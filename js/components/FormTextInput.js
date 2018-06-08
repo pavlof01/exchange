@@ -22,10 +22,6 @@ class FormTextInput extends Component {
      * Used to locate this view in end-to-end tests.
      */
     testID: PropTypes.string,
-    /**
-     * Styles.
-     */
-    style: View.propTypes.style,
   };
 
   focus() {
@@ -34,10 +30,9 @@ class FormTextInput extends Component {
 
   render() {
     const {
-      style,
       error,
     } = this.props;
-    const containerStyles = [style, styles.container];
+    const containerStyles = [styles.container];
     const textStyles = [styles.text];
     if (error) {
       containerStyles.push({ borderColor: errorRed });
