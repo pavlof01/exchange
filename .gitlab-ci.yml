@@ -49,6 +49,7 @@ before_script:
 #    - /^build/ios/[0-9]*$/
 
 build android:
+  stage: deploy
   variables:
     ASSEMBLE_TASK: "assembleRelease"
     ARTIFACT_APK: android/app/build/outputs/apk/release/app-release.apk
@@ -95,6 +96,7 @@ build android:
 #    - /^build/ios/[0-9]*$/
 
 deploy android to fabric:
+  stage: deploy
   environment:
     name: fabric
     url: https://www.fabric.io/exchange4/android/apps/com.icerockdev.exchange/beta/releases/latest
