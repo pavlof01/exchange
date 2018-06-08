@@ -61,9 +61,6 @@ build android:
     - fastlane run changelog_from_git_commits tag_match_pattern:build/* | grep -E '^([a-zA-Z]*-.*)' | sed 's/^\([a-zA-Z]*-[0-9]*\).*$/\1/' | sort | uniq |  tr '\n' ',' | sed 's/\(.*\),/\1/' > changelog.txt || true
     # выставляем билдномер
     - sed -i '' "s/BUILD_CODE.*/BUILD_CODE=${BUILD_NUMBER}/" android/gradle.properties
-    # собираем бандл реакта
-    - mkdir -p android/app/src/main/assets
-    - npm run bundle-android
     # собираем билд
     - cd android && ./gradlew ${ASSEMBLE_TASK}
     # сохраняем использованную схему (нужно для экспорта архива)
