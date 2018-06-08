@@ -15,6 +15,7 @@ before_script:
   - export LANG=en_US.UTF-8
   - export LANGUAGE=en_US.UTF-8
   - export LC_ALL=en_US.UTF-8
+  - mpm install
 
 #.deploy: &deploy
 #  stage: deploy
@@ -49,7 +50,7 @@ before_script:
 #    - /^build/ios/[0-9]*$/
 
 build android:
-  stage: deploy
+  stage: build
   variables:
     ASSEMBLE_TASK: "assembleRelease"
     ARTIFACT_APK: android/app/build/outputs/apk/release/app-release.apk
@@ -65,6 +66,7 @@ build android:
     - react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
     # собираем билд
     - ./gradlew ${ASSEMBLE_TASK}
+    # сохраняем использованную схему (нужно для экспорта архива)
     # сохраняем использованную схему (нужно для экспорта архива)
     - echo ${ARTIFACT_APK} > apk.txt
   artifacts:
