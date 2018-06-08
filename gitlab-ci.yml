@@ -1,0 +1,110 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  XCARCHIVE_NAME: "App.xcarchive"
+  XCZIP_NAME: "App.zip"
+  IPA_NAME: "App.ipa"
+  CHANGELOG_FILE: "changelog.txt"
+  BUILD_CRASHLYTICS_API_TOKEN: "7f62b20f92a49b339c2e8dbf850cb3c5d852e026"
+  BUILD_CRASHLYTICS_BUILD_SECRET: "5eddcdc41a7e6fc1382d312113bbfce9e66c8fee4653a365923d2f512df4b32c"
+  BUILD_CRASHLYTICS_TEST_GROUPS: "icerock-testers"
+
+before_script:
+  - export LANG=en_US.UTF-8
+  - export LANGUAGE=en_US.UTF-8
+  - export LC_ALL=en_US.UTF-8
+
+#.deploy: &deploy
+#  stage: deploy
+#  artifacts:
+#    paths:
+#      - ${IPA_NAME}
+#      - ${CHANGELOG_FILE}
+#    expire_in: 2 days
+#  tags:
+#    - fastlane
+#    - xcode
+#    - osx
+
+#build ios:
+#  <<: *build
+#  variables:
+#    BUILD_APP_IDENTIFIER: "com.icerockdev.exchange"
+#    BUILD_SCHEME: "exchange"
+#  script:
+#    - export BUILD_NUMBER=$(echo $CI_COMMIT_TAG | sed 's/.*\///g')
+#    - fastlane ios build
+#  artifacts:
+#    paths:
+#      - ${XCZIP_NAME}
+#      - ${CHANGELOG_FILE}
+#    expire_in: 2 days
+#  tags:
+#    - fastlane
+#    - osx
+#    - xcode
+#  only:
+#    - /^build/ios/[0-9]*$/
+
+build android:
+  variables:
+    ASSEMBLE_TASK: "assembleRelease"
+    ARTIFACT_APK: android/app/build/outputs/apk/release/app-release.apk
+  script:
+    # получаем из тега запустившего сборку номер билда
+    - export BUILD_NUMBER=$(echo $CI_COMMIT_TAG | sed 's/.*\///g')
+    # собираем список задач сделанных с последнего билда
+    - fastlane run changelog_from_git_commits tag_match_pattern:build/* | grep -E '^([a-zA-Z]*-.*)' | sed 's/^\([a-zA-Z]*-[0-9]*\).*$/\1/' | sort | uniq |  tr '\n' ',' | sed 's/\(.*\),/\1/' > changelog.txt || true
+    # выставляем билдномер
+    - sed -i '' "s/BUILD_CODE.*/BUILD_CODE=${BUILD_NUMBER}/" android/gradle.properties
+    # собираем бвндл реакта
+    - mkdir -p android/app/src/main/assets
+    - react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
+    # собираем билд
+    - ./gradlew ${ASSEMBLE_TASK}
+    # сохраняем использованную схему (нужно для экспорта архива)
+    - echo ${ARTIFACT_APK} > apk.txt
+  artifacts:
+    paths:
+      - ${ARTIFACT_APK}
+      - apk.txt
+      - changelog.txt
+    expire_in: 2 days
+  except:
+    - branches
+  tags:
+    - android
+    - gradle
+  only:
+    - /^build/android/[0-9]*$/
+
+#deploy ios to fabric:
+#  <<: *deploy
+#  variables:
+#    BUILD_APP_IDENTIFIER: "com.icerockdev.slon9.client.dev"
+#    BUILD_SCHEME: "client-dev"
+#    BUILD_EXPORT_METHOD: 'enterprise'
+#  environment:
+#    name: fabric
+#    url: https://fabric.io/servedin/ios/apps/com.icerockdev.slon9.client.dev/dashboard
+#  script:
+#    - fastlane ios deploy_fabric
+#  only:
+#    - /^build/ios/[0-9]*$/
+
+deploy android to fabric:
+  environment:
+    name: fabric
+    url: https://www.fabric.io/exchange4/android/apps/com.icerockdev.exchange/beta/releases/latest
+  script:
+    - export APK_PATH=$(cat apk.txt)
+    - fastlane run crashlytics api_token:${CRASHLYTICS_API_TOKEN} build_secret:${CRASHLYTICS_BUILD_SECRET} notifications:true groups:${BUILD_CRASHLYTICS_TEST_GROUPS} apk_path:$APK_PATH notes_path:changelog.txt
+  except:
+    - branches
+  tags:
+    - android
+    - fastlane
+  only:
+    - /^build/android/[0-9]*$/
