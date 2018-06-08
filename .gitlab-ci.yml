@@ -65,7 +65,7 @@ build android:
     - mkdir -p android/app/src/main/assets
     - npm run bundle-android
     # собираем билд
-    - ./android/gradlew ${ASSEMBLE_TASK}
+    - cd android && ./gradlew ${ASSEMBLE_TASK}
     # сохраняем использованную схему (нужно для экспорта архива)
     - echo ${ARTIFACT_APK} > apk.txt
   artifacts:
