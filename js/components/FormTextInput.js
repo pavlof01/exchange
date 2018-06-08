@@ -49,6 +49,7 @@ class FormTextInput extends Component {
       <View style={containerStyles}>
         <TextInput
           {...this.props}
+          keyboardType='default'
           style={textStyles}
           keyboardAppearance="dark"
           placeholderColor="#474747"
@@ -69,7 +70,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   text: {
-    fontFamily: 'Roboto Mono',
     color: '#000',
     textAlign: 'left',
     fontSize: 14,
