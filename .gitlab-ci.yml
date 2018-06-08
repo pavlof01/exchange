@@ -62,7 +62,9 @@ build android:
     # выставляем билдномер
     - sed -i '' "s/BUILD_CODE.*/BUILD_CODE=${BUILD_NUMBER}/" android/gradle.properties
     # собираем билд
-    - cd android && ./gradlew ${ASSEMBLE_TASK}
+    - cd android
+    - ./gradlew ${ASSEMBLE_TASK}
+    - cd ..
     # сохраняем использованную схему (нужно для экспорта архива)
     - echo ${ARTIFACT_APK} > apk.txt
   artifacts:
@@ -100,7 +102,7 @@ deploy android to fabric:
     url: https://www.fabric.io/exchange4/android/apps/com.icerockdev.exchange/beta/releases/latest
   script:
     - export APK_PATH=$(cat apk.txt)
-    - fastlane run crashlytics api_token:${CRASHLYTICS_API_TOKEN} build_secret:${CRASHLYTICS_BUILD_SECRET} notifications:true groups:${BUILD_CRASHLYTICS_TEST_GROUPS} apk_path:$APK_PATH notes_path:changelog.txt
+    - fastlane run crashlytics api_token:${BUILD_CRASHLYTICS_API_TOKEN} build_secret:${BUILD_CRASHLYTICS_BUILD_SECRET} notifications:true groups:${BUILD_CRASHLYTICS_TEST_GROUPS} apk_path:$APK_PATH notes_path:changelog.txt
   except:
     - branches
   tags:
