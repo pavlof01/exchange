@@ -7,10 +7,8 @@ default_platform :ios
 platform :ios do
 
   lane :build do
-    # получаем номер билда новый
-    build_number = sh("cd .. && git tag -l 'build\/*' | sed 's/build\\///g' | sort -nr | head -1 || echo 0").to_i + 1
     # устанавливаем номер билда в настройки проекта
-    increment_build_number(build_number: build_number)
+    increment_build_number(build_number: ENV["BUILD_NUMBER"])
     # ставим поды
     sh("pod install")
     # убираем автоподпись
@@ -18,18 +16,18 @@ platform :ios do
     # создаем временный кейчейн
     SpareKeys.temp_keychain(true) { |temp_keychain_path, keychain_password|
       # загружаем данные для подписи
-      match(app_identifier: ENV["BUILD_APP_IDENTIFIER"], 
-        type: 'development', 
+      match(app_identifier: ENV["BUILD_APP_IDENTIFIER"],
+        type: 'development',
         keychain_name: temp_keychain_path)
       # разрешаем доступ к кейчейну
       `security set-key-partition-list -S apple-tool:,apple: -k "#{keychain_password}" #{temp_keychain_path}`
       # собираем билд
       gym({
-        scheme: ENV["BUILD_SCHEME"], 
-        export_method: 'development', 
-        xcargs: '-allowProvisioningUpdates', 
-        skip_package_ipa: true, 
-        clean: true, 
+        scheme: ENV["BUILD_SCHEME"],
+        export_method: 'development',
+        xcargs: '-allowProvisioningUpdates',
+        skip_package_ipa: true,
+        clean: true,
         build_path: 'archive'
       })
     }
@@ -43,10 +41,6 @@ platform :ios do
     issue_ids = commits_changelog.scan(/^[a-zA-Z]*-\d+/).sort().uniq()
     issues_string = issue_ids.join(",")
     File.open("../" + ENV['CHANGELOG_FILE'], 'w') { |file| file.write(issues_string) }
-    # добавляем номер билда в репозиторий
-    add_git_tag(tag: "build/#{build_number}")
-    # сохраняем в удаленный репозиторий
-    push_git_tags
   end
 
   lane :deploy_fabric do
@@ -62,9 +56,9 @@ platform :ios do
       `security set-key-partition-list -S apple-tool:,apple: -k "#{keychain_password}" #{temp_keychain_path}`
       # экспортируем приложение
       gym({
-        scheme: ENV["BUILD_SCHEME"], 
+        scheme: ENV["BUILD_SCHEME"],
         skip_build_archive: true,
-        export_method: ENV["BUILD_EXPORT_METHOD"], 
+        export_method: ENV["BUILD_EXPORT_METHOD"],
         archive_path: ENV["XCARCHIVE_NAME"],
         output_name: ENV["IPA_NAME"]
       })
@@ -107,23 +101,5 @@ platform :ios do
       skip_waiting_for_build_processing: true
     )
   end
-
-  lane :register_new_devices do
-    register_devices(devices_file: ENV["DEVICES_FILE"])    
-  end
 end
 
-platform :android do
-
-  lane :build do
-
-  end
-
-  lane :deploy_fabric do
-
-  end
-
-  lane :deploy_playmarket do
-
-  end
-end

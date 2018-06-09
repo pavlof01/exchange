@@ -17,37 +17,26 @@ before_script:
   - export LC_ALL=en_US.UTF-8
   - npm install
 
-#.deploy: &deploy
-#  stage: deploy
-#  artifacts:
-#    paths:
-#      - ${IPA_NAME}
-#      - ${CHANGELOG_FILE}
-#    expire_in: 2 days
-#  tags:
-#    - fastlane
-#    - xcode
-#    - osx
-
-#build ios:
-#  <<: *build
-#  variables:
-#    BUILD_APP_IDENTIFIER: "com.icerockdev.exchange"
-#    BUILD_SCHEME: "exchange"
-#  script:
-#    - export BUILD_NUMBER=$(echo $CI_COMMIT_TAG | sed 's/.*\///g')
-#    - fastlane ios build
-#  artifacts:
-#    paths:
-#      - ${XCZIP_NAME}
-#      - ${CHANGELOG_FILE}
-#    expire_in: 2 days
-#  tags:
-#    - fastlane
-#    - osx
-#    - xcode
-#  only:
-#    - /^build/ios/[0-9]*$/
+build ios:
+  stage: build
+  variables:
+    BUILD_APP_IDENTIFIER: "com.icerockdev.exchange"
+    BUILD_SCHEME: "exchange"
+  script:
+    - export BUILD_NUMBER=$(echo $CI_COMMIT_TAG | sed 's/.*\///g')
+    - cd ios
+    - fastlane build
+  artifacts:
+    paths:
+      - ios/${XCZIP_NAME}
+      - ios/${CHANGELOG_FILE}
+    expire_in: 2 days
+  tags:
+    - fastlane
+    - osx
+    - xcode
+  only:
+    - /^build/ios/[0-9]*$/
 
 build android:
   stage: build
@@ -81,19 +70,29 @@ build android:
   only:
     - /^build/android/[0-9]*$/
 
-#deploy ios to fabric:
-#  <<: *deploy
-#  variables:
-#    BUILD_APP_IDENTIFIER: "com.icerockdev.slon9.client.dev"
-#    BUILD_SCHEME: "client-dev"
-#    BUILD_EXPORT_METHOD: 'enterprise'
-#  environment:
-#    name: fabric
-#    url: https://fabric.io/servedin/ios/apps/com.icerockdev.slon9.client.dev/dashboard
-#  script:
-#    - fastlane ios deploy_fabric
-#  only:
-#    - /^build/ios/[0-9]*$/
+deploy ios to fabric:
+  stage: deploy
+  variables:
+    BUILD_APP_IDENTIFIER: "com.icerockdev.exchange"
+    BUILD_SCHEME: "exchange"
+    BUILD_EXPORT_METHOD: 'enterprise'
+  environment:
+    name: fabric
+    url: https://fabric.io/exchange4/ios/apps/com.icerockdev.exchange/beta/releases/latest
+  script:
+    - cd ios
+    - fastlane deploy_fabric
+  artifacts:
+    paths:
+      - ios/${IPA_NAME}
+      - ios/${CHANGELOG_FILE}
+    expire_in: 2 days
+  tags:
+    - fastlane
+    - xcode
+    - osx
+  only:
+    - /^build/ios/[0-9]*$/
 
 deploy android to fabric:
   stage: deploy
