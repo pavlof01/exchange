@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 import Validator from '../../services/Validator';
 import {
@@ -6,10 +7,10 @@ import {
     Text,
     ScrollView,
     StyleSheet,
-    TouchableOpacity,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
 import * as authActions from '../../actions/authActions';
+import Touchable from '../Touchable';
 
 export default class Login extends Component {
 
@@ -85,14 +86,11 @@ export default class Login extends Component {
                 <View>
                     <Text style={[styles.error]}>{this.state.formError}</Text>
                 </View>
-
-                <TouchableOpacity
-                    onPress={this.onLoginPressed}
-                >
+                <Touchable onPress={this.onLoginPressed}>
                     <View>
                         <Text>L O G I N</Text>
                     </View>
-                </TouchableOpacity>
+                </Touchable>
             </ScrollView>
         );
     }
@@ -107,11 +105,9 @@ export default class Login extends Component {
                 return formType;
         }
         return (
-
-            <View className="login section">
-                <View className="grid">
-                    <Text className="login__title heading heading_1">Войти</Text>
-
+            <View>
+                <View>
+                    <Text>Войти</Text>
                     <View>
                         {formType}
                     </View>
@@ -124,5 +120,12 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     error: {
         color: '#dd0057',
-    }
+    },
 });
+
+Login.propTypes = {
+    formState: PropTypes.object,
+    formError: PropTypes.string,
+    login: PropTypes.func,
+    fetchDictionary: PropTypes.func,
+};

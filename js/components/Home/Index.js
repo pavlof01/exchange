@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import {
     Text,
     View,
-    TouchableOpacity,
 } from 'react-native';
+import Touchable from '../Touchable';
 
 export default class Home extends Component {
 
@@ -20,14 +21,19 @@ export default class Home extends Component {
     return (
         <View>
           <Text>Hello! {this.props.user.user_name}</Text>
-            <TouchableOpacity
+            <Touchable
                 onPress={this.onLogoutPressed}
             >
                 <View>
                     <Text>L O G O U T</Text>
                 </View>
-            </TouchableOpacity>
+            </Touchable>
         </View>
     )
   }
 }
+
+Home.propTypes = {
+    user: PropTypes.object,
+    logout: PropTypes.func,
+};

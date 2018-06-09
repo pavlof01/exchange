@@ -13,17 +13,6 @@ const errorRed = '#dd0057';
  */
 class FormTextInput extends Component {
 
-  static propTypes = {
-    /**
-     * If true, render input with red colors.
-     */
-    error: PropTypes.bool,
-    /**
-     * Used to locate this view in end-to-end tests.
-     */
-    testID: PropTypes.string,
-  };
-
   focus() {
     this.textInput.focus();
   }
@@ -72,5 +61,15 @@ const styles = StyleSheet.create({
     padding: 4,
   },
 });
+
+FormTextInput.propTypes = {
+    error: PropTypes.bool,
+    ref: PropTypes.func,
+    placeholder: PropTypes.string,
+    keyboardType: PropTypes.string,
+    value: PropTypes.string,
+    onChangeText: PropTypes.func,
+    onSubmitEditing: PropTypes.func,
+};
 
 export default FormTextInput;

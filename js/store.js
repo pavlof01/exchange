@@ -1,13 +1,11 @@
 import { createStore } from 'redux'
 import reducers from './reducers';
-//import middlewares from './middlewares';
 import createSagaMiddleware from 'redux-saga';
 import rootSagas from './sagas';
 import orders from './middlewares/orders'
 import position from './middlewares/position'
 import { applyMiddleware } from 'redux'
 
-import ReduxThunk from 'redux-thunk';
 import { navMiddleware } from './App'
 
 const sagaMiddleware = createSagaMiddleware();
@@ -16,7 +14,6 @@ const middlewares = [
     position,
     sagaMiddleware,
     navMiddleware,
-    ReduxThunk,
 ];
 const store = createStore(
   reducers,
