@@ -1,16 +1,16 @@
 import {connect} from 'react-redux'
-import Login from '../../components/Login/Index'
-import {login} from '../../actions/authActions';
+import SignUp from '../../components/SignUp/Index'
+import {signUp} from '../../actions/signUp';
 import {fetchDictionary} from '../../actions/i18n';
-import {signUpRequest} from '../../actions/signUp';
+import {loginRequest} from '../../actions/authActions';
 
 const mapDispatchToProps = dispatch => ({
     fetchDictionary: () => dispatch(fetchDictionary(dispatch)),
-    login: (params) => {
-        dispatch(login(params))
+    signUp: (params) => {
+        dispatch(signUp(params))
     },
-    signUpRequest: () => {
-        dispatch(signUpRequest())
+    loginRequest: () => {
+        dispatch(loginRequest())
     }
 });
 
@@ -20,4 +20,4 @@ const mapStateToProps = (state) => ({
     formError: state.auth.form.error,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

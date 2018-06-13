@@ -11,6 +11,7 @@ import {
 import FormTextInput from '../../components/FormTextInput';
 import * as authActions from '../../actions/authActions';
 import Touchable from '../Touchable';
+import {signUpRequest} from "../../actions/signUp";
 
 export default class Login extends Component {
 
@@ -27,7 +28,7 @@ export default class Login extends Component {
         };
 
         this.onLoginPressed = this.onLoginPressed.bind(this);
-
+        this.onSignUpPressed = this.onSignUpPressed.bind(this);
     }
 
     componentDidMount() {
@@ -54,6 +55,9 @@ export default class Login extends Component {
         } else {
             this.props.login({login: loginValue, password: passwordValue});
         }
+    }
+    onSignUpPressed() {
+        this.props.signUpRequest();
     }
 
     renderLoginForm() {
@@ -112,6 +116,11 @@ export default class Login extends Component {
                         {formType}
                     </View>
                 </View>
+                <Touchable onPress={this.onSignUpPressed}>
+                    <View>
+                        <Text>SignUp</Text>
+                    </View>
+                </Touchable>
             </View>
         );
     }
@@ -127,5 +136,6 @@ Login.propTypes = {
     formState: PropTypes.object,
     formError: PropTypes.string,
     login: PropTypes.func,
+    signUpRequest: PropTypes.func,
     fetchDictionary: PropTypes.func,
 };

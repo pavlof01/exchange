@@ -4,8 +4,11 @@ import AppNavigator from '../AppNavigator';
 import {
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
+    LOGIN_REQUEST,
 } from '../actions/authActions';
-
+import {
+    SIGN_UP_REQUEST,
+} from '../actions/signUp';
 const firstAction = AppNavigator.router.getActionForPathAndParams('Login');
 const initialState = AppNavigator.router.getStateForAction(firstAction);
 
@@ -19,12 +22,19 @@ export default function navigationReducer(state = initialState, action) {
         state
       );
       break;
+      case LOGIN_REQUEST:
       case LOGOUT_SUCCESS:
         nextState = AppNavigator.router.getStateForAction(
           NavigationActions.navigate({ routeName: 'Login' }),
           state
         );
         break;
+      case SIGN_UP_REQUEST:
+          nextState = AppNavigator.router.getStateForAction(
+              NavigationActions.navigate({ routeName: 'SignUp' }),
+              state
+          );
+          break;
 
     default:
       nextState = AppNavigator.router.getStateForAction(action, state);

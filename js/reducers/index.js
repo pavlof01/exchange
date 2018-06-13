@@ -19,9 +19,11 @@ import groupedPaymentMethods from './groupedPaymentMethods'
 import paymentMethodBanks from './paymentMethodBanks'
 import navigation from './navigation';
 import auth from './authReducer';
+import signUp from './signUp';
 
 export default combineReducers({
   nav: navigation,
+  signUp,
   app,
   auth,
   session,

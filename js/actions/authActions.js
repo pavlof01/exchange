@@ -5,6 +5,7 @@ export const LOGIN = 'LOGIN';
 export const LOGIN_SET_USER = 'LOGIN_SET_USER';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 
 export function loginSuccess(params) {
   return {
@@ -47,5 +48,11 @@ export function logoutError(error) {
     return {
         type: LOGOUT_ERROR,
         payload: error,
+    };
+}
+
+export function loginRequest() {
+    return {
+        type: LOGIN_REQUEST,
     };
 }

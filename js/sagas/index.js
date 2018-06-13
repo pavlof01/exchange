@@ -3,12 +3,15 @@ import {
     loginData,
     logoutData, loginOnSuccessData,
 } from './authorization';
-
+import {
+    signUpData,
+} from './signup';
 const rootSagas = function* root() {
     yield all([
         fork(loginData),
         fork(logoutData),
         fork(loginOnSuccessData),
+        fork(signUpData),
     ]);
 };
 
