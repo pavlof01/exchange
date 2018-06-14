@@ -28,7 +28,11 @@ export const userSignUp = function* userSignUp(action) {
         yield put(signUpSuccess(result));
     } catch (err) {
         if (err.response.status === 422) {
-            yield put(signUpFailure(err.response.data.errors));
+            let errors = [];
+            for (let prop in err.response.data.errors) {
+                errors.push(prop + ": " + err.response.data.errors[prop]);
+            }
+            yield put(signUpFailure({error: errors.join('; ')}));
         } else {
             yield put(signUpFailure({error: 'Что-то пошло не так, повторите позже'}));
         }

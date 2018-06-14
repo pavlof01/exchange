@@ -6,7 +6,6 @@ export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export function signUpRequest() {
     return {
         type: SIGN_UP_REQUEST,
-        //payload: params,
     };
 }
 

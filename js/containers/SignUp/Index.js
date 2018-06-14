@@ -15,9 +15,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = (state) => ({
-    isFetching: state.auth.form.isFetching,
-    formState: state.auth.form.state,
-    formError: state.auth.form.error,
+    isFetching: state.signUp.form.isFetching,
+    formState: state.signUp.form.state,
+    formError: state.signUp.form.error,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

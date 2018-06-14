@@ -9,7 +9,6 @@ import {
     StyleSheet,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
-import * as authActions from '../../actions/authActions';
 import Touchable from '../Touchable';
 
 export default class SignUp extends Component {
@@ -26,7 +25,7 @@ export default class SignUp extends Component {
         };
 
         this.onSignUpPressed = this.onSignUpPressed.bind(this);
-
+        this.onLoginPressed = this.onLoginPressed.bind(this);
     }
 
     componentDidMount() {
@@ -59,7 +58,7 @@ export default class SignUp extends Component {
         password2Error && validationErrors.push(password2Error);
 
         if (validationErrors.length) {
-            this.setState({formError: validationErrors.join(', ')});
+            this.setState({formError: validationErrors.join('; ')});
         } else {
             this.props.signUp({user_name: loginValue, email: emailValue, password: passwordValue, password_confirmation: password2Value});
         }
@@ -85,9 +84,9 @@ export default class SignUp extends Component {
         }
 
         return (
-            <View>
-                <ScrollView>
-                    <Text>Зарегистрировать новую учетную запись</Text>
+            <View style={[styles.paddingScreen]}>
+                <ScrollView style={[styles.formBlock]}>
+                    <Text style={[styles.pageHeader]}>Зарегистрировать новую учетную запись</Text>
                     <View>
                         <FormTextInput
                             error={this.state.formError !== null}
@@ -143,8 +142,14 @@ export default class SignUp extends Component {
                             <Text style={[styles.error]}>{this.state.formError}</Text>
                         </View>
                         <Touchable onPress={this.onSignUpPressed}>
+                            <View style={[styles.mainButton]}>
+                                <Text style={[styles.mainButtonLabel]}>Зарегистрироваться</Text>
+                            </View>
+                        </Touchable>
+                        <Text style={[styles.textCenter]}>Уже зарегистрированы?</Text>
+                        <Touchable onPress={this.onLoginPressed}>
                             <View>
-                                <Text>Registration</Text>
+                                <Text style={[styles.textLink, styles.textCenter]}>Войти</Text>
                             </View>
                         </Touchable>
                     </View>
@@ -157,11 +162,41 @@ export default class SignUp extends Component {
 const styles = StyleSheet.create({
     error: {
         color: '#dd0057',
+        marginBottom: 16,
     },
+    pageHeader: {
+        textAlign: 'center',
+        fontSize: 18,
+        lineHeight: 18,
+        fontWeight: "700",
+    },
+    paddingScreen: {
+        padding: 16,
+    },
+    formBlock: {
+        padding: 32,
+        backgroundColor: '#fff',
+    },
+    mainButton: {
+        backgroundColor: '#2d18a0',
+        padding: 12,
+        marginBottom: 16,
+    },
+    mainButtonLabel: {
+        color: '#fff',
+        textAlign: 'center',
+    },
+    textLink: {
+        color: '#2d18a0',
+        textDecorationLine: 'underline',
+    },
+    textCenter: {
+        textAlign: 'center',
+    }
 });
 
 SignUp.propTypes = {
-    formState: PropTypes.object,
+    formState: PropTypes.string,
     formError: PropTypes.string,
     signUp: PropTypes.func,
     loginRequest: PropTypes.func,
