@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
 
 FormTextInput.propTypes = {
     error: PropTypes.bool,
-    ref: PropTypes.func,
     placeholder: PropTypes.string,
     keyboardType: PropTypes.string,
     value: PropTypes.string,

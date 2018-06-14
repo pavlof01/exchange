@@ -46,11 +46,15 @@ export default class Login extends Component {
             passwordValue,
         } = this.state;
 
-        let validationErrors = new Validator({presence: true}).validate(loginValue) || '';
-        validationErrors = validationErrors + (new Validator({presence: true}).validate(passwordValue) || '');
+        let loginError = new Validator({presence: true}).validate(loginValue);
+        let passwordError = new Validator({presence: true}).validate(passwordValue);
 
-        if (validationErrors !== '') {
-            this.setState({formError: validationErrors});
+        let validationErrors = [];
+        loginError && validationErrors.push('User Name: ' + loginError);
+        passwordError && validationErrors.push('Password: ' + passwordError);
+
+        if (validationErrors.length) {
+            this.setState({formError: validationErrors.join('; ')});
         } else {
             this.props.login({login: loginValue, password: passwordValue});
         }
@@ -87,8 +91,8 @@ export default class Login extends Component {
                     <Text style={[styles.error]}>{this.state.formError}</Text>
                 </View>
                 <Touchable onPress={this.onLoginPressed}>
-                    <View>
-                        <Text>L O G I N</Text>
+                    <View style={[styles.mainButton]}>
+                        <Text style={[styles.mainButtonLabel]}>Войти</Text>
                     </View>
                 </Touchable>
             </ScrollView>
@@ -105,12 +109,18 @@ export default class Login extends Component {
                 return formType;
         }
         return (
-            <View>
-                <View>
-                    <Text>Войти</Text>
+            <View style={[styles.paddingScreen]}>
+                <View style={[styles.formBlock]}>
+                    <Text style={[styles.pageHeader]}>Войти</Text>
                     <View>
                         {formType}
                     </View>
+                    <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
+                    <Touchable onPress={this.onSignUpPressed}>
+                        <View>
+                            <Text style={[styles.textLink, styles.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
+                        </View>
+                    </Touchable>
                 </View>
             </View>
         );
@@ -120,11 +130,41 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     error: {
         color: '#dd0057',
+        marginBottom: 16,
     },
+    pageHeader: {
+        textAlign: 'center',
+        fontSize: 18,
+        lineHeight: 18,
+        fontWeight: "700",
+    },
+    paddingScreen: {
+        padding: 16,
+    },
+    formBlock: {
+        padding: 32,
+        backgroundColor: '#fff',
+    },
+    mainButton: {
+        backgroundColor: '#2d18a0',
+        padding: 12,
+        marginBottom: 16,
+    },
+    mainButtonLabel: {
+        color: '#fff',
+        textAlign: 'center',
+    },
+    textLink: {
+        color: '#2d18a0',
+        textDecorationLine: 'underline',
+    },
+    textCenter: {
+        textAlign: 'center',
+    }
 });
 
 Login.propTypes = {
-    formState: PropTypes.object,
+    formState: PropTypes.string,
     formError: PropTypes.string,
     login: PropTypes.func,
     fetchDictionary: PropTypes.func,
