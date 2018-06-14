@@ -1,4 +1,4 @@
-package com.exchange;
+package com.icerockdev.exchange;
 
 import com.facebook.react.ReactActivity;
 
