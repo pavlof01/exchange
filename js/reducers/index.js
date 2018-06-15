@@ -20,10 +20,12 @@ import paymentMethodBanks from './paymentMethodBanks'
 import navigation from './navigation';
 import auth from './authReducer';
 import signUp from './signUp';
+import recoverPassword from './recoverPassword';
 
 export default combineReducers({
   nav: navigation,
   signUp,
+  recoverPassword,
   app,
   auth,
   session,
