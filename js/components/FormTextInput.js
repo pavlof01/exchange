@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: 'rgba(48, 48, 48, 0.35)',
     borderStyle: 'solid',
-    marginBottom: 15,
+    marginBottom: 16,
   },
   text: {
     color: '#000',
     textAlign: 'left',
     fontSize: 14,
-    height: 30,
+    height: 32,
     padding: 4,
   },
 });

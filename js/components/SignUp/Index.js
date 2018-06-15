@@ -52,10 +52,10 @@ export default class SignUp extends Component {
         let password2Error = new Validator({presence: true}).validate(password2Value);
 
         let validationErrors = [];
-        loginError && validationErrors.push(loginError);
-        emailError && validationErrors.push(emailError);
-        passwordError && validationErrors.push(passwordError);
-        password2Error && validationErrors.push(password2Error);
+        loginError && validationErrors.push('User Name: ' + loginError);
+        emailError && validationErrors.push('Email: ' + emailError);
+        passwordError && validationErrors.push('Password: ' + passwordError);
+        password2Error && validationErrors.push('Password Repeat: ' + password2Error);
 
         if (validationErrors.length) {
             this.setState({formError: validationErrors.join('; ')});
@@ -166,25 +166,28 @@ const styles = StyleSheet.create({
     },
     pageHeader: {
         textAlign: 'center',
-        fontSize: 18,
-        lineHeight: 18,
+        fontSize: 24,
         fontWeight: "700",
+        marginBottom: 16,
     },
     paddingScreen: {
         padding: 16,
     },
     formBlock: {
-        padding: 32,
+        paddingHorizontal: 20,
+        paddingVertical: 32,
         backgroundColor: '#fff',
     },
     mainButton: {
         backgroundColor: '#2d18a0',
         padding: 12,
-        marginBottom: 16,
+        marginBottom: 28,
     },
     mainButtonLabel: {
         color: '#fff',
         textAlign: 'center',
+        fontWeight: '500',
+        fontSize: 14,
     },
     textLink: {
         color: '#2d18a0',

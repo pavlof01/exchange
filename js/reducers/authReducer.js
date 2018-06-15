@@ -3,19 +3,17 @@ import {
     LOGIN,
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
-    LOGIN_SET_USER, LOGOUT_SUCCESS,
+    LOGIN_SET_USER,
+    LOGOUT_SUCCESS,
 } from '../actions/authActions';
 import LogoutUser from '../models/User/Logout'
 
 const Form = Record({
   error: null,
   isFetching: false,
-  state: LOGIN,
   fields: new (Record({
     username: '',
-    email: '',
     password: '',
-    passwordAgain: '',
     showPassword: false,
   }))(),
 });
