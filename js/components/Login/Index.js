@@ -9,7 +9,6 @@ import {
     StyleSheet,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
-import * as authActions from '../../actions/authActions';
 import Touchable from '../Touchable';
 
 export default class Login extends Component {

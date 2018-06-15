@@ -18,7 +18,7 @@ import partnerActivity from './partnerActivity'
 import groupedPaymentMethods from './groupedPaymentMethods'
 import paymentMethodBanks from './paymentMethodBanks'
 import navigation from './navigation';
-import auth from './authReducer';
+import login from './login';
 import signUp from './signUp';
 import recoverPassword from './recoverPassword';
 
@@ -27,7 +27,7 @@ export default combineReducers({
   signUp,
   recoverPassword,
   app,
-  auth,
+  login,
   session,
   profile,
   home,

@@ -5,7 +5,7 @@ import {
     LOGIN_FAILURE,
     LOGIN_SET_USER,
     LOGOUT_SUCCESS,
-} from '../actions/authActions';
+} from '../actions/login';
 import LogoutUser from '../models/User/Logout'
 
 const Form = Record({
@@ -25,7 +25,7 @@ const InitialState = Record({
 
 const initialState = new InitialState();
 
-export default function authReducer(state = initialState, action) {
+export default function login(state = initialState, action) {
   switch (action.type) {
 
     case LOGIN: {

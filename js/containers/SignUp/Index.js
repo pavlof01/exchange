@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 import SignUp from '../../components/SignUp/Index'
 import {signUp} from '../../actions/signUp';
 import {fetchDictionary} from '../../actions/i18n';
-import {loginRequest} from '../../actions/authActions';
+import {loginRequest} from '../../actions/login';
 
 const mapDispatchToProps = dispatch => ({
     fetchDictionary: () => dispatch(fetchDictionary(dispatch)),

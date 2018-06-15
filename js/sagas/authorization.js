@@ -7,7 +7,7 @@ import {
     loginSuccess,
     loginFailure,
     loginSetUser,
-} from '../actions/authActions';
+} from '../actions/login';
 import LoginUser from "../models/User/Login";
 import Api from "../services/Api";
 

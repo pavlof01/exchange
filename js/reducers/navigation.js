@@ -5,7 +5,7 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
     LOGIN_REQUEST,
-} from '../actions/authActions';
+} from '../actions/login';
 import {
     SIGN_UP_REQUEST,
 } from '../actions/signUp';
