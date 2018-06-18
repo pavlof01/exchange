@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../Touchable';
+import _ from 'lodash';
 
 export default class SignUp extends Component {
 
@@ -21,7 +22,7 @@ export default class SignUp extends Component {
             password2Value: '',
             emailValue: '',
             formState: this.props.formState,
-            formError: null,
+            formError: {},
         };
 
         this.onSignUpPressed = this.onSignUpPressed.bind(this);
@@ -34,7 +35,7 @@ export default class SignUp extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.formError !== nextProps.formError) {
-            this.setState({formError: nextProps.formError})
+            this.setState({formError: {serverError: nextProps.formError}})
         }
     }
 
@@ -51,14 +52,15 @@ export default class SignUp extends Component {
         let passwordError = new Validator({presence: true}).validate(passwordValue);
         let password2Error = new Validator({presence: true}).validate(password2Value);
 
-        let validationErrors = [];
-        loginError && validationErrors.push('User Name: ' + loginError);
-        emailError && validationErrors.push('Email: ' + emailError);
-        passwordError && validationErrors.push('Password: ' + passwordError);
-        password2Error && validationErrors.push('Password Repeat: ' + password2Error);
+        let validationErrors = {
+            loginError: loginError && ('User Name: ' + loginError),
+            emailError: emailError && ('Email: ' + emailError),
+            passwordError: passwordError && ('Password: ' + passwordError),
+            password2Error: password2Error && ('Password Repeat: ' + passwordError),
+        };
 
-        if (validationErrors.length) {
-            this.setState({formError: validationErrors.join('; ')});
+        if (!_.isEmpty(validationErrors)) {
+            this.setState({formError: validationErrors});
         } else {
             this.props.signUp({user_name: loginValue, email: emailValue, password: passwordValue, password_confirmation: password2Value});
         }
@@ -89,7 +91,7 @@ export default class SignUp extends Component {
                     <Text style={[styles.pageHeader]}>Зарегистрировать новую учетную запись</Text>
                     <View>
                         <FormTextInput
-                            error={this.state.formError !== null}
+                            error={!_.isEmpty(this.state.formError.loginError)}
                             ref={(ref) => (this.loginInput = ref)}
                             placeholder="Username"
                             keyboardType="login-address"
@@ -101,8 +103,11 @@ export default class SignUp extends Component {
                                 this.emailInput.focus();
                             }}
                         />
+                        <View>
+                            <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
+                        </View>
                         <FormTextInput
-                            error={this.state.formError !== null}
+                            error={!_.isEmpty(this.state.formError.emailError)}
                             ref={(ref) => (this.emailInput = ref)}
                             placeholder="E-mail"
                             keyboardType="login-address"
@@ -114,8 +119,11 @@ export default class SignUp extends Component {
                                 this.passwordInput.focus();
                             }}
                         />
+                        <View>
+                            <Text style={[styles.error]}>{this.state.formError.emailError}</Text>
+                        </View>
                         <FormTextInput
-                            error={this.state.formError !== null}
+                            error={!_.isEmpty(this.state.formError.passwordError)}
                             ref={(ref) => (this.passwordInput = ref)}
                             placeholder="Password"
                             secureTextEntry
@@ -127,8 +135,11 @@ export default class SignUp extends Component {
                                 this.password2Input.focus();
                             }}
                         />
+                        <View>
+                            <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
+                        </View>
                         <FormTextInput
-                            error={this.state.formError !== null}
+                            error={!_.isEmpty(this.state.formError.password2Error)}
                             ref={(ref) => (this.password2Input = ref)}
                             placeholder="Repeat Password"
                             secureTextEntry
@@ -139,7 +150,8 @@ export default class SignUp extends Component {
                             onSubmitEditing={this.onSignUpPressed}
                         />
                         <View>
-                            <Text style={[styles.error]}>{this.state.formError}</Text>
+                            <Text style={[styles.error]}>{this.state.formError.password2Error}</Text>
+                            <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
                         </View>
                         <Touchable onPress={this.onSignUpPressed}>
                             <View style={[styles.mainButton]}>

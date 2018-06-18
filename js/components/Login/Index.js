@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../Touchable';
+import _ from 'lodash';
 
 export default class Login extends Component {
 
@@ -18,7 +19,7 @@ export default class Login extends Component {
         this.state = {
             loginValue: '',
             passwordValue: '',
-            formError: null,
+            formError: {},
         };
 
         this.onLoginPressed = this.onLoginPressed.bind(this);
@@ -32,7 +33,7 @@ export default class Login extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.formError !== nextProps.formError) {
-            this.setState({formError: nextProps.formError})
+            this.setState({formError: {serverError: nextProps.formError}})
         }
     }
 
@@ -45,12 +46,13 @@ export default class Login extends Component {
         let loginError = new Validator({presence: true}).validate(loginValue);
         let passwordError = new Validator({presence: true}).validate(passwordValue);
 
-        let validationErrors = [];
-        loginError && validationErrors.push('User Name: ' + loginError);
-        passwordError && validationErrors.push('Password: ' + passwordError);
+        let validationErrors = {
+            loginError: loginError && ('User Name: ' + loginError),
+            passwordError: passwordError && ('Password: ' + passwordError)
+        };
 
-        if (validationErrors.length) {
-            this.setState({formError: validationErrors.join('; ')});
+        if (!_.isEmpty(validationErrors)) {
+            this.setState({formError: validationErrors});
         } else {
             this.props.login({login: loginValue, password: passwordValue});
         }
@@ -69,7 +71,7 @@ export default class Login extends Component {
                 <View style={[styles.formBlock]}>
                     <View>
                         <FormTextInput
-                            error={this.state.formError !== null}
+                            error={!_.isEmpty(this.state.formError.loginError)}
                             ref={(ref) => (this.loginInput = ref)}
                             placeholder="Username"
                             keyboardType="login-address"
@@ -81,8 +83,11 @@ export default class Login extends Component {
                                 this.passwordInput.focus();
                             }}
                         />
+                        <View>
+                            <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
+                        </View>
                         <FormTextInput
-                            error={this.state.formError !== null}
+                            error={!_.isEmpty(this.state.formError.passwordError)}
                             ref={(ref) => (this.passwordInput = ref)}
                             placeholder="Password"
                             secureTextEntry
@@ -93,7 +98,8 @@ export default class Login extends Component {
                             onSubmitEditing={this.onLoginPressed}
                         />
                         <View>
-                            <Text style={[styles.error]}>{this.state.formError}</Text>
+                            <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
+                            <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
                         </View>
                         <Touchable onPress={this.onRecoverRequestPressed}>
                             <View>
