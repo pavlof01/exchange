@@ -2,12 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
+    StyleSheet,
     Text,
     View,
 } from 'react-native';
 import Touchable from '../Touchable';
 
-export default class Home extends Component {
+const styles = StyleSheet.create({
+    centerContent: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+
+export default class Settings extends Component {
 
     constructor(props) {
         super(props);
@@ -25,7 +35,7 @@ export default class Home extends Component {
                 onPress={this.onLogoutPressed}
             >
                 <View>
-                    <Text>L O G O U T</Text>
+                    <Text>Logout</Text>
                 </View>
             </Touchable>
         </View>
@@ -33,7 +43,7 @@ export default class Home extends Component {
   }
 }
 
-Home.propTypes = {
+Settings.propTypes = {
     user: PropTypes.object,
     logout: PropTypes.func,
 };

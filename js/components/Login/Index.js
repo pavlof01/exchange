@@ -51,7 +51,7 @@ export default class Login extends Component {
             passwordError: passwordError && ('Password: ' + passwordError)
         };
 
-        if (!_.isEmpty(validationErrors)) {
+        if (!_.every(_.values(validationErrors), value => !value)) {
             this.setState({formError: validationErrors});
         } else {
             this.props.login({login: loginValue, password: passwordValue});

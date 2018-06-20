@@ -22,7 +22,7 @@ export default function navigationReducer(state = initialState, action) {
 
     case LOGIN_SUCCESS:
       nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'Home' }),
+        NavigationActions.navigate({ routeName: 'Main' }),
         state
       );
       break;
