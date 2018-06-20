@@ -7,7 +7,7 @@ import {
     loginSuccess,
     loginFailure,
     loginSetUser,
-} from '../actions/authActions';
+} from '../actions/login';
 import LoginUser from "../models/User/Login";
 import Api from "../services/Api";
 
@@ -20,7 +20,6 @@ function userLoginViaApi(values) {
 }
 
 export const login = function* login(action) {
-
     try {
         const user = yield call(userLoginViaApi, {login: action.payload.login, password: action.payload.password});
 

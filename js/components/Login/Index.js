@@ -9,8 +9,8 @@ import {
     StyleSheet,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
-import * as authActions from '../../actions/authActions';
 import Touchable from '../Touchable';
+import _ from 'lodash';
 
 export default class Login extends Component {
 
@@ -19,15 +19,12 @@ export default class Login extends Component {
         this.state = {
             loginValue: '',
             passwordValue: '',
-            password2Value: '',
-            nameValue: '',
-            phoneValue: '',
-            formState: this.props.formState,
-            formError: null,
+            formError: {},
         };
 
         this.onLoginPressed = this.onLoginPressed.bind(this);
-
+        this.onSignUpPressed = this.onSignUpPressed.bind(this);
+        this.onRecoverRequestPressed = this.onRecoverRequestPressed.bind(this);
     }
 
     componentDidMount() {
@@ -36,7 +33,7 @@ export default class Login extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.formError !== nextProps.formError) {
-            this.setState({formError: nextProps.formError})
+            this.setState({formError: {serverError: nextProps.formError}})
         }
     }
 
@@ -49,71 +46,71 @@ export default class Login extends Component {
         let loginError = new Validator({presence: true}).validate(loginValue);
         let passwordError = new Validator({presence: true}).validate(passwordValue);
 
-        let validationErrors = [];
-        loginError && validationErrors.push('User Name: ' + loginError);
-        passwordError && validationErrors.push('Password: ' + passwordError);
+        let validationErrors = {
+            loginError: loginError && ('User Name: ' + loginError),
+            passwordError: passwordError && ('Password: ' + passwordError)
+        };
 
-        if (validationErrors.length) {
-            this.setState({formError: validationErrors.join('; ')});
+        if (!_.isEmpty(validationErrors)) {
+            this.setState({formError: validationErrors});
         } else {
             this.props.login({login: loginValue, password: passwordValue});
         }
     }
-
-    renderLoginForm() {
-        return (
-            <ScrollView>
-                <FormTextInput
-                    error={this.state.formError !== null}
-                    ref={(ref) => (this.loginInput = ref)}
-                    placeholder="Username"
-                    keyboardType="login-address"
-                    value={this.state.loginValue}
-                    onChangeText={(login) => {
-                        this.setState({loginValue: login});
-                    }}
-                    onSubmitEditing={() => {
-                        this.passwordInput.focus();
-                    }}
-                />
-                <FormTextInput
-                    error={this.state.formError !== null}
-                    ref={(ref) => (this.passwordInput = ref)}
-                    placeholder="Password"
-                    secureTextEntry
-                    value={this.state.passwordValue}
-                    onChangeText={(password) => {
-                        this.setState({passwordValue: password});
-                    }}
-                    onSubmitEditing={this.onLoginPressed}
-                />
-                <View>
-                    <Text style={[styles.error]}>{this.state.formError}</Text>
-                </View>
-                <Touchable onPress={this.onLoginPressed}>
-                    <View style={[styles.mainButton]}>
-                        <Text style={[styles.mainButtonLabel]}>Войти</Text>
-                    </View>
-                </Touchable>
-            </ScrollView>
-        );
+    onSignUpPressed() {
+        this.props.signUpRequest();
+    }
+    onRecoverRequestPressed() {
+        this.props.recoverPasswordRequest();
     }
 
     render() {
-        let formType;
-        switch (this.props.formState) {
-            case authActions.LOGIN:
-                formType = this.renderLoginForm();
-                break;
-            default:
-                return formType;
-        }
         return (
-            <View style={[styles.paddingScreen]}>
+            <ScrollView style={[styles.paddingScreen]}>
+                <Text style={[styles.pageHeader]}>Войти</Text>
                 <View style={[styles.formBlock]}>
-                    <Text style={[styles.pageHeader]}>Войти</Text>
                     <View>
-                        {formType}
+                        <FormTextInput
+                            error={!_.isEmpty(this.state.formError.loginError)}
+                            ref={(ref) => (this.loginInput = ref)}
+                            placeholder="Username"
+                            keyboardType="login-address"
+                            value={this.state.loginValue}
+                            onChangeText={(login) => {
+                                this.setState({loginValue: login});
+                            }}
+                            onSubmitEditing={() => {
+                                this.passwordInput.focus();
+                            }}
+                        />
+                        <View>
+                            <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
+                        </View>
+                        <FormTextInput
+                            error={!_.isEmpty(this.state.formError.passwordError)}
+                            ref={(ref) => (this.passwordInput = ref)}
+                            placeholder="Password"
+                            secureTextEntry
+                            value={this.state.passwordValue}
+                            onChangeText={(password) => {
+                                this.setState({passwordValue: password});
+                            }}
+                            onSubmitEditing={this.onLoginPressed}
+                        />
+                        <View>
+                            <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
+                            <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
+                        </View>
+                        <Touchable onPress={this.onRecoverRequestPressed}>
+                            <View>
+                                <Text style={[styles.remindLink, styles.textCenter]}>Забыли пароль?</Text>
+                            </View>
+                        </Touchable>
+                        <Touchable onPress={this.onLoginPressed}>
+                            <View style={[styles.mainButton]}>
+                                <Text style={[styles.mainButtonLabel]}>Войти</Text>
+                            </View>
+                        </Touchable>
                     </View>
                     <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
                     <Touchable onPress={this.onSignUpPressed}>
@@ -122,7 +119,7 @@ export default class Login extends Component {
                         </View>
                     </Touchable>
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }
@@ -134,38 +131,48 @@ const styles = StyleSheet.create({
     },
     pageHeader: {
         textAlign: 'center',
-        fontSize: 18,
-        lineHeight: 18,
+        fontSize: 24,
         fontWeight: "700",
+        marginBottom: 16,
     },
     paddingScreen: {
         padding: 16,
     },
     formBlock: {
-        padding: 32,
+        paddingHorizontal: 20,
+        paddingVertical: 32,
         backgroundColor: '#fff',
     },
     mainButton: {
         backgroundColor: '#2d18a0',
         padding: 12,
-        marginBottom: 16,
+        marginBottom: 28,
     },
     mainButtonLabel: {
         color: '#fff',
         textAlign: 'center',
+        fontWeight: '500',
+        fontSize: 14,
     },
     textLink: {
         color: '#2d18a0',
         textDecorationLine: 'underline',
     },
+    remindLink: {
+        color: '#838383',
+        fontWeight: '700',
+        fontSize: 16,
+        marginBottom: 28,
+    },
     textCenter: {
         textAlign: 'center',
-    }
+    },
 });
 
 Login.propTypes = {
-    formState: PropTypes.string,
     formError: PropTypes.string,
     login: PropTypes.func,
+    recoverPasswordRequest: PropTypes.func,
+    signUpRequest: PropTypes.func,
     fetchDictionary: PropTypes.func,
 };

@@ -1,21 +1,21 @@
 import { Record } from 'immutable';
 import {
-    LOGIN,
-    LOGIN_SUCCESS,
-    LOGIN_FAILURE,
-    LOGIN_SET_USER, LOGOUT_SUCCESS,
-} from '../actions/authActions';
+    SIGN_UP,
+    SIGN_UP_SUCCESS,
+    SIGN_UP_ERROR,
+} from '../actions/signUp';
 import LogoutUser from '../models/User/Logout'
 
 const Form = Record({
   error: null,
   isFetching: false,
-  state: LOGIN,
+  isSuccess: false,
+  state: SIGN_UP,
   fields: new (Record({
     username: '',
     email: '',
     password: '',
-    passwordAgain: '',
+    passwordRepeat: '',
     showPassword: false,
   }))(),
 });
@@ -27,32 +27,26 @@ const InitialState = Record({
 
 const initialState = new InitialState();
 
-export default function authReducer(state = initialState, action) {
+export default function signUp(state = initialState, action) {
   switch (action.type) {
 
-    case LOGIN: {
+    case SIGN_UP: {
       return state
         .setIn(['form', 'isFetching'], true)
+        .setIn(['form', 'isSuccess'], false)
         .setIn(['form', 'error'], null);
     }
 
-    case LOGIN_SUCCESS: {
-      return state.setIn(['form', 'isFetching'], false);
+    case SIGN_UP_SUCCESS: {
+      return state.setIn(['form', 'isFetching'], false)
+          .setIn(['form', 'isSuccess'], true);
     }
 
-    case LOGIN_FAILURE: {
+    case SIGN_UP_ERROR: {
       return state
         .setIn(['form', 'isFetching'], false)
+        .setIn(['form', 'isSuccess'], false)
         .setIn(['form', 'error'], action.payload.error);
-    }
-
-    case LOGIN_SET_USER: {
-      return state
-       .setIn(['user'], action.user);
-    }
-
-    case LOGOUT_SUCCESS: {
-      return initialState;
     }
 
     default: {
