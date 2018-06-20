@@ -17,11 +17,11 @@ import currentTrade from './currentTrade'
 import partnerActivity from './partnerActivity'
 import groupedPaymentMethods from './groupedPaymentMethods'
 import paymentMethodBanks from './paymentMethodBanks'
-//import navigation from './navigation';
+import navigation from './navigation';
 import auth from './authReducer';
 
 export default combineReducers({
-  //nav: navigation,
+  nav: navigation,
   app,
   auth,
   session,

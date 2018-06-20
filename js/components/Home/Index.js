@@ -1,40 +1,39 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import { keysToSnakeCase } from '../../helpers'
-import { Text } from 'react-native';
+import {
+    Text,
+    View,
+} from 'react-native';
+import Touchable from '../Touchable';
 
 export default class Home extends Component {
-  componentDidMount() {
-    this.fetchHomeTimer = setInterval(this.fetchHome, 30 * 1000);
-    this.props.fetchCurrencies();
-    this.fetchHome();
-    this.fetchRates(this.props.filter);
-  }
 
-  componentWillUnmount() {
-    clearInterval(this.fetchHomeTimer);
-  }
+    constructor(props) {
+        super(props);
+        this.onLogoutPressed = this.onLogoutPressed.bind(this);
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.filter !== this.props.filter) {
-      this.fetchRates(newProps.filter);
-      this.fetchHome(newProps.filter);
     }
+  onLogoutPressed() {
+    this.props.logout();
   }
-
-  fetchRates = (filter) => {
-    this.props.fetchRates({
-      [filter.cryptoCurrencyCode]: ['USD', filter.currencyCode].join(','),
-      USD: [filter.currencyCode].join(',')
-    });
-  };
-
-  fetchHome = (filter = this.props.filter) => {
-    this.props.fetchHome(keysToSnakeCase(filter));
-  };
-
   render() {
-
-    return <Text>Hello!</Text>
+    return (
+        <View>
+          <Text>Hello! {this.props.user.user_name}</Text>
+            <Touchable
+                onPress={this.onLogoutPressed}
+            >
+                <View>
+                    <Text>L O G O U T</Text>
+                </View>
+            </Touchable>
+        </View>
+    )
   }
 }
+
+Home.propTypes = {
+    user: PropTypes.object,
+    logout: PropTypes.func,
+};
