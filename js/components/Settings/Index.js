@@ -7,11 +7,12 @@ import {
     View,
 } from 'react-native';
 import Touchable from '../Touchable';
+import BorderlessButton from "../BorderlessButton";
 
 const styles = StyleSheet.create({
     centerContent: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -29,15 +30,12 @@ export default class Settings extends Component {
   }
   render() {
     return (
-        <View>
-          <Text>Hello! {this.props.user.user_name}</Text>
-            <Touchable
+        <View style={styles.centerContent}>
+          <Text style={{margin: 16, fontSize: 24}}>Hello, {this.props.user.user_name}!</Text>
+            <BorderlessButton
                 onPress={this.onLogoutPressed}
-            >
-                <View>
-                    <Text>Logout</Text>
-                </View>
-            </Touchable>
+                title={'Logout'}
+            />
         </View>
     )
   }

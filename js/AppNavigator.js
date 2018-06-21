@@ -1,5 +1,5 @@
 import React from 'react';
-import { StackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import Offers from './containers/Offers/Index';
 import Wallet from './containers/Wallet/Index';
@@ -8,18 +8,17 @@ import Settings from './containers/Settings/Index';
 import Login from './containers/Login/Index';
 import SignUp from "./containers/SignUp/Index";
 import RecoverPassword from "./containers/RecoverPassword/Index";
+import {bottomBarStyle, createBottomBarOptions} from "./style/navigation";
 
 const Main = createBottomTabNavigator({
-    Offers: { screen: Offers },
-    Wallet: { screen: Wallet },
-    Trades: { screen: Trades },
-    Settings: { screen: Settings },
-});
+    Offers: { screen: Offers, navigationOptions: createBottomBarOptions(require('./img/ic_offer.png')) },
+    Wallet: { screen: Wallet, navigationOptions: createBottomBarOptions(require('./img/ic_wallet.png'))  },
+    Trades: { screen: Trades, navigationOptions: createBottomBarOptions(require('./img/ic_trades.png'))  },
+    Settings: { screen: Settings, navigationOptions: createBottomBarOptions(require('./img/ic_settings.png')) },
+}, bottomBarStyle);
 
-const AppNavigator = StackNavigator({
-        Main: { screen: Main, navigationOptions: () => ({
-                header: props => null,
-            }), },
+const AppNavigator = createStackNavigator({
+        Main: { screen: Main, navigationOptions: () => ({ header: props => null }) },
         Login: { screen: Login },
         SignUp: { screen: SignUp },
         RecoverPassword: { screen: RecoverPassword },

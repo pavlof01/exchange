@@ -10,8 +10,11 @@ import {
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../Touchable';
+import PrimaryButton from "../PrimaryButton";
+import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
 
 export default class RecoverPassword extends Component {
+    static navigationOptions = createBasicNavigationOptions('Восстановление');
 
     constructor(props) {
         super(props);
@@ -47,7 +50,7 @@ export default class RecoverPassword extends Component {
         let emailError = new Validator({presence: true, email: true}).validate(emailValue);
 
         let validationErrors = [];
-        emailError && validationErrors.push('Email: ' + emailError);
+        emailError && validationErrors.push(emailError);
 
         if (validationErrors.length) {
             this.setState({formError: validationErrors.join('; ')});
@@ -62,7 +65,7 @@ export default class RecoverPassword extends Component {
 
     render() {
         if (this.props.isSent) {
-            return (
+            return withCommonStatusBar(
                 <ScrollView style={[styles.paddingScreen]}>
                     <View>
                         <Text style={[styles.textSuccess, styles.textCenter]}>На ваш электронный адрес было отправлено письмо с инструкциями по изменению пароля</Text>
@@ -76,11 +79,11 @@ export default class RecoverPassword extends Component {
                 </ScrollView>
             )
         } else {
-            return (
+            return withCommonStatusBar(
                 <ScrollView style={[styles.paddingScreen]}>
                     <Text style={[styles.pageHeader]}>Восстановление</Text>
                     <View style={[styles.formBlock]}>
-                        <View>
+                        <View style={{marginBottom: 8}}>
                             <FormTextInput
                                 error={this.state.formError !== null}
                                 ref={(ref) => (this.emailInput = ref)}
@@ -94,15 +97,11 @@ export default class RecoverPassword extends Component {
                             <View>
                                 <Text style={[styles.error]}>{this.state.formError}</Text>
                             </View>
-                            <Touchable onPress={this.onRecoverPressed}>
-                                <View style={[styles.mainButton]}>
-                                    <Text style={[styles.mainButtonLabel]}>Восстановить</Text>
-                                </View>
-                            </Touchable>
+                            <PrimaryButton onPress={this.onRecoverPressed} title={'Восстановить'} />
                         </View>
-                        <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
                         <Touchable onPress={this.onSignUpPressed}>
                             <View>
+                                <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
                                 <Text style={[styles.textLink, styles.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
                             </View>
                         </Touchable>
@@ -110,7 +109,6 @@ export default class RecoverPassword extends Component {
                 </ScrollView>
             );
         }
-
     }
 }
 
@@ -133,23 +131,13 @@ const styles = StyleSheet.create({
         paddingVertical: 32,
         backgroundColor: '#fff',
     },
-    mainButton: {
-        backgroundColor: '#2d18a0',
-        padding: 12,
-        marginBottom: 28,
-    },
-    mainButtonLabel: {
-        color: '#fff',
-        textAlign: 'center',
-        fontWeight: '500',
-        fontSize: 14,
-    },
     textLink: {
         color: '#2d18a0',
         textDecorationLine: 'underline',
     },
     textCenter: {
         textAlign: 'center',
+        justifyContent: 'center',
     },
     textSuccess: {
         color: '#48a34f',

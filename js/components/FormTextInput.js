@@ -6,6 +6,8 @@ import {
   View,
 } from 'react-native';
 
+import _ from 'lodash';
+
 const errorRed = '#dd0057';
 
 /**
@@ -21,6 +23,7 @@ class FormTextInput extends Component {
     const {
       error,
     } = this.props;
+    const inputProps = _.omit(this.props, error);
     const containerStyles = [styles.container];
     const textStyles = [styles.text];
     if (error) {
@@ -32,7 +35,7 @@ class FormTextInput extends Component {
     return (
       <View style={containerStyles}>
         <TextInput
-          {...this.props}
+          {...inputProps}
           keyboardType='default'
           style={textStyles}
           keyboardAppearance="dark"
@@ -50,8 +53,7 @@ const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
     borderColor: 'rgba(48, 48, 48, 0.35)',
-    borderStyle: 'solid',
-    marginBottom: 16,
+    borderStyle: 'solid'
   },
   text: {
     color: '#000',

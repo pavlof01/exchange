@@ -11,8 +11,11 @@ import {
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../Touchable';
 import _ from 'lodash';
+import PrimaryButton from "../PrimaryButton";
+import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
 
 export default class SignUp extends Component {
+    static navigationOptions = createBasicNavigationOptions('Регистрация');
 
     constructor(props) {
         super(props);
@@ -72,7 +75,7 @@ export default class SignUp extends Component {
 
     render() {
         if (this.props.formState.isSuccess) {
-            return (
+            return withCommonStatusBar(
                 <View>
                     <Text>Вы успешно зарегистрированы.</Text>
                     <Text>На ваш e-mail отправлено сообщение со ссылкой для подтверждения регистрации</Text>
@@ -85,11 +88,10 @@ export default class SignUp extends Component {
             )
         }
 
-        return (
+        return withCommonStatusBar(
             <View style={[styles.paddingScreen]}>
                 <ScrollView style={[styles.formBlock]}>
-                    <Text style={[styles.pageHeader]}>Зарегистрировать новую учетную запись</Text>
-                    <View>
+                    <View style={{marginBottom: 8}}>
                         <FormTextInput
                             error={!_.isEmpty(this.state.formError.loginError)}
                             ref={(ref) => (this.loginInput = ref)}
@@ -153,18 +155,14 @@ export default class SignUp extends Component {
                             <Text style={[styles.error]}>{this.state.formError.password2Error}</Text>
                             <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
                         </View>
-                        <Touchable onPress={this.onSignUpPressed}>
-                            <View style={[styles.mainButton]}>
-                                <Text style={[styles.mainButtonLabel]}>Зарегистрироваться</Text>
-                            </View>
-                        </Touchable>
-                        <Text style={[styles.textCenter]}>Уже зарегистрированы?</Text>
+                        <PrimaryButton onPress={this.onSignUpPressed} title={'Зарегистрироваться'} />
+                    </View>
                         <Touchable onPress={this.onLoginPressed}>
                             <View>
+                                <Text style={[styles.textCenter]}>Уже зарегистрированы?</Text>
                                 <Text style={[styles.textLink, styles.textCenter]}>Войти</Text>
                             </View>
                         </Touchable>
-                    </View>
                 </ScrollView>
             </View>
         );
@@ -176,12 +174,6 @@ const styles = StyleSheet.create({
         color: '#dd0057',
         marginBottom: 16,
     },
-    pageHeader: {
-        textAlign: 'center',
-        fontSize: 24,
-        fontWeight: "700",
-        marginBottom: 16,
-    },
     paddingScreen: {
         padding: 16,
     },
@@ -190,23 +182,13 @@ const styles = StyleSheet.create({
         paddingVertical: 32,
         backgroundColor: '#fff',
     },
-    mainButton: {
-        backgroundColor: '#2d18a0',
-        padding: 12,
-        marginBottom: 28,
-    },
-    mainButtonLabel: {
-        color: '#fff',
-        textAlign: 'center',
-        fontWeight: '500',
-        fontSize: 14,
-    },
     textLink: {
         color: '#2d18a0',
         textDecorationLine: 'underline',
     },
     textCenter: {
         textAlign: 'center',
+        justifyContent: 'center',
     }
 });
 

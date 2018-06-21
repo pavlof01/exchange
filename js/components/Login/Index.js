@@ -6,13 +6,17 @@ import {
     View,
     Text,
     ScrollView,
-    StyleSheet,
+    StyleSheet, ActivityIndicator,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../Touchable';
 import _ from 'lodash';
+import PrimaryButton from "../PrimaryButton";
+import {withColoredStatusBar} from "../../style/navigation";
+import BorderlessButton from "../BorderlessButton";
 
 export default class Login extends Component {
+    static navigationOptions = { header: props => null };
 
     constructor(props) {
         super(props);
@@ -43,12 +47,12 @@ export default class Login extends Component {
             passwordValue,
         } = this.state;
 
-        let loginError = new Validator({presence: true}).validate(loginValue);
-        let passwordError = new Validator({presence: true}).validate(passwordValue);
+        const loginError = new Validator({presence: true}).validate(loginValue);
+        const passwordError = new Validator({presence: true}).validate(passwordValue);
 
-        let validationErrors = {
-            loginError: loginError && ('User Name: ' + loginError),
-            passwordError: passwordError && ('Password: ' + passwordError)
+        const validationErrors = {
+            loginError: loginError && (loginError),
+            passwordError: passwordError && (passwordError)
         };
 
         if (!_.every(_.values(validationErrors), value => !value)) {
@@ -65,17 +69,19 @@ export default class Login extends Component {
     }
 
     render() {
-        return (
-            <ScrollView style={[styles.paddingScreen]}>
-                <Text style={[styles.pageHeader]}>Войти</Text>
+        return (//withColoredStatusBar('#AAAAAA',
+
+            <View style={[styles.paddingScreen]}>
+                <Text style={[styles.pageHeader]}>BitChange</Text>
                 <View style={[styles.formBlock]}>
-                    <View>
+                    <View style={{marginBottom: 8}}>
                         <FormTextInput
+                            key={'login'}
                             error={!_.isEmpty(this.state.formError.loginError)}
                             ref={(ref) => (this.loginInput = ref)}
                             placeholder="Username"
                             keyboardType="login-address"
-                            value={this.state.loginValue}
+                            autoCapitalize={'none'}
                             onChangeText={(login) => {
                                 this.setState({loginValue: login});
                             }}
@@ -83,76 +89,58 @@ export default class Login extends Component {
                                 this.passwordInput.focus();
                             }}
                         />
-                        <View>
-                            <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
-                        </View>
+                        <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
                         <FormTextInput
+                            key={'pass'}
                             error={!_.isEmpty(this.state.formError.passwordError)}
                             ref={(ref) => (this.passwordInput = ref)}
                             placeholder="Password"
                             secureTextEntry
-                            value={this.state.passwordValue}
                             onChangeText={(password) => {
                                 this.setState({passwordValue: password});
                             }}
                             onSubmitEditing={this.onLoginPressed}
                         />
-                        <View>
-                            <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
-                            <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
-                        </View>
-                        <Touchable onPress={this.onRecoverRequestPressed}>
-                            <View>
-                                <Text style={[styles.remindLink, styles.textCenter]}>Забыли пароль?</Text>
-                            </View>
-                        </Touchable>
-                        <Touchable onPress={this.onLoginPressed}>
-                            <View style={[styles.mainButton]}>
-                                <Text style={[styles.mainButtonLabel]}>Войти</Text>
-                            </View>
-                        </Touchable>
+                        <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
+                        <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
+                        <BorderlessButton onPress={this.onRecoverRequestPressed} title={'Забыли пароль?'} />
+                        <PrimaryButton onPress={this.onLoginPressed} title={'Войти'} disabled={this.props.isFetching}>
+                            {this.props.isFetching ? <ActivityIndicator size="large"/> : undefined}
+                        </PrimaryButton>
                     </View>
-                    <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
                     <Touchable onPress={this.onSignUpPressed}>
                         <View>
+                            <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
                             <Text style={[styles.textLink, styles.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
                         </View>
                     </Touchable>
                 </View>
-            </ScrollView>
-        );
+            </View>);
     }
 }
 
 const styles = StyleSheet.create({
     error: {
         color: '#dd0057',
-        marginBottom: 16,
+        marginBottom: 4,
     },
     pageHeader: {
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: 32,
+        color: 'black',
         fontWeight: "700",
-        marginBottom: 16,
+        margin: 24,
     },
     paddingScreen: {
         padding: 16,
+        flexDirection: 'column',
+        flex: 1,
+        justifyContent: 'center',
     },
     formBlock: {
         paddingHorizontal: 20,
         paddingVertical: 32,
         backgroundColor: '#fff',
-    },
-    mainButton: {
-        backgroundColor: '#2d18a0',
-        padding: 12,
-        marginBottom: 28,
-    },
-    mainButtonLabel: {
-        color: '#fff',
-        textAlign: 'center',
-        fontWeight: '500',
-        fontSize: 14,
     },
     textLink: {
         color: '#2d18a0',
@@ -166,11 +154,13 @@ const styles = StyleSheet.create({
     },
     textCenter: {
         textAlign: 'center',
+        justifyContent: 'center',
     },
 });
 
 Login.propTypes = {
     formError: PropTypes.string,
+    isFetching: PropTypes.bool,
     login: PropTypes.func,
     recoverPasswordRequest: PropTypes.func,
     signUpRequest: PropTypes.func,
