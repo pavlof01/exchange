@@ -1,27 +1,17 @@
 import Api from '../services/Api'
-import LoginUser from '../models/User/Login'
 import LogoutUser from '../models/User/Logout'
 import { SESSION } from '../actions'
-import { AsyncStorage } from 'react-native'
 
-export function set(dispatch) {
-  Api.get('/me')
-    .then(response => dispatch(setUser(new LoginUser(response.data.user))))
-    .catch(error => dispatch(setFailure('Сессия истекла')));
-
-  return { type: SESSION.FETCH_USER_STARTED }
+export function isFetchingUser() {
+  return { type: SESSION.FETCHING_USER }
 }
 
-function setFailure(error) {
-  return { type: SESSION.SESSION_SET_USER, error: error, user: new LogoutUser({}) }
+export function setFailure(error) {
+  return { type: SESSION.FETCH_USER_FAILURE, error: error, user: new LogoutUser({}) }
 }
 
 export function setUser(user) {
-  user.api_token ?
-    AsyncStorage.setItem(Api.tokenName, user.api_token) :
-    AsyncStorage.removeItem(Api.tokenName);
-
-  return { type: SESSION.SESSION_SET_USER, user: user }
+  return { type: SESSION.SESSION_SET_USER, user }
 }
 
 export function update(attrs) {
@@ -241,4 +231,49 @@ export function updateEstimatedFee(params, dispatch) {
     });
 
     return { type: SESSION.UPDATE_FEE_STARTED }
+}
+
+export function loginSuccess() {
+    return {
+        type: SESSION.LOGIN_SUCCESS
+    };
+}
+
+export function loginFailure(error) {
+    return {
+        type: SESSION.LOGIN_FAILURE,
+        payload: error,
+    };
+}
+
+export function login(params) {
+    return {
+        type: SESSION.LOGIN,
+        payload: params,
+    };
+}
+
+export function loginRequest() {
+    return {
+        type: SESSION.LOGIN_REQUEST,
+    };
+}
+
+export function logout() {
+    return {
+        type: SESSION.LOGOUT,
+    };
+}
+
+export function logoutSuccess() {
+    return {
+        type: SESSION.LOGOUT_SUCCESS,
+    };
+}
+
+export function logoutError(error) {
+    return {
+        type: SESSION.LOGOUT_ERROR,
+        payload: error,
+    };
 }

@@ -41,22 +41,20 @@ export function createBottomBarOptions(src) {
 }
 
 export const withCommonStatusBar = (container) => {
-    container.key = 1;
-    return [
-        <StatusBar
-            backgroundColor="#2A2A72"
-            barStyle="light-content"
-            key={0}
-        />, container];
+    return <React.Fragment>
+            <StatusBar
+                backgroundColor="#2A2A72"
+                barStyle="light-content"/>
+            {container}
+        </React.Fragment>;
 };
 
 
 export const withColoredStatusBar = (color, container) => {
-    container.key = 1;
-    return [
-        <StatusBar
-            backgroundColor={color}
-            barStyle="light-content"
-            key={0}
-        />, container];
+    return <React.Fragment>
+            <StatusBar
+                backgroundColor={color}
+                barStyle="light-content"/>
+            {container}
+        </React.Fragment>;
 };

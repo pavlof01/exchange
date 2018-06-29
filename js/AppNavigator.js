@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
+import SplashScreen from './containers/SplashScreen'
 import Offers from './containers/Offers/Index';
 import Wallet from './containers/Wallet/Index';
 import Trades from './containers/Trades/Index';
@@ -22,7 +23,7 @@ const AppNavigator = createStackNavigator({
         Login: { screen: Login },
         SignUp: { screen: SignUp },
         RecoverPassword: { screen: RecoverPassword },
-
+        SplashScreen: { screen: SplashScreen },
     }
 );
 

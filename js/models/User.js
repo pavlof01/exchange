@@ -17,7 +17,7 @@ export default class User {
       AsyncStorage.setItem('favoriteCurrencyCode', code)
   }
 
-  static getFavoriteCurrencyCode(code) {
+  static getFavoriteCurrencyCode() {
     return AsyncStorage.getItem('favoriteCurrencyCode')
   }
 
@@ -29,7 +29,7 @@ export default class User {
       AsyncStorage.setItem('favoriteCountryCode', code)
   }
 
-  static getFavoriteCountryCode(code) {
+  static getFavoriteCountryCode() {
     return AsyncStorage.getItem('favoriteCountryCode')
   }
 

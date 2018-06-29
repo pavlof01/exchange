@@ -1,8 +1,8 @@
 import {all, fork} from 'redux-saga/effects';
 import {
+    dynamicInitialRouteData,
     loginData,
     logoutData,
-    loginOnSuccessData,
 } from './authorization';
 import {
     signUpData,
@@ -12,9 +12,9 @@ import {
 } from './recoverPassword';
 const rootSagas = function* root() {
     yield all([
+        fork(dynamicInitialRouteData),
         fork(loginData),
         fork(logoutData),
-        fork(loginOnSuccessData),
         fork(signUpData),
         fork(recoverData),
     ]);

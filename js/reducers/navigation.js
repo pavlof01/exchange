@@ -2,32 +2,27 @@ import { NavigationActions } from 'react-navigation';
 import AppNavigator from '../AppNavigator';
 
 import {
-    LOGIN_SUCCESS,
-    LOGOUT_SUCCESS,
-    LOGIN_REQUEST,
-} from '../actions/login';
-import {
     SIGN_UP_REQUEST,
 } from '../actions/signUp';
 import {
     RECOVER_PASSWORD_SUCCESS,
     RECOVER_PASSWORD_REQUEST,
 } from '../actions/recoverPassword';
-const firstAction = AppNavigator.router.getActionForPathAndParams('Login');
+import {SESSION} from "../actions";
+const firstAction = AppNavigator.router.getActionForPathAndParams('SplashScreen');
 const initialState = AppNavigator.router.getStateForAction(firstAction);
 
 export default function navigationReducer(state = initialState, action) {
   let nextState;
   switch (action.type) {
-
-    case LOGIN_SUCCESS:
+    case SESSION.LOGIN_SUCCESS:
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'Main' }),
         state
       );
       break;
-      case LOGIN_REQUEST:
-      case LOGOUT_SUCCESS:
+      case SESSION.LOGIN_REQUEST:
+      case SESSION.LOGOUT_SUCCESS:
         nextState = AppNavigator.router.getStateForAction(
           NavigationActions.navigate({ routeName: 'Login' }),
           state

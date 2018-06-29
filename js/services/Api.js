@@ -1,18 +1,18 @@
 import axios from 'axios'
 import { API_BASE_URL } from '../config.json';
-import { AsyncStorage } from 'react-native'
 
 export default class Api {
   static tokenName = 'nekotIpa';
 
-  static get instance() {
-    return axios.create({
-      baseURL: API_BASE_URL,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-Access-Token': AsyncStorage.getItem(Api.tokenName)
-      }
+  static createApiWithToken(value) {
+    Api.currentToken = value;
+    Api.instance = axios.create({
+        baseURL: API_BASE_URL,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Access-Token': value
+        }
     });
   }
 

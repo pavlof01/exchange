@@ -3,7 +3,7 @@ import RecoverPassword from '../../components/RecoverPassword/Index'
 import {recover} from '../../actions/recoverPassword';
 import {fetchDictionary} from '../../actions/i18n';
 import {signUpRequest} from '../../actions/signUp';
-import {loginRequest} from '../../actions/login';
+import {loginRequest} from '../../actions/session';
 
 const mapDispatchToProps = dispatch => ({
     fetchDictionary: () => dispatch(fetchDictionary(dispatch)),

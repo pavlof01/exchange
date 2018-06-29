@@ -18,7 +18,6 @@ import partnerActivity from './partnerActivity'
 import groupedPaymentMethods from './groupedPaymentMethods'
 import paymentMethodBanks from './paymentMethodBanks'
 import navigation from './navigation';
-import login from './login';
 import signUp from './signUp';
 import recoverPassword from './recoverPassword';
 
@@ -27,7 +26,6 @@ export default combineReducers({
   signUp,
   recoverPassword,
   app,
-  login,
   session,
   profile,
   home,
@@ -39,7 +37,7 @@ export default combineReducers({
   countries,
   ordersFilter,
   orders,
-  mainSocket,
+  // mainSocket,
   i18n,
   currentTrade,
   partnerActivity,

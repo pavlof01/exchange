@@ -10,7 +10,7 @@ export default (state = initial, action) => {
       ...state, ready: true
     };
 
-    case SESSION.FETCH_USER_STARTED: return {
+    case SESSION.FETCHING_USER: return {
       ...state, ready: false
     };
 

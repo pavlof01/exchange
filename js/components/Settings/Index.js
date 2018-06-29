@@ -29,6 +29,7 @@ export default class Settings extends Component {
     this.props.logout();
   }
   render() {
+        console.warn(JSON.stringify(this.props.user));
     return (
         <View style={styles.centerContent}>
           <Text style={{margin: 16, fontSize: 24}}>Hello, {this.props.user.user_name}!</Text>

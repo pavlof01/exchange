@@ -1,9 +1,9 @@
 import {connect} from 'react-redux'
 import Login from '../../components/Login/Index'
-import {login} from '../../actions/login';
 import {fetchDictionary} from '../../actions/i18n';
 import {signUpRequest} from '../../actions/signUp';
 import {recoverPasswordRequest} from '../../actions/recoverPassword';
+import {login} from "../../actions/session";
 
 const mapDispatchToProps = dispatch => ({
     fetchDictionary: () => dispatch(fetchDictionary(dispatch)),
@@ -19,8 +19,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = (state) => ({
-    isFetching: state.login.form.isFetching,
-    formError: state.login.form.error,
+    isFetching: state.session.pending,
+    formError: state.session.error,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
