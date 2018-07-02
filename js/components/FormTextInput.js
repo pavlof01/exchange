@@ -73,7 +73,6 @@ FormTextInput.propTypes = {
     value: PropTypes.string,
     onChangeText: PropTypes.func,
     onSubmitEditing: PropTypes.func,
-    style: View.propTypes.style,
 };
 
 export default FormTextInput;

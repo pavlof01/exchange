@@ -37,11 +37,6 @@ class CardPicker extends React.Component {
          */
         selectedValue: PropTypes.string,
 
-        /**
-         * Styles.
-         */
-        style: View.propTypes.style,
-
         renderButton: PropTypes.func,
     };
 

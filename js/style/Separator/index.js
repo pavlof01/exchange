@@ -25,10 +25,6 @@ class Separator extends React.Component {
      */
     color: PropTypes.string,
     /**
-     * Styles.
-     */
-    style: View.propTypes.style,
-    /**
      * Should be vertical
      */
     vertical: PropTypes.bool,
