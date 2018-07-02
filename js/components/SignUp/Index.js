@@ -62,7 +62,14 @@ export default class SignUp extends Component {
             password2Error: password2Error && ('Password Repeat: ' + passwordError),
         };
 
-        if (!_.isEmpty(validationErrors)) {
+        let isFormHaveError = false;
+        Object.keys(validationErrors).forEach( value => {
+            if (!_.isEmpty(validationErrors[value])) {
+                isFormHaveError = true;
+            }
+        });
+
+        if (isFormHaveError) {
             this.setState({formError: validationErrors});
         } else {
             this.props.signUp({user_name: loginValue, email: emailValue, password: passwordValue, password_confirmation: password2Value});
