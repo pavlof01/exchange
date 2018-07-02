@@ -1,14 +1,15 @@
-import { ORDERS_FILTER, POSITION } from '../actions'
+import {ORDERS_FILTER, POSITION, SESSION} from '../actions'
 import User from '../models/User'
 
 const initial = {
-  currencyCode: User.getFavoriteCurrencyCode() || 'USD',
+  type: 'buy',
+  sort: '-price',
+  currencyCode: 'USD',
   cryptoCurrencyCode: 'BTC',
-  countryCode: User.getFavoriteCountryCode() || 'US',
+  countryCode: 'US',
   withCorrectLimits: true,
   paymentMethodCode: null,
   smsRequired: null,
-  sort: null,
   page: 1,
   limit: 2,
 };
@@ -26,12 +27,12 @@ export default (state = initial, action) => {
       countryCode: action.location.countryCode
     };
 
-    // case SESSION.SESSION_SET_USER:
-    //   return {
-    //     ...state,
-    //     currencyCode: action.user.currencyCode || state.currencyCode,
-    //     countryCode: action.user.countryCode || state.countryCode,
-    //   };
+    case SESSION.SESSION_SET_USER:
+      return {
+        ...state,
+        currencyCode: action.user.currencyCode || state.currencyCode,
+        countryCode: action.user.countryCode || state.countryCode,
+      };
 
     default: return state;
   }

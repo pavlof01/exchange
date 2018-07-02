@@ -9,9 +9,9 @@ import {
     StyleSheet,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
-import Touchable from '../Touchable';
+import Touchable from '../../style/Touchable';
 import _ from 'lodash';
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../../style/PrimaryButton";
 import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
 
 export default class SignUp extends Component {

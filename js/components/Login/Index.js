@@ -9,11 +9,11 @@ import {
     StyleSheet, ActivityIndicator,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
-import Touchable from '../Touchable';
+import Touchable from '../../style/Touchable';
 import _ from 'lodash';
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../../style/PrimaryButton";
 import {withColoredStatusBar} from "../../style/navigation";
-import BorderlessButton from "../BorderlessButton";
+import BorderlessButton from "../../style/BorderlessButton";
 
 export default class Login extends Component {
     static navigationOptions = { header: props => null };

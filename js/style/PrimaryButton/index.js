@@ -8,7 +8,7 @@ import {
   View,
   ViewPropTypes,
 } from 'react-native';
-import Touchable from '../Touchable';
+import Touchable from '../Touchable/index';
 
 const styles = StyleSheet.create({
   button: {

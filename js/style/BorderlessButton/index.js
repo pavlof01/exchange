@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import Touchable from '../Touchable';
+import Touchable from '../Touchable/index';
 
 const defaultBlue = '#4f88b5';
 

@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    Text,
-    View,
-    StyleSheet, CheckBox, Picker,
-} from 'react-native';
+import {ActivityIndicator, CheckBox, FlatList, Picker, StyleSheet, Text, View,} from 'react-native';
 import FormTextInput from "../FormTextInput";
+import TopButton from "./TopButton";
+import Separator from "../../style/Separator";
+import HeaderBar from "../../style/HeaderBar";
+import Price from "../../values/Price";
+import CenterProgressBar from "../../style/CenterProgressBar";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -15,9 +16,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    rowContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     picker: {
         height: 50,
         width: 100,
+    },
+    red_circle: {
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: 'red',
+    },
+    green_circle: {
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        backgroundColor: 'green',
     },
 });
 
@@ -25,10 +43,6 @@ export default class Offers extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            actionCode: "buy"
-        }
     }
 
     componentDidMount() {
@@ -38,69 +52,80 @@ export default class Offers extends Component {
     }
 
     onFilterChangeFactory = (name) => (value) => {
-        this.props.updateFilter({ [name]: value });
+        this.props.updateFilter({[name]: value});
     };
 
     onCryptoCurrencyCodeChange = this.onFilterChangeFactory('cryptoCurrencyCode');
     onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
     onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
-    onCountryCodeChange = this.onFilterChangeFactory('countryCode');
+    onActionCodeChangeToBuy = () => this.props.updateFilter({type: 'buy', sort: '-price'});
+    onActionCodeChangeToSell = () => this.props.updateFilter({type: 'sell', sort: 'price'});
 
-
-    onCheckboxChange = (value) => {
-        this.props.updateFilter({
-            'smsRequired': value ? false : null,
-        });
-    };
+    // /new_trade/${ad.id}
+    renderItem(it) {
+        const ad = it.item;
+        return (<View style={styles.rowContainer}>
+            <View style={ad.user.online ? styles.green_circle : styles.red_circle}/>
+            <Text>{ad.user.user_name}</Text>
+            {ad.payment_method_banks.map(
+                bank => <Text key={bank.id}>{bank.name}</Text>
+            )}
+            <Text>{Price.build(ad.limit_min).viewMain} – {Price.build(ad.limit_max).viewMain}</Text>
+            <Text>{Price.build(ad.price).viewMain} </Text>
+        </View>);
+    }
 
     render() {
+        let header;
+        if(this.props.filter.type === 'buy') {
+            header = 'BUY OFFERS';
+        } else {
+            header = 'SELL OFFERS';
+        }
         return (
-            <View style={styles.centerContent}>
+            <View>
+                <HeaderBar title={header}/>
                 {/*{this.actionName}*/}
 
-                <Picker style={styles.picker} selectedValue={this.state.actionCode} onValueChange={(value, index) => this.setState({actionCode: value})} mode={'dropdown'}>
-                    <Picker.Item value="buy" label={'Купить'}/>
-                    <Picker.Item value="sell" label={'Продать'}/>
-                </Picker>
-                {/*{this.props.filter.cryptoCurrencyCode}*/}
+                <View style={styles.rowContainer}>
+                    <TopButton title={'КУПИТЬ'} onPress={this.onActionCodeChangeToBuy} selected={this.props.filter.type === 'buy'} selectedColor={'green'} color={'black'}/>
+                    <TopButton title={'ПРОДАТЬ'} onPress={this.onActionCodeChangeToSell} selected={this.props.filter.type === 'sell'} selectedColor={'red'} color={'black'}/>
+                </View>
 
-                <Picker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange} selectedValue={this.props.filter.cryptoCurrencyCode}>
-                    {this.props.cryptoCurrencies.map(
-                        currency => <Picker.Item key={currency.code} value={currency.code} label={currency.code}/>
-                    )}
-                </Picker>
-                {/*{this.props.filter.currencyCode}*/}
+                <Separator color="#c3c3c3" />
 
-                <Picker style={styles.picker} onValueChange={this.onCurrencyCodeChange} selectedValue={this.props.filter.currencyCode}>
-                    {this.props.currencies.map(
-                        currency => <Picker.Item key={currency.code} value={currency.code} label={currency.code}/>
-                    )}
-                </Picker>
+                <View style={styles.rowContainer}>
+                    <Picker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
+                            selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}>
+                        {this.props.cryptoCurrencies.map(
+                            currency => <Picker.Item key={currency.code} value={currency.code} label={currency.code}/>
+                        )}
+                    </Picker>
 
+                    <Picker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
+                            selectedValue={this.props.filter.currencyCode} mode={'dropdown'}>
+                        {this.props.currencies.map(
+                            currency => <Picker.Item key={currency.code} value={currency.code} label={currency.code}/>
+                        )}
+                    </Picker>
+                </View>
 
-                {/*{this.props.filter.paymentMethodCode || 'Любым способом'}*/}
-                <Picker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange} selectedValue={this.props.filter.paymentMethodCode || ''}>
-                    <Picker.Item value="ANY" label={'любым способом'} />
+                <Picker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
+                        selectedValue={this.props.filter.paymentMethodCode || ''} mode={'dropdown'}>
+                    <Picker.Item value="ANY" label={'любым способом'}/>
                     {this.props.paymentMethods.map(
                         method => <Picker.Item key={method.code} value={method.code} label={method.name}/>
                     )}
                 </Picker>
 
-                {/*в стране*/}
-                {/*{this.props.filter.countryCode}*/}
-                <Picker style={styles.picker} onValueChange={this.onCountryCodeChange} selectedValue={this.props.filter.countryCode}>
-                    {this.props.countries.map(
-                        country => <Picker.Item key={country.code} value={country.code} label={country.name}/>
-                    )}
-                </Picker>
+                <Separator color="#c3c3c3" />
 
-                <FormTextInput placeholder={'Сбербанк, банкомат и пр.'}/>
-                <View>
-                    <CheckBox
-                        value={this.props.filter.smsRequired !== null}
-                        onValueChange={this.onCheckboxChange}/>
-                    {/*Без смс*/}
-                </View>
+                {this.props.orders.pending ?
+
+                    <CenterProgressBar /> :
+
+                    <FlatList data={this.props.orders.list}
+                              renderItem={this.renderItem}/>}
 
             </View>
         )

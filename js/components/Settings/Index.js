@@ -6,8 +6,8 @@ import {
     Text,
     View,
 } from 'react-native';
-import Touchable from '../Touchable';
-import BorderlessButton from "../BorderlessButton";
+import Touchable from '../../style/Touchable';
+import BorderlessButton from "../../style/BorderlessButton";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -29,7 +29,6 @@ export default class Settings extends Component {
     this.props.logout();
   }
   render() {
-        console.warn(JSON.stringify(this.props.user));
     return (
         <View style={styles.centerContent}>
           <Text style={{margin: 16, fontSize: 24}}>Hello, {this.props.user.user_name}!</Text>
