@@ -4,16 +4,17 @@ import PropTypes from 'prop-types';
 import {
     Text,
     View,
-    StyleSheet, ScrollView, Image,
+    StyleSheet, ScrollView, Image, ActivityIndicator,
 } from 'react-native';
 import {createBasicNavigationOptions} from "../../style/navigation";
 import FormTextInput from "../FormTextInput";
 import Price from "../../values/Price";
-import {currencyCodeToSymbol} from "../../helpers";
+import {currencyCodeToSymbol, objMap} from "../../helpers";
 import PrimaryButton from "../../style/PrimaryButton";
 import OnlineStatus from "../../style/OnlineStatus";
 import Separator from "../../style/Separator";
 import User from "../../models/User";
+import Api from "../../services/Api";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -70,38 +71,74 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 8,
     },
+    error: {
+        color: '#dd0057',
+        marginBottom: 4,
+    },
 });
-
-
 
 export default class NewTrade extends Component {
     static navigationOptions = createBasicNavigationOptions('Новая сделка');
 
     state = {
-        ad: this.props.navigation.getParam('ad', {id: 'NO-ID'})
+        ad: this.props.navigation.getParam('ad', {id: 'NO-ID'}),
+        form: {
+            amount: undefined,
+            cost: undefined,
+        },
+        pending: false,
+        errors: undefined
     };
 
     onCostChange = (value) => {
         value = value || 0.0;
-        value = value / this.state.ad.price;
-        this.form.setValue('amount', Price.build(value).viewCrypto);
+        const amount = value / this.state.ad.price;
+        this.setState({form: {...this.state.form, cost: value, amount: amount.toFixed(8)}});
     };
 
     onAmountChange = (value) => {
         value = value || 0.0;
-        value = value * this.state.ad.price;
-        this.form.setValue('cost', value.toFixed(2));
+        const cost = value * this.state.ad.price;
+        this.setState({form: {...this.state.form, amount: value, cost: cost.toFixed(2)}});
     };
 
-    static renderCurrencyInput(limitMin, limitMax, curCode, isCrypt, onChange) {
+    onMessageChange = (value) => this.setState({form: {...this.state.form, message: value}});
+
+    onSubmit = (values) => {
+        this.setState({pending: true});
+        Api.post(`/pro/${this.state.ad.id}/trades`, {trade: values, ad: {price: this.state.ad.price}})
+            .then(response => {
+                this.setState({pending: false});
+                this.props.openTrade(response.data.trade.id)
+            })
+            .catch(error => {
+                const newState = {pending: false};
+
+                if (error.response.status === 422) {
+                    newState.errors = error.response.data.errors;
+                } else if (error.response.status === 422) {
+                    newState.errors = {opened_trade_ids: error.response.data.trade_ids};
+                } else if (error.response.status === 410) {
+                    newState.errors = {schedule: ['Трейдер в данный момент не работает, смотрите расписание']};
+                } else if (error.response.status === 405) {
+                    newState.errors = {yourself: ['Торговля с собой']};
+                }
+
+                this.setState(newState);
+            });
+    };
+
+    static renderCurrencyInput(limitMin, limitMax, curCode, isCrypt, value, onChange) {
         const min = Price.build(limitMin);
         const max = Price.build(limitMax);
 
         return (<View style={styles.formStyle}>
             <View style={styles.formRow}>
                 <FormTextInput
+                    keyboardType='numeric'
                     style={styles.formStyle}
                     placeholder={'0'}
+                    value={value}
                     onChangeText={onChange}/>
                 <Text style={styles.header}>{curCode}</Text>
             </View>
@@ -110,17 +147,17 @@ export default class NewTrade extends Component {
     }
 
     renderFiatCurrencyInput() {
-        const { ad } = this.state;
-        return NewTrade.renderCurrencyInput(ad.limit_min, ad.limit_max, ad.currency_code, false, this.onCostChange);
+        const { ad, form } = this.state;
+        return NewTrade.renderCurrencyInput(ad.limit_min, ad.limit_max, ad.currency_code, false, form.cost, this.onCostChange);
     }
 
     renderCryptoCurrencyInput() {
-        const { ad } = this.state;
-        return NewTrade.renderCurrencyInput(ad.limit_min / ad.price, ad.limit_max / ad.price, ad.crypto_currency_code, true, this.onAmountChange);
+        const { ad, form } = this.state;
+        return NewTrade.renderCurrencyInput(ad.limit_min / ad.price, ad.limit_max / ad.price, ad.crypto_currency_code, true, form.amount, this.onAmountChange);
     }
 
     render() {
-        const { ad } = this.state;
+        const { ad, pending, form } = this.state;
         const { user } = ad;
         return (
             <ScrollView>
@@ -136,10 +173,19 @@ export default class NewTrade extends Component {
                     </View>
 
                     <FormTextInput
-                        placeholder={'Можете оставить сообщение с дополнительной информацией'}/>
+                        placeholder={'Можете оставить сообщение с дополнительной информацией'}
+                        onChangeText={this.onMessageChange}
+                    />
                     <Text style={styles.centeredText}>Окно оплаты счёта продавца:<Text style={styles.bold}>{'\n'}{ad.escrow_time || 90} минут</Text></Text>
 
-                    <PrimaryButton title={'Отправить запрос Трейдеру'}/>
+                    <PrimaryButton onPress={() => this.onSubmit(form)} title={'Отправить запрос Трейдеру'} disabled={pending}>
+                        {pending ? <ActivityIndicator size="large"/> : undefined}
+                    </PrimaryButton>
+
+                    {
+                        this.state.errors &&
+                        objMap(this.state.errors, (key, value) => <Text style={styles.error} key={key}>{key}: {value.join('. ')}</Text>)
+                    }
 
                     <View style={styles.row}>
                         <Text>{ad.type === 'Ad::Buy' ? 'Покупатель' : 'Продавец'}</Text>
@@ -179,4 +225,5 @@ export default class NewTrade extends Component {
 
 NewTrade.propTypes = {
     isFetching: PropTypes.bool,
+    openTrade: PropTypes.func,
 };
