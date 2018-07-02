@@ -160,7 +160,7 @@ export default class NewTrade extends Component {
         const { ad, pending, form } = this.state;
         const { user } = ad;
         return (
-            <ScrollView>
+            <ScrollView keyboardShouldPersistTaps='always'>
                 <View>
                     <View style={styles.info}>
                         <Text style={[styles.huge, styles.centeredText]}>{ad.payment_method_code}</Text>

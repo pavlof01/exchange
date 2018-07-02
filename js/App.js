@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Platform, BackHandler } from 'react-native';
+import {  NavigationActions } from 'react-navigation';
 
 import AppNavigator from './AppNavigator';
 import { connect } from 'react-redux';
@@ -24,6 +26,17 @@ class App extends Component {
 
     componentDidMount() {
         initializeListeners("root", this.props.nav);
+        const { dispatch, nav } = this.props;
+        if (Platform.OS === 'android') {
+            this.backButtonListener = BackHandler.addEventListener('hardwareBackPress', () => {
+                if (nav.routes.length === 1 && (nav.routes[0].routeName === 'Main' ||
+                    nav.routes[0].routeName === 'Home')) {
+                    return false;
+                }
+                dispatch(NavigationActions.back());
+                return true;
+            });
+        }
     }
 
     render() {
