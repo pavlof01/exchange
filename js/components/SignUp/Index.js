@@ -96,7 +96,7 @@ export default class SignUp extends Component {
                             error={!_.isEmpty(this.state.formError.loginError)}
                             ref={(ref) => (this.loginInput = ref)}
                             placeholder="Username"
-                            keyboardType="login-address"
+                            keyboardType="email-address"
                             value={this.state.loginValue}
                             onChangeText={(login) => {
                                 this.setState({loginValue: login});
@@ -112,7 +112,7 @@ export default class SignUp extends Component {
                             error={!_.isEmpty(this.state.formError.emailError)}
                             ref={(ref) => (this.emailInput = ref)}
                             placeholder="E-mail"
-                            keyboardType="login-address"
+                            keyboardType="email-address"
                             value={this.state.emailValue}
                             onChangeText={(login) => {
                                 this.setState({emailValue: login});

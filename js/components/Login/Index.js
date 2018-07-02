@@ -80,7 +80,7 @@ export default class Login extends Component {
                             error={!_.isEmpty(this.state.formError.loginError)}
                             ref={(ref) => (this.loginInput = ref)}
                             placeholder="Username"
-                            keyboardType="login-address"
+                            keyboardType="email-address"
                             autoCapitalize={'none'}
                             onChangeText={(login) => {
                                 this.setState({loginValue: login});
