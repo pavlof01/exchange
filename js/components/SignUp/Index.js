@@ -5,6 +5,7 @@ import Validator from '../../services/Validator';
 import {
     View,
     Text,
+    KeyboardAvoidingView,
     ScrollView,
     StyleSheet,
 } from 'react-native';
@@ -62,7 +63,14 @@ export default class SignUp extends Component {
             password2Error: password2Error && ('Password Repeat: ' + passwordError),
         };
 
-        if (!_.isEmpty(validationErrors)) {
+        let isFormHaveError = false;
+        Object.keys(validationErrors).forEach( value => {
+            if (!_.isEmpty(validationErrors[value])) {
+                isFormHaveError = true;
+            }
+        });
+
+        if (isFormHaveError) {
             this.setState({formError: validationErrors});
         } else {
             this.props.signUp({user_name: loginValue, email: emailValue, password: passwordValue, password_confirmation: password2Value});
@@ -91,78 +99,82 @@ export default class SignUp extends Component {
         return withCommonStatusBar(
             <View style={[styles.paddingScreen]}>
                 <ScrollView style={[styles.formBlock]}>
-                    <View style={{marginBottom: 8}}>
-                        <FormTextInput
-                            error={!_.isEmpty(this.state.formError.loginError)}
-                            ref={(ref) => (this.loginInput = ref)}
-                            placeholder="Username"
-                            keyboardType="login-address"
-                            value={this.state.loginValue}
-                            onChangeText={(login) => {
-                                this.setState({loginValue: login});
-                            }}
-                            onSubmitEditing={() => {
-                                this.emailInput.focus();
-                            }}
-                        />
-                        <View>
-                            <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
+                    <KeyboardAvoidingView
+                        behavior="padding"
+                    >
+                        <View style={{marginBottom: 8}}>
+                            <FormTextInput
+                                error={!_.isEmpty(this.state.formError.loginError)}
+                                ref={(ref) => (this.loginInput = ref)}
+                                placeholder="Username"
+                                keyboardType="email-address"
+                                value={this.state.loginValue}
+                                onChangeText={(login) => {
+                                    this.setState({loginValue: login});
+                                }}
+                                onSubmitEditing={() => {
+                                    this.emailInput.focus();
+                                }}
+                            />
+                            <View>
+                                <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
+                            </View>
+                            <FormTextInput
+                                error={!_.isEmpty(this.state.formError.emailError)}
+                                ref={(ref) => (this.emailInput = ref)}
+                                placeholder="E-mail"
+                                keyboardType="email-address"
+                                value={this.state.emailValue}
+                                onChangeText={(login) => {
+                                    this.setState({emailValue: login});
+                                }}
+                                onSubmitEditing={() => {
+                                    this.passwordInput.focus();
+                                }}
+                            />
+                            <View>
+                                <Text style={[styles.error]}>{this.state.formError.emailError}</Text>
+                            </View>
+                            <FormTextInput
+                                error={!_.isEmpty(this.state.formError.passwordError)}
+                                ref={(ref) => (this.passwordInput = ref)}
+                                placeholder="Password"
+                                secureTextEntry
+                                value={this.state.passwordValue}
+                                onChangeText={(password) => {
+                                    this.setState({passwordValue: password});
+                                }}
+                                onSubmitEditing={() => {
+                                    this.password2Input.focus();
+                                }}
+                            />
+                            <View>
+                                <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
+                            </View>
+                            <FormTextInput
+                                error={!_.isEmpty(this.state.formError.password2Error)}
+                                ref={(ref) => (this.password2Input = ref)}
+                                placeholder="Repeat Password"
+                                secureTextEntry
+                                value={this.state.password2Value}
+                                onChangeText={(password) => {
+                                    this.setState({password2Value: password});
+                                }}
+                                onSubmitEditing={this.onSignUpPressed}
+                            />
+                            <View>
+                                <Text style={[styles.error]}>{this.state.formError.password2Error}</Text>
+                                <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
+                            </View>
+                            <PrimaryButton onPress={this.onSignUpPressed} title={'Зарегистрироваться'} />
                         </View>
-                        <FormTextInput
-                            error={!_.isEmpty(this.state.formError.emailError)}
-                            ref={(ref) => (this.emailInput = ref)}
-                            placeholder="E-mail"
-                            keyboardType="login-address"
-                            value={this.state.emailValue}
-                            onChangeText={(login) => {
-                                this.setState({emailValue: login});
-                            }}
-                            onSubmitEditing={() => {
-                                this.passwordInput.focus();
-                            }}
-                        />
-                        <View>
-                            <Text style={[styles.error]}>{this.state.formError.emailError}</Text>
-                        </View>
-                        <FormTextInput
-                            error={!_.isEmpty(this.state.formError.passwordError)}
-                            ref={(ref) => (this.passwordInput = ref)}
-                            placeholder="Password"
-                            secureTextEntry
-                            value={this.state.passwordValue}
-                            onChangeText={(password) => {
-                                this.setState({passwordValue: password});
-                            }}
-                            onSubmitEditing={() => {
-                                this.password2Input.focus();
-                            }}
-                        />
-                        <View>
-                            <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
-                        </View>
-                        <FormTextInput
-                            error={!_.isEmpty(this.state.formError.password2Error)}
-                            ref={(ref) => (this.password2Input = ref)}
-                            placeholder="Repeat Password"
-                            secureTextEntry
-                            value={this.state.password2Value}
-                            onChangeText={(password) => {
-                                this.setState({password2Value: password});
-                            }}
-                            onSubmitEditing={this.onSignUpPressed}
-                        />
-                        <View>
-                            <Text style={[styles.error]}>{this.state.formError.password2Error}</Text>
-                            <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
-                        </View>
-                        <PrimaryButton onPress={this.onSignUpPressed} title={'Зарегистрироваться'} />
-                    </View>
                         <Touchable onPress={this.onLoginPressed}>
                             <View>
                                 <Text style={[styles.textCenter]}>Уже зарегистрированы?</Text>
                                 <Text style={[styles.textLink, styles.textCenter]}>Войти</Text>
                             </View>
                         </Touchable>
+                    </KeyboardAvoidingView>
                 </ScrollView>
             </View>
         );

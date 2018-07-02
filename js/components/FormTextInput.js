@@ -39,7 +39,6 @@ class FormTextInput extends Component {
       <View style={containerStyles}>
         <TextInput
           {...inputProps}
-          keyboardType='default'
           style={textStyles}
           keyboardAppearance="dark"
           placeholderColor="#474747"
