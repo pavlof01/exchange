@@ -13,8 +13,9 @@ import PropTypes from 'prop-types';
 const styles = StyleSheet.create({
     picker: {
         elevation: 4,
-        padding: 4,
-        backgroundColor: 'white'
+        borderRadius: 4,
+        backgroundColor: 'white',
+        margin: 8,
     },
     cardText: {
         fontSize: 24,

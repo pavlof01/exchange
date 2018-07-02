@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {ActivityIndicator, FlatList, Picker, StyleSheet, Text, View,} from 'react-native';
+import { FlatList, Image, StyleSheet, Text, View,} from 'react-native';
 import TopButton from "./TopButton";
 import Separator from "../../style/Separator";
 import HeaderBar from "../../style/HeaderBar";
@@ -12,6 +12,7 @@ import {MenuOption} from "react-native-popup-menu";
 import Touchable from "../../style/Touchable";
 import {newTrade} from "../../actions/navigation";
 import OnlineStatus from "../../style/OnlineStatus";
+import {currencyCodeToSymbol} from "../../helpers";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -26,15 +27,51 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: 48,
     },
+    pickerRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 8,
+    },
+    pickerIcon: {
+        height: 24,
+        width: 24,
+    },
     picker: {
         height: 50,
         width: 100,
     },
     cardText: {
         fontSize: 24,
-        color: 'black',
+        color: '#333333',
+        margin: 8,
+        fontWeight: "bold",
     },
+    currency_circle: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        backgroundColor: '#c3c3c3',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    currency_symbol: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: '#c3c3c3',
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center'
+    }
 });
+
+const cryptoIcons = {
+    BTC: require('../../img/ic_btc.png'),
+    ETH: require('../../img/ic_eth.png')
+};
 
 export default class Offers extends Component {
 
@@ -79,6 +116,18 @@ export default class Offers extends Component {
             </Touchable>);
     };
 
+    static ItemWithIcon(label, icon) {
+        return (<View style={styles.pickerRow}>{icon}<Text style={styles.cardText}>{label}</Text></View>)
+    }
+
+    static CryptItem(code) {
+        return Offers.ItemWithIcon(code, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode='contain'/>);
+    }
+
+    static FiatItem(code) {
+        return Offers.ItemWithIcon(code, <View style={styles.currency_circle}><Text style={styles.currency_symbol}>{currencyCodeToSymbol(code)}</Text></View>);
+    }
+
     render() {
         let header;
         if(this.props.filter.type === 'buy') {
@@ -99,19 +148,27 @@ export default class Offers extends Component {
                 <Separator />
 
                 <View style={styles.rowContainer}>
-                    <Picker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
-                            selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}>
+                    <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
+                            selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}
+                            renderButton={Offers.CryptItem}>
                         {this.props.cryptoCurrencies.map(
-                            currency => <Picker.Item key={currency.code} value={currency.code} label={currency.code}/>
+                            currency => <MenuOption key={currency.code} value={currency.code}>
+                                {Offers.CryptItem(currency.code)}
+                            </MenuOption>
                         )}
-                    </Picker>
+                    </CardPicker>
 
-                    <Picker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
-                            selectedValue={this.props.filter.currencyCode} mode={'dropdown'}>
+                    <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16}]}/>
+
+                    <CardPicker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
+                            selectedValue={this.props.filter.currencyCode} mode={'dropdown'}
+                                renderButton={Offers.FiatItem}>
                         {this.props.currencies.map(
-                            currency => <Picker.Item key={currency.code} value={currency.code} label={currency.code}/>
+                            currency => <MenuOption key={currency.code} value={currency.code}>
+                                    {Offers.FiatItem(currency.code)}
+                            </MenuOption>
                         )}
-                    </Picker>
+                    </CardPicker>
                 </View>
 
                 <CardPicker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
