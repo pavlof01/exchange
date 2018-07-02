@@ -23,7 +23,7 @@ export function createBasicNavigationOptions(title) {
 }
 
 export const bottomBarStyle = {
-    initialRouteName: 'Settings',
+    initialRouteName: 'Offers',
     tabBarOptions: {
         activeTintColor: '#25367E',
         inactiveTintColor: '#696969',

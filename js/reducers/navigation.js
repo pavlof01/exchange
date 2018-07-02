@@ -9,6 +9,7 @@ import {
     RECOVER_PASSWORD_REQUEST,
 } from '../actions/recoverPassword';
 import {SESSION} from "../actions";
+import {NEW_TRADE_REQUEST} from "../actions/navigation";
 const firstAction = AppNavigator.router.getActionForPathAndParams('SplashScreen');
 const initialState = AppNavigator.router.getStateForAction(firstAction);
 
@@ -37,6 +38,12 @@ export default function navigationReducer(state = initialState, action) {
       case RECOVER_PASSWORD_REQUEST:
           nextState = AppNavigator.router.getStateForAction(
               NavigationActions.navigate({ routeName: 'RecoverPassword' }),
+              state
+          );
+          break;
+      case NEW_TRADE_REQUEST:
+          nextState = AppNavigator.router.getStateForAction(
+              NavigationActions.navigate({ routeName: 'NewTrade', params: {ad: action.ad }}),
               state
           );
           break;

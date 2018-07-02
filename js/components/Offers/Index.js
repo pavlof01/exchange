@@ -9,6 +9,9 @@ import Price from "../../values/Price";
 import CenterProgressBar from "../../style/CenterProgressBar";
 import CardPicker from "../../style/CardPicker";
 import {MenuOption} from "react-native-popup-menu";
+import Touchable from "../../style/Touchable";
+import {newTrade} from "../../actions/navigation";
+import OnlineStatus from "../../style/OnlineStatus";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -21,6 +24,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        height: 48,
     },
     picker: {
         height: 50,
@@ -29,18 +33,6 @@ const styles = StyleSheet.create({
     cardText: {
         fontSize: 24,
         color: 'black',
-    },
-    red_circle: {
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      backgroundColor: 'red',
-    },
-    green_circle: {
-        width: 12,
-        height: 12,
-        borderRadius: 6,
-        backgroundColor: 'green',
     },
 });
 
@@ -66,19 +58,26 @@ export default class Offers extends Component {
     onActionCodeChangeToBuy = () => this.props.updateFilter({type: 'buy', sort: '-price'});
     onActionCodeChangeToSell = () => this.props.updateFilter({type: 'sell', sort: 'price'});
 
+    openNewTrade = (ad) => {
+        this.props.newTrade(ad)
+    };
+
     // /new_trade/${ad.id}
-    renderItem(it) {
+    renderItem = (it) => {
         const ad = it.item;
-        return (<View style={styles.rowContainer}>
-            <View style={ad.user.online ? styles.green_circle : styles.red_circle}/>
-            <Text>{ad.user.user_name}</Text>
-            {ad.payment_method_banks.map(
-                bank => <Text key={bank.id}>{bank.name}</Text>
-            )}
-            <Text>{Price.build(ad.limit_min).viewMain} – {Price.build(ad.limit_max).viewMain}</Text>
-            <Text>{Price.build(ad.price).viewMain} </Text>
-        </View>);
-    }
+        return (
+            <Touchable onPress={() => this.openNewTrade(ad)}>
+                <View style={styles.rowContainer}>
+                    <OnlineStatus isOnline={ad.user.online}/>
+                    <Text>{ad.user.user_name}</Text>
+                    {ad.payment_method_banks.map(
+                        bank => <Text key={bank.id}>{bank.name}</Text>
+                    )}
+                    <Text>{Price.build(ad.limit_min).viewMain} – {Price.build(ad.limit_max).viewMain}</Text>
+                    <Text>{Price.build(ad.price).viewMain} </Text>
+                </View>
+            </Touchable>);
+    };
 
     render() {
         let header;
@@ -97,7 +96,7 @@ export default class Offers extends Component {
                     <TopButton title={'ПРОДАТЬ'} onPress={this.onActionCodeChangeToSell} selected={this.props.filter.type === 'sell'} selectedColor={'red'} color={'black'}/>
                 </View>
 
-                <Separator color="#c3c3c3" />
+                <Separator />
 
                 <View style={styles.rowContainer}>
                     <Picker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
@@ -124,7 +123,7 @@ export default class Offers extends Component {
                     )}
                 </CardPicker>
 
-                <Separator color="#c3c3c3" />
+                <Separator />
 
                 {this.props.orders.pending ?
 
@@ -144,4 +143,5 @@ Offers.propTypes = {
     fetchCurrencies: PropTypes.func,
     fetchPaymentMethods: PropTypes.func,
     fetchCountries: PropTypes.func,
+    newTrade: PropTypes.func,
 };

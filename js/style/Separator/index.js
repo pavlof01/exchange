@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 const styles = StyleSheet.create({
   separator: {
     height: 2,
-    backgroundColor: '#e4e4e4',
+    backgroundColor: '#c3c3c3',
   },
 });
 
