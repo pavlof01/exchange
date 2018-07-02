@@ -3,14 +3,17 @@ import { Provider } from 'react-redux';
 import store from './store';
 
 import App from './App';
+import {MenuProvider} from "react-native-popup-menu";
 
 class Root extends Component {
 
     render() {
         return (
-            <Provider store={store}>
-                <App />
-            </Provider>
+            <MenuProvider>
+                <Provider store={store}>
+                    <App />
+                </Provider>
+            </MenuProvider>
         );
     }
 }

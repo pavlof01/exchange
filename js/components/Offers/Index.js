@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {ActivityIndicator, CheckBox, FlatList, Picker, StyleSheet, Text, View,} from 'react-native';
-import FormTextInput from "../FormTextInput";
+import {ActivityIndicator, FlatList, Picker, StyleSheet, Text, View,} from 'react-native';
 import TopButton from "./TopButton";
 import Separator from "../../style/Separator";
 import HeaderBar from "../../style/HeaderBar";
 import Price from "../../values/Price";
 import CenterProgressBar from "../../style/CenterProgressBar";
+import CardPicker from "../../style/CardPicker";
+import {MenuOption} from "react-native-popup-menu";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -24,6 +25,10 @@ const styles = StyleSheet.create({
     picker: {
         height: 50,
         width: 100,
+    },
+    cardText: {
+        fontSize: 24,
+        color: 'black',
     },
     red_circle: {
       width: 12,
@@ -110,13 +115,14 @@ export default class Offers extends Component {
                     </Picker>
                 </View>
 
-                <Picker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
-                        selectedValue={this.props.filter.paymentMethodCode || ''} mode={'dropdown'}>
-                    <Picker.Item value="ANY" label={'любым способом'}/>
+                <CardPicker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
+                        selectedValue={this.props.filter.paymentMethodCode || 'ANY'}
+                            renderButton={(value, text) => <Text style={styles.cardText}>{text}</Text>}>
+                    <MenuOption value="ANY" text={'любым способом'}/>
                     {this.props.paymentMethods.map(
-                        method => <Picker.Item key={method.code} value={method.code} label={method.name}/>
+                        method => <MenuOption key={method.code} value={method.code} text={method.name}/>
                     )}
-                </Picker>
+                </CardPicker>
 
                 <Separator color="#c3c3c3" />
 
