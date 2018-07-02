@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import { FlatList, Image, StyleSheet, Text, View,} from 'react-native';
+import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View,} from 'react-native';
 import TopButton from "./TopButton";
 import Separator from "../../style/Separator";
 import HeaderBar from "../../style/HeaderBar";
@@ -10,27 +10,50 @@ import CenterProgressBar from "../../style/CenterProgressBar";
 import CardPicker from "../../style/CardPicker";
 import {MenuOption} from "react-native-popup-menu";
 import Touchable from "../../style/Touchable";
-import {newTrade} from "../../actions/navigation";
 import OnlineStatus from "../../style/OnlineStatus";
 import {currencyCodeToSymbol} from "../../helpers";
 
 const styles = StyleSheet.create({
-    centerContent: {
+    container: {
         flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: 'white',
     },
     rowContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         height: 48,
+        paddingLeft: 8,
+        paddingRight: 8,
     },
     pickerRow: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         padding: 8,
+    },
+    inputHint: {
+        marginLeft: 8,
+        fontSize: 11
+    },
+    userName: {
+        fontWeight: 'bold',
+        color: '#333333',
+        fontSize: 16,
+        marginLeft: 4,
+        flex: 1,
+    },
+    amount: {
+        color: '#111111',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        flex: 1,
+    },
+    limitsAmount: {
+        color: '#111111',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        flex: 2,
     },
     pickerIcon: {
         height: 24,
@@ -65,6 +88,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center'
+    },
+    alternate_background: {
+        backgroundColor: '#EEEEEE'
     }
 });
 
@@ -100,18 +126,19 @@ export default class Offers extends Component {
     };
 
     // /new_trade/${ad.id}
-    renderItem = (it) => {
-        const ad = it.item;
+    renderItem = ({item, index}) => {
+        const ad = item;
+        const alt = index % 2 === 1;
         return (
             <Touchable onPress={() => this.openNewTrade(ad)}>
-                <View style={styles.rowContainer}>
+                <View style={[styles.rowContainer, alt ? styles.alternate_background : undefined]}>
                     <OnlineStatus isOnline={ad.user.online}/>
-                    <Text>{ad.user.user_name}</Text>
+                    <Text style={styles.userName}>{ad.user.user_name}</Text>
                     {ad.payment_method_banks.map(
                         bank => <Text key={bank.id}>{bank.name}</Text>
                     )}
-                    <Text>{Price.build(ad.limit_min).viewMain} – {Price.build(ad.limit_max).viewMain}</Text>
-                    <Text>{Price.build(ad.price).viewMain} </Text>
+                    <Text style={styles.limitsAmount}>{currencyCodeToSymbol(ad.currency_code)}{Price.build(ad.limit_min).viewMain} – {Price.build(ad.limit_max).viewMain}</Text>
+                    <Text style={styles.amount}>{currencyCodeToSymbol(ad.currency_code)}{Price.build(ad.price).viewMain} </Text>
                 </View>
             </Touchable>);
     };
@@ -136,41 +163,50 @@ export default class Offers extends Component {
             header = 'SELL OFFERS';
         }
         return (
-            <View>
+            <View style={styles.container}>
                 <HeaderBar title={header}/>
                 {/*{this.actionName}*/}
 
                 <View style={styles.rowContainer}>
-                    <TopButton title={'КУПИТЬ'} onPress={this.onActionCodeChangeToBuy} selected={this.props.filter.type === 'buy'} selectedColor={'green'} color={'black'}/>
-                    <TopButton title={'ПРОДАТЬ'} onPress={this.onActionCodeChangeToSell} selected={this.props.filter.type === 'sell'} selectedColor={'red'} color={'black'}/>
+                    <TopButton title={'BUY'} onPress={this.onActionCodeChangeToBuy} selected={this.props.filter.type === 'buy'} selectedColor={'green'} color={'black'}/>
+
+                    <Separator vertical/>
+                        <TopButton title={'SELL'} onPress={this.onActionCodeChangeToSell} selected={this.props.filter.type === 'sell'} selectedColor={'red'} color={'black'}/>
                 </View>
 
                 <Separator />
 
-                <View style={styles.rowContainer}>
-                    <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
-                            selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}
-                            renderButton={Offers.CryptItem}>
-                        {this.props.cryptoCurrencies.map(
-                            currency => <MenuOption key={currency.code} value={currency.code}>
-                                {Offers.CryptItem(currency.code)}
-                            </MenuOption>
-                        )}
-                    </CardPicker>
+                <View style={styles.pickerRow}>
+                    <View>
+                        <Text style={styles.inputHint}>YOU BUY</Text>
+                        <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
+                                selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}
+                                renderButton={Offers.CryptItem}>
+                            {this.props.cryptoCurrencies.map(
+                                currency => <MenuOption key={currency.code} value={currency.code}>
+                                    {Offers.CryptItem(currency.code)}
+                                </MenuOption>
+                            )}
+                        </CardPicker>
+                    </View>
 
-                    <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16}]}/>
+                    <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16, marginTop: 32}]}/>
 
-                    <CardPicker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
-                            selectedValue={this.props.filter.currencyCode} mode={'dropdown'}
-                                renderButton={Offers.FiatItem}>
-                        {this.props.currencies.map(
-                            currency => <MenuOption key={currency.code} value={currency.code}>
-                                    {Offers.FiatItem(currency.code)}
-                            </MenuOption>
-                        )}
-                    </CardPicker>
+                    <View>
+                        <Text style={styles.inputHint}>SELECT PAYMENT METHOD</Text>
+                        <CardPicker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
+                                selectedValue={this.props.filter.currencyCode} mode={'dropdown'}
+                                    renderButton={Offers.FiatItem}>
+                            {this.props.currencies.map(
+                                currency => <MenuOption key={currency.code} value={currency.code}>
+                                        {Offers.FiatItem(currency.code)}
+                                </MenuOption>
+                            )}
+                        </CardPicker>
+                    </View>
                 </View>
 
+                <Text style={styles.inputHint}>FOR</Text>
                 <CardPicker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
                         selectedValue={this.props.filter.paymentMethodCode || 'ANY'}
                             renderButton={(value, text) => <Text style={styles.cardText}>{text}</Text>}>
@@ -184,7 +220,7 @@ export default class Offers extends Component {
 
                 {this.props.orders.pending ?
 
-                    <CenterProgressBar /> :
+                    <ActivityIndicator size="large" style={{margin: 16}} /> :
 
                     <FlatList data={this.props.orders.list}
                               renderItem={this.renderItem}/>}

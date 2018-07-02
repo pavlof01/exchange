@@ -8,9 +8,11 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#2B2B82',
         color: 'white',
-        height: 48,
-        padding: 10,
+        height: 56,
+        padding: 14,
         fontSize: 22,
+        fontWeight: 'bold',
+        elevation: 8,
         alignItems: 'center',
         textAlign: 'center',
         justifyContent: 'center',

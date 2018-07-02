@@ -10,6 +10,11 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: '#c3c3c3',
   },
+  verticalSeparator: {
+      width: 2,
+      height: '100%',
+      backgroundColor: '#c3c3c3',
+  },
 });
 
 class Separator extends React.Component {
@@ -23,10 +28,14 @@ class Separator extends React.Component {
      * Styles.
      */
     style: View.propTypes.style,
+    /**
+     * Should be vertical
+     */
+    vertical: PropTypes.bool,
   };
 
   render() {
-    const style = [styles.separator];
+    const style = [this.props.vertical ? styles.verticalSeparator : styles.separator];
 
     if (this.props.color) {
       style.push({ backgroundColor: this.props.color });

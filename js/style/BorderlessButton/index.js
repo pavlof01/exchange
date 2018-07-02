@@ -58,6 +58,10 @@ class BorderlessButton extends Component {
      * Styles.
      */
     style: ViewPropTypes.style,
+    /**
+     * Styles.
+     */
+    textStyle: PropTypes.object,
   };
 
   constructor(props) {
@@ -80,12 +84,16 @@ class BorderlessButton extends Component {
       disabled,
       testID,
       style,
+      textStyle,
     } = this.props;
     const buttonStyles = [style, styles.button];
     const textStyles = [styles.text];
     if (color) {
       textStyles.push({ color });
       buttonStyles.push({ borderColor: color });
+    }
+    if (textStyle) {
+      textStyles.push(textStyle);
     }
     return (
       <Touchable

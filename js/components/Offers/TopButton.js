@@ -6,8 +6,10 @@ import BorderlessButton from "../../style/BorderlessButton";
 
 const styles = StyleSheet.create({
     topButton: {
-        flex: 1,
-        padding: 8,
+        flex: 1
+    },
+    text: {
+        fontWeight: 'bold',
     },
 });
 
@@ -54,7 +56,8 @@ export default class TopButton extends Component {
                     title={this.props.title}
                     onPress={this.props.onPress}
                     disabled={this.props.selected}
-                    color={this.props.selected ? this.props.selectedColor : this.props.color}/>
+                    color={this.props.selected ? this.props.selectedColor : this.props.color}
+                    textStyle={styles.text}/>
             </View>
         )
     }
