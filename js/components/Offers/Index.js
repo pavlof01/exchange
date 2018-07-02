@@ -171,14 +171,15 @@ export default class Offers extends Component {
                     <TopButton title={'BUY'} onPress={this.onActionCodeChangeToBuy} selected={this.props.filter.type === 'buy'} selectedColor={'green'} color={'black'}/>
 
                     <Separator vertical/>
-                        <TopButton title={'SELL'} onPress={this.onActionCodeChangeToSell} selected={this.props.filter.type === 'sell'} selectedColor={'red'} color={'black'}/>
+
+                    <TopButton title={'SELL'} onPress={this.onActionCodeChangeToSell} selected={this.props.filter.type === 'sell'} selectedColor={'red'} color={'black'}/>
                 </View>
 
                 <Separator />
 
                 <View style={styles.pickerRow}>
                     <View>
-                        <Text style={styles.inputHint}>YOU BUY</Text>
+                        <Text style={styles.inputHint}>YOU {this.props.filter.type === 'buy' ? 'BUY' : 'SELL'}</Text>
                         <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
                                 selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}
                                 renderButton={Offers.CryptItem}>
@@ -193,7 +194,7 @@ export default class Offers extends Component {
                     <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16, marginTop: 32}]}/>
 
                     <View>
-                        <Text style={styles.inputHint}>SELECT PAYMENT METHOD</Text>
+                        <Text style={styles.inputHint}>FOR</Text>
                         <CardPicker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
                                 selectedValue={this.props.filter.currencyCode} mode={'dropdown'}
                                     renderButton={Offers.FiatItem}>
@@ -206,7 +207,7 @@ export default class Offers extends Component {
                     </View>
                 </View>
 
-                <Text style={styles.inputHint}>FOR</Text>
+                <Text style={styles.inputHint}>SELECT PAYMENT METHOD</Text>
                 <CardPicker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
                         selectedValue={this.props.filter.paymentMethodCode || 'ANY'}
                             renderButton={(value, text) => <Text style={styles.cardText}>{text}</Text>}>

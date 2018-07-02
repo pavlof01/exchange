@@ -21,11 +21,14 @@ class FormTextInput extends Component {
 
   render() {
     const {
-      error,
+      error, style
     } = this.props;
     const inputProps = _.omit(this.props, error);
     const containerStyles = [styles.container];
     const textStyles = [styles.text];
+    if (style) {
+      containerStyles.push(style);
+    }
     if (error) {
       containerStyles.push({ borderColor: errorRed });
     }
@@ -71,6 +74,7 @@ FormTextInput.propTypes = {
     value: PropTypes.string,
     onChangeText: PropTypes.func,
     onSubmitEditing: PropTypes.func,
+    style: View.propTypes.style,
 };
 
 export default FormTextInput;
