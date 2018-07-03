@@ -85,6 +85,7 @@ export default class NewTrade extends Component {
         form: {
             amount: undefined,
             cost: undefined,
+            message: undefined,
         },
         pending: false,
         errors: undefined

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {StyleSheet, View, ColorPropType, ViewPropTypes} from "react-native";
 import PropTypes from "prop-types";
-import BorderlessButton from "../../style/BorderlessButton";
+import BorderlessButton from "../BorderlessButton/index";
 
 
 const styles = StyleSheet.create({

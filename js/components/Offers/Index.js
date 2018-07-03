@@ -2,16 +2,16 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View,} from 'react-native';
-import TopButton from "./TopButton";
+import TopButton from "../../style/TopButton";
 import Separator from "../../style/Separator";
 import HeaderBar from "../../style/HeaderBar";
 import Price from "../../values/Price";
-import CenterProgressBar from "../../style/CenterProgressBar";
 import CardPicker from "../../style/CardPicker";
 import {MenuOption} from "react-native-popup-menu";
 import Touchable from "../../style/Touchable";
 import OnlineStatus from "../../style/OnlineStatus";
 import {currencyCodeToSymbol} from "../../helpers";
+import {cryptoIcons} from "../../style/resourceHelpers";
 
 const styles = StyleSheet.create({
     container: {
@@ -93,11 +93,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#EEEEEE'
     }
 });
-
-const cryptoIcons = {
-    BTC: require('../../img/ic_btc.png'),
-    ETH: require('../../img/ic_eth.png')
-};
 
 export default class Offers extends Component {
 
