@@ -21,7 +21,7 @@ export default class Trades extends Component {
   render() {
     return (
         <View style={styles.centerContent}>
-          <Text>Trades</Text>
+          <Text style={{margin: 16, fontSize: 24}}>{'Trades TBD\n04.07.2018'}</Text>
         </View>
     )
   }

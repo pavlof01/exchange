@@ -21,8 +21,8 @@ export default class Receive extends Component {
 
     render() {
         return (
-            <View>
-                <Text>Wallet</Text>
+            <View style={styles.centerContent}>
+                <Text style={{margin: 16, fontSize: 24}}>{'Transaction token generation TBD\n06.07.2018'}</Text>
             </View>
         )
     }
