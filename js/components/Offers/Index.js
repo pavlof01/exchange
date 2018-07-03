@@ -12,6 +12,7 @@ import Touchable from "../../style/Touchable";
 import OnlineStatus from "../../style/OnlineStatus";
 import {currencyCodeToSymbol} from "../../helpers";
 import {cryptoIcons} from "../../style/resourceHelpers";
+import {withCommonStatusBar} from "../../style/navigation";
 
 const styles = StyleSheet.create({
     container: {
@@ -157,7 +158,7 @@ export default class Offers extends Component {
         } else {
             header = 'SELL OFFERS';
         }
-        return (
+        return withCommonStatusBar(
             <View style={styles.container}>
                 <HeaderBar title={header}/>
                 {/*{this.actionName}*/}

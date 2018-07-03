@@ -9,8 +9,10 @@ import Settings from './containers/Settings/Index';
 import Login from './containers/Login/Index';
 import SignUp from "./containers/SignUp/Index";
 import RecoverPassword from "./containers/RecoverPassword/Index";
+import NewTrade from "./containers/NewTrade/Index";
+import Trade from "./containers/Trade/Index";
+
 import {bottomBarStyle, createBottomBarOptions} from "./style/navigation";
-import NewTrade from "./components/NewTrade";
 
 const Main = createBottomTabNavigator({
     Offers: { screen: Offers, navigationOptions: createBottomBarOptions(require('./img/ic_offer.png')) },
@@ -22,6 +24,7 @@ const Main = createBottomTabNavigator({
 const AppNavigator = createStackNavigator({
         Main: { screen: Main, navigationOptions: () => ({ header: props => null }) },
         NewTrade: { screen: NewTrade },
+        Trade: { screen: Trade },
         Login: { screen: Login },
         SignUp: { screen: SignUp },
         RecoverPassword: { screen: RecoverPassword },

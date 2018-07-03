@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import { fetch, update } from '../../actions/currentTrade'
 import Trade from '../../components/Trade'
-import {openTrade} from "../../actions/navigation";
 import { default as updatePartnerActivity } from '../../actions/partnerActivity'
 
 const mapDispatchToProps = dispatch => ({

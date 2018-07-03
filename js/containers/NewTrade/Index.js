@@ -1,9 +1,13 @@
 import { connect } from 'react-redux'
 import NewTrade from '../../components/NewTrade'
+import {fetchFromTrade} from "../../actions/currentTrade";
 import {openTrade} from "../../actions/navigation";
 
 const mapDispatchToProps = dispatch => ({
-    openTrade: (id) => dispatch(openTrade(id))
+    openTrade: (trade) => {
+        dispatch(fetchFromTrade(dispatch, trade));
+        dispatch(openTrade(trade.id));
+    }
 });
 
 const mapStateToProps = (state) => ({

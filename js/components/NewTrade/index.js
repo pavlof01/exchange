@@ -6,7 +6,7 @@ import {
     View,
     StyleSheet, ScrollView, Image, ActivityIndicator,
 } from 'react-native';
-import {createBasicNavigationOptions} from "../../style/navigation";
+import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
 import FormTextInput from "../FormTextInput";
 import Price from "../../values/Price";
 import {currencyCodeToSymbol, objMap} from "../../helpers";
@@ -15,6 +15,9 @@ import OnlineStatus from "../../style/OnlineStatus";
 import Separator from "../../style/Separator";
 import User from "../../models/User";
 import Api from "../../services/Api";
+import TradeAdvices from "../Trade/TradeAdvices";
+import TradeTrivia from "../Trade/TradeTrivia";
+import PartnerLink from "../Trade/PartnerLink";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -126,14 +129,15 @@ export default class NewTrade extends Component {
         Api.post(`/pro/${this.state.ad.id}/trades`, {trade: values, ad: {price: this.state.ad.price}})
             .then(response => {
                 this.setState({pending: false});
-                this.props.openTrade(response.data.trade.id)
+                this.props.openTrade(response.data.trade)
             })
             .catch(error => {
                 const newState = {pending: false};
 
                 if (error.response.status === 422) {
                     newState.errors = error.response.data.errors;
-                } else if (error.response.status === 422) {
+                } else if (error.response.status === 429) {
+                    this.props.openTrade({id: error.response.data.trade_ids[0]});
                     newState.errors = {opened_trade_ids: error.response.data.trade_ids};
                 } else if (error.response.status === 410) {
                     newState.errors = {schedule: ['Трейдер в данный момент не работает, смотрите расписание']};
@@ -176,7 +180,7 @@ export default class NewTrade extends Component {
     render() {
         const { ad, pending, form } = this.state;
         const { user } = ad;
-        return (
+        return withCommonStatusBar(
             <ScrollView keyboardShouldPersistTaps='always'>
                 <View>
                     <View style={styles.info}>
@@ -203,36 +207,13 @@ export default class NewTrade extends Component {
                         objMap(this.state.errors, (key, value) => <Text style={styles.warning} key={key}>{key}: {value.join('. ')}</Text>)
                     }
 
-                    <View style={styles.row}>
-                        <Text>{ad.type === 'Ad::Buy' ? 'Покупатель' : 'Продавец'}</Text>
-                        <OnlineStatus isOnline={ad.user.online}/>
-                        <Text>{user.user_name} ({User.approximateTradesCount(user.completed_trades_count)})</Text>
-                        <Text>{user.feedback_grade}%</Text>
-                    </View>
+                    <PartnerLink user={user} online={user.online} isSeller={ad.type === 'Ad::Buy'}/>
 
                     <Separator/>
 
-                    <Text style={styles.row}><Text style={styles.bold}>Страна:</Text> {ad.country_code}</Text>
+                    <TradeTrivia ad={ad}/>
 
-                    {ad.conditions && <View style={styles.info}>
-                        <Text>Условия сделки:</Text>
-                        <Text>{ad.conditions}</Text>
-                    </View>}
-
-                    <View style={styles.info}>
-                        <Text style={styles.header}>Советы</Text>
-                        <Text style={styles.infoText}>Прочитайте объявление и проверьте условия.</Text>
-                        <Text style={styles.infoText}>Предложите место встречи и время, если необходима сделка с наличными.</Text>
-                        <Text style={styles.infoText}>Остерегайтесь мошенников! Проверяйте отзывы в профиле и проявляйте особую осторожность с недавно зарегистрированными пользователями.</Text>
-                        <Text style={styles.infoText}>Обратите внимание, что округления и колебания цен могут изменить окончательную сумму в биткоинах. Сумма фиатных денег, вводимая вами, имеет значение, и сумма в биткоинах рассчитывается на момент запроса.</Text>
-                    </View>
-
-                    <View style={styles.info}>
-                        <Text style={styles.header}>BitChange обеспечивает вашу безопасность</Text>
-                        <Text style={styles.infoText}>Криптовалюта блокируется в депонировании платежа на BitChange, после того как вы отправили запрос. Оплатите счёт, отметьте его как оплаченный, и продавец отправит Вам криптовалюту, когда перечисление платежа отразится на его счете.</Text>
-                        <Text style={styles.bold}>Обратите внимание: в настоящий момент вы можете запросить депонирование не больше, чем на 0.44 BTC. Вы сможете покупать на большую сумму, как только у вас будет достаточный объем сделок и репутация. Именно Продавец устанавливает ограничения.</Text>
-                        <Text style={styles.infoText}>Депонирование платежей защищает и Покупателя, и Продавца в онлайн-сделках.</Text>
-                    </View>
+                    <TradeAdvices/>
                 </View>
             </ScrollView>
         )

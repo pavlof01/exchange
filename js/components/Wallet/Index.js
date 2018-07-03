@@ -12,6 +12,7 @@ import Separator from "../../style/Separator";
 import Transfer from "./Transfer";
 import Receive from "./Receive";
 import exchangeRates from "../../reducers/exchangeRates";
+import {withCommonStatusBar} from "../../style/navigation";
 
 
 const styles = StyleSheet.create({
@@ -63,7 +64,7 @@ export default class Wallet extends Component {
           header = 'RECEIVE';
       }
 
-      return (
+      return withCommonStatusBar(
         <View style={styles.container}>
             <HeaderBar title={header}/>
             {/*{this.actionName}*/}
