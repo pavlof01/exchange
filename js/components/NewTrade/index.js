@@ -75,6 +75,15 @@ const styles = StyleSheet.create({
         color: '#dd0057',
         marginBottom: 4,
     },
+    warning: {
+        color: '#8b572a',
+        backgroundColor: '#fbf5eb',
+        borderColor: '#f5a623',
+        borderRadius: 4,
+        borderWidth: 1,
+        padding: 8,
+        margin: 8,
+    }
 });
 
 export default class NewTrade extends Component {
@@ -91,6 +100,13 @@ export default class NewTrade extends Component {
         errors: undefined
     };
 
+    componentDidMount() {
+        this.setState({pending: true});
+        Api.get('/pro/' + this.state.ad.id)
+            .then(response => this.setState({ad: response.data.ad, pending: false}))
+            .catch(error => alert('Ad not found'));
+    }
+
     onCostChange = (value) => {
         value = value || 0.0;
         const amount = value / this.state.ad.price;
@@ -106,7 +122,7 @@ export default class NewTrade extends Component {
     onMessageChange = (value) => this.setState({form: {...this.state.form, message: value}});
 
     onSubmit = (values) => {
-        this.setState({pending: true});
+        this.setState({pending: true, errors: undefined});
         Api.post(`/pro/${this.state.ad.id}/trades`, {trade: values, ad: {price: this.state.ad.price}})
             .then(response => {
                 this.setState({pending: false});
@@ -184,8 +200,7 @@ export default class NewTrade extends Component {
                     </PrimaryButton>
 
                     {
-                        this.state.errors &&
-                        objMap(this.state.errors, (key, value) => <Text style={styles.error} key={key}>{key}: {value.join('. ')}</Text>)
+                        objMap(this.state.errors, (key, value) => <Text style={styles.warning} key={key}>{key}: {value.join('. ')}</Text>)
                     }
 
                     <View style={styles.row}>
