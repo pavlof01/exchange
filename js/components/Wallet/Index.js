@@ -46,10 +46,15 @@ export default class Wallet extends Component {
     onReceiveSelected = () => this.setState({selectedAction: 'receive'});
 
   render() {
-      const { user: { balance, crypto_amount_buy, crypto_amount_sell, currencyCode }, exchangeRates } = this.props;
+      const {
+          user: { balance, crypto_amount_buy, crypto_amount_sell, currencyCode },
+          exchangeRates,
+          withdrawal,
+          sendCryptoCurrency,
+      } = this.props;
 
       let content, header;
-      if(this.state.selectedAction === 'transfer') {
+      if (this.state.selectedAction === 'transfer') {
           content = <Transfer
               cryptoCurrencies={this.props.cryptoCurrencies}
               currencyCode={currencyCode}
@@ -57,7 +62,10 @@ export default class Wallet extends Component {
               exchangeRates={exchangeRates}
               updateRates={this.props.updateRates}
               updateCurrencies={this.props.updateCurrencies}
-              updateEstimatedFee={this.props.updateEstimatedFee}/>;
+              updateEstimatedFee={this.props.updateEstimatedFee}
+              withdrawal={withdrawal}
+              sendCryptoCurrency={sendCryptoCurrency}
+          />;
           header = 'TRANSFER'
       } else {
           content = <Receive cryptoCurrencies={this.props.cryptoCurrencies}/>;

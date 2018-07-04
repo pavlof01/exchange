@@ -13,7 +13,6 @@ import {default as ProgressCircle} from 'react-native-progress-circle'
 import FormTextInput from "../../FormTextInput";
 import PrimaryButton from "../../../style/PrimaryButton";
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -81,6 +80,15 @@ const styles = StyleSheet.create({
     },
 });
 
+const DEFAULT_FORM_VALUES = {
+    code: '',
+    amount: '',
+    address: '',
+    password: '',
+    currency: 'BTC',
+    description: '',
+};
+
 const simpleCurrencyName = {
     BTC: 'Bitcoin',
     ETH: 'Ethereum',
@@ -90,11 +98,7 @@ export default class Transfer extends Component {
 
     state = {
         cryptoCurrencyCode: 'BTC',
-        form: {
-            amount: undefined,
-            cost: undefined,
-            address: undefined,
-        },
+        form: DEFAULT_FORM_VALUES,
         isConfirming: false,
     };
 
@@ -104,6 +108,38 @@ export default class Transfer extends Component {
         this.props.updateRates({ [currencyCode]: this.state.cryptoCurrencyCode });
         this.props.updateCurrencies();
         this.props.updateEstimatedFee({ currency: this.props.currencyCode });
+    }
+
+    componentWillReceiveProps({ withdrawal, exchangeRates, currency }) {
+        const data = this.state;
+
+        if (withdrawal.status === 200) {
+            data.form  = { ...DEFAULT_FORM_VALUES };
+            data.price = '';
+            data.error.isSucceed = true;
+            data.error.isConfirming = false;
+        }
+
+        if (withdrawal.status === 400) {
+            data.error.isEmpty = true;
+        }
+
+        if (
+            this.state.price &&
+            this.props.exchangeRates !== exchangeRates &&
+            exchangeRates[`${this.props.currency}_${this.state.currency}`]
+        ) {
+            data.price = data.form.amount * exchangeRates[`${this.props.currency}_${this.state.currency}`];
+        }
+
+        if (this.props.currency !== currency) {
+            this.props.updateEstimatedFee({ currency });
+            this.props.updateRates({ [currency]: this.state.currency });
+        }
+
+        console.warn(JSON.stringify(withdrawal));
+
+        this.setState({ ...data, error: { ...withdrawal.error, ...data.error }});
     }
 
     onCostChange = (value) => {
@@ -137,7 +173,7 @@ export default class Transfer extends Component {
 
     onSubmitHandler = () => {
         if (this.state.isConfirming) {
-
+            this.props.sendCryptoCurrency({ ...this.state.form, currency: this.props.currency })
         } else {
             this.setState({isConfirming: true});
         }
@@ -145,7 +181,13 @@ export default class Transfer extends Component {
 
     render() {
         const code = this.state.cryptoCurrencyCode;
-        const {currencyCode} = this.props;
+        const {
+            currencyCode,
+            withdrawal: { pending },
+        } = this.props;
+
+        const submitButtonText = pending ? "WAIT" : this.state.isConfirming ? 'CONFIRM' : 'SEND';
+
         return (
             <View style={styles.container}>
                 {this.hint('BALANCE')}
@@ -197,7 +239,7 @@ export default class Transfer extends Component {
                     <Text style={styles.header}>{currencyCode}</Text>
                 </View>
 
-                <PrimaryButton onPress={this.onSubmitHandler} title={this.state.isConfirming ? 'CONFIRM' : 'SEND'} style={{margin: 16}} />
+                <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16}} />
 
                 </View>
 

@@ -18,7 +18,8 @@ const mapStateToProps = (state) => ({
     cryptoCurrencies: state.cryptoCurrencies.list,
     countries: state.countries.list,
     user: state.session.user,
-    exchangeRates: state.exchangeRates
+    exchangeRates: state.exchangeRates,
+    withdrawal: state.session.withdrawal,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet)
