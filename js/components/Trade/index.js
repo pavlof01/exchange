@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Api from "../../services/Api";
 import Price from "../../values/Price";
-import {currencyCodeToSymbol} from "../../helpers";
+import {currencyCodeToSymbol, tradeType, tradeTypeBuy, tradeTypeSell} from "../../helpers";
 import PrimaryButton from "../../style/PrimaryButton";
 import EscrowTimer from "./EscrowTimer";
 import PartnerLink from "./PartnerLink";
@@ -139,31 +139,39 @@ export default class Trade extends Component {
         return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
     }
 
-    renderBuyActionBlock() {
-        if (this.props.trade.status === 'new') {
+    renderBuyActionBlock(status) {
+        if (status === 'new') {
             return <View style={styles.formRow}>
-                    <PrimaryButton onPress={this.onCancelHandler} title={'Отменить сделку'} color={'#C00'} style={{margin: 4}}/>
-                    <PrimaryButton onPress={this.onPaidHandler} title={'Оплатить сделку'} style={{margin: 4}}/>
+                    <PrimaryButton onPress={this.onCancelHandler} title={'Отменить сделку'} color={'#C00'} style={{margin: 8, flex: 1}}/>
+                    <PrimaryButton onPress={this.onPaidHandler} title={'Оплатить сделку'} style={{margin: 8, flex: 1}}/>
                 </View>
         }
     }
 
-    renderSellActionBlock = () => {
-        if (['paid_confirmed', 'expired_and_paid'].includes(this.props.trade.status)) {
-            return <PrimaryButton onPress={this.onCompleteHandler} title={'Отпустить крипту'} style={{margin: 4}}/>;
+    renderSellActionBlock(status) {
+        if (['paid_confirmed', 'expired_and_paid'].includes(status)) {
+            return <PrimaryButton onPress={this.onCompleteHandler} title={'Отпустить крипту'} style={{margin: 8}}/>;
         }
     };
 
     renderActionBlock = () => {
+        if(!this.isReady){
+            return undefined;
+        }
+
         if(this.state.pending) {
             return <ActivityIndicator size="large" />
         }
-
-        return this.isSelling() ? this.renderSellActionBlock() : this.renderBuyActionBlock();
+        const { status } = this.props.trade;
+        return this.isBuying() ? this.renderBuyActionBlock(status) : this.renderSellActionBlock(status);
     };
 
-    isSelling = () => {
-        return this.props.trade.ad && this.props.trade.ad.type === 'Ad::Sell';
+    isBuying = () => {
+        return this.props.trade.ad && (tradeType(this.props.trade, this.props.user.id) === tradeTypeBuy);
+    };
+
+    isReady = () => {
+        return !!this.props.trade.status;
     };
 
     get partner() {
@@ -171,7 +179,7 @@ export default class Trade extends Component {
     }
 
     get actionTitle () {
-        return this.isSelling() ? 'ПРОДАЖУ ОНЛАЙН' : 'ПОКУПКУ ОНЛАЙН';
+        return this.isBuying() ? 'ПРОДАЖУ ОНЛАЙН' : 'ПОКУПКУ ОНЛАЙН';
     }
 
     render() {
@@ -186,21 +194,25 @@ export default class Trade extends Component {
                         <Text style={styles.centeredText}><Text style={styles.header}>Цена за 1 {ad.crypto_currency_code}:</Text> <Text style={[styles.huge, {color: '#25367E'}]}>{Price.build(ad.price).viewMain} {currencyCodeToSymbol(ad.currency_code)}</Text></Text>
                     </View>
 
-                    <View style={{padding:8, backgroundColor: 'white'}}>
-                        <Text>Ваш запрос Трейдеру <Text style={styles.bold}>{this.partner.user_name}</Text> на <Text style={styles.bold}>{this.actionTitle}</Text> криптовалюты от <Text>{this.createdAt}</Text></Text>
+                {
+                    this.isReady() ? <View style={{padding: 8, backgroundColor: 'white'}}>
+                        <Text>Ваш запрос Трейдеру <Text style={styles.bold}>{this.partner.user_name}</Text> на <Text
+                            style={styles.bold}>{this.actionTitle}</Text> криптовалюты от <Text>{this.createdAt}</Text></Text>
                         <Text style={[styles.header, styles.centeredText]}>
-                            {Price.build(trade.amount * trade.price).viewMain} {ad.currency_code}
+                            {Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}
                             <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16}]}/>
-                             {Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}
+                            {' ' + Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}
                         </Text>
                         {
-                            this.props.trade.status === 'new' && <Text>Осталось для оплаты <EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> минут</Text>
+                            this.props.trade.status === 'new' && <Text>Осталось для оплаты <EscrowTimer
+                                expiredAt={this.props.trade.escrow_expired_at}/> минут</Text>
                         }
-                    </View>
+                    </View> : <ActivityIndicator size="large"/>
+                }
 
                     {this.renderActionBlock()}
 
-                    <PartnerLink user={this.partner} online={this.props.partnerActivityStatuses[this.partner.id]} isSeller={!this.isSelling()}/>
+                    <PartnerLink user={this.partner} online={this.props.partnerActivityStatuses[this.partner.id]} isSeller={this.isBuying()}/>
 
                     <Separator/>
 

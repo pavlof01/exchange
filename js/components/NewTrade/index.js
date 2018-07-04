@@ -137,7 +137,6 @@ export default class NewTrade extends Component {
                 if (error.response.status === 422) {
                     newState.errors = error.response.data.errors;
                 } else if (error.response.status === 429) {
-                    this.props.openTrade({id: error.response.data.trade_ids[0]});
                     newState.errors = {opened_trade_ids: error.response.data.trade_ids};
                 } else if (error.response.status === 410) {
                     newState.errors = {schedule: ['Трейдер в данный момент не работает, смотрите расписание']};
@@ -199,7 +198,7 @@ export default class NewTrade extends Component {
                     />
                     <Text style={styles.centeredText}>Окно оплаты счёта продавца:<Text style={styles.bold}>{'\n'}{ad.escrow_time || 90} минут</Text></Text>
 
-                    <PrimaryButton onPress={() => this.onSubmit(form)} title={'Отправить запрос Трейдеру'} disabled={pending}>
+                    <PrimaryButton onPress={() => this.onSubmit(form)} title={'Отправить запрос Трейдеру'} disabled={pending} style={{margin: 8, flex: 1}}>
                         {pending ? <ActivityIndicator size="large"/> : undefined}
                     </PrimaryButton>
 
