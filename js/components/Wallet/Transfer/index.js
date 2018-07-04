@@ -95,7 +95,9 @@ export default class Transfer extends Component {
             cost: undefined,
             address: undefined,
         },
+        isConfirming: false,
     };
+
     componentWillMount() {
         const {currencyCode} = this.props;
 
@@ -132,6 +134,14 @@ export default class Transfer extends Component {
     onCryptoCurrencyCodeChange = (value) => this.setState({cryptoCurrencyCode: value});
 
     hint = (title) => <View style={styles.hintRow}><Text style={styles.inputHint}>{title}</Text></View>;
+
+    onSubmitHandler = () => {
+        if (this.state.isConfirming) {
+
+        } else {
+            this.setState({isConfirming: true});
+        }
+    };
 
     render() {
         const code = this.state.cryptoCurrencyCode;
@@ -187,7 +197,7 @@ export default class Transfer extends Component {
                         <Text style={styles.header}>{currencyCode}</Text>
                     </View>
 
-                <PrimaryButton title={'SEND'} style={{margin: 16}}/>
+                <PrimaryButton onPress={this.onSubmitHandler} title={this.state.isConfirming ? 'CONFIRM' : 'SEND'} style={{margin: 16}} />
 
                 </View>
 
