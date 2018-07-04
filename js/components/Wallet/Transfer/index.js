@@ -170,6 +170,7 @@ export default class Transfer extends Component {
                         <FormTextInput
                             placeholder={`Amount to send`}
                             onChangeText={this.onAmountChange}
+                            keyboardType={'numeric'}
                             value={this.state.form.amount}
                             style={styles.formStyle}/>
                         <Text style={styles.header}>{code}</Text>
@@ -180,6 +181,7 @@ export default class Transfer extends Component {
                         <FormTextInput
                             placeholder={`In other currency`}
                             onChangeText={this.onCostChange}
+                            keyboardType={'numeric'}
                             value={this.state.form.cost}
                             style={styles.formStyle}/>
                         <Text style={styles.header}>{currencyCode}</Text>
