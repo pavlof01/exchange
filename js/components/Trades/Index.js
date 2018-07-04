@@ -69,12 +69,19 @@ const styles = StyleSheet.create({
 export default class Trades extends Component {
     state = {
         pending: false,
+        endReached: false,
         trades: [],
     };
 
     componentDidMount() {
         this.load({page: 1})
     }
+
+    loadNext = () => {
+        if(!this.state.endReached) {
+            this.load({page: this.state.page + 1})
+        }
+    };
 
     load = (params = {}) => {
         this.setState({...this.state, pending: true});
@@ -83,17 +90,18 @@ export default class Trades extends Component {
             ...this.props.params,
             sort: this.state.sort,
             scope: 'info_panel',
-            limit: 10,
+            limit: 15,
             ...params
         };
 
-        Api.get('/trades', {sort: this.state.sort, limit: 2, scope: 'info_panel', ...params})
+        Api.get('/trades', params)
             .then(response => this.setState({
                 pending: false,
-                trades: response.data.trades.map(trade => trade),
+                trades: response.data.page === 1 ? response.data.trades : [...this.state.trades, ...response.data.trades],
                 page: response.data.page,
                 pages: response.data.pages,
-                sort: params.sort
+                sort: params.sort,
+                endReached: response.data.page.length === 0,
             }))
     };
 
@@ -119,12 +127,15 @@ export default class Trades extends Component {
         <View style={styles.container}>
             <HeaderBar title={'TRADES'}/>
 
-            {this.state.pending ?
+            {this.state.pending && this.state.trades.length === 0 ?
 
                 <CenterProgressBar/> :
 
                 <FlatList data={this.state.trades}
-                          renderItem={this.renderItem}/>}
+                          renderItem={this.renderItem}
+                          keyExtractor={i => i.id}
+                          onEndReached={this.loadNext}
+                          onEndThreshold={0}/>}
         </View>
     )
   }
