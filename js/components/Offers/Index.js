@@ -121,7 +121,6 @@ export default class Offers extends Component {
         this.props.newTrade(ad)
     };
 
-    // /new_trade/${ad.id}
     renderItem = ({item, index}) => {
         const ad = item;
         const alt = index % 2 === 1;
