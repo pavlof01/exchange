@@ -173,29 +173,29 @@ export default class Transfer extends Component {
                 <View style={styles.formStyle}>
 
                 {this.hint('ADDRESS')}
-                    <FormTextInput placeholder={`Enter ${simpleCurrencyName[code]} address`}/>
+                <FormTextInput placeholder={`Enter ${simpleCurrencyName[code]} address`}/>
 
                 {this.hint('AMOUNT')}
-                    <View style={styles.formRow}>
-                        <FormTextInput
-                            placeholder={`Amount to send`}
-                            onChangeText={this.onAmountChange}
-                            keyboardType={'numeric'}
-                            value={this.state.form.amount}
-                            style={styles.formStyle}/>
-                        <Text style={styles.header}>{code}</Text>
-                    </View>
+                <View style={styles.formRow}>
+                    <FormTextInput
+                        placeholder={`Amount to send`}
+                        onChangeText={this.onAmountChange}
+                        keyboardType={'numeric'}
+                        value={this.state.form.amount}
+                        style={styles.formStyle}/>
+                    <Text style={styles.header}>{code}</Text>
+                </View>
 
                 {this.hint('COST')}
-                    <View style={styles.formRow}>
-                        <FormTextInput
-                            placeholder={`In other currency`}
-                            onChangeText={this.onCostChange}
-                            keyboardType={'numeric'}
-                            value={this.state.form.cost}
-                            style={styles.formStyle}/>
-                        <Text style={styles.header}>{currencyCode}</Text>
-                    </View>
+                <View style={styles.formRow}>
+                    <FormTextInput
+                        placeholder={`In other currency`}
+                        onChangeText={this.onCostChange}
+                        keyboardType={'numeric'}
+                        value={this.state.form.cost}
+                        style={styles.formStyle}/>
+                    <Text style={styles.header}>{currencyCode}</Text>
+                </View>
 
                 <PrimaryButton onPress={this.onSubmitHandler} title={this.state.isConfirming ? 'CONFIRM' : 'SEND'} style={{margin: 16}} />
 
