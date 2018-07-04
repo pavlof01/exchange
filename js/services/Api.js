@@ -11,7 +11,8 @@ export default class Api {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'X-Access-Token': value
+            'Authorization': 'Basic ZXhjaGFuZ2U6MTIzNjU0',
+            'X-Access-Token': value,
         }
     });
   }
