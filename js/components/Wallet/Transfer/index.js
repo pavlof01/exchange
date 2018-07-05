@@ -78,6 +78,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 8,
     },
+    errorRow: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    errorText: {
+        flex: 1,
+        color: '#d61b38',
+        textAlign: 'center',
+    }
 });
 
 const DEFAULT_FORM_VALUES = {
@@ -100,6 +109,7 @@ export default class Transfer extends Component {
         cryptoCurrencyCode: 'BTC',
         form: DEFAULT_FORM_VALUES,
         isConfirming: false,
+        error: { isEmpty: false, isSucceed: false },
     };
 
     componentWillMount() {
@@ -110,7 +120,7 @@ export default class Transfer extends Component {
         this.props.updateEstimatedFee({ currency: this.props.currencyCode });
     }
 
-    componentWillReceiveProps({ withdrawal, exchangeRates, currency }) {
+    componentWillReceiveProps({ withdrawal, exchangeRates }) {
         const data = this.state;
 
         if (withdrawal.status === 200) {
@@ -132,13 +142,6 @@ export default class Transfer extends Component {
             data.price = data.form.amount * exchangeRates[`${this.props.currency}_${this.state.currency}`];
         }
 
-        if (this.props.currency !== currency) {
-            this.props.updateEstimatedFee({ currency });
-            this.props.updateRates({ [currency]: this.state.currency });
-        }
-
-        console.warn(JSON.stringify(withdrawal));
-
         this.setState({ ...data, error: { ...withdrawal.error, ...data.error }});
     }
 
@@ -156,6 +159,24 @@ export default class Transfer extends Component {
         value = value || 0.0;
         const cost = value / rate;
         this.setState({form: {...this.state.form, amount: value, cost: cost.toFixed(2)}});
+    };
+
+    clearedErrorList = name => {
+        const  error = this.state.error;
+        delete error[name];
+        delete error.isEmpty;
+        delete error.isSucceed;
+
+        return error
+    };
+
+    onChangePassword = (value) => {
+        const form = {
+            ...this.state.form,
+            password: value,
+        };
+
+        this.setState({ error: this.clearedErrorList('password'), form });
     };
 
     static ItemWithIcon(label, icon) {
@@ -177,6 +198,30 @@ export default class Transfer extends Component {
         } else {
             this.setState({isConfirming: true});
         }
+    };
+
+    renderConfirmPasswordField = () => {
+        return (
+            <View>
+                {this.hint('PASSWORD')}
+                <View style={styles.formRow}>
+                    <FormTextInput
+                        placeholder={`login password`}
+                        secureTextEntry
+                        onChangeText={this.onChangePassword}
+                        value={this.state.form.password}
+                        style={styles.formStyle}/>
+                </View>
+            </View>
+        );
+    };
+
+    renderPasswordError = () => {
+        return (
+            <View style={styles.formRow}>
+                <Text style={styles.errorText}>{'Wrong password'}</Text>
+            </View>
+        );
     };
 
     render() {
@@ -239,7 +284,11 @@ export default class Transfer extends Component {
                     <Text style={styles.header}>{currencyCode}</Text>
                 </View>
 
+                { this.state.isConfirming ? this.renderConfirmPasswordField() : null }
+
                 <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16}} />
+
+                { this.state.error.isEmpty ? this.renderPasswordError() : null }
 
                 </View>
 
