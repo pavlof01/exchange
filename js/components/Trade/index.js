@@ -212,7 +212,8 @@ export default class Trade extends Component {
 
                     {this.renderActionBlock()}
 
-                    <PartnerLink user={this.partner} online={this.props.partnerActivityStatuses[this.partner.id]} isSeller={this.isUserBuying()}/>
+                    <PartnerLink user={this.partner} isSeller={this.isUserBuying()}  onProfileOpen={this.props.openProfile}
+                                 online={this.props.partnerActivityStatuses[this.partner.id]} />
 
                     <Separator/>
 

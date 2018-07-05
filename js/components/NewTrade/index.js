@@ -204,7 +204,7 @@ export default class NewTrade extends Component {
                         objMap(this.state.errors, (key, value) => <Text style={styles.warning} key={key}>{key}: {value.join('. ')}</Text>)
                     }
 
-                    <PartnerLink user={user} online={user.online} isSeller={ad.type === 'Ad::Sell'}/>
+                    <PartnerLink user={user} online={user.online} isSeller={ad.type === 'Ad::Sell'} onProfileOpen={this.props.openProfile}/>
 
                     <Separator/>
 

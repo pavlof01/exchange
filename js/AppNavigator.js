@@ -11,6 +11,7 @@ import SignUp from "./containers/SignUp/Index";
 import RecoverPassword from "./containers/RecoverPassword/Index";
 import NewTrade from "./containers/NewTrade/Index";
 import Trade from "./containers/Trade/Index";
+import Profile from "./components/Profile";
 
 import {bottomBarStyle, createBottomBarOptions} from "./style/navigation";
 
@@ -25,6 +26,7 @@ const AppNavigator = createStackNavigator({
         Main: { screen: Main, navigationOptions: () => ({ header: props => null }) },
         NewTrade: { screen: NewTrade },
         Trade: { screen: Trade },
+        Profile: { screen: Profile },
         Login: { screen: Login },
         SignUp: { screen: SignUp },
         RecoverPassword: { screen: RecoverPassword },
