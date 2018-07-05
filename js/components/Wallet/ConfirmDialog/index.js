@@ -107,6 +107,7 @@ export default class ConfirmDialog extends Component {
                             onChangeText={onChangePassword}
                             value={passwordValue}
                             style={styles.inputStyle}
+                            error={(errorText.length > 0)}
                         />
                         <Text style={styles.dialogErrorLabel}>{errorText}</Text>
                         <View style={styles.buttonGroup}>

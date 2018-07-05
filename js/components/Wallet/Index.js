@@ -37,15 +37,67 @@ const styles = StyleSheet.create({
     },
 });
 
+const DEFAULT_FORM_VALUES = {
+    code: '',
+    amount: '',
+    address: '',
+    password: '',
+    currency: 'BTC',
+    description: '',
+};
+
 export default class Wallet extends Component {
 
     state = {
         selectedAction: 'transfer',
         isConfirming: false,
+        form: DEFAULT_FORM_VALUES,
     };
 
     onTransferSelected = () => this.setState({selectedAction: 'transfer'});
     onReceiveSelected = () => this.setState({selectedAction: 'receive'});
+
+    onWalletOperationStart = ( form ) => {
+        this.setState({ isConfirming: true, form });
+    };
+
+    closeConfirmDialog = () => {
+        this.setState({ isConfirming: false });
+    };
+
+    renderConfirmDialog = () => {
+        const {
+            amount,
+            currency,
+            address,
+            password,
+        } = this.state.form;
+        return (
+            <ConfirmDialog
+                priceLabel={'YOU SEND'}
+                priceText={`${amount} ${currency}`}
+                addressText={address}
+                passwordValue={password}
+                onChangePassword={this.onChangePassword}
+                errorText={''}
+                onCancelPress={this.closeConfirmDialog}
+                onConfirmPress={this.onConfirmPress}
+            />
+        );
+    };
+
+    onConfirmPress = () => {
+        this.props.sendCryptoCurrency({ ...this.state.form, currency: this.props.currencyCode });
+    };
+
+    onChangePassword = (value) => {
+        const form = {
+            ...this.state.form,
+            password: value,
+        };
+
+        this.setState({ form });
+    };
 
   render() {
       const {
@@ -66,6 +118,7 @@ export default class Wallet extends Component {
               updateCurrencies={this.props.updateCurrencies}
               updateEstimatedFee={this.props.updateEstimatedFee}
               withdrawal={withdrawal}
+              onWalletOperationStart={this.onWalletOperationStart}
               sendCryptoCurrency={sendCryptoCurrency}
           />;
           header = 'TRANSFER'
@@ -93,16 +146,8 @@ export default class Wallet extends Component {
                 {content}
             </ScrollView>
 
-            <ConfirmDialog
-                priceLabel={'YOU SEND'}
-                priceText={'0.1931 BTC'}
-                addressText={'mvNgFFDKKDGETFDYJFfewytdfeywdwedfDFE'}
-                passwordValue={''}
-                onChangePassword={() => {}}
-                errorText={''}
-                onCancelPress={() => {}}
-                onConfirmPress={() => {}}
-            />
+            { this.state.isConfirming ? this.renderConfirmDialog() : null }
+
         </View>
     )
   }

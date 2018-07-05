@@ -137,9 +137,9 @@ export default class Transfer extends Component {
         if (
             this.state.price &&
             this.props.exchangeRates !== exchangeRates &&
-            exchangeRates[`${this.props.currency}_${this.state.currency}`]
+            exchangeRates[`${this.props.currencyCode}_${this.state.currency}`]
         ) {
-            data.price = data.form.amount * exchangeRates[`${this.props.currency}_${this.state.currency}`];
+            data.price = data.form.amount * exchangeRates[`${this.props.currencyCode}_${this.state.currency}`];
         }
 
         this.setState({ ...data, error: { ...withdrawal.error, ...data.error }});
@@ -189,15 +189,18 @@ export default class Transfer extends Component {
     };
 
     onCryptoCurrencyCodeChange = (value) => this.setState({cryptoCurrencyCode: value});
+    onAddressChange = (value) => {
+        const form = {
+            ...this.state.form,
+            address: value,
+        };
+        this.setState({ form });
+    };
 
     hint = (title) => <View style={styles.hintRow}><Text style={styles.inputHint}>{title}</Text></View>;
 
     onSubmitHandler = () => {
-        if (this.state.isConfirming) {
-            this.props.sendCryptoCurrency({ ...this.state.form, currency: this.props.currency })
-        } else {
-            this.setState({isConfirming: true});
-        }
+        this.props.onWalletOperationStart({ ...this.state.form });
     };
 
     renderConfirmPasswordField = () => {
@@ -260,7 +263,12 @@ export default class Transfer extends Component {
                 <View style={styles.formStyle}>
 
                 {this.hint('ADDRESS')}
-                <FormTextInput placeholder={`Enter ${simpleCurrencyName[code]} address`}/>
+                <FormTextInput
+                    placeholder={`Enter ${simpleCurrencyName[code]} address`}
+                    onChangeText={this.onAddressChange}
+                    value={this.state.form.address}
+                    style={styles.formStyle}
+                />
 
                 {this.hint('AMOUNT')}
                 <View style={styles.formRow}>
