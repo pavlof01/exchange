@@ -13,6 +13,7 @@ import Transfer from "./Transfer";
 import Receive from "./Receive";
 import exchangeRates from "../../reducers/exchangeRates";
 import {withCommonStatusBar} from "../../style/navigation";
+import ConfirmDialog from "./ConfirmDialog";
 
 
 const styles = StyleSheet.create({
@@ -40,6 +41,7 @@ export default class Wallet extends Component {
 
     state = {
         selectedAction: 'transfer',
+        isConfirming: false,
     };
 
     onTransferSelected = () => this.setState({selectedAction: 'transfer'});
@@ -90,6 +92,17 @@ export default class Wallet extends Component {
             <ScrollView keyboardShouldPersistTaps='always'>
                 {content}
             </ScrollView>
+
+            <ConfirmDialog
+                priceLabel={'YOU SEND'}
+                priceText={'0.1931 BTC'}
+                addressText={'mvNgFFDKKDGETFDYJFfewytdfeywdwedfDFE'}
+                passwordValue={''}
+                onChangePassword={() => {}}
+                errorText={''}
+                onCancelPress={() => {}}
+                onConfirmPress={() => {}}
+            />
         </View>
     )
   }
