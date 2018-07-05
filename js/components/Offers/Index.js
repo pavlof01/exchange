@@ -114,8 +114,13 @@ export default class Offers extends Component {
     onCryptoCurrencyCodeChange = this.onFilterChangeFactory('cryptoCurrencyCode');
     onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
     onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
-    onActionCodeChangeToBuy = () => this.props.updateFilter({type: 'buy', sort: '-price'});
-    onActionCodeChangeToSell = () => this.props.updateFilter({type: 'sell', sort: 'price'});
+
+    /* When the user is looking to _buy_, they filter for offers to _sell_ and vice versa*/
+    userWantsToBuy = () => this.props.filter.type === 'sell';
+    showOffersToSell = () => this.props.updateFilter({type: 'sell', sort: 'price'});
+
+    userWantsToSell = () => this.props.filter.type === 'buy';
+    showOffersToBuy = () => this.props.updateFilter({type: 'buy', sort: '-price'});
 
     openNewTrade = (ad) => {
         this.props.newTrade(ad)
@@ -152,7 +157,7 @@ export default class Offers extends Component {
 
     render() {
         let header;
-        if(this.props.filter.type === 'buy') {
+        if(this.userWantsToBuy()) {
             header = 'BUY OFFERS';
         } else {
             header = 'SELL OFFERS';
@@ -160,21 +165,26 @@ export default class Offers extends Component {
         return withCommonStatusBar(
             <View style={styles.container}>
                 <HeaderBar title={header}/>
-                {/*{this.actionName}*/}
 
                 <View style={styles.rowContainer}>
-                    <TopButton title={'BUY'} onPress={this.onActionCodeChangeToBuy} selected={this.props.filter.type === 'buy'} selectedColor={'green'} color={'black'}/>
+                    <TopButton title={'BUY'}
+                               selected={this.userWantsToBuy()}
+                               onPress={this.showOffersToSell}
+                               selectedColor={'green'}/>
 
                     <Separator vertical/>
 
-                    <TopButton title={'SELL'} onPress={this.onActionCodeChangeToSell} selected={this.props.filter.type === 'sell'} selectedColor={'red'} color={'black'}/>
+                    <TopButton title={'SELL'}
+                               selected={this.userWantsToSell()}
+                               onPress={this.showOffersToBuy}
+                               selectedColor={'red'}/>
                 </View>
 
                 <Separator />
 
                 <View style={styles.pickerRow}>
                     <View>
-                        <Text style={styles.inputHint}>YOU {this.props.filter.type === 'buy' ? 'BUY' : 'SELL'}</Text>
+                        <Text style={styles.inputHint}>YOU {this.userWantsToBuy() ? 'BUY' : 'SELL'}</Text>
                         <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
                                 selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}
                                 renderButton={Offers.CryptItem}>

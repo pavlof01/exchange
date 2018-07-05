@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Api from "../../services/Api";
 import Price from "../../values/Price";
-import {currencyCodeToSymbol, tradeType, tradeTypeBuy, tradeTypeSell} from "../../helpers";
+import {currencyCodeToSymbol, tradePartner, tradeType, tradeTypeBuy, tradeTypeSell} from "../../helpers";
 import PrimaryButton from "../../style/PrimaryButton";
 import EscrowTimer from "./EscrowTimer";
 import PartnerLink from "./PartnerLink";
@@ -155,7 +155,7 @@ export default class Trade extends Component {
     };
 
     renderActionBlock = () => {
-        if(!this.isReady){
+        if(!this.isTradeLoaded){
             return undefined;
         }
 
@@ -163,23 +163,23 @@ export default class Trade extends Component {
             return <ActivityIndicator size="large" />
         }
         const { status } = this.props.trade;
-        return this.isBuying() ? this.renderBuyActionBlock(status) : this.renderSellActionBlock(status);
+        return this.isUserBuying() ? this.renderBuyActionBlock(status) : this.renderSellActionBlock(status);
     };
 
-    isBuying = () => {
-        return this.props.trade.ad && (tradeType(this.props.trade, this.props.user.id) === tradeTypeBuy);
+    isUserBuying = () => {
+        return this.isTradeLoaded() && (tradeType(this.props.trade, this.props.user.id) === tradeTypeBuy);
     };
 
-    isReady = () => {
+    isTradeLoaded = () => {
         return !!this.props.trade.status;
     };
 
     get partner() {
-        return this.props.trade && this.props.trade.contractor || {};
+        return this.isTradeLoaded() ? tradePartner(this.props.trade, this.props.user.id) : "";
     }
 
     get actionTitle () {
-        return this.isBuying() ? 'ПРОДАЖУ ОНЛАЙН' : 'ПОКУПКУ ОНЛАЙН';
+        return this.isUserBuying() ? 'ПОКУПКУ ОНЛАЙН' : 'ПРОДАЖУ ОНЛАЙН';
     }
 
     render() {
@@ -188,14 +188,14 @@ export default class Trade extends Component {
 
         return withCommonStatusBar(<ScrollView keyboardShouldPersistTaps='always'>
             <View>
-                    <Text style={styles.header}>{ad.payment_details}</Text>
+                    <Text style={[styles.header, styles.centeredText]}>{ad.payment_details}</Text>
                     <View style={styles.info}>
                         <Text style={[styles.huge, styles.centeredText]}>{ad.payment_method_code}</Text>
                         <Text style={styles.centeredText}><Text style={styles.header}>Цена за 1 {ad.crypto_currency_code}:</Text> <Text style={[styles.huge, {color: '#25367E'}]}>{Price.build(ad.price).viewMain} {currencyCodeToSymbol(ad.currency_code)}</Text></Text>
                     </View>
 
                 {
-                    this.isReady() ? <View style={{padding: 8, backgroundColor: 'white'}}>
+                    this.isTradeLoaded() ? <View style={{padding: 8, backgroundColor: 'white'}}>
                         <Text>Ваш запрос Трейдеру <Text style={styles.bold}>{this.partner.user_name}</Text> на <Text
                             style={styles.bold}>{this.actionTitle}</Text> криптовалюты от <Text>{this.createdAt}</Text></Text>
                         <Text style={[styles.header, styles.centeredText]}>
@@ -212,7 +212,7 @@ export default class Trade extends Component {
 
                     {this.renderActionBlock()}
 
-                    <PartnerLink user={this.partner} online={this.props.partnerActivityStatuses[this.partner.id]} isSeller={this.isBuying()}/>
+                    <PartnerLink user={this.partner} online={this.props.partnerActivityStatuses[this.partner.id]} isSeller={this.isUserBuying()}/>
 
                     <Separator/>
 

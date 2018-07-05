@@ -11,9 +11,7 @@ import FormTextInput from "../FormTextInput";
 import Price from "../../values/Price";
 import {currencyCodeToSymbol, objMap} from "../../helpers";
 import PrimaryButton from "../../style/PrimaryButton";
-import OnlineStatus from "../../style/OnlineStatus";
 import Separator from "../../style/Separator";
-import User from "../../models/User";
 import Api from "../../services/Api";
 import TradeAdvices from "../Trade/TradeAdvices";
 import TradeTrivia from "../Trade/TradeTrivia";
@@ -206,7 +204,7 @@ export default class NewTrade extends Component {
                         objMap(this.state.errors, (key, value) => <Text style={styles.warning} key={key}>{key}: {value.join('. ')}</Text>)
                     }
 
-                    <PartnerLink user={user} online={user.online} isSeller={ad.type === 'Ad::Buy'}/>
+                    <PartnerLink user={user} online={user.online} isSeller={ad.type === 'Ad::Sell'}/>
 
                     <Separator/>
 
