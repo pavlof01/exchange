@@ -170,15 +170,6 @@ export default class Transfer extends Component {
         return error
     };
 
-    onChangePassword = (value) => {
-        const form = {
-            ...this.state.form,
-            password: value,
-        };
-
-        this.setState({ error: this.clearedErrorList('password'), form });
-    };
-
     static ItemWithIcon(label, icon) {
         return (<View style={styles.pickerRow}>{icon}<Text style={styles.cardText}>{label}</Text></View>)
     }
@@ -201,22 +192,6 @@ export default class Transfer extends Component {
 
     onSubmitHandler = () => {
         this.props.onWalletOperationStart({ ...this.state.form });
-    };
-
-    renderConfirmPasswordField = () => {
-        return (
-            <View>
-                {this.hint('PASSWORD')}
-                <View style={styles.formRow}>
-                    <FormTextInput
-                        placeholder={`login password`}
-                        secureTextEntry
-                        onChangeText={this.onChangePassword}
-                        value={this.state.form.password}
-                        style={styles.formStyle}/>
-                </View>
-            </View>
-        );
     };
 
     renderPasswordError = () => {
