@@ -88,6 +88,7 @@ export default class Wallet extends Component {
     onConfirmPress = () => {
         const params = { ...this.state.form };
         this.props.sendCryptoCurrency(params);
+        this.closeConfirmDialog();
     };
 
     onChangePassword = (value) => {

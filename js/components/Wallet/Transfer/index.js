@@ -86,7 +86,12 @@ const styles = StyleSheet.create({
         flex: 1,
         color: '#d61b38',
         textAlign: 'center',
-    }
+    },
+    successText: {
+        flex: 1,
+        color: '#14d459',
+        textAlign: 'center',
+    },
 });
 
 const DEFAULT_FORM_VALUES = {
@@ -210,6 +215,14 @@ export default class Transfer extends Component {
         );
     };
 
+    renderSucessText = () => {
+        return (
+            <View style={styles.formRow}>
+                <Text style={styles.successText}>{'Transaction added to queue'}</Text>
+            </View>
+        );
+    };
+
     render() {
         const code = this.state.cryptoCurrencyCode;
         const {
@@ -280,6 +293,8 @@ export default class Transfer extends Component {
                 <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16}} />
 
                 { this.state.error.isEmpty ? this.renderPasswordError() : null }
+
+                { this.state.error.isSucceed ? this.renderSucessText() : null }
 
                 </View>
 
