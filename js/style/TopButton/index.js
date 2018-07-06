@@ -50,13 +50,16 @@ export default class TopButton extends Component {
     };
 
     render() {
+        const selectedColor = this.props.selectedColor || 'blue';
+        const color = this.props.color || 'black';
+
         return (
             <View style={styles.topButton}>
                 <BorderlessButton
                     title={this.props.title}
                     onPress={this.props.onPress}
                     disabled={this.props.selected}
-                    color={this.props.selected ? this.props.selectedColor : this.props.color}
+                    color={this.props.selected ? selectedColor : color}
                     textStyle={styles.text}/>
             </View>
         )

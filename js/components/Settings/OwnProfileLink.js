@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     userName: {
         fontWeight: 'bold',
         color: '#333333',
-        fontSize: 16,
+        fontSize: 24,
         marginLeft: 4,
     },
     feedback_grade: {
@@ -29,16 +29,15 @@ const styles = StyleSheet.create({
     }
 });
 
-class PartnerLink extends React.Component {
+class OwnProfileLink extends React.Component {
 
     render() {
-        const { user, online, isSeller, onProfileOpen } = this.props;
+        const { user, onProfileOpen } = this.props;
 
         return (
             <Touchable onPress={() => onProfileOpen(user)}>
                 <View style={styles.row}>
-                    <Text>{isSeller ? 'Продавец' : 'Покупатель'}</Text>
-                    <OnlineStatus isOnline={online}/>
+                    <OnlineStatus isOnline={true}/>
                     <Text style={styles.userName}>{user.user_name} ({User.approximateTradesCount(user.completed_trades_count)})</Text>
                     <Text> {user.feedback_grade}%</Text>
                 </View>
@@ -47,4 +46,4 @@ class PartnerLink extends React.Component {
     }
 }
 
-export default PartnerLink;
+export default OwnProfileLink;

@@ -11,9 +11,7 @@ import FormTextInput from "../FormTextInput";
 import Price from "../../values/Price";
 import {currencyCodeToSymbol, objMap} from "../../helpers";
 import PrimaryButton from "../../style/PrimaryButton";
-import OnlineStatus from "../../style/OnlineStatus";
 import Separator from "../../style/Separator";
-import User from "../../models/User";
 import Api from "../../services/Api";
 import TradeAdvices from "../Trade/TradeAdvices";
 import TradeTrivia from "../Trade/TradeTrivia";
@@ -137,7 +135,6 @@ export default class NewTrade extends Component {
                 if (error.response.status === 422) {
                     newState.errors = error.response.data.errors;
                 } else if (error.response.status === 429) {
-                    this.props.openTrade({id: error.response.data.trade_ids[0]});
                     newState.errors = {opened_trade_ids: error.response.data.trade_ids};
                 } else if (error.response.status === 410) {
                     newState.errors = {schedule: ['Трейдер в данный момент не работает, смотрите расписание']};
@@ -199,7 +196,7 @@ export default class NewTrade extends Component {
                     />
                     <Text style={styles.centeredText}>Окно оплаты счёта продавца:<Text style={styles.bold}>{'\n'}{ad.escrow_time || 90} минут</Text></Text>
 
-                    <PrimaryButton onPress={() => this.onSubmit(form)} title={'Отправить запрос Трейдеру'} disabled={pending}>
+                    <PrimaryButton onPress={() => this.onSubmit(form)} title={'Отправить запрос Трейдеру'} disabled={pending} style={{margin: 8, flex: 1}}>
                         {pending ? <ActivityIndicator size="large"/> : undefined}
                     </PrimaryButton>
 
@@ -207,7 +204,7 @@ export default class NewTrade extends Component {
                         objMap(this.state.errors, (key, value) => <Text style={styles.warning} key={key}>{key}: {value.join('. ')}</Text>)
                     }
 
-                    <PartnerLink user={user} online={user.online} isSeller={ad.type === 'Ad::Buy'}/>
+                    <PartnerLink user={user} online={user.online} isSeller={ad.type === 'Ad::Sell'} onProfileOpen={this.props.openProfile}/>
 
                     <Separator/>
 

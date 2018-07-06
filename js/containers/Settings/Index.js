@@ -1,9 +1,12 @@
 import { connect } from 'react-redux'
 import Settings from '../../components/Settings/Index'
-import {logout} from "../../actions/session";
+import {logout, updateUserMeta} from "../../actions/session";
+import {openProfile} from "../../actions/navigation";
 
 const mapDispatchToProps = dispatch => ({
-    logout: () => {dispatch(logout())}
+    logout: () => {dispatch(logout())},
+    openProfile: (profile) => dispatch(openProfile(profile)),
+    updateUserMeta: params => dispatch(updateUserMeta(params,dispatch)),
 });
 
 const mapStateToProps = (state) => ({

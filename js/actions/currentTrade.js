@@ -5,7 +5,7 @@ export function fetch(dispatch, id) {
   Api.get('/trades/' + id)
     .then(response => dispatch(set(response.data.trade)));
 
-  return { type: CURRENT_TRADE.CURRENT_TRADE_SET, trade: null }
+  return { type: CURRENT_TRADE.CURRENT_TRADE_SET, trade: { id } }
 }
 
 export function fetchFromTrade(dispatch, trade) {

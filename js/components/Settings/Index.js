@@ -2,12 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    StyleSheet,
+    ActivityIndicator,
+    StyleSheet, Switch,
     Text,
     View,
 } from 'react-native';
 import Touchable from '../../style/Touchable';
 import BorderlessButton from "../../style/BorderlessButton";
+import OwnProfileLink from "./OwnProfileLink";
+import Separator from "../../style/Separator";
+import FormTextInput from "../FormTextInput";
+import PrimaryButton from "../../style/PrimaryButton";
+import HeaderBar from "../../style/HeaderBar";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -16,26 +22,156 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    header: {
+        color: '#222222',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginBottom: 8,
+    },
+    bold: {
+        margin: 2,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    rowItem: {
+        flex: 1,
+    },
+    row: {
+        flexDirection: 'row',
+        padding: 4,
+        alignItems: 'center',
+    },
+    row2: {
+        flexDirection: 'row',
+        padding: 8,
+    },
+    info: {
+        backgroundColor: 'white',
+        margin: 8,
+        padding: 8,
+    },
+    infoText: {
+        margin: 2,
+        fontSize: 16,
+    },
+    warning: {
+        color: '#8b572a',
+        backgroundColor: '#fbf5eb',
+        borderColor: '#f5a623',
+        borderRadius: 4,
+        borderWidth: 1,
+        padding: 8,
+        margin: 8,
+    }
 });
 
+const Header = (props) => <Text style={styles.header}>{props.children}</Text>;
+const Bold = (props) => <Text style={styles.bold}>{props.children}</Text>;
+
 export default class Settings extends Component {
+    state = {
+        pending: false,
+        introduction: this.props.user.introduction,
+        ad_sell_enabled: this.props.user.ad_buy_enabled,
+        ad_buy_enabled: this.props.user.ad_sell_enabled };
 
-    constructor(props) {
-        super(props);
-        this.onLogoutPressed = this.onLogoutPressed.bind(this);
-
+    componentWillReceiveProps({ user }) {
+        const { user : { introduction, ad_buy_enabled, ad_sell_enabled }} = this.props;
+        this.setState({
+            pending: false,
+            ...(introduction !== user.introduction ? { introduction: user.introduction } : {}),
+            ...(ad_buy_enabled !== user.ad_buy_enabled ? { ad_buy_enabled: user.ad_buy_enabled } : {}),
+            ...(ad_sell_enabled !== user.ad_sell_enabled ? { ad_sell_enabled: user.ad_sell_enabled } : {}),
+        });
     }
-  onLogoutPressed() {
-    this.props.logout();
-  }
+
+    onSubmitUserMeta = () => {
+
+        const { user : { introduction, ad_buy_enabled, ad_sell_enabled }} = this.props;
+
+        const meta = {
+            ...(introduction !== this.state.introduction ? { introduction: this.state.introduction } : {}),
+            ...(ad_buy_enabled !== this.state.ad_buy_enabled ? { ad_buy_enabled: this.state.ad_buy_enabled } : {}),
+            ...(ad_sell_enabled !== this.state.ad_sell_enabled ? { ad_sell_enabled: this.state.ad_sell_enabled } : {}),
+        };
+
+        this.props.updateUserMeta(meta);
+
+        // this.setState({pending:true});
+    };
+
+    onLogoutPressed = () => this.props.logout();
+    onIntroductionChanged = (value) => this.setState({ introduction: value });
+    onAdBuyEnabledChanged = (value) => this.setState({ ad_buy_enabled: value });
+    onAdSellEnabledChanged = (value) => this.setState({ ad_sell_enabled: value });
+
   render() {
-    return (
-        <View style={styles.centerContent}>
-          <Text style={{margin: 16, fontSize: 24}}>Hello, {this.props.user.user_name}!</Text>
-            <BorderlessButton
-                onPress={this.onLogoutPressed}
-                title={'Logout'}
-            />
+        const { user } = this.props;
+
+        return (
+        <View>
+            <HeaderBar title={'SETTINGS'}/>
+            <View style={styles.row}>
+                <View style={styles.rowItem}>
+                    <OwnProfileLink user={this.props.user} onProfileOpen={this.props.openProfile} />
+                </View>
+                <View style={styles.rowItem}>
+                    <BorderlessButton
+                        onPress={this.onLogoutPressed}
+                        title={'Logout'}
+                    />
+                </View>
+            </View>
+
+
+            <View style={styles.info}>
+                {!user.email_verified_date && <Text style={styles.warning}>
+                    Вы еще не подтвердили вашу электронную почту.
+                    У вас осталось примерно <Bold>2&nbsp;дня, 23&nbsp;часа</Bold>,
+                    до того как срок действия email подтверждения истечет. Проверьте вашу почту.
+                </Text>}
+
+
+                <Header>E-mail</Header>
+                <Bold>{user.email}</Bold>
+
+                {!user.email_verified_date &&
+                <Text style={[styles.bold, {color: 'red'}]}>E-mail не подтвержден</Text>}
+
+                {user.email_verified_date &&
+                <Text style={[styles.bold, {color: 'green'}]}>E-mail подтвержден</Text>}
+
+                <Separator/>
+
+                <Header>О себе</Header>
+                <FormTextInput
+                    onChangeText={this.onIntroductionChanged}
+                    multiline
+                    style={{minHeight: 150, height: 'auto'}}
+                    value={this.state.introduction ? this.state.introduction : ""}
+                    onChange={this.onIntroductionChanged}
+                    placeholder="Показывается в общедоступном профиле. Только текст, не более 200 символов."
+                />
+
+                <View style={styles.row2}>
+                    <Text style={[styles.infoText, styles.rowItem]}>Продажи временно приостановлены</Text>
+                    <Switch
+                        value={this.state.ad_sell_enabled}
+                        onValueChange={this.onAdSellEnabledChanged}/>
+                </View>
+
+                <View style={styles.row2}>
+                    <Text style={[styles.infoText, styles.rowItem]}>Покупки временно приостановлены</Text>
+                    <Switch
+                        value={this.state.ad_buy_enabled}
+                        onValueChange={this.onAdBuyEnabledChanged}/>
+                </View>
+
+                <PrimaryButton onPress={this.onSubmitUserMeta} title={'Сохранить профиль'} disabled={this.state.pending}>
+                    {this.state.pending ? <ActivityIndicator size="large"/> : undefined}
+                </PrimaryButton>
+            </View>
+
         </View>
     )
   }
