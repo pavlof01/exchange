@@ -208,6 +208,8 @@ export default class NewTrade extends Component {
 
                     <Separator/>
 
+                    <Text style={styles.row}><Text style={styles.bold}>Страна:</Text> {ad.country_code}</Text>
+
                     <TradeTrivia ad={ad}/>
 
                     <TradeAdvices/>

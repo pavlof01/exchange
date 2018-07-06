@@ -16,6 +16,7 @@ import Separator from "../../style/Separator";
 import TradeTrivia from "./TradeTrivia";
 import TradeAdvices from "./TradeAdvices";
 import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
+import Feedback from "./Feedback";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -216,6 +217,13 @@ export default class Trade extends Component {
                                  online={this.props.partnerActivityStatuses[this.partner.id]} />
 
                     <Separator/>
+
+                    <Text style={styles.row}><Text style={styles.bold}>Страна:</Text> {ad.country_code}</Text>
+
+                    {
+                        trade.feedback_allowed &&
+                        <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
+                    }
 
                     <TradeTrivia ad={ad}/>
 

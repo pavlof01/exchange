@@ -37,16 +37,10 @@ class TradeTrivia extends React.Component {
     render() {
         const {ad} = this.props;
 
-        return (
-            <React.Fragment>
-                <Text style={styles.row}><Text style={styles.bold}>Страна:</Text> {ad.country_code}</Text>
-
-                {ad.conditions && <View style={styles.info}>
-                    <Text>Условия сделки:</Text>
-                    <Text>{ad.conditions}</Text>
-                </View>}
-            </React.Fragment>
-        );
+        return ad.conditions ? <View style={styles.info}>
+            <Text>Условия сделки:</Text>
+            <Text>{ad.conditions}</Text>
+        </View> : null;
     }
 }
 
