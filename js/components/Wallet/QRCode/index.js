@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
+    ActivityIndicator,
     Text,
     Image,
     View,
@@ -14,6 +15,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        minHeight: 280,
     },
 });
 
@@ -27,7 +29,9 @@ export default class QRCode extends Component {
         const { transactionTokens } = this.props;
 
         let content = null;
-        if (transactionTokens && transactionTokens.data && transactionTokens.data.length > 0) {
+        if (transactionTokens && transactionTokens.generation_pending) {
+            content = (<ActivityIndicator size="large" />);
+        } else if (transactionTokens && transactionTokens.data && transactionTokens.data.length > 0) {
             const base64code = transactionTokens.data[0].qr_code.replace(/\n/g, '');
             content = (
                 <Image
