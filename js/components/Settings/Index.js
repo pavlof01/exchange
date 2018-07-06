@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    wideRowItem: {
+        flex: 2,
+    },
     rowItem: {
         flex: 1,
     },
@@ -112,12 +115,13 @@ export default class Settings extends Component {
         <View>
             <HeaderBar title={'SETTINGS'}/>
             <View style={styles.row}>
-                <View style={styles.rowItem}>
+                <View style={styles.wideRowItem}>
                     <OwnProfileLink user={this.props.user} onProfileOpen={this.props.openProfile} />
                 </View>
                 <View style={styles.rowItem}>
                     <BorderlessButton
                         onPress={this.onLogoutPressed}
+                        textStyle={{fontWeight: 'bold'}}
                         title={'Logout'}
                     />
                 </View>

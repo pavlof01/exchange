@@ -38,6 +38,8 @@ class CardPicker extends React.Component {
         selectedValue: PropTypes.string,
 
         renderButton: PropTypes.func,
+
+        fontSize: PropTypes.number,
     };
 
     state = {
@@ -50,13 +52,15 @@ class CardPicker extends React.Component {
     };
 
     render() {
+        const { fontSize } = this.props;
+
         let selected;
         const options = React.Children.map(this.props.children,
             (child) => {
                 if(child.props.value === this.state.selectedValue) {
                     selected = child;
                 }
-                return React.cloneElement(child, {onSelect: this.handleChange, customStyles: {optionText: styles.cardText}})
+                return React.cloneElement(child, {onSelect: this.handleChange, customStyles: {optionText: [styles.cardText, fontSize ? {fontSize} : undefined]}})
             }
         );
 

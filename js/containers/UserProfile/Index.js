@@ -1,8 +1,10 @@
 
 import { connect } from 'react-redux'
 import Profile from '../../components/Profile'
+import {openFeedback} from "../../actions/navigation";
 
 const mapDispatchToProps = dispatch => ({
+    openFeedback: (user_name) => dispatch(openFeedback(user_name)),
 });
 
 const mapStateToProps = (state) => ({

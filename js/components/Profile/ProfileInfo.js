@@ -10,6 +10,7 @@ import OnlineStatus from "../../style/OnlineStatus";
 import CenterProgressBar from "../../style/CenterProgressBar";
 import {objLength, objMap} from "../../helpers";
 import Time from "../../values/Time";
+import BorderlessButton from "../../style/BorderlessButton";
 
 const styles = StyleSheet.create({
     header: {
@@ -58,7 +59,7 @@ const Span = (props) => <Text style={styles.infoText}>{props.children}</Text>;
 class ProfileInfo extends React.Component {
 
     render() {
-        const { profile, pending } = this.props;
+        const { profile, pending, openFeedback } = this.props;
 
         if (!profile) return <CenterProgressBar/>;
 
@@ -95,8 +96,8 @@ class ProfileInfo extends React.Component {
                     {User.approximateTradesCount(profile.completed_trades_count)} </Span>
                         с {profile.completed_trades_users_count} различными партнерами
                     </Dd>
-                    <Dt>Оценка отзывов</Dt>
-                    <Dd><Span>{profile.feedback_grade} %</Span></Dd>
+                    <BorderlessButton title={'Просмотреть отзывы'} onPress={openFeedback} textStyle={{fontWeight: 'bold'}}/>
+                    <Dd>Средняя оценка по отзывам: <Span>{profile.feedback_grade}%</Span></Dd>
                     <Dt>Подтверждение настоящего имени</Dt>
                     <Dd>0 проверенное подтверждение, 0 отклоненных подтверждения</Dd>
                     <Dt>Первая покупка</Dt>

@@ -1,6 +1,7 @@
 export const NEW_TRADE_REQUEST = 'NEW_TRADE_REQUEST';
 export const OPEN_TRADE_REQUEST = 'OPEN_TRADE_REQUEST';
 export const OPEN_PROFILE_REQUEST = 'OPEN_PROFILE_REQUEST';
+export const OPEN_FEEDBACK_REQUEST = 'OPEN_FEEDBACK_REQUEST';
 
 export function newTrade(ad) {
     return {
@@ -20,5 +21,12 @@ export function openProfile(profile) {
     return {
         type: OPEN_PROFILE_REQUEST,
         profile
+    };
+}
+
+export function openFeedback(user_name) {
+    return {
+        type: OPEN_FEEDBACK_REQUEST,
+        user_name
     };
 }

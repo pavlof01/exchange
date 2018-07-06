@@ -8,7 +8,12 @@ import {
     RECOVER_PASSWORD_REQUEST,
 } from '../actions/recoverPassword';
 import {SESSION} from "../actions";
-import {NEW_TRADE_REQUEST, OPEN_PROFILE_REQUEST, OPEN_TRADE_REQUEST} from "../actions/navigation";
+import {
+    NEW_TRADE_REQUEST,
+    OPEN_FEEDBACK_REQUEST,
+    OPEN_PROFILE_REQUEST,
+    OPEN_TRADE_REQUEST
+} from "../actions/navigation";
 const firstAction = AppNavigator.router.getActionForPathAndParams('SplashScreen');
 const initialState = AppNavigator.router.getStateForAction(firstAction);
 
@@ -55,6 +60,12 @@ export default function navigationReducer(state = initialState, action) {
       case OPEN_PROFILE_REQUEST:
           nextState = AppNavigator.router.getStateForAction(
               NavigationActions.navigate({ routeName: 'Profile', params: {profile: action.profile} }),
+              state
+          );
+          break;
+      case OPEN_FEEDBACK_REQUEST:
+          nextState = AppNavigator.router.getStateForAction(
+              NavigationActions.navigate({ routeName: 'Feedback', params: {user_name: action.user_name} }),
               state
           );
           break;

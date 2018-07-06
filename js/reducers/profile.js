@@ -27,7 +27,7 @@ export default (state = initial, action) => {
                 ...state.feedbacks,
 
                 total_pages: action.data.total_pages,
-                data: action.data.feedbacks,
+                data: action.data.page === 1 ? action.data.feedbacks : [...state.feedbacks.data, ...action.data.feedbacks],
                 page: action.data.page,
 
                 different_users_count: action.data.different_users_count,
