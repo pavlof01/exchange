@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: 280,
+        minHeight: 276,
+        padding: 8,
     },
 });
 
