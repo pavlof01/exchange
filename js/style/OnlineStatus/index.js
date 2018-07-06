@@ -22,20 +22,6 @@ const styles = StyleSheet.create({
     },
 });
 
-class OnlineStatus extends React.Component {
-
-    static propTypes = {
-        /**
-         * Color.
-         */
-        isOnline: PropTypes.bool.isRequired,
-    };
-
-    render() {
-        return (
-            <View style={this.props.isOnline ? styles.green_circle : styles.red_circle}/>
-        );
-    }
-}
+const OnlineStatus = (props) => <View style={props.isOnline ? styles.green_circle : styles.red_circle}/>;
 
 export default OnlineStatus;

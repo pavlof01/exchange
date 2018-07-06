@@ -11,7 +11,7 @@ const initial = {
   paymentMethodCode: null,
   smsRequired: null,
   page: 1,
-  limit: 2,
+  limit: 15,
 };
 
 export default (state = initial, action) => {

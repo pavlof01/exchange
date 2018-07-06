@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
     Text,
     View,
-    StyleSheet, FlatList,
+    StyleSheet, FlatList, ActivityIndicator,
 } from 'react-native';
 import CenterProgressBar from "../../style/CenterProgressBar";
 import Api from "../../services/Api";
@@ -25,6 +25,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    centerMessage: {
+        flex: 1,
+        height: 64,
+        fontSize: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
     },
     rowContainer: {
         flexDirection: 'row',
@@ -134,8 +143,10 @@ export default class Trades extends Component {
                 <FlatList data={this.state.trades}
                           renderItem={this.renderItem}
                           keyExtractor={i => i.id}
+                          ListEmptyComponent={<Text style={styles.centerMessage}>У вас ещё не было сделок</Text>}
+                          ListFooterComponent={this.state.pending && <ActivityIndicator size="large"/> }
                           onEndReached={this.loadNext}
-                          onEndThreshold={0}/>}
+                          onEndReachedThreshold={0.3}/>}
         </View>
     )
   }

@@ -81,7 +81,6 @@ export default class RecoverPassword extends Component {
         } else {
             return withCommonStatusBar(
                 <ScrollView style={[styles.paddingScreen]}>
-                    <Text style={[styles.pageHeader]}>Восстановление</Text>
                     <View style={[styles.formBlock]}>
                         <View style={{marginBottom: 8}}>
                             <FormTextInput
@@ -115,12 +114,6 @@ export default class RecoverPassword extends Component {
 const styles = StyleSheet.create({
     error: {
         color: '#dd0057',
-        marginBottom: 16,
-    },
-    pageHeader: {
-        textAlign: 'center',
-        fontSize: 24,
-        fontWeight: "700",
         marginBottom: 16,
     },
     paddingScreen: {

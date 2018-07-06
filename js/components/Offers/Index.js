@@ -19,6 +19,15 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
     },
+    centerMessage: {
+        flex: 1,
+        height: 64,
+        fontSize: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+    },
     rowContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -105,6 +114,7 @@ export default class Offers extends Component {
         this.props.fetchCurrencies();
         this.props.fetchPaymentMethods();
         this.props.fetchCountries();
+        this.props.updateFilter({});
     }
 
     onFilterChangeFactory = (name) => (value) => {
@@ -229,7 +239,9 @@ export default class Offers extends Component {
                     <ActivityIndicator size="large" style={{margin: 16}} /> :
 
                     <FlatList data={this.props.orders.list}
-                              renderItem={this.renderItem}/>}
+                              renderItem={this.renderItem}
+                              ListEmptyComponent={<Text style={styles.centerMessage}>Нет соответствующих предложений</Text>}
+                              />}
 
             </View>
         )

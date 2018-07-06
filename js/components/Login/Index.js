@@ -69,8 +69,7 @@ export default class Login extends Component {
     }
 
     render() {
-        return (//withColoredStatusBar('#AAAAAA',
-
+        return (withColoredStatusBar('#AAAAAA',
             <View style={[styles.paddingScreen]}>
                 <Text style={[styles.pageHeader]}>BitChange</Text>
                 <View style={[styles.formBlock]}>
@@ -115,7 +114,7 @@ export default class Login extends Component {
                         </View>
                     </Touchable>
                 </View>
-            </View>);
+            </View>));
     }
 }
 
@@ -140,6 +139,7 @@ const styles = StyleSheet.create({
     formBlock: {
         paddingHorizontal: 20,
         paddingVertical: 32,
+        borderRadius: 8,
         backgroundColor: '#fff',
     },
     textLink: {

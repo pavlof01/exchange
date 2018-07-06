@@ -20,6 +20,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 8,
     },
+    cardText: {
+        fontSize: 24,
+        color: '#333333',
+        margin: 8,
+        fontWeight: "bold",
+    },
     info: {
         backgroundColor: 'white',
         margin: 8,

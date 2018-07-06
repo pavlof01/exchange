@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         margin: 8,
         padding: 8,
+        borderRadius: 4,
     },
     infoText: {
         margin: 2,
@@ -196,7 +197,7 @@ export default class Trade extends Component {
                     </View>
 
                 {
-                    this.isTradeLoaded() ? <View style={{padding: 8, backgroundColor: 'white'}}>
+                    this.isTradeLoaded() ? <View style={styles.info}>
                         <Text>Ваш запрос Трейдеру <Text style={styles.bold}>{this.partner.user_name}</Text> на <Text
                             style={styles.bold}>{this.actionTitle}</Text> криптовалюты от <Text>{this.createdAt}</Text></Text>
                         <Text style={[styles.header, styles.centeredText]}>
@@ -222,7 +223,9 @@ export default class Trade extends Component {
 
                     {
                         trade.feedback_allowed &&
-                        <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
+                            <View style={styles.info}>
+                                <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
+                            </View>
                     }
 
                     <TradeTrivia ad={ad}/>

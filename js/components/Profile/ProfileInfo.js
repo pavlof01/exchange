@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         margin: 8,
         padding: 8,
+        borderRadius: 4,
     },
     infoText: {
         margin: 2,
