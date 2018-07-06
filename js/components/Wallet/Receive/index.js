@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
     ActivityIndicator,
+    Clipboard,
     Text,
     View,
     StyleSheet,
@@ -70,14 +71,19 @@ export default class Receive extends Component {
     };
 
     copyAddress = () => {
-
+        if (this.isAddressLoaded()) {
+            const {
+                transactionTokens,
+            } = this.props;
+            Clipboard.setString(transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address);
+        }
     };
 
     isAddressLoaded = () => {
         const {
             transactionTokens,
         } = this.props;
-        return (transactionTokens && transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address);
+        return (transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address);
     };
 
     hint = (title) => (
