@@ -105,6 +105,9 @@ export default class Wallet extends Component {
           exchangeRates,
           withdrawal,
           sendCryptoCurrency,
+          transactionTokens,
+          getTransactionTokens,
+          generateTransactionToken,
       } = this.props;
 
       let content, header;
@@ -123,7 +126,13 @@ export default class Wallet extends Component {
           />;
           header = 'TRANSFER'
       } else {
-          content = <Receive cryptoCurrencies={this.props.cryptoCurrencies}/>;
+          content = <Receive
+              currency={"BTC"}
+              cryptoCurrencies={this.props.cryptoCurrencies}
+              transactionTokens={transactionTokens}
+              getTransactionTokens={getTransactionTokens}
+              generateTransactionToken={generateTransactionToken}
+          />;
           header = 'RECEIVE';
       }
 

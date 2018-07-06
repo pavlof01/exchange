@@ -120,7 +120,7 @@ const InitialState = Record({
 
 const initial = new InitialState();
 
-function parseMutation(action) {
+function parseMutation(action, state) {
     switch (action.type) {
         case SESSION.LOGIN: return { error: null, pending: true };
 
@@ -310,9 +310,9 @@ function parseMutation(action) {
 }
 
 export default (state = initial, action) => {
-    const mutation = parseMutation(action);
+    const mutation = parseMutation(action, state);
 
-    if(mutation) {
+    if (mutation) {
         return state.mergeDeep(fromJS(mutation));
     } else
         return state
