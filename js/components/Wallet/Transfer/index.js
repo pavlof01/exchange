@@ -86,7 +86,12 @@ const styles = StyleSheet.create({
         flex: 1,
         color: '#d61b38',
         textAlign: 'center',
-    }
+    },
+    successText: {
+        flex: 1,
+        color: '#14d459',
+        textAlign: 'center',
+    },
 });
 
 const DEFAULT_FORM_VALUES = {
@@ -108,6 +113,7 @@ export default class Transfer extends Component {
     state = {
         cryptoCurrencyCode: 'BTC',
         form: DEFAULT_FORM_VALUES,
+        price: "",
         isConfirming: false,
         error: { isEmpty: false, isSucceed: false },
     };
@@ -179,7 +185,14 @@ export default class Transfer extends Component {
         return Transfer.ItemWithIcon(`${value} ${code}`, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode='contain'/>);
     };
 
-    onCryptoCurrencyCodeChange = (value) => this.setState({cryptoCurrencyCode: value});
+    onCryptoCurrencyCodeChange = (value) => {
+        const form = {
+            ...this.state.form,
+            currency: value,
+        };
+        this.setState({ form, cryptoCurrencyCode: value});
+    };
+
     onAddressChange = (value) => {
         const form = {
             ...this.state.form,
@@ -198,6 +211,14 @@ export default class Transfer extends Component {
         return (
             <View style={styles.formRow}>
                 <Text style={styles.errorText}>{'Wrong password'}</Text>
+            </View>
+        );
+    };
+
+    renderSucessText = () => {
+        return (
+            <View style={styles.formRow}>
+                <Text style={styles.successText}>{'Transaction added to queue'}</Text>
             </View>
         );
     };
@@ -272,6 +293,8 @@ export default class Transfer extends Component {
                 <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16}} />
 
                 { this.state.error.isEmpty ? this.renderPasswordError() : null }
+
+                { this.state.error.isSucceed ? this.renderSucessText() : null }
 
                 </View>
 
