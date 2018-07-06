@@ -4,13 +4,7 @@ import {
     StyleSheet, Text,
     View,
 } from 'react-native';
-import Separator from "../../style/Separator";
-import User from "../../models/User";
-import OnlineStatus from "../../style/OnlineStatus";
 import CenterProgressBar from "../../style/CenterProgressBar";
-import {objLength, objMap} from "../../helpers";
-import Time from "../../values/Time";
-import TopButton from "../../style/TopButton";
 import {createBasicNavigationOptions, createNavigationOptionsWithButton} from "../../style/navigation";
 import moment from "moment";
 import CardPicker from "../../style/CardPicker";
@@ -104,7 +98,7 @@ class Feedback extends React.Component {
     };
 
     componentWillMount() {
-        moment.locale('ru');
+        // moment.locale('ru');
         this.props.updateFeedbacks({
             user_name: this.state.user_name,
             grade: "all", page: 1
