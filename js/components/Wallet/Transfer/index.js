@@ -108,6 +108,7 @@ export default class Transfer extends Component {
     state = {
         cryptoCurrencyCode: 'BTC',
         form: DEFAULT_FORM_VALUES,
+        price: "",
         isConfirming: false,
         error: { isEmpty: false, isSucceed: false },
     };
@@ -179,7 +180,14 @@ export default class Transfer extends Component {
         return Transfer.ItemWithIcon(`${value} ${code}`, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode='contain'/>);
     };
 
-    onCryptoCurrencyCodeChange = (value) => this.setState({cryptoCurrencyCode: value});
+    onCryptoCurrencyCodeChange = (value) => {
+        const form = {
+            ...this.state.form,
+            currency: value,
+        };
+        this.setState({ form, cryptoCurrencyCode: value});
+    };
+
     onAddressChange = (value) => {
         const form = {
             ...this.state.form,

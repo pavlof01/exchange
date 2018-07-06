@@ -15,7 +15,6 @@ import exchangeRates from "../../reducers/exchangeRates";
 import {withCommonStatusBar} from "../../style/navigation";
 import ConfirmDialog from "./ConfirmDialog";
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -87,7 +86,8 @@ export default class Wallet extends Component {
     };
 
     onConfirmPress = () => {
-        this.props.sendCryptoCurrency({ ...this.state.form, currency: this.props.currencyCode });
+        const params = { ...this.state.form };
+        this.props.sendCryptoCurrency(params);
     };
 
     onChangePassword = (value) => {
