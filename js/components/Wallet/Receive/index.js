@@ -53,22 +53,20 @@ export default class Receive extends Component {
         generateTransactionToken: PropTypes.func,
     };
 
+    state = {
+        cryptoCurrencyCode: this.props.currency || 'BTC',
+    };
+
     componentWillMount() {
-        this.props.getTransactionTokens({ currency: this.props.currency });
+        this.props.getTransactionTokens({ currency: this.state.cryptoCurrencyCode });
 
         if (!this.isAddressLoaded()) {
             this.generateNewToken();
         }
     }
 
-    componentWillReceiveProps(props) {
-        if (props.currency !== this.props.currency) {
-            this.props.getTransactionTokens({ currency: props.currency })
-        }
-    }
-
     generateNewToken = () => {
-        this.props.generateTransactionToken({ currency: this.props.currency })
+        this.props.generateTransactionToken({ currency: this.state.cryptoCurrencyCode })
     };
 
     copyAddress = () => {
@@ -99,6 +97,11 @@ export default class Receive extends Component {
         return address;
     };
 
+    onCurrencyChange = (code) => {
+        this.props.getTransactionTokens({ currency: code });
+        this.setState({cryptoCurrencyCode: code}, this.generateNewToken);
+    };
+
     render() {
         const {
             transactionTokens,
@@ -109,8 +112,8 @@ export default class Receive extends Component {
             <View style={styles.content}>
                 <CurrencySelector
                     cryptoCurrencies={cryptoCurrencies}
-                    onValueChange={() => {}}
-                    selectedValue={'BTC'}
+                    onValueChange={this.onCurrencyChange}
+                    selectedValue={this.state.cryptoCurrencyCode}
                 />
                 {this.hint('QR CODE')}
                 <View style={styles.centerContent}>
