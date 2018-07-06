@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     },
     hintRow: {
         marginTop: 4,
-        marginLeft: 16,
+        marginLeft: 8,
         flexDirection: 'row',
     },
     hintText: {
@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
         textAlign: 'left',
     },
     address: {
-        marginLeft: 16,
+        marginRight: 8,
+        marginLeft: 8,
         color: '#000000',
         fontSize: 18,
         marginBottom: 8,
@@ -73,7 +74,7 @@ export default class Receive extends Component {
             address = transactionTokens.data[0].address;
         }
         if (transactionTokens && transactionTokens.generation_pending) {
-            address = 'address is generate...';
+            address = 'address is being generated...';
         }
         return address;
     };
