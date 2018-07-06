@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
+    ActivityIndicator,
     Text,
     View,
     StyleSheet,
 } from 'react-native';
 
+import CardPicker from '../../../style/CardPicker';
+import { MenuOption } from 'react-native-popup-menu';
 import QRCode from '../QRCode';
-import PrimaryButton from "../../../style/PrimaryButton";
+import PrimaryButton from '../../../style/PrimaryButton';
+import CurrencySelector from "../CurrencySelector";
 
 const styles = StyleSheet.create({
     content: {
@@ -34,7 +38,7 @@ const styles = StyleSheet.create({
         marginRight: 8,
         marginLeft: 8,
         color: '#000000',
-        fontSize: 18,
+        fontSize: 17,
         marginBottom: 8,
     }
 });
@@ -42,11 +46,20 @@ const styles = StyleSheet.create({
 export default class Receive extends Component {
 
     static propTypes = {
+        cryptoCurrencies: PropTypes.array,
         currency: PropTypes.string,
         transactionTokens: PropTypes.any,
         getTransactionTokens: PropTypes.func,
         generateTransactionToken: PropTypes.func,
     };
+
+    componentWillMount() {
+        this.props.getTransactionTokens({ currency: this.props.currency });
+
+        if (!this.isAddressLoaded()) {
+            this.generateNewToken();
+        }
+    }
 
     componentWillReceiveProps(props) {
         if (props.currency !== this.props.currency) {
@@ -62,6 +75,13 @@ export default class Receive extends Component {
 
     };
 
+    isAddressLoaded = () => {
+        const {
+            transactionTokens,
+        } = this.props;
+        return (transactionTokens && transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address);
+    };
+
     hint = (title) => (
         <View style={styles.hintRow}>
             <Text style={styles.hintText}>{title}</Text>
@@ -70,7 +90,7 @@ export default class Receive extends Component {
 
     getAddressFromTokens = (transactionTokens) => {
         let address = ' ';
-        if (transactionTokens && transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address) {
+        if (this.isAddressLoaded()) {
             address = transactionTokens.data[0].address;
         }
         if (transactionTokens && transactionTokens.generation_pending) {
@@ -82,12 +102,16 @@ export default class Receive extends Component {
     render() {
         const {
             transactionTokens,
+            cryptoCurrencies,
         } = this.props;
-
-        console.warn(JSON.stringify(transactionTokens, undefined, 2));
 
         return (
             <View style={styles.content}>
+                <CurrencySelector
+                    cryptoCurrencies={cryptoCurrencies}
+                    onValueChange={() => {}}
+                    selectedValue={'BTC'}
+                />
                 {this.hint('QR CODE')}
                 <View style={styles.centerContent}>
                     <QRCode transactionTokens={transactionTokens} />
@@ -101,15 +125,17 @@ export default class Receive extends Component {
                 </Text>
                 <PrimaryButton
                     onPress={this.generateNewToken}
-                    title={transactionTokens && transactionTokens.data && transactionTokens.data.length > 0 ? 'UPDATE' : 'GENERATE'}
+                    title={transactionTokens.data && transactionTokens.data.length > 0 ? 'UPDATE' : 'GENERATE'}
                     style={{margin: 16}}
-                    disabled={transactionTokens && transactionTokens.generation_pending}
-                />
+                    disabled={transactionTokens.generation_pending}
+                >
+                    {transactionTokens.generation_pending ? <ActivityIndicator size="large"/> : null}
+                </PrimaryButton>
                 <PrimaryButton
                     onPress={this.copyAddress}
                     title={'COPY'}
                     style={{margin: 16}}
-                    disabled={transactionTokens && transactionTokens.generation_pending}
+                    disabled={transactionTokens.generation_pending}
                 />
             </View>
         )
