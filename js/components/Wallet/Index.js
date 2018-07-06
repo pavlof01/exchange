@@ -13,6 +13,7 @@ import Transfer from "./Transfer";
 import Receive from "./Receive";
 import exchangeRates from "../../reducers/exchangeRates";
 import {withCommonStatusBar} from "../../style/navigation";
+import ConfirmDialog from "./ConfirmDialog";
 
 
 const styles = StyleSheet.create({
@@ -36,20 +37,81 @@ const styles = StyleSheet.create({
     },
 });
 
+const DEFAULT_FORM_VALUES = {
+    code: '',
+    amount: '',
+    address: '',
+    password: '',
+    currency: 'BTC',
+    description: '',
+};
+
 export default class Wallet extends Component {
 
     state = {
         selectedAction: 'transfer',
+        isConfirming: false,
+        form: DEFAULT_FORM_VALUES,
     };
 
     onTransferSelected = () => this.setState({selectedAction: 'transfer'});
     onReceiveSelected = () => this.setState({selectedAction: 'receive'});
 
+    onWalletOperationStart = ( form ) => {
+        this.setState({ isConfirming: true, form });
+    };
+
+    closeConfirmDialog = () => {
+        this.setState({ isConfirming: false });
+    };
+
+    renderConfirmDialog = () => {
+        const {
+            amount,
+            currency,
+            address,
+            password,
+        } = this.state.form;
+        return (
+            <ConfirmDialog
+                priceLabel={'YOU SEND'}
+                priceText={`${amount} ${currency}`}
+                addressText={address}
+                passwordValue={password}
+                onChangePassword={this.onChangePassword}
+                errorText={''}
+                onCancelPress={this.closeConfirmDialog}
+                onConfirmPress={this.onConfirmPress}
+            />
+        );
+    };
+
+    onConfirmPress = () => {
+        this.props.sendCryptoCurrency({ ...this.state.form, currency: this.props.currencyCode });
+    };
+
+    onChangePassword = (value) => {
+        const form = {
+            ...this.state.form,
+            password: value,
+        };
+
+        this.setState({ form });
+    };
+
   render() {
-      const { user: { balance, crypto_amount_buy, crypto_amount_sell, currencyCode }, exchangeRates } = this.props;
+      const {
+          user: { balance, crypto_amount_buy, crypto_amount_sell, currencyCode },
+          exchangeRates,
+          withdrawal,
+          sendCryptoCurrency,
+          transactionTokens,
+          getTransactionTokens,
+          generateTransactionToken,
+      } = this.props;
 
       let content, header;
-      if(this.state.selectedAction === 'transfer') {
+      if (this.state.selectedAction === 'transfer') {
           content = <Transfer
               cryptoCurrencies={this.props.cryptoCurrencies}
               currencyCode={currencyCode}
@@ -57,10 +119,20 @@ export default class Wallet extends Component {
               exchangeRates={exchangeRates}
               updateRates={this.props.updateRates}
               updateCurrencies={this.props.updateCurrencies}
-              updateEstimatedFee={this.props.updateEstimatedFee}/>;
+              updateEstimatedFee={this.props.updateEstimatedFee}
+              withdrawal={withdrawal}
+              onWalletOperationStart={this.onWalletOperationStart}
+              sendCryptoCurrency={sendCryptoCurrency}
+          />;
           header = 'TRANSFER'
       } else {
-          content = <Receive cryptoCurrencies={this.props.cryptoCurrencies}/>;
+          content = <Receive
+              currency={"BTC"}
+              cryptoCurrencies={this.props.cryptoCurrencies}
+              transactionTokens={transactionTokens}
+              getTransactionTokens={getTransactionTokens}
+              generateTransactionToken={generateTransactionToken}
+          />;
           header = 'RECEIVE';
       }
 
@@ -82,6 +154,9 @@ export default class Wallet extends Component {
             <ScrollView keyboardShouldPersistTaps='always'>
                 {content}
             </ScrollView>
+
+            { this.state.isConfirming ? this.renderConfirmDialog() : null }
+
         </View>
     )
   }

@@ -13,7 +13,6 @@ import {default as ProgressCircle} from 'react-native-progress-circle'
 import FormTextInput from "../../FormTextInput";
 import PrimaryButton from "../../../style/PrimaryButton";
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -79,7 +78,25 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 8,
     },
+    errorRow: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    errorText: {
+        flex: 1,
+        color: '#d61b38',
+        textAlign: 'center',
+    }
 });
+
+const DEFAULT_FORM_VALUES = {
+    code: '',
+    amount: '',
+    address: '',
+    password: '',
+    currency: 'BTC',
+    description: '',
+};
 
 const simpleCurrencyName = {
     BTC: 'Bitcoin',
@@ -90,18 +107,42 @@ export default class Transfer extends Component {
 
     state = {
         cryptoCurrencyCode: 'BTC',
-        form: {
-            amount: undefined,
-            cost: undefined,
-            address: undefined,
-        },
+        form: DEFAULT_FORM_VALUES,
+        isConfirming: false,
+        error: { isEmpty: false, isSucceed: false },
     };
+
     componentWillMount() {
         const {currencyCode} = this.props;
 
         this.props.updateRates({ [currencyCode]: this.state.cryptoCurrencyCode });
         this.props.updateCurrencies();
         this.props.updateEstimatedFee({ currency: this.props.currencyCode });
+    }
+
+    componentWillReceiveProps({ withdrawal, exchangeRates }) {
+        const data = this.state;
+
+        if (withdrawal.status === 200) {
+            data.form  = { ...DEFAULT_FORM_VALUES };
+            data.price = '';
+            data.error.isSucceed = true;
+            data.error.isConfirming = false;
+        }
+
+        if (withdrawal.status === 400) {
+            data.error.isEmpty = true;
+        }
+
+        if (
+            this.state.price &&
+            this.props.exchangeRates !== exchangeRates &&
+            exchangeRates[`${this.props.currencyCode}_${this.state.currency}`]
+        ) {
+            data.price = data.form.amount * exchangeRates[`${this.props.currencyCode}_${this.state.currency}`];
+        }
+
+        this.setState({ ...data, error: { ...withdrawal.error, ...data.error }});
     }
 
     onCostChange = (value) => {
@@ -120,6 +161,15 @@ export default class Transfer extends Component {
         this.setState({form: {...this.state.form, amount: value, cost: cost.toFixed(2)}});
     };
 
+    clearedErrorList = name => {
+        const  error = this.state.error;
+        delete error[name];
+        delete error.isEmpty;
+        delete error.isSucceed;
+
+        return error
+    };
+
     static ItemWithIcon(label, icon) {
         return (<View style={styles.pickerRow}>{icon}<Text style={styles.cardText}>{label}</Text></View>)
     }
@@ -130,12 +180,37 @@ export default class Transfer extends Component {
     };
 
     onCryptoCurrencyCodeChange = (value) => this.setState({cryptoCurrencyCode: value});
+    onAddressChange = (value) => {
+        const form = {
+            ...this.state.form,
+            address: value,
+        };
+        this.setState({ form });
+    };
 
     hint = (title) => <View style={styles.hintRow}><Text style={styles.inputHint}>{title}</Text></View>;
 
+    onSubmitHandler = () => {
+        this.props.onWalletOperationStart({ ...this.state.form });
+    };
+
+    renderPasswordError = () => {
+        return (
+            <View style={styles.formRow}>
+                <Text style={styles.errorText}>{'Wrong password'}</Text>
+            </View>
+        );
+    };
+
     render() {
         const code = this.state.cryptoCurrencyCode;
-        const {currencyCode} = this.props;
+        const {
+            currencyCode,
+            withdrawal: { pending },
+        } = this.props;
+
+        const submitButtonText = pending ? "WAIT" : this.state.isConfirming ? 'CONFIRM' : 'SEND';
+
         return (
             <View style={styles.container}>
                 {this.hint('BALANCE')}
@@ -163,29 +238,40 @@ export default class Transfer extends Component {
                 <View style={styles.formStyle}>
 
                 {this.hint('ADDRESS')}
-                    <FormTextInput placeholder={`Enter ${simpleCurrencyName[code]} address`}/>
+                <FormTextInput
+                    placeholder={`Enter ${simpleCurrencyName[code]} address`}
+                    onChangeText={this.onAddressChange}
+                    value={this.state.form.address}
+                    style={styles.formStyle}
+                />
 
                 {this.hint('AMOUNT')}
-                    <View style={styles.formRow}>
-                        <FormTextInput
-                            placeholder={`Amount to send`}
-                            onChangeText={this.onAmountChange}
-                            value={this.state.form.amount}
-                            style={styles.formStyle}/>
-                        <Text style={styles.header}>{code}</Text>
-                    </View>
+                <View style={styles.formRow}>
+                    <FormTextInput
+                        placeholder={`Amount to send`}
+                        onChangeText={this.onAmountChange}
+                        keyboardType={'numeric'}
+                        value={this.state.form.amount}
+                        style={styles.formStyle}/>
+                    <Text style={styles.header}>{code}</Text>
+                </View>
 
                 {this.hint('COST')}
-                    <View style={styles.formRow}>
-                        <FormTextInput
-                            placeholder={`In other currency`}
-                            onChangeText={this.onCostChange}
-                            value={this.state.form.cost}
-                            style={styles.formStyle}/>
-                        <Text style={styles.header}>{currencyCode}</Text>
-                    </View>
+                <View style={styles.formRow}>
+                    <FormTextInput
+                        placeholder={`In other currency`}
+                        onChangeText={this.onCostChange}
+                        keyboardType={'numeric'}
+                        value={this.state.form.cost}
+                        style={styles.formStyle}/>
+                    <Text style={styles.header}>{currencyCode}</Text>
+                </View>
 
-                <PrimaryButton title={'SEND'} style={{margin: 16}}/>
+                { this.state.isConfirming ? this.renderConfirmPasswordField() : null }
+
+                <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16}} />
+
+                { this.state.error.isEmpty ? this.renderPasswordError() : null }
 
                 </View>
 

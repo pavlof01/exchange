@@ -61,7 +61,7 @@ class BorderlessButton extends Component {
     /**
      * Styles.
      */
-    textStyle: PropTypes.object,
+    textStyle: Text.propTypes.style,
   };
 
   constructor(props) {
