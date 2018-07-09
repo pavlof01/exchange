@@ -30,6 +30,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 8,
     },
+    pickerIcon: {
+        height: 24,
+        width: 24,
+    },
     pickerRow: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -200,11 +204,12 @@ export default class Trade extends Component {
                     this.isTradeLoaded() ? <View style={styles.info}>
                         <Text>Ваш запрос Трейдеру <Text style={styles.bold}>{this.partner.user_name}</Text> на <Text
                             style={styles.bold}>{this.actionTitle}</Text> криптовалюты от <Text>{this.createdAt}</Text></Text>
-                        <Text style={[styles.header, styles.centeredText]}>
-                            {Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}
+
+                        <View style={styles.row}>
+                            <Text style={[styles.header, styles.centeredText]}>{Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}</Text>
                             <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16}]}/>
-                            {' ' + Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}
-                        </Text>
+                            <Text style={[styles.header, styles.centeredText]}>{' ' + Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}</Text>
+                        </View>
                         {
                             this.props.trade.status === 'new' && <Text>Осталось для оплаты <EscrowTimer
                                 expiredAt={this.props.trade.escrow_expired_at}/> минут</Text>

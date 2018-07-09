@@ -1,11 +1,12 @@
 import React from 'react';
 import {
+    Platform,
     StyleSheet, Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({
-    container: {
+    androidContainer: {
         backgroundColor: '#2B2B82',
         color: 'white',
         height: 56,
@@ -17,7 +18,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
     },
+    iosContainer: {
+        backgroundColor: '#2B2B82',
+        color: 'white',
+        height: 56,
+        padding: 24,
+        fontSize: 16,
+        fontWeight: 'bold',
+        alignItems: 'center',
+        textAlign: 'center',
+        justifyContent: 'center',
+    },
 });
+
+
+const isAndroid = Platform.OS === 'android';
 
 class HeaderBar extends React.Component {
 
@@ -30,7 +45,7 @@ class HeaderBar extends React.Component {
 
     render() {
         return (
-            <Text style={styles.container}>{this.props.title}</Text>
+            <Text style={isAndroid ? styles.androidContainer : styles.iosContainer}>{this.props.title}</Text>
         );
     }
 }

@@ -87,7 +87,7 @@ export default class Trades extends Component {
     }
 
     loadNext = () => {
-        if(!this.state.endReached) {
+        if(!this.state.pending && !this.state.endReached) {
             this.load({page: this.state.page + 1})
         }
     };
@@ -104,14 +104,16 @@ export default class Trades extends Component {
         };
 
         Api.get('/trades', params)
-            .then(response => this.setState({
-                pending: false,
-                trades: response.data.page === 1 ? response.data.trades : [...this.state.trades, ...response.data.trades],
-                page: response.data.page,
-                pages: response.data.pages,
-                sort: params.sort,
-                endReached: response.data.page.length === 0,
-            }))
+            .then(response => {
+                this.setState({
+                    pending: false,
+                    trades: response.data.page === 1 ? response.data.trades : [...this.state.trades, ...response.data.trades],
+                    page: response.data.page,
+                    pages: response.data.pages,
+                    sort: params.sort,
+                    endReached: response.data.trades.length === 0,
+                })
+            })
     };
 
     renderItem = ({item, index}) => {

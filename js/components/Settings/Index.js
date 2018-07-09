@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    ActivityIndicator,
+    ActivityIndicator, ScrollView,
     StyleSheet, Switch,
-    Text,
+    Text, TextInput,
     View,
 } from 'react-native';
 import Touchable from '../../style/Touchable';
@@ -128,55 +128,56 @@ export default class Settings extends Component {
                 </View>
             </View>
 
+            <ScrollView keyboardShouldPersistTaps='always'>
 
-            <View style={styles.info}>
-                {!user.email_verified_date && <Text style={styles.warning}>
-                    Вы еще не подтвердили вашу электронную почту.
-                    У вас осталось примерно <Bold>2&nbsp;дня, 23&nbsp;часа</Bold>,
-                    до того как срок действия email подтверждения истечет. Проверьте вашу почту.
-                </Text>}
+                <View style={styles.info}>
+                    {!user.email_verified_date && <Text style={styles.warning}>
+                        Вы еще не подтвердили вашу электронную почту.
+                        У вас осталось примерно <Bold>2&nbsp;дня, 23&nbsp;часа</Bold>,
+                        до того как срок действия email подтверждения истечет. Проверьте вашу почту.
+                    </Text>}
 
 
-                <Header>E-mail</Header>
-                <Bold>{user.email}</Bold>
+                    <Header>E-mail</Header>
+                    <Bold>{user.email}</Bold>
 
-                {!user.email_verified_date &&
-                <Text style={[styles.bold, {color: 'red'}]}>E-mail не подтвержден</Text>}
+                    {!user.email_verified_date &&
+                    <Text style={[styles.bold, {color: 'red'}]}>E-mail не подтвержден</Text>}
 
-                {user.email_verified_date &&
-                <Text style={[styles.bold, {color: 'green'}]}>E-mail подтвержден</Text>}
+                    {user.email_verified_date &&
+                    <Text style={[styles.bold, {color: 'green'}]}>E-mail подтвержден</Text>}
 
-                <Separator/>
+                    <Separator/>
 
-                <Header>О себе</Header>
-                <FormTextInput
-                    onChangeText={this.onIntroductionChanged}
-                    multiline
-                    style={{minHeight: 150, height: 'auto'}}
-                    value={this.state.introduction ? this.state.introduction : ""}
-                    onChange={this.onIntroductionChanged}
-                    placeholder="Показывается в общедоступном профиле. Только текст, не более 200 символов."
-                />
+                    <Header>О себе</Header>
+                    <TextInput
+                        onChangeText={this.onIntroductionChanged}
+                        multiline
+                        style={{height: 150}}
+                        value={this.state.introduction ? this.state.introduction : ""}
+                        onChange={this.onIntroductionChanged}
+                        placeholder="Показывается в общедоступном профиле. Только текст, не более 200 символов."
+                    />
 
-                <View style={styles.row2}>
-                    <Text style={[styles.infoText, styles.rowItem]}>Продажи временно приостановлены</Text>
-                    <Switch
-                        value={this.state.ad_sell_enabled}
-                        onValueChange={this.onAdSellEnabledChanged}/>
+                    <View style={styles.row2}>
+                        <Text style={[styles.infoText, styles.rowItem]}>Продажи временно приостановлены</Text>
+                        <Switch
+                            value={this.state.ad_sell_enabled}
+                            onValueChange={this.onAdSellEnabledChanged}/>
+                    </View>
+
+                    <View style={styles.row2}>
+                        <Text style={[styles.infoText, styles.rowItem]}>Покупки временно приостановлены</Text>
+                        <Switch
+                            value={this.state.ad_buy_enabled}
+                            onValueChange={this.onAdBuyEnabledChanged}/>
+                    </View>
+
+                    <PrimaryButton onPress={this.onSubmitUserMeta} title={'Сохранить профиль'} disabled={this.state.pending}>
+                        {this.state.pending ? <ActivityIndicator size="large"/> : undefined}
+                    </PrimaryButton>
                 </View>
-
-                <View style={styles.row2}>
-                    <Text style={[styles.infoText, styles.rowItem]}>Покупки временно приостановлены</Text>
-                    <Switch
-                        value={this.state.ad_buy_enabled}
-                        onValueChange={this.onAdBuyEnabledChanged}/>
-                </View>
-
-                <PrimaryButton onPress={this.onSubmitUserMeta} title={'Сохранить профиль'} disabled={this.state.pending}>
-                    {this.state.pending ? <ActivityIndicator size="large"/> : undefined}
-                </PrimaryButton>
-            </View>
-
+            </ScrollView>
         </View>
     )
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { objMap } from '../../helpers'
 import Api from '../../services/Api';
-import {ActivityIndicator, StyleSheet, Text} from "react-native";
+import {ActivityIndicator, StyleSheet, Text, TextInput} from "react-native";
 import PrimaryButton from "../../style/PrimaryButton";
 import CardPicker from "../../style/CardPicker";
 import MenuOption from "react-native-popup-menu/src/MenuOption";
@@ -51,7 +51,7 @@ export default class Feedback extends Component {
         feedback: this.props.feedback || {},
         pending: false,
         form: {
-            grade: (this.props.feedback && this.props.feedback.grade) || "neutral",
+            grade: ((this.props.feedback || {}).grade) || "neutral",
             body: (this.props.feedback && this.props.feedback.body) || "",
         }
     };
@@ -67,8 +67,8 @@ export default class Feedback extends Component {
             .catch(error => this.setState({errors: error.response.data.errors, pending: false}))
     };
 
-    onBodyChanged = (value) => this.setState({ form: { body: value } });
-    onGradeChanged = (value) => this.setState({ form: { grade: value } });
+    onBodyChanged = (value) => this.setState({ form: { ...this.state.form, body: value } });
+    onGradeChanged = (value) => this.setState({ form: { ...this.state.form, grade: value } });
 
     render () {
         return <React.Fragment>
@@ -83,10 +83,13 @@ export default class Feedback extends Component {
                 <MenuOption value="block" text={'ОТРИЦАТЕЛЬНЫЙ'}/>
             </CardPicker>
 
-            <FormTextInput
+            <TextInput
                 onChangeText={this.onBodyChanged}
                 multiline
-                style={{height: 96, padding: 8}}
+                onContentSizeChange={(event) => {
+                    this.setState({ height: event.nativeEvent.contentSize.height })
+                }}
+                style={{height: Math.max(35, this.state.height)}}
                 value={this.state.form.body ? this.state.form.body : ""}
                 onChange={this.onBodyChanged}
                 placeholder="Комментарий"
