@@ -6,7 +6,7 @@ const initial = {
   sort: '-price',
   currencyCode: 'USD',
   cryptoCurrencyCode: 'BTC',
-  countryCode: 'US',
+  countryCode: null,
   withCorrectLimits: true,
   paymentMethodCode: null,
   smsRequired: null,

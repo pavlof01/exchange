@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View,} from 'react-native';
+import {ActivityIndicator, FlatList, Image, Picker, StyleSheet, Text, View,} from 'react-native';
 import TopButton from "../../style/TopButton";
 import Separator from "../../style/Separator";
 import HeaderBar from "../../style/HeaderBar";
@@ -13,6 +13,7 @@ import OnlineStatus from "../../style/OnlineStatus";
 import {currencyCodeToSymbol} from "../../helpers";
 import {cryptoIcons} from "../../style/resourceHelpers";
 import {withCommonStatusBar} from "../../style/navigation";
+import PickerModal from "../../style/PickerModal";
 
 const styles = StyleSheet.create({
     container: {
@@ -87,14 +88,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    currency_subcircle: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     currency_symbol: {
         fontSize: 16,
         fontWeight: "bold",
         color: '#c3c3c3',
         width: 20,
         height: 20,
-        borderRadius: 10,
-        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center'
@@ -124,6 +131,7 @@ export default class Offers extends Component {
     onCryptoCurrencyCodeChange = this.onFilterChangeFactory('cryptoCurrencyCode');
     onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
     onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
+    onCountryCodeChange = this.onFilterChangeFactory('countryCode');
 
     /* When the user is looking to _buy_, they filter for offers to _sell_ and vice versa*/
     userWantsToBuy = () => this.props.filter.type === 'sell';
@@ -162,7 +170,12 @@ export default class Offers extends Component {
     }
 
     static FiatItem(code) {
-        return Offers.ItemWithIcon(code, <View style={styles.currency_circle}><Text style={styles.currency_symbol}>{currencyCodeToSymbol(code)}</Text></View>);
+        return Offers.ItemWithIcon(code,
+            <View style={styles.currency_circle}>
+                <View style={styles.currency_subcircle}>
+                    <Text style={styles.currency_symbol}>{currencyCodeToSymbol(code)}</Text>
+                </View>
+            </View>);
     }
 
     render() {
@@ -231,6 +244,14 @@ export default class Offers extends Component {
                         method => <MenuOption key={method.code} value={method.code} text={method.name}/>
                     )}
                 </CardPicker>
+
+                <Text style={styles.inputHint}>SELECT A COUNTRY</Text>
+
+                <PickerModal countryCode={this.props.filter.countryCode}
+                    onCountryCodeChange={this.onCountryCodeChange}
+                    countries={this.props.countries}
+                    countryMap={this.props.countryMap}/>
+
 
                 <Separator />
 

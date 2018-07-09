@@ -7,5 +7,9 @@ export function update(values) {
     newValues.paymentMethodCode = null;
   }
 
+  if (values.countryCode === 'ANY') {
+    newValues.countryCode = null;
+  }
+
   return { type: ORDERS_FILTER.UPDATE_ORDERS_FILTER, values: newValues }
 }
