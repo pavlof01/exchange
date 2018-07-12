@@ -75,7 +75,7 @@ export default class Login extends Component {
             <View style={[styles.paddingScreen]}>
                 <Text style={[styles.pageHeader]}>BitChange</Text>
                 <View style={[styles.formBlock]}>
-                    <View style={{marginBottom: 8}}>
+                    <View style={{marginBottom: 64}}>
                         <FormTextInput
                             key={'login'}
                             error={!_.isEmpty(this.state.formError.loginError)}

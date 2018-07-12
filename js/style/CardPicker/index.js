@@ -16,6 +16,12 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: 'white',
         margin: 8,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5,
     },
     cardText: {
         fontSize: 24,

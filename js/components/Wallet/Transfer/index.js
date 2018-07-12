@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    StyleSheet, Image,
+    StyleSheet, Image, Platform,
 } from 'react-native';
 import CardPicker from "../../../style/CardPicker";
 import {MenuOption} from "react-native-popup-menu";
@@ -13,6 +13,7 @@ import {default as ProgressCircle} from 'react-native-progress-circle'
 import FormTextInput from "../../FormTextInput";
 import PrimaryButton from "../../../style/ActionButton";
 import {common, Hint} from "../../../style/common";
+import {CenterHalf} from "../../../style/CenterHalf";
 
 const styles = StyleSheet.create({
     container: {
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
         height: 24,
         width: 24,
         marginHorizontal: 8,
+        marginBottom: Platform.OS === 'android' ? 0 : 8,
     },
     picker: {
         height: 50,
@@ -290,9 +292,9 @@ export default class Transfer extends Component {
 
                 { this.state.isConfirming ? this.renderConfirmPasswordField() : null }
 
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16, width: '50%'}} />
-                </View>
+                <CenterHalf>
+                        <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{flex: 1}} />
+                </CenterHalf>
 
                 { this.state.error.isEmpty ? this.renderPasswordError() : null }
 

@@ -144,18 +144,19 @@ class PrimaryButton extends Component {
     }
 
     const content = children || <Text style={textStyles}>{title}</Text>;
-    return (
-      <Touchable
-        accessibilityComponentType="button"
-        accessibilityLabel={accessibilityLabel}
-        testID={testID}
-        disabled={disabled}
-        onPress={this.onPress}
-      >
-        <View style={buttonStyles}>
-          {content}
+    return (<View style={{flex: style ? style.flex : 1}}>
+              <Touchable
+                accessibilityComponentType="button"
+                accessibilityLabel={accessibilityLabel}
+                testID={testID}
+                disabled={disabled}
+                onPress={this.onPress}
+              >
+                <View style={buttonStyles}>
+                  {content}
+                </View>
+              </Touchable>
         </View>
-      </Touchable>
     );
   }
 }
