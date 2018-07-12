@@ -9,12 +9,20 @@ export default class User {
     }
   }
 
+  static guardedSet(key, value) {
+      if (value) {
+          AsyncStorage.setItem(key, value);
+      } else {
+          AsyncStorage.removeItem(key);
+      }
+  }
+
   static setCurrencyCode(code) {
-      AsyncStorage.setItem('currencyCode', code)
+      User.guardedSet('currencyCode', code)
   }
 
   static setFavoriteCurrencyCode(code) {
-      AsyncStorage.setItem('favoriteCurrencyCode', code)
+      User.guardedSet('favoriteCurrencyCode', code)
   }
 
   static getFavoriteCurrencyCode() {
@@ -22,11 +30,11 @@ export default class User {
   }
 
   static setCountryCode(code) {
-      AsyncStorage.setItem('countryCode', code)
+      User.guardedSet('countryCode', code)
   }
 
   static setFavoriteCountryCode(code) {
-      AsyncStorage.setItem('favoriteCountryCode', code)
+      User.guardedSet('favoriteCountryCode', code)
   }
 
   static getFavoriteCountryCode() {
@@ -34,7 +42,7 @@ export default class User {
   }
 
   static setPlaceId(id) {
-      AsyncStorage.setItem('placeId', id)
+      User.guardedSet('placeId', id)
   }
 
   static approximateTradesCount(count) {
