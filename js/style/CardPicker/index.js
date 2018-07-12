@@ -40,6 +40,8 @@ class CardPicker extends React.Component {
         renderButton: PropTypes.func,
 
         fontSize: PropTypes.number,
+
+        flat: PropTypes.bool,
     };
 
     state = {
@@ -52,7 +54,7 @@ class CardPicker extends React.Component {
     };
 
     render() {
-        const { fontSize } = this.props;
+        const { fontSize, flat } = this.props;
 
         let selected;
         const options = React.Children.map(this.props.children,
@@ -66,7 +68,7 @@ class CardPicker extends React.Component {
 
         return (
             <Menu>
-                <MenuTrigger customStyles={{triggerOuterWrapper: styles.picker}}>{this.props.renderButton(this.state.selectedValue, selected && selected.props.text)}</MenuTrigger>
+                <MenuTrigger customStyles={!flat ? {triggerOuterWrapper: styles.picker} : undefined}>{this.props.renderButton(this.state.selectedValue, selected && selected.props.text)}</MenuTrigger>
                 <MenuOptions>
                     {options}
                 </MenuOptions>

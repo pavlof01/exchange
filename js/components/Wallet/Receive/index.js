@@ -12,13 +12,15 @@ import {
 import CardPicker from '../../../style/CardPicker';
 import { MenuOption } from 'react-native-popup-menu';
 import QRCode from '../QRCode';
-import PrimaryButton from '../../../style/PrimaryButton';
+import PrimaryButton from '../../../style/ActionButton';
 import CurrencySelector from "../CurrencySelector";
+import {Hint} from "../../../style/common";
+import {fonts} from "../../../style/resourceHelpers";
 
 const styles = StyleSheet.create({
     content: {
         flex: 1,
-        paddingTop: 8,
+        padding: 16,
     },
     centerContent: {
         flex: 1,
@@ -26,20 +28,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    hintRow: {
-        marginTop: 4,
-        marginLeft: 8,
-        flexDirection: 'row',
-    },
-    hintText: {
-        fontSize: 11,
-        textAlign: 'left',
-    },
     address: {
         marginRight: 8,
         marginLeft: 8,
         color: '#000000',
         fontSize: 17,
+        fontWeight: 'bold',
+        fontFamily: fonts.bold.regular,
         marginBottom: 8,
     }
 });
@@ -86,12 +81,6 @@ export default class Receive extends Component {
         return (transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address);
     };
 
-    hint = (title) => (
-        <View style={styles.hintRow}>
-            <Text style={styles.hintText}>{title}</Text>
-        </View>
-    );
-
     getAddressFromTokens = (transactionTokens) => {
         let address = ' ';
         if (this.isAddressLoaded()) {
@@ -116,36 +105,45 @@ export default class Receive extends Component {
 
         return (
             <View style={styles.content}>
-                <CurrencySelector
-                    cryptoCurrencies={cryptoCurrencies}
-                    onValueChange={this.onCurrencyChange}
-                    selectedValue={this.state.cryptoCurrencyCode}
-                />
-                {this.hint('QR CODE')}
+
+                <View style={styles.centerContent}>
+                    <CurrencySelector
+                        cryptoCurrencies={cryptoCurrencies}
+                        onValueChange={this.onCurrencyChange}
+                        selectedValue={this.state.cryptoCurrencyCode}
+                    />
+                </View>
+                <Hint>QR CODE</Hint>
                 <View style={styles.centerContent}>
                     <QRCode transactionTokens={transactionTokens} />
                 </View>
-                {this.hint('ADDRESS TO RECEIVE BITCOINS')}
+                <Hint>ADDRESS TO RECEIVE BITCOINS</Hint>
                 <Text
                     style={styles.address}
                     selectable
                 >
                     {this.getAddressFromTokens(transactionTokens)}
                 </Text>
-                <PrimaryButton
-                    onPress={this.generateNewToken}
-                    title={transactionTokens.data && transactionTokens.data.length > 0 ? 'UPDATE' : 'GENERATE'}
-                    style={{margin: 16}}
-                    disabled={transactionTokens.generation_pending}
-                >
-                    {transactionTokens.generation_pending ? <ActivityIndicator size="large"/> : null}
-                </PrimaryButton>
-                <PrimaryButton
-                    onPress={this.copyAddress}
-                    title={'COPY'}
-                    style={{margin: 16}}
-                    disabled={transactionTokens.generation_pending}
-                />
+
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <PrimaryButton
+                        onPress={this.generateNewToken}
+                        title={transactionTokens.data && transactionTokens.data.length > 0 ? 'UPDATE' : 'GENERATE'}
+                        style={{flex: 1, margin: 16}}
+                        secondary
+                        disabled={transactionTokens.generation_pending}
+                    >
+                        {transactionTokens.generation_pending ? <ActivityIndicator size="large"/> : null}
+                    </PrimaryButton>
+                    <PrimaryButton
+                        onPress={this.copyAddress}
+                        title={'COPY'}
+                        style={{flex: 1, margin: 16}}
+                        secondary
+                        disabled={transactionTokens.generation_pending}
+                    />
+                </View>
+
             </View>
         )
     }

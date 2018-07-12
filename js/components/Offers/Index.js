@@ -14,6 +14,7 @@ import {currencyCodeToSymbol} from "../../helpers";
 import {cryptoIcons} from "../../style/resourceHelpers";
 import {withCommonStatusBar} from "../../style/navigation";
 import PickerModal from "../../style/PickerModal";
+import {Hint} from "../../style/common";
 
 const styles = StyleSheet.create({
     container: {
@@ -42,10 +43,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 8,
-    },
-    inputHint: {
-        marginLeft: 8,
-        fontSize: 11
     },
     userName: {
         fontWeight: 'bold',
@@ -207,7 +204,7 @@ export default class Offers extends Component {
 
                 <View style={styles.pickerRow}>
                     <View>
-                        <Text style={styles.inputHint}>YOU {this.userWantsToBuy() ? 'BUY' : 'SELL'}</Text>
+                        <Hint>YOU {this.userWantsToBuy() ? 'BUY' : 'SELL'}</Hint>
                         <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
                                 selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}
                                 renderButton={Offers.CryptItem}>
@@ -222,7 +219,7 @@ export default class Offers extends Component {
                     <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16, marginTop: 32}]}/>
 
                     <View>
-                        <Text style={styles.inputHint}>FOR</Text>
+                        <Hint>FOR</Hint>
                         <CardPicker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
                                 selectedValue={this.props.filter.currencyCode} mode={'dropdown'}
                                     renderButton={Offers.FiatItem}>
@@ -235,7 +232,7 @@ export default class Offers extends Component {
                     </View>
                 </View>
 
-                <Text style={styles.inputHint}>SELECT PAYMENT METHOD</Text>
+                <Hint>SELECT PAYMENT METHOD</Hint>
                 <CardPicker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
                         selectedValue={this.props.filter.paymentMethodCode || 'ANY'}
                             renderButton={(value, text) => <Text style={styles.cardText}>{text}</Text>}>
@@ -245,7 +242,7 @@ export default class Offers extends Component {
                     )}
                 </CardPicker>
 
-                <Text style={styles.inputHint}>SELECT A COUNTRY</Text>
+                <Hint>SELECT A COUNTRY</Hint>
 
                 <PickerModal countryCode={this.props.filter.countryCode}
                     onCountryCodeChange={this.onCountryCodeChange}

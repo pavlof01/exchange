@@ -12,7 +12,7 @@ import BorderlessButton from "../../style/BorderlessButton";
 import OwnProfileLink from "./OwnProfileLink";
 import Separator from "../../style/Separator";
 import FormTextInput from "../FormTextInput";
-import PrimaryButton from "../../style/PrimaryButton";
+import PrimaryButton from "../../style/ActionButton";
 import HeaderBar from "../../style/HeaderBar";
 
 const styles = StyleSheet.create({

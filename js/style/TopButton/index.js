@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {StyleSheet, View, ColorPropType, ViewPropTypes} from "react-native";
 import PropTypes from "prop-types";
 import BorderlessButton from "../BorderlessButton/index";
+import {fonts} from "../resourceHelpers";
 
 
 const styles = StyleSheet.create({
@@ -10,6 +11,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontWeight: 'bold',
+        fontFamily: fonts.bold.regular
     },
 });
 

@@ -5,16 +5,18 @@ import {
     Text,
     View,
     ScrollView,
-    StyleSheet,
+    StyleSheet, Modal,
 } from 'react-native';
 
 import FormTextInput from "../../FormTextInput";
-import PrimaryButton from "../../../style/PrimaryButton";
+import PrimaryButton from "../../../style/ActionButton";
+import {Hint} from "../../../style/common";
+import {fonts} from "../../../style/resourceHelpers";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgba(52, 52, 52, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         position: 'absolute',
         top: 0,
         bottom: 0,
@@ -31,26 +33,26 @@ const styles = StyleSheet.create({
     },
     dialogTitle: {
         flex: 1,
-        color: '#BBBBBB',
+        color: '#AAAAAA',
         textAlign: 'center',
         fontSize: 16,
         marginBottom: 10,
-    },
-    dialogLabel: {
-        flex: 1,
-        color: '#999999',
-        fontSize: 12,
+        fontFamily: fonts.bold.regular,
     },
     dialogPrice: {
         flex: 1,
-        color: '#555555',
+        color: '#444444',
         fontSize: 20,
+        fontWeight: 'bold',
+        fontFamily: fonts.bold.regular,
         marginBottom: 4,
     },
     dialogAddress: {
         flex: 1,
-        color: '#555555',
+        color: '#444444',
         fontSize: 16,
+        fontWeight: 'bold',
+        fontFamily: fonts.bold.regular,
         marginBottom: 4,
     },
     buttonGroup: {
@@ -92,15 +94,20 @@ export default class ConfirmDialog extends Component {
         } = this.props;
 
         return (
+            <Modal
+                animationType={'fade'}
+                transparent={true}
+                onRequestClose={this.onCancelPress}
+            >
             <View style={styles.container}>
                 <ScrollView keyboardShouldPersistTaps='always'>
                     <View style={styles.dialogContainer}>
-                        <Text style={styles.dialogTitle}>PLEASE{'\n'}CONFIRM</Text>
-                        <Text style={styles.dialogLabel}>{priceLabel}</Text>
+                        <Text style={styles.dialogTitle}>PLEASE CONFIRM</Text>
+                        <Hint>{priceLabel}</Hint>
                         <Text style={styles.dialogPrice}>{priceText}</Text>
-                        <Text style={styles.dialogLabel}>{'TO'}</Text>
+                        <Hint>TO</Hint>
                         <Text style={styles.dialogAddress}>{addressText}</Text>
-                        <Text style={styles.dialogLabel}>{'PASSWORD'}</Text>
+                        <Hint>PASSWORD</Hint>
                         <FormTextInput
                             placeholder={`login password`}
                             secureTextEntry
@@ -114,6 +121,7 @@ export default class ConfirmDialog extends Component {
                             <PrimaryButton
                                 onPress={onCancelPress}
                                 title={'CANCEL'}
+                                secondary
                                 style={{margin: 16, marginLeft: 0, marginRight: 8, flex: 1}}
                             />
                             <PrimaryButton
@@ -125,6 +133,7 @@ export default class ConfirmDialog extends Component {
                     </View>
                 </ScrollView>
             </View>
+            </Modal>
         )
     }
 

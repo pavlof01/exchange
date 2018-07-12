@@ -10,7 +10,7 @@ import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/nav
 import FormTextInput from "../FormTextInput";
 import Price from "../../values/Price";
 import {currencyCodeToSymbol, objMap} from "../../helpers";
-import PrimaryButton from "../../style/PrimaryButton";
+import PrimaryButton from "../../style/ActionButton";
 import Separator from "../../style/Separator";
 import Api from "../../services/Api";
 import TradeAdvices from "../Trade/TradeAdvices";

@@ -9,7 +9,7 @@ import {
 import Api from "../../services/Api";
 import Price from "../../values/Price";
 import {currencyCodeToSymbol, tradePartner, tradeType, tradeTypeBuy, tradeTypeSell} from "../../helpers";
-import PrimaryButton from "../../style/PrimaryButton";
+import PrimaryButton from "../../style/ActionButton";
 import EscrowTimer from "./EscrowTimer";
 import PartnerLink from "./PartnerLink";
 import Separator from "../../style/Separator";
@@ -63,10 +63,6 @@ const styles = StyleSheet.create({
         margin: 8,
         padding: 8,
         borderRadius: 4,
-    },
-    infoText: {
-        margin: 2,
-        fontSize: 16,
     },
     bold: {
         margin: 2,

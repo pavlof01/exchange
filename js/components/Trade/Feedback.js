@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { objMap } from '../../helpers'
 import Api from '../../services/Api';
 import {ActivityIndicator, StyleSheet, Text, TextInput} from "react-native";
-import PrimaryButton from "../../style/PrimaryButton";
+import PrimaryButton from "../../style/ActionButton";
 import CardPicker from "../../style/CardPicker";
 import MenuOption from "react-native-popup-menu/src/MenuOption";
 import FormTextInput from "../FormTextInput";

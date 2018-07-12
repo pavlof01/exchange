@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import Touchable from '../Touchable/index';
+import {fonts} from "../resourceHelpers";
 
 const defaultBlue = '#4f88b5';
 
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     color: defaultBlue,
     padding: 8,
     fontSize: 16,
+    fontFamily: fonts.bold.regular,
   },
 });
 

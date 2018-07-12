@@ -9,38 +9,59 @@ import {
   ViewPropTypes,
 } from 'react-native';
 import Touchable from '../Touchable/index';
+import {fonts} from "../resourceHelpers";
+
+const sharedButtonStyle = {
+    shadowOffset: {
+        width: 0,
+        height: 2
+    },
+    shadowRadius: 4,
+    shadowOpacity: 1.0,
+    elevation: 4,
+    borderWidth: 2,
+    borderRadius: 4,
+    height: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+};
+
+const sharedTextStyle = {
+    textAlign: 'center',
+    fontSize: 17,
+    fontWeight: '700',
+    fontFamily: fonts.bold.regular,
+};
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#2d18a0',
-    borderColor: '#2d18a0',
-    borderWidth: 2,
-    borderRadius: (Platform.OS === 'ios') ? 4 : 0,
-    height: 44,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+      ...sharedButtonStyle,
+    backgroundColor: '#6955FF',
+    borderColor: '#6955FF',
+    shadowColor: '#6955FF',
   },
-  text: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 17,
-    fontWeight: '700',
+  buttonSecondary: {
+    ...sharedButtonStyle,
+    backgroundColor: 'white',
+    borderColor: 'white',
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
-    borderColor: '#ccc',
-    borderWidth: 2,
-    height: 44,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+      ...sharedButtonStyle,
+      backgroundColor: '#DDD',
+      borderColor: '#DDD',
+  },
+  text: {
+      ...sharedTextStyle,
+      color: '#fff',
+  },
+  textSecondary: {
+      ...sharedTextStyle,
+      color: '#471287',
   },
   textDisabled: {
-    textAlign: 'center',
-    color: '#c4c4c4',
-    fontSize: 17,
-    fontWeight: '700',
+      ...sharedTextStyle,
+    color: '#c0c0c0',
   },
 });
 
@@ -86,6 +107,10 @@ class PrimaryButton extends Component {
      * Children.
      */
     children: PropTypes.any,
+    /**
+     * Children.
+     */
+    secondary: PropTypes.bool,
   };
 
   constructor(props) {
@@ -107,19 +132,18 @@ class PrimaryButton extends Component {
       children,
       title,
       disabled,
+      secondary,
       testID,
       style,
       fontStyle,
     } = this.props;
-    const buttonStyles = [disabled ? styles.buttonDisabled : styles.button, style];
-    const textStyles = [disabled ? styles.textDisabled : styles.text, fontStyle];
+    const buttonStyles = [disabled ? styles.buttonDisabled : secondary ? styles.buttonSecondary : styles.button, style];
+    const textStyles = [disabled ? styles.textDisabled : secondary ? styles.textSecondary : styles.text, fontStyle];
     if (color) {
       buttonStyles.push({ borderColor: color, backgroundColor: color });
     }
-    const textContent = (
-      <Text style={textStyles}>{title}</Text>
-    );
-    const content = children || textContent;
+
+    const content = children || <Text style={textStyles}>{title}</Text>;
     return (
       <Touchable
         accessibilityComponentType="button"

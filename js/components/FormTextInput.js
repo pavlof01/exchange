@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import _ from 'lodash';
+import {fonts} from "../style/resourceHelpers";
 
 const errorRed = '#dd0057';
 
@@ -60,7 +61,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     textAlign: 'left',
-    fontSize: 14,
+    fontFamily: fonts.regular.regular,
+    fontSize: 16,
     height: 32,
     padding: 4,
   },

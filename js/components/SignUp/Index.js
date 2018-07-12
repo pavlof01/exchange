@@ -11,7 +11,7 @@ import {
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../../style/Touchable';
 import _ from 'lodash';
-import PrimaryButton from "../../style/PrimaryButton";
+import PrimaryButton from "../../style/ActionButton";
 import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
 
 export default class SignUp extends Component {

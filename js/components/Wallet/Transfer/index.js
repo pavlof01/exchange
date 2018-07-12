@@ -7,17 +7,18 @@ import {
 } from 'react-native';
 import CardPicker from "../../../style/CardPicker";
 import {MenuOption} from "react-native-popup-menu";
-import {cryptoIcons} from "../../../style/resourceHelpers";
+import {cryptoIcons, fonts, IC_PICKER} from "../../../style/resourceHelpers";
 
 import {default as ProgressCircle} from 'react-native-progress-circle'
 import FormTextInput from "../../FormTextInput";
-import PrimaryButton from "../../../style/PrimaryButton";
+import PrimaryButton from "../../../style/ActionButton";
+import {common, Hint} from "../../../style/common";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        padding: 8,
+        padding: 16,
     },
     centerContent: {
         flex: 1,
@@ -25,27 +26,36 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    pickerRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 8,
-    },
     amount: {
         color: '#111111',
         fontWeight: 'bold',
+        fontFamily: fonts.bold.regular,
         textAlign: 'center',
         flex: 1,
     },
     limitsAmount: {
         color: '#111111',
         fontWeight: 'bold',
+        fontFamily: fonts.bold.regular,
         textAlign: 'center',
         flex: 2,
+    },
+    pickerRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 8,
+    },
+    pickerColumn: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 8,
     },
     pickerIcon: {
         height: 24,
         width: 24,
+        marginHorizontal: 8,
     },
     picker: {
         height: 50,
@@ -53,17 +63,9 @@ const styles = StyleSheet.create({
     },
     cardText: {
         fontSize: 24,
-        color: '#333333',
-        margin: 8,
+        color: '#444444',
         fontWeight: "bold",
-    },
-    inputHint: {
-        fontSize: 11,
-        textAlign: 'left',
-    },
-    hintRow: {
-        marginTop: 4,
-        flexDirection: 'row',
+        fontFamily: fonts.bold.regular,
     },
     formStyle: {
         flex: 1,
@@ -73,24 +75,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     header: {
-        color: '#222222',
+        color: '#444444',
         fontWeight: 'bold',
         fontSize: 20,
-        marginBottom: 8,
+        margin: 8,
+        fontFamily: fonts.bold.regular,
     },
     errorRow: {
         flex: 1,
         flexDirection: 'row',
-    },
-    errorText: {
-        flex: 1,
-        color: '#d61b38',
-        textAlign: 'center',
-    },
-    successText: {
-        flex: 1,
-        color: '#14d459',
-        textAlign: 'center',
     },
 });
 
@@ -176,14 +169,22 @@ export default class Transfer extends Component {
         return error
     };
 
-    static ItemWithIcon(label, icon) {
-        return (<View style={styles.pickerRow}>{icon}<Text style={styles.cardText}>{label}</Text></View>)
+    static ItemWithIcons(label, iconLeft, iconRight) {
+        return (<View style={styles.pickerRow}>{iconLeft}<Text style={styles.cardText}>{label}</Text>{iconRight}</View>)
     }
 
-    CryptItem = (code) => {
+    CryptItemFactory = (header) => (code) => {
         const value = this.props.balance[code].value;
-        return Transfer.ItemWithIcon(`${value} ${code}`, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode='contain'/>);
+        return <View style={styles.pickerColumn}>
+            <Text style={styles.cardText}>{value}</Text>
+            {Transfer.ItemWithIcons(code, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode='contain'/>,
+                header ? <Image source={IC_PICKER} style={styles.pickerIcon} resizeMode='contain'/> : undefined)}
+        </View>;
     };
+
+    CryptItem = this.CryptItemFactory(false);
+
+    CryptHeader = this.CryptItemFactory(true);
 
     onCryptoCurrencyCodeChange = (value) => {
         const form = {
@@ -201,8 +202,6 @@ export default class Transfer extends Component {
         this.setState({ form });
     };
 
-    hint = (title) => <View style={styles.hintRow}><Text style={styles.inputHint}>{title}</Text></View>;
-
     onSubmitHandler = () => {
         this.props.onWalletOperationStart({ ...this.state.form });
     };
@@ -210,7 +209,7 @@ export default class Transfer extends Component {
     renderPasswordError = () => {
         return (
             <View style={styles.formRow}>
-                <Text style={styles.errorText}>{'Wrong password'}</Text>
+                <Text style={common.errorText}>{'Wrong password'}</Text>
             </View>
         );
     };
@@ -218,7 +217,7 @@ export default class Transfer extends Component {
     renderSucessText = () => {
         return (
             <View style={styles.formRow}>
-                <Text style={styles.successText}>{'Transaction added to queue'}</Text>
+                <Text style={common.successText}>{'Transaction added to queue'}</Text>
             </View>
         );
     };
@@ -234,7 +233,7 @@ export default class Transfer extends Component {
 
         return (
             <View style={styles.container}>
-                {this.hint('BALANCE')}
+                <Hint>BALANCE</Hint>
                 <View style={styles.centerContent}>
                     <ProgressCircle
                         percent={15}
@@ -246,7 +245,8 @@ export default class Transfer extends Component {
                     >
                         <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
                                     selectedValue={code}
-                                    renderButton={this.CryptItem}>
+                                    renderButton={this.CryptHeader}
+                                    flat>
                             {this.props.cryptoCurrencies.map(
                                 currency => <MenuOption key={currency.code} value={currency.code}>
                                     {this.CryptItem(currency.code)}
@@ -258,7 +258,7 @@ export default class Transfer extends Component {
 
                 <View style={styles.formStyle}>
 
-                {this.hint('ADDRESS')}
+                <Hint>ADDRESS</Hint>
                 <FormTextInput
                     placeholder={`Enter ${simpleCurrencyName[code]} address`}
                     onChangeText={this.onAddressChange}
@@ -266,7 +266,7 @@ export default class Transfer extends Component {
                     style={styles.formStyle}
                 />
 
-                {this.hint('AMOUNT')}
+                <Hint>AMOUNT</Hint>
                 <View style={styles.formRow}>
                     <FormTextInput
                         placeholder={`Amount to send`}
@@ -277,7 +277,7 @@ export default class Transfer extends Component {
                     <Text style={styles.header}>{code}</Text>
                 </View>
 
-                {this.hint('COST')}
+                <Hint>COST</Hint>
                 <View style={styles.formRow}>
                     <FormTextInput
                         placeholder={`In other currency`}
@@ -290,7 +290,9 @@ export default class Transfer extends Component {
 
                 { this.state.isConfirming ? this.renderConfirmPasswordField() : null }
 
-                <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16}} />
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{margin: 16, width: '50%'}} />
+                </View>
 
                 { this.state.error.isEmpty ? this.renderPasswordError() : null }
 

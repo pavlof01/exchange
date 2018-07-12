@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 48,
+        height: 56,
         paddingLeft: 8,
         paddingRight: 8,
     },
@@ -143,14 +143,14 @@ export default class Wallet extends Component {
             {/*{this.actionName}*/}
 
             <View style={styles.rowContainer}>
-                <TopButton title={'TRANSFER'} onPress={this.onTransferSelected} selected={this.state.selectedAction === 'transfer'} selectedColor={'blue'} color={'black'}/>
+                <TopButton title={'TRANSFER'} onPress={this.onTransferSelected} selected={this.state.selectedAction === 'transfer'}/>
 
-                <Separator vertical/>
+                <Separator vertical padding={8}/>
 
-                <TopButton title={'RECEIVE'} onPress={this.onReceiveSelected} selected={this.state.selectedAction === 'receive'} selectedColor={'blue'} color={'black'}/>
+                <TopButton title={'RECEIVE'} onPress={this.onReceiveSelected} selected={this.state.selectedAction === 'receive'}/>
             </View>
 
-            <Separator />
+            <Separator padding={16} />
 
             <ScrollView keyboardShouldPersistTaps='always'>
                 {content}

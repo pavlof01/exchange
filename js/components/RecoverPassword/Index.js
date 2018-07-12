@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../../style/Touchable';
-import PrimaryButton from "../../style/PrimaryButton";
+import PrimaryButton from "../../style/ActionButton";
 import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
 
 export default class RecoverPassword extends Component {

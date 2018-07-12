@@ -4,6 +4,7 @@ import {
     StyleSheet, Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import {fonts} from "../resourceHelpers";
 
 const styles = StyleSheet.create({
     androidContainer: {
@@ -13,6 +14,7 @@ const styles = StyleSheet.create({
         padding: 14,
         fontSize: 22,
         fontWeight: 'bold',
+        fontFamily: fonts.bold.regular,
         elevation: 8,
         alignItems: 'center',
         textAlign: 'center',
@@ -25,6 +27,7 @@ const styles = StyleSheet.create({
         padding: 24,
         fontSize: 16,
         fontWeight: 'bold',
+        fontFamily: fonts.bold.regular,
         alignItems: 'center',
         textAlign: 'center',
         justifyContent: 'center',

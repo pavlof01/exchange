@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
         margin: 8,
         fontWeight: 'bold',
     },
+    picker: {
+        height: 50,
+        width: 100,
+    },
 });
 
 export default class CurrencySelector extends Component {
