@@ -14,6 +14,8 @@ import _ from 'lodash';
 import PrimaryButton from "../../style/ActionButton";
 import {withColoredStatusBar} from "../../style/navigation";
 import BorderlessButton from "../../style/BorderlessButton";
+import {fonts} from "../../style/resourceHelpers";
+import {common} from "../../style/common";
 
 export default class Login extends Component {
     static navigationOptions = { header: props => null };
@@ -103,14 +105,15 @@ export default class Login extends Component {
                         <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
                         <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
                         <BorderlessButton onPress={this.onRecoverRequestPressed} title={'Забыли пароль?'} />
-                        <PrimaryButton onPress={this.onLoginPressed} title={'Войти'} disabled={this.props.isFetching}>
+                        <PrimaryButton onPress={this.onLoginPressed} title={'Войти'} disabled={this.props.isFetching} >
                             {this.props.isFetching ? <ActivityIndicator size="large"/> : undefined}
                         </PrimaryButton>
+
                     </View>
                     <Touchable onPress={this.onSignUpPressed}>
                         <View>
-                            <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
-                            <Text style={[styles.textLink, styles.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
+                            <Text style={[common.textCenter]}>Вы впервые на BitChange?</Text>
+                            <Text style={[common.textLink, common.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
                         </View>
                     </Touchable>
                 </View>
@@ -122,12 +125,14 @@ const styles = StyleSheet.create({
     error: {
         color: '#dd0057',
         marginBottom: 4,
+        fontFamily: fonts.regular.regular,
     },
     pageHeader: {
         textAlign: 'center',
         fontSize: 32,
         color: 'black',
         fontWeight: "700",
+        fontFamily: fonts.medium.regular,
         margin: 24,
     },
     paddingScreen: {
@@ -141,20 +146,6 @@ const styles = StyleSheet.create({
         paddingVertical: 32,
         borderRadius: 8,
         backgroundColor: '#fff',
-    },
-    textLink: {
-        color: '#2d18a0',
-        textDecorationLine: 'underline',
-    },
-    remindLink: {
-        color: '#838383',
-        fontWeight: '700',
-        fontSize: 16,
-        marginBottom: 28,
-    },
-    textCenter: {
-        textAlign: 'center',
-        justifyContent: 'center',
     },
 });
 

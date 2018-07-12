@@ -12,6 +12,7 @@ import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../../style/Touchable';
 import PrimaryButton from "../../style/ActionButton";
 import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
+import {common} from "../../style/common";
 
 export default class RecoverPassword extends Component {
     static navigationOptions = createBasicNavigationOptions('Восстановление');
@@ -100,8 +101,8 @@ export default class RecoverPassword extends Component {
                         </View>
                         <Touchable onPress={this.onSignUpPressed}>
                             <View>
-                                <Text style={[styles.textCenter]}>Вы впервые на BitChange?</Text>
-                                <Text style={[styles.textLink, styles.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
+                                <Text style={[common.textCenter]}>Вы впервые на BitChange?</Text>
+                                <Text style={[common.textLink, common.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
                             </View>
                         </Touchable>
                     </View>

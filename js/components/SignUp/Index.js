@@ -13,6 +13,7 @@ import Touchable from '../../style/Touchable';
 import _ from 'lodash';
 import PrimaryButton from "../../style/ActionButton";
 import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
+import {common} from "../../style/common";
 
 export default class SignUp extends Component {
     static navigationOptions = createBasicNavigationOptions('Регистрация');
@@ -166,8 +167,8 @@ export default class SignUp extends Component {
                     </View>
                     <Touchable onPress={this.onLoginPressed}>
                         <View>
-                            <Text style={[styles.textCenter]}>Уже зарегистрированы?</Text>
-                            <Text style={[styles.textLink, styles.textCenter]}>Войти</Text>
+                            <Text style={[common.textCenter]}>Уже зарегистрированы?</Text>
+                            <Text style={[common.textLink, common.textCenter]}>Войти</Text>
                         </View>
                     </Touchable>
                 </ScrollView>
@@ -189,14 +190,6 @@ const styles = StyleSheet.create({
         paddingVertical: 32,
         backgroundColor: '#fff',
     },
-    textLink: {
-        color: '#2d18a0',
-        textDecorationLine: 'underline',
-    },
-    textCenter: {
-        textAlign: 'center',
-        justifyContent: 'center',
-    }
 });
 
 SignUp.propTypes = {

@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 48,
+        height: 56,
         paddingLeft: 8,
         paddingRight: 8,
     },
@@ -192,7 +192,7 @@ export default class Offers extends Component {
                                onPress={this.showOffersToSell}
                                selectedColor={'green'}/>
 
-                    <Separator vertical/>
+                    <Separator vertical padding={8}/>
 
                     <TopButton title={'SELL'}
                                selected={this.userWantsToSell()}
@@ -200,7 +200,7 @@ export default class Offers extends Component {
                                selectedColor={'red'}/>
                 </View>
 
-                <Separator />
+                <Separator padding={16} />
 
                 <View style={styles.pickerRow}>
                     <View>

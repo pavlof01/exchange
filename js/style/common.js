@@ -32,6 +32,15 @@ export const common = StyleSheet.create({
         textAlign: 'center',
         fontFamily: fonts.regular.regular,
     },
+    textLink: {
+        color: '#2d18a0',
+        textDecorationLine: 'underline',
+    },
+    textCenter: {
+        textAlign: 'center',
+        justifyContent: 'center',
+        fontFamily: fonts.regular.regular,
+    },
 });
 
 export const Hint = (props) => <Text {...props} style={common.hintText}/>;
