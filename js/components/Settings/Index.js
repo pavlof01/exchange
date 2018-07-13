@@ -176,6 +176,7 @@ export default class Settings extends Component {
                     <PrimaryButton onPress={this.onSubmitUserMeta} title={'Сохранить профиль'} disabled={this.state.pending}>
                         {this.state.pending ? <ActivityIndicator size="large"/> : undefined}
                     </PrimaryButton>
+                    <PrimaryButton style={{ marginTop: 10 }} onPress={this.props.openAds} title={'Объявления'} />
                 </View>
             </ScrollView>
         </View>

@@ -13,6 +13,7 @@ import NewTrade from "./containers/NewTrade/Index";
 import Trade from "./containers/Trade/Index";
 import Profile from "./containers/UserProfile/Index";
 import Feedback from "./containers/Feedback/Index";
+import Ads from "./containers/Ads/Index";
 
 import {bottomBarStyle, createBottomBarOptions} from "./style/navigation";
 
@@ -33,6 +34,7 @@ const AppNavigator = createStackNavigator({
         SignUp: { screen: SignUp },
         RecoverPassword: { screen: RecoverPassword },
         SplashScreen: { screen: SplashScreen },
+        Ads :{ screen: Ads }
     }
 );
 
