@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import HeaderBar from "../../style/HeaderBar";
 import Api from '../../services/Api';
 import { keysToCamelCase } from '../../helpers';
-import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
-
+import {createBasicNavigationOptions } from "../../style/navigation";
 
 const styles = StyleSheet.create({
   container: {
@@ -75,16 +73,14 @@ export default class Ads extends Component {
   };
 
   componentDidMount() {
-    this.load({page: 1});
+    this.loadAds();
   }
 
-  load = (params = {}) => {
-    params = {sort: this.state.sort, limit: 10, ...params};
-
-    Api.get('/me/pro'/*, params*/)
+  loadAds = () => {
+    Api.get('/me/pro')
       .then(response => this.setState({
         ads: response.data.ads.map(ad => keysToCamelCase(ad)),
-        load:false
+        load: false
       }))
 };
 
@@ -102,16 +98,13 @@ export default class Ads extends Component {
       );
 };
   render() {
-    console.log(this.state.ads);
     return (
       <View>
         <FlatList data={this.state.ads}
                           renderItem={this.renderItem}
                           keyExtractor={i => i.id}
-                          //ListEmptyComponent={<Text /*style={styles.centerMessage}*/>У вас ещё не было сделок</Text>}
+                          ListEmptyComponent={!this.state.load ? <Text style={styles.centerMessage}>У вас ещё не было сделок</Text>: null}
                           ListFooterComponent={this.state.load && <ActivityIndicator size="large"/> }
-                          //onEndReached={this.loadNext}
-                          //onEndReachedThreshold={0.3}
                           />}
       </View>
     )
