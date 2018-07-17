@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   userName: {
       fontWeight: 'bold',
       color: '#333333',
-      fontSize: 16,
+      fontSize: 12,
       paddingLeft: 2,
       paddingRight: 2,
       flex: 2,
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
       flex: 2,
   },
   smallInfo: {
+      fontSize: 11,
       paddingLeft: 2,
       paddingRight: 2,
       flex: 1,
@@ -87,7 +88,7 @@ export default class Ads extends Component {
   renderItem = ({item, index}) => {
     const alt = index % 2 === 1;
     return (
-            <View style={[styles.rowContainer, alt ? styles.alternate_background : undefined]}>
+            <View style={[styles.rowContainer, alt ? styles.alternate_background : null]}>
                 <Text style={styles.smallInfo}>#{item.id}</Text>
                 <Text style={styles.userName}>{item.createdAt}</Text>
                 <Text style={styles.info}>{item.isActive}</Text>
@@ -100,12 +101,13 @@ export default class Ads extends Component {
   render() {
     return (
       <View>
-        <FlatList data={this.state.ads}
-                          renderItem={this.renderItem}
-                          keyExtractor={i => i.id}
-                          ListEmptyComponent={!this.state.load ? <Text style={styles.centerMessage}>У вас ещё не было сделок</Text>: null}
-                          ListFooterComponent={this.state.load && <ActivityIndicator size="large"/> }
-                          />}
+        <FlatList
+            data={this.state.ads}
+            renderItem={this.renderItem}
+            keyExtractor={i => i.id}
+            ListEmptyComponent={!this.state.load ? <Text style={styles.centerMessage}>У вас ещё не было сделок</Text>: null}
+            ListFooterComponent={this.state.load && <ActivityIndicator size="large"/>}
+        />
       </View>
     )
   }

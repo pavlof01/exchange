@@ -113,7 +113,7 @@ export default class Settings extends Component {
         const { user } = this.props;
 
         return (
-        <View>
+        <View style={styles.rowItem}>
             <HeaderBar title={'SETTINGS'}/>
             <View style={styles.row}>
                 <View style={styles.wideRowItem}>
