@@ -14,6 +14,7 @@ import {
     OPEN_PROFILE_REQUEST,
     OPEN_TRADE_REQUEST
 } from "../actions/navigation";
+import { OPEN_ADS } from "../actions/navigation";
 const firstAction = AppNavigator.router.getActionForPathAndParams('SplashScreen');
 const initialState = AppNavigator.router.getStateForAction(firstAction);
 
@@ -66,6 +67,12 @@ export default function navigationReducer(state = initialState, action) {
       case OPEN_FEEDBACK_REQUEST:
           nextState = AppNavigator.router.getStateForAction(
               NavigationActions.navigate({ routeName: 'Feedback', params: {user_name: action.user_name} }),
+              state
+          );
+          break;
+      case OPEN_ADS: //console.log("object"); break;
+          nextState = AppNavigator.router.getStateForAction(
+              NavigationActions.navigate({ routeName: 'Ads' }),
               state
           );
           break;
