@@ -4,6 +4,8 @@ import Price from "../../values/Price";
 import { currencyCodeToSymbol } from "../../helpers";
 import OnlineStatus from "../../style/OnlineStatus";
 import User from "../../models/User";
+import EscrowTimer from "./EscrowTimer";
+import PrimaryButton from "../../style/ActionButton";
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -79,7 +81,7 @@ export default class Buy extends Component {
 
     state = {
         amount:0,
-        btc:10
+        message:''
     };
 
   render() {
@@ -112,15 +114,22 @@ export default class Buy extends Component {
             </View>
             <Image source={require('../../img/ic_swap.png')} style={{height:18, width:18, marginLeft:15, marginRight:15}}/>
             <View style={{ borderColor: 'gray', borderBottomWidth: 1, flex:1, flexDirection:'row'}}>
-                <Text>{/*this.state.amount*/Price.build(this.state.amount / ad.price).viewCrypto}</Text>
+                <Text>{Price.build(this.state.amount / ad.price).viewCrypto}</Text>
                 <Text style={{position:'absolute',right:0, color:'grey'}}>{ad.crypto_currency_code}</Text>
             </View>
-            
-            
-            
         </View>
         <Text style={{marginTop:10}}>Limit: {Math.round(ad.limit_min * 10) / 10} - {Math.round(ad.limit_max * 10) / 10} {currencyCodeToSymbol(ad.currency_code)}</Text>
-    
+        <Text style={{color:"#4A4A4A", fontSize:10, marginTop:10, marginBottom:10}}>MESSAGE</Text>
+        <TextInput
+            style={{borderColor: 'rgba(0,0,0, 0.3)', borderBottomWidth: 1,fontSize:18}}
+            placeholder='You may leave a message'
+            onChangeText={(message) => this.setState({message})}
+            value={this.state.message}/>
+        <View style={{marginTop:20, justifyContent:'space-around', flexDirection:'row', flex:1}}>
+            <Text>Time limit for payment of seller's invoice:</Text>
+                <Text><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text>
+        </View>
+        <PrimaryButton title={'SEND REQUSET TO A TRADER'} color={'#5B6EFF'} /*style={{margin: 8, flex: 1}}*//>
     {/*
         this.isTradeLoaded() ? <View style={styles.info}>
             <Text style={{textAlign:'center'}}>Your request Trader {this.partner.user_name} {this.actionTitle} cryptocurrency from {this.createdAt}</Text>
