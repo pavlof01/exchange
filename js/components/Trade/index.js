@@ -15,6 +15,8 @@ import PartnerLink from "./PartnerLink";
 import Separator from "../../style/Separator";
 import TradeTrivia from "./TradeTrivia";
 import TradeAdvices from "./TradeAdvices";
+import Buy from './Buy';
+import Sell from './Sell';
 import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
 import Feedback from "./Feedback";
 
@@ -53,15 +55,14 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     header: {
-        color: '#222222',
+        color: '#2C09A3',
         fontWeight: 'bold',
         fontSize: 20,
         marginBottom: 8,
     },
     info: {
-        backgroundColor: 'white',
-        margin: 8,
-        padding: 8,
+        margin: 5,
+        //padding: 8,
         borderRadius: 4,
     },
     bold: {
@@ -112,7 +113,7 @@ export default class Trade extends Component {
                         }).catch(error => {
                             const newState = {pending: false};
 
-                            console.warn(JSON.stringify(error, undefined, 2));
+                            //console.warn(JSON.stringify(error, undefined, 2));
                             if (error.response.status === 405) {
                                 newState.errors = error.response.data.errors;
                             }
@@ -142,18 +143,26 @@ export default class Trade extends Component {
     }
 
     renderBuyActionBlock(status) {
-        if (status === 'new') {
+        /*if (status === 'new') {
             return <View style={styles.formRow}>
                     <PrimaryButton onPress={this.onCancelHandler} title={'Отменить сделку'} color={'#C00'} style={{margin: 8, flex: 1}}/>
                     <PrimaryButton onPress={this.onPaidHandler} title={'Оплатить сделку'} style={{margin: 8, flex: 1}}/>
                 </View>
-        }
+        }*/
+        return <Buy 
+            partnerName={this.partner.user_name} 
+            isOnline = {this.props.partnerActivityStatuses[this.partner.id]} 
+            {...this.props}/>;
     }
 
     renderSellActionBlock(status) {
-        if (['paid_confirmed', 'expired_and_paid'].includes(status)) {
+        /*if (['paid_confirmed', 'expired_and_paid'].includes(status)) {
             return <PrimaryButton onPress={this.onCompleteHandler} title={'Отпустить крипту'} style={{margin: 8}}/>;
-        }
+        }*/
+        return <Sell 
+            partnerName={this.partner.user_name} 
+            isOnline = {this.props.partnerActivityStatuses[this.partner.id]} 
+            {...this.props}/>;
     };
 
     renderActionBlock = () => {
@@ -165,6 +174,7 @@ export default class Trade extends Component {
             return <ActivityIndicator size="large" />
         }
         const { status } = this.props.trade;
+
         return this.isUserBuying() ? this.renderBuyActionBlock(status) : this.renderSellActionBlock(status);
     };
 
@@ -187,19 +197,23 @@ export default class Trade extends Component {
     render() {
         let trade = this.props.trade || {};
         let ad = trade.ad || {};
-
-        return withCommonStatusBar(<ScrollView keyboardShouldPersistTaps='always'>
-            <View>
-                    <Text style={[styles.header, styles.centeredText]}>{ad.payment_details}</Text>
+        console.warn(JSON.stringify(trade,null,2));
+        return this.renderActionBlock();/*withCommonStatusBar(<ScrollView keyboardShouldPersistTaps='always'>
+            <View style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10}}>  
+                    <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,}}>
+                        <Text style={{fontSize:18,  color:'grey',fontWeight:'bold'}}>TRANSFER VIA {ad.payment_method_code}</Text>
+                    </View>
+                    <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,}}>
+                        <Text style={{fontSize:18, fontWeight:'bold'}}>{this.partner.user_name}</Text>
+                    </View>
+                    
                     <View style={styles.info}>
-                        <Text style={[styles.huge, styles.centeredText]}>{ad.payment_method_code}</Text>
-                        <Text style={styles.centeredText}><Text style={styles.header}>Цена за 1 {ad.crypto_currency_code}:</Text> <Text style={[styles.huge, {color: '#25367E'}]}>{Price.build(ad.price).viewMain} {currencyCodeToSymbol(ad.currency_code)}</Text></Text>
+                        <Text style={styles.centeredText}><Text style={styles.header}>1 {ad.crypto_currency_code} / {Price.build(ad.price).viewMain} {currencyCodeToSymbol(ad.currency_code)}</Text></Text>
                     </View>
 
                 {
                     this.isTradeLoaded() ? <View style={styles.info}>
-                        <Text>Ваш запрос Трейдеру <Text style={styles.bold}>{this.partner.user_name}</Text> на <Text
-                            style={styles.bold}>{this.actionTitle}</Text> криптовалюты от <Text>{this.createdAt}</Text></Text>
+                        <Text style={{textAlign:'center'}}>Your request Trader {this.partner.user_name} {this.actionTitle} cryptocurrency from {this.createdAt}</Text>
 
                         <View style={styles.row}>
                             <Text style={[styles.header, styles.centeredText]}>{Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}</Text>
@@ -211,14 +225,13 @@ export default class Trade extends Component {
                                 expiredAt={this.props.trade.escrow_expired_at}/> минут</Text>
                         }
                     </View> : <ActivityIndicator size="large"/>
-                }
+                    }
 
                     {this.renderActionBlock()}
-
+                    
                     <PartnerLink user={this.partner} isSeller={this.isUserBuying()}  onProfileOpen={this.props.openProfile}
                                  online={this.props.partnerActivityStatuses[this.partner.id]} />
 
-                    <Separator/>
 
                     <Text style={styles.row}><Text style={styles.bold}>Страна:</Text> {ad.country_code}</Text>
 
@@ -228,11 +241,7 @@ export default class Trade extends Component {
                                 <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
                             </View>
                     }
-
-                    <TradeTrivia ad={ad}/>
-
-                    <TradeAdvices/>
             </View>
         </ScrollView>);
-    }
+                */}
 }
