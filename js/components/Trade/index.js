@@ -161,7 +161,8 @@ export default class Trade extends Component {
         }*/
         return <Sell 
             partnerName={this.partner.user_name} 
-            isOnline = {this.props.partnerActivityStatuses[this.partner.id]} 
+            isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
+            createdAt = {this.createdAt} 
             {...this.props}/>;
     };
 
