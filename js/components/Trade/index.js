@@ -198,7 +198,7 @@ export default class Trade extends Component {
     render() {
         let trade = this.props.trade || {};
         let ad = trade.ad || {};
-        console.warn(JSON.stringify(trade,null,2));
+        //console.warn(JSON.stringify(trade,null,2));
         return this.renderActionBlock();/*withCommonStatusBar(<ScrollView keyboardShouldPersistTaps='always'>
             <View style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10}}>  
                     <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,}}>

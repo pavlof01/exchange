@@ -90,7 +90,6 @@ export default class Buy extends Component {
   render() {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
-    console.warn(ad.currency_code);
     return (
         <ScrollView style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10, flex:1}}>  
         <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,}}>
