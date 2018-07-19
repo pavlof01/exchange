@@ -6,7 +6,7 @@ import OnlineStatus from "../../style/OnlineStatus";
 import User from "../../models/User";
 import EscrowTimer from "./EscrowTimer";
 import PrimaryButton from "../../style/ActionButton";
-import { GiftedChat } from 'react-native-gifted-chat';
+//import { GiftedChat } from 'react-native-gifted-chat';
 
 const styles = StyleSheet.create({
     centerContent: {
@@ -275,7 +275,7 @@ export default class Sell extends Component {
 
     onSend(messages = []) {
         this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, messages),
+          //messages: GiftedChat.append(previousState.messages, messages),
         }))
       }
 
