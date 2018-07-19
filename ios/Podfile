@@ -5,8 +5,6 @@ target 'exchange' do
   use_frameworks!
   pod 'Fabric'
   pod 'Crashlytics'
-  pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
-
 end
 
 target 'exchange-tvOS' do
