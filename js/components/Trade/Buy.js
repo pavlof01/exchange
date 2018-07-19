@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Price from "../../values/Price";
 import { currencyCodeToSymbol } from "../../helpers";
 import OnlineStatus from "../../style/OnlineStatus";
@@ -81,23 +81,35 @@ export default class Buy extends Component {
 
     state = {
         amount:0,
-        message:''
+        message:'',
+        showInfoAboutPartner:false
     };
+
+    showInfoAboutPartner = () => this.setState({showInfoAboutPartner:!this.state.showInfoAboutPartner});
 
   render() {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
     console.warn(ad.currency_code);
     return (
-        <View style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10, flex:1}}>  
+        <ScrollView style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10, flex:1}}>  
         <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,}}>
             <Text style={{fontSize:18,  color:'grey',fontWeight:'bold'}}>TRANSFER VIA {ad.payment_method_code}</Text>
         </View>
-        <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,flexDirection:'row',alignItems:'center'}}>
+        <TouchableOpacity onPress={this.showInfoAboutPartner} style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,flexDirection:'row',alignItems:'center'}}>
             <OnlineStatus isOnline={this.props.isOnline}/>
             <Text style={{fontSize:18, fontWeight:'bold'}}>{this.props.partnerName}</Text>
             <Text style={{marginLeft:10}}>{User.approximateTradesCount(this.props.user.completed_trades_count)}</Text>
+        </TouchableOpacity>
+        {this.state.showInfoAboutPartner ? (
+        <View style={{backgroundColor:'#F8F9FB',paddingBottom:15,paddingTop:15}}>
+            <Text style={{color:"#4A4A4A", fontSize:10, marginTop:10, marginBottom:15}}>Country</Text>
+            <Text style={{fontSize:18}}>ad.country_code</Text>
+            <Text style={{color:"#4A4A4A", fontSize:10, marginTop:10, marginBottom:15}}>Term of transaction</Text>
+            <Text style={{fontSize:18}}>This advertisement is for cash transactions only. Make a request only when you can make a cash payment within 12 hours.</Text>
         </View>
+        ):null}
+        
         <Text style={{color:"#4A4A4A", fontSize:10, marginTop:10}}>COST</Text>
         <View style={styles.info}>
             <Text style={styles.centeredText}><Text style={styles.header}>1 {ad.crypto_currency_code} / {Price.build(ad.price).viewMain} {currencyCodeToSymbol(ad.currency_code)}</Text></Text>
@@ -118,7 +130,10 @@ export default class Buy extends Component {
                 <Text style={{position:'absolute',right:0, color:'grey'}}>{ad.crypto_currency_code}</Text>
             </View>
         </View>
+        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
         <Text style={{marginTop:10}}>Limit: {Math.round(ad.limit_min * 10) / 10} - {Math.round(ad.limit_max * 10) / 10} {currencyCodeToSymbol(ad.currency_code)}</Text>
+        <Text style={{marginTop:10}}>Limit: {Price.build(ad.limit_min / ad.price).viewCrypto} - {Price.build(ad.limit_max / ad.price).viewCrypto} {currencyCodeToSymbol(ad.currency_code)}</Text>
+        </View>
         <Text style={{color:"#4A4A4A", fontSize:10, marginTop:10, marginBottom:10}}>MESSAGE</Text>
         <TextInput
             style={{borderColor: 'rgba(0,0,0, 0.3)', borderBottomWidth: 1,fontSize:18}}
@@ -129,7 +144,7 @@ export default class Buy extends Component {
             <Text>Time limit for payment of seller's invoice:</Text>
                 <Text><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text>
         </View>
-        <PrimaryButton title={'SEND REQUSET TO A TRADER'} color={'#5B6EFF'} /*style={{margin: 8, flex: 1}}*//>
+        <PrimaryButton title={'SEND REQUSET TO A TRADER'} color={'#5B6EFF'} style={{marginTop:30}}/>
     {/*
         this.isTradeLoaded() ? <View style={styles.info}>
             <Text style={{textAlign:'center'}}>Your request Trader {this.partner.user_name} {this.actionTitle} cryptocurrency from {this.createdAt}</Text>
@@ -155,7 +170,7 @@ export default class Buy extends Component {
                     <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
                 </View>
         */}
-</View>
+</ScrollView>
     )
   }
 };
