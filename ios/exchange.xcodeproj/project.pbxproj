@@ -40,6 +40,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* exchangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* exchangeTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		31074609C6364489AF06F6A9 /* Gilroy-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 504F251E12084E4C9365522D /* Gilroy-RegularItalic.otf */; };
+		44187DC92100A5E4009F1DC0 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44187DC82100A599009F1DC0 /* libRCTOneSignal.a */; };
 		532CE10E45A7236439A5210C /* libPods-exchange-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21A3F85750B88A32C4E26EAD /* libPods-exchange-tvOS.a */; };
 		5A9EBCD993F04E9F841B978A /* Gilroy-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E196F288B3BE4E379AED9394 /* Gilroy-Medium.otf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -292,6 +293,13 @@
 			remoteGlobalIDString = 3D3CD9181DE5FBD800167DC4;
 			remoteInfo = "jschelpers-tvOS";
 		};
+		44187DC72100A599009F1DC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 44187DC32100A599009F1DC0 /* RCTOneSignal.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3245CDED1BFEE35C00EABF68;
+			remoteInfo = RCTOneSignal;
+		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
@@ -360,6 +368,7 @@
 		30240D59B1A14AFFBAF13D77 /* Gilroy-ExtraboldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-ExtraboldItalic.otf"; path = "../assets/fonts/Gilroy-ExtraboldItalic.otf"; sourceTree = "<group>"; };
 		341F50DC58EA2D1AB53E5A80 /* Pods_exchange.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_exchange.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D58719EE8FEB83E393189F1 /* Pods-exchange-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-exchange-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-exchange-tvOSTests/Pods-exchange-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		44187DC32100A599009F1DC0 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOneSignal.xcodeproj; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; };
 		444CBE5A2100423300109176 /* exchange.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = exchange.entitlements; path = exchange/exchange.entitlements; sourceTree = "<group>"; };
 		504F251E12084E4C9365522D /* Gilroy-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-RegularItalic.otf"; path = "../assets/fonts/Gilroy-RegularItalic.otf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -391,6 +400,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44187DC92100A5E4009F1DC0 /* libRCTOneSignal.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -577,6 +587,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		44187DC42100A599009F1DC0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				44187DC82100A599009F1DC0 /* libRCTOneSignal.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -598,6 +616,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				44187DC32100A599009F1DC0 /* RCTOneSignal.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -829,6 +848,10 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
+				},
+				{
+					ProductGroup = 44187DC42100A599009F1DC0 /* Products */;
+					ProjectRef = 44187DC32100A599009F1DC0 /* RCTOneSignal.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -1084,6 +1107,13 @@
 			fileType = archive.ar;
 			path = libjschelpers.a;
 			remoteRef = 3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		44187DC82100A599009F1DC0 /* libRCTOneSignal.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTOneSignal.a;
+			remoteRef = 44187DC72100A599009F1DC0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
@@ -1374,6 +1404,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = RF9T8S9829;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-onesignal/ios";
 				INFOPLIST_FILE = exchange/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1395,6 +1426,7 @@
 				CODE_SIGN_ENTITLEMENTS = exchange/exchange.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RF9T8S9829;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-onesignal/ios";
 				INFOPLIST_FILE = exchange/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
