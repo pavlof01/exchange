@@ -104,7 +104,7 @@ export default class Buy extends Component {
         {this.state.showInfoAboutPartner ? (
         <View style={{backgroundColor:'#F8F9FB',paddingBottom:15,paddingTop:15}}>
             <Text style={{color:"#4A4A4A", fontSize:10, marginTop:10, marginBottom:15}}>Country</Text>
-            <Text style={{fontSize:18}}>ad.country_code</Text>
+            <Text style={{fontSize:18}}>{ad.country_code}</Text>
             <Text style={{color:"#4A4A4A", fontSize:10, marginTop:10, marginBottom:15}}>Term of transaction</Text>
             <Text style={{fontSize:18}}>This advertisement is for cash transactions only. Make a request only when you can make a cash payment within 12 hours.</Text>
         </View>
