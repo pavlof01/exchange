@@ -90,7 +90,6 @@ export default class Trades extends Component {
   }
 
   onRefresh = () => {
-    console.warn('refresh');
     this.load({page: 1});
   };
 
