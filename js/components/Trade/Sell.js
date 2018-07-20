@@ -1,163 +1,82 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image, FlatList, Alert, KeyboardAvoidingView, Keyboard, Dimensions } from 'react-native';
 import Price from "../../values/Price";
 import { currencyCodeToSymbol, keysToCamelCase } from "../../helpers";
 import OnlineStatus from "../../style/OnlineStatus";
 import User from "../../models/User";
 import EscrowTimer from "./EscrowTimer";
 import PrimaryButton from "../../style/ActionButton";
-//import { GiftedChat } from 'react-native-gifted-chat';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
-    centerContent: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-    },
-    pickerIcon: {
-        height: 24,
-        width: 24,
-    },
-    pickerRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-    },
-    formRow: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    formStyle: {
-        flex: 1,
-    },
-    huge: {
-        color: '#222222',
-        fontSize: 26,
-        marginBottom: 8,
-    },
     header: {
         color: '#2C09A3',
         fontWeight: 'bold',
         fontSize: 24,
         marginBottom: 8,
     },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    pickerIcon: {
+        height: 24,
+        width: 24,
+    },
     info: {
         margin: 5,
         //padding: 8,
         //borderRadius: 4,
-    },
-    bold: {
-        margin: 2,
-        fontSize: 16,
-        fontWeight: 'bold',
     },
     centeredText: {
         textAlign: 'center',
         //flex: 1,
         margin: 8,
     },
-    error: {
-        color: '#dd0057',
-        marginBottom: 4,
-    },
-    warning: {
-        color: '#8b572a',
-        backgroundColor: '#fbf5eb',
-        borderColor: '#f5a623',
-        borderRadius: 4,
-        borderWidth: 1,
-        padding: 8,
-        margin: 8,
-    },
     me: {
         flex: 1,
+        alignItems:'flex-end',
     },
     trader: {
         flex:1,
-        alignItems:'flex-end',
+    },
+    displayNone: {
+        display: 'none',
     }
 });
 
 export default class Sell extends Component {
     state = {
         messages: [],
-        showInfoAboutPartner:false
+        textMessage:'',
+        showInfoAboutPartner:false,
+        showKeyboard:false,
+        expandChat:true
     };
 
-    componentWillMount() {
-        /*const ws = new WebSocket('ws://host.com/path');
-        this.setState({
-          messages: [
-            {
-              _id: 1,
-              text: 'Hello developer',
-              createdAt: new Date(),
-              user: {
-                _id: 2,
-                name: 'React Native',
-              },
-            },
-          ],
-        })*/
-    }
+      _keyboardDidShow = () => {
+        this.setState({showKeyboard:true});
+        if (this.state.messages.length > 4){
+        this.messagesFlatList.scrollToIndex({animated: true, index: 0});
+        }
+      }
+
+      _keyboardDidHide = () => {
+        this.setState({showKeyboard:false});
+      }
 
     componentDidMount() {
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
         /*let tunnelledHosts = ['papabit.com'];
         let protocol = 'ws:';
         let postfix = '/cable';*/
         //let url = protocol + '//' + window.location.hostname + postfix;
     
         this.socket = new WebSocket('ws://91.228.155.81/cable');
-        this.socket.onopen = () => {
-            let intervalId = setInterval(() => {
-                switch (this.socket.readyState) {
-                  case this.socket.CLOSING:
-                  case this.socket.CLOSED:
-                    clearInterval(intervalId);
-                    break;
-                  case this.socket.OPEN:
-                    this.send({command: 'subscribe'});
-                    clearInterval(intervalId);
-                    break;
-                  default:
-                    break;
-                }
-              }, 100);
-        };
-        this.socket.onmessage = (event) => {
-        let data = JSON.parse(event.data);
-        switch (data.type) {
-          case 'welcome':
-          case 'ping':
-            break;
-          case 'confirm_subscription':
-            console.warn('Subscription confirmed (Api::V1::ChatChannel)');
-            break;
-          default:
-            let message = data.message;
-            //console.warn(message);
-            if (message.messages) {
-              this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
-            } else if (message.error) {
-              this.setState({error: message.error})
-            }
-            break;
-        }
-          };
-        //this.socket.onopen = this.onConnect;
-        //this.socket.onmessage = this.onMessage;
-        this.socket.onclose = event => {
-            event.wasClean ?
-            console.log('Disconnect was clean (Api::V1::ChatChannel)') :
-            console.log('Disconnect (Api::V1::ChatChannel):', event);
-        }
+        this.socket.onopen = this.onConnect;
+        this.socket.onmessage = this.onMessage;
+        this.socket.onclose = this.onDisconnect;
       }
 
       onConnect = () => {
@@ -184,7 +103,7 @@ export default class Sell extends Component {
           case 'ping':
             break;
           case 'confirm_subscription':
-            console.warn('Subscription confirmed (Api::V1::ChatChannel)');
+            console.log('Subscription confirmed (Api::V1::ChatChannel)');
             break;
           default:
             let message = data.message;
@@ -193,21 +112,18 @@ export default class Sell extends Component {
             } else if (message.error) {
               this.setState({error: message.error})
             }
-    
             break;
         }
       };
     
       onDisconnect = (event) => {
         event.wasClean ?
-          console.log('Disconnect was clean (Api::V1::ChatChannel)') :
-          console.log('Disconnect (Api::V1::ChatChannel):', event);
+          console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
+          console.warn('Disconnect (Api::V1::ChatChannel):', event);
       };
     
       sendMessage = (params = {}) => {
-        //console.warn("sendMessage",params);
         this.setState({error: null});
-    
         this.send({
           command: 'message',
           data: JSON.stringify({...params, action: 'create'}),
@@ -227,10 +143,14 @@ export default class Sell extends Component {
       };
     
       onSubmit = () => {
-        //if (this.bodyInput.value) {
-          this.sendMessage({body: 'test'});
-          //this.bodyInput.value = '';
-        //}
+        if (this.state.textMessage.length) {
+            this.setState({textMessage:''});
+            this.sendMessage({body: this.state.textMessage});
+        } else {
+            Alert.alert(
+                'Введите сообщение',
+              )
+        }
         
       };
     
@@ -251,8 +171,6 @@ export default class Sell extends Component {
     
         this.fileInput.value = '';
       };
-    
-    
 
     showInfoAboutPartner = () => this.setState({showInfoAboutPartner:!this.state.showInfoAboutPartner});
 
@@ -261,31 +179,26 @@ export default class Sell extends Component {
     renderMessage = (message) => {
         const messageUserId = message.item.user.id;
         return (
-        <View key={messageUserId} style={{backgroundColor:'#00cc00'}}>
-            <View style={messageUserId === this.props.user.id ? styles.trader : styles.me}>
-                <View style={{width:'70%',backgroundColor:'red',padding:10,margin:10, flex:1}}>
+        <View style={{paddingLeft:10,paddingRight:10,marginTop:15}} key={messageUserId}>
+            <View style={messageUserId === this.props.user.id ? styles.me : styles.trader}>
+            {messageUserId === this.props.user.id ? null:<Text style={{marginBottom:10, color:'grey'}}>{ message.item.user.userName}</Text>}
+                <View style={{width:'85%',backgroundColor:'#ffffff',padding:10, flex:1, borderRadius:10}}>
                     <Text >
                         {message.item.body}
                     </Text>
                 </View>
+                <Text style={{fontSize:12,marginTop:5,color:'grey'}}>{moment(message.item.date).format('LT')} (MSK)</Text>
             </View>
         </View>
         )
     };
 
-    onSend(messages = []) {
-        this.setState(previousState => ({
-          //messages: GiftedChat.append(previousState.messages, messages),
-        }))
-      }
-
     render() {
         let trade = this.props.trade || {};
         let ad = trade.ad || {};
-        //console.warn(this.props.trade.conversation_id);
-        //console.warn(JSON.stringify(this.props.trade,null,2));
         return (
-            <ScrollView style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10, flex:1}}>  
+            <ScrollView style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10, flex:1}}>
+            <View style={this.state.showKeyboard ? styles.displayNone:null}>
             <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,}}>
                 <Text style={{fontSize:18,  color:'grey',fontWeight:'bold'}}>TRANSFER VIA {ad.payment_method_code}</Text>
             </View>
@@ -308,45 +221,48 @@ export default class Sell extends Component {
             <Text style={{textAlign:'center'}}>
             Your request Trader {this.props.partnerName} PURCHASE ONLINE cryptocurrency from {this.props.createdAt}
             </Text>
+            <View style={styles.row}>
+                <Text style={[styles.header, styles.centeredText]}>
+                    {Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}
+                </Text>
+                <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon]}/>
+                <Text style={[styles.header, styles.centeredText]}>
+                    {' ' + Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}
+                </Text>
+            </View>
             <View style={{marginTop:20, justifyContent:'center', flexDirection:'row', flex:1}}>
                 <Text>Time left to pay:</Text>
-                    <Text><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text>
+                <Text><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text>
             </View>
-            
+            </View>
+            <View style={{height:!this.state.expandChat ? Dimensions.get('window').height / 2.2:35 ,marginBottom:15,marginTop:15}}>
+            <TouchableOpacity onPress={() => this.setState({expandChat:!this.state.expandChat})}>
+                <View style={{width:'100%',borderBottomWidth:.5,borderColor:'grey',paddingBottom:2,marginBottom:15}}>
+                    <Text style={{color:'grey'}}>CHAT</Text>
+                </View>
+            </TouchableOpacity>
                 <FlatList
-                    //style={{height:400,backgroundColor:'#cccccc'}}
+                    style={{backgroundColor:'#F2F3F4'}}
+                    ref={ref => this.messagesFlatList = ref}
                     data={this.state.messages}
                     keyExtractor={this._keyExtractor}
                     renderItem={this.renderMessage}
+                    inverted={true}
                 />
-            
-            <PrimaryButton onPress={this.onSubmit} title={'Complete the transaction'} color={'#5B6EFF'} style={{marginTop:30}}/>
-            <PrimaryButton title={'Cancel the transaction'} color={'#ffffff'} style={{marginTop:30}} fontStyle={{color:'#696969'}}/>
-        {/*
-            this.isTradeLoaded() ? <View style={styles.info}>
-                <Text style={{textAlign:'center'}}>Your request Trader {this.partner.user_name} {this.actionTitle} cryptocurrency from {this.createdAt}</Text>
-    
-                <View style={styles.row}>
-                    <Text style={[styles.header, styles.centeredText]}>{Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}</Text>
-                    <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16}]}/>
-                    <Text style={[styles.header, styles.centeredText]}>{' ' + Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}</Text>
-                </View>
-                {
-                    this.props.trade.status === 'new' && <Text>Осталось для оплаты <EscrowTimer
-                        expiredAt={this.props.trade.escrow_expired_at}/> минут</Text>
-                }
-            </View> : <ActivityIndicator size="large"/>
-            */}
-            
-            {/*<PartnerLink user={this.partner} isSeller={this.isUserBuying()}  onProfileOpen={this.props.openProfile}
-                         online={this.props.partnerActivityStatuses[this.partner.id]} />*/}
-    
-            {/*
-                trade.feedback_allowed &&
-                    <View style={styles.info}>
-                        <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
-                    </View>
-            */}
+                <TextInput
+                    style={this.state.expandChat ? [styles.displayNone,{height:30}]:null}
+                    placeholder="Введите сообщение"
+                    returnKeyType='send'
+                    onSubmitEditing={this.onSubmit}
+                    value={this.state.textMessage}
+                    underlineColorAndroid="transparent"
+                    onChangeText={(textMessage) => this.setState({textMessage})}
+                    />
+            </View>
+            <View style={this.state.showKeyboard ? styles.displayNone:null}>
+                <PrimaryButton title={'Complete the transaction'} color={'#5B6EFF'} style={{marginTop:30}}/>
+                <PrimaryButton title={'Cancel the transaction'} color={'#ffffff'} style={{marginTop:30}} fontStyle={{color:'#696969'}}/>
+            </View>
     </ScrollView>
         )
       }
