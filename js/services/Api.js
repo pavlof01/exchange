@@ -1,5 +1,9 @@
 import axios from 'axios'
 import { API_BASE_URL } from '../config.json';
+import { AsyncStorage } from 'react-native';
+import { dispatch } from 'redux';
+import { logout } from '../actions/session';
+import store from '../store';
 
 export default class Api {
   static tokenName = 'nekotIpa';
@@ -15,6 +19,35 @@ export default class Api {
             'X-Access-Token': value,
         }
     });
+
+    Api.instance.interceptors.response.use(
+      (response) => response,
+      (onError) => {
+        const request = onError.config;
+        if ( onError.response.status === 401 ) {
+          return AsyncStorage.getItem(Api.tokenName)
+            .then(token => {
+              return axios.post(`${API_BASE_URL}/auths/renew_api_token`, {api_token: token})
+            }).then((tokenResponse) => {
+              const newToken = tokenResponse.data.api_token;
+              return AsyncStorage.setItem(Api.tokenName, newToken)
+                .then(() => {
+                  axios.defaults.headers.common['X-Access-Token'] = newToken;
+                  request.headers['X-Access-Token'] = newToken;
+                  Api.currentToken = newToken;
+                  Api.createApiWithToken(newToken);
+                  return axios(request);
+                })
+          }).catch(() => {
+            store.dispatch(logout());
+            return Promise.reject(onError);
+          });
+        } else {
+          store.dispatch(logout());
+          return Promise.reject(onError);
+        }
+      }
+    );
   }
 
   static get(uri, params = {}) {
