@@ -8,38 +8,10 @@ import EscrowTimer from "./EscrowTimer";
 import PrimaryButton from "../../style/ActionButton";
 
 const styles = StyleSheet.create({
-    centerContent: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     row: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 8,
-    },
-    pickerIcon: {
-        height: 24,
-        width: 24,
-    },
-    pickerRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-    },
-    formRow: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    formStyle: {
-        flex: 1,
-    },
-    huge: {
-        color: '#222222',
-        fontSize: 26,
-        marginBottom: 8,
     },
     header: {
         color: '#2C09A3',
@@ -49,32 +21,12 @@ const styles = StyleSheet.create({
     },
     info: {
         margin: 5,
-        //padding: 8,
-        //borderRadius: 4,
-    },
-    bold: {
-        margin: 2,
-        fontSize: 16,
-        fontWeight: 'bold',
     },
     centeredText: {
         textAlign: 'center',
         //flex: 1,
         margin: 8,
     },
-    error: {
-        color: '#dd0057',
-        marginBottom: 4,
-    },
-    warning: {
-        color: '#8b572a',
-        backgroundColor: '#fbf5eb',
-        borderColor: '#f5a623',
-        borderRadius: 4,
-        borderWidth: 1,
-        padding: 8,
-        margin: 8,
-    }
 });
 
 export default class Buy extends Component {
@@ -144,31 +96,6 @@ export default class Buy extends Component {
                 <Text><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text>
         </View>
         <PrimaryButton title={'SEND REQUSET TO A TRADER'} color={'#5B6EFF'} style={{marginTop:30}}/>
-    {/*
-        this.isTradeLoaded() ? <View style={styles.info}>
-            <Text style={{textAlign:'center'}}>Your request Trader {this.partner.user_name} {this.actionTitle} cryptocurrency from {this.createdAt}</Text>
-
-            <View style={styles.row}>
-                <Text style={[styles.header, styles.centeredText]}>{Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}</Text>
-                <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16}]}/>
-                <Text style={[styles.header, styles.centeredText]}>{' ' + Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}</Text>
-            </View>
-            {
-                this.props.trade.status === 'new' && <Text>Осталось для оплаты <EscrowTimer
-                    expiredAt={this.props.trade.escrow_expired_at}/> минут</Text>
-            }
-        </View> : <ActivityIndicator size="large"/>
-        */}
-        
-        {/*<PartnerLink user={this.partner} isSeller={this.isUserBuying()}  onProfileOpen={this.props.openProfile}
-                     online={this.props.partnerActivityStatuses[this.partner.id]} />*/}
-
-        {/*
-            trade.feedback_allowed &&
-                <View style={styles.info}>
-                    <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
-                </View>
-        */}
 </ScrollView>
     )
   }
