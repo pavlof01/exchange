@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    Text,
-    View,
-    StyleSheet, FlatList, ActivityIndicator,
+  ActivityIndicator,
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+  RefreshControl,
 } from 'react-native';
 import CenterProgressBar from "../../style/CenterProgressBar";
 import Api from "../../services/Api";
@@ -76,21 +79,26 @@ const styles = StyleSheet.create({
 });
 
 export default class Trades extends Component {
-    state = {
-        pending: false,
-        endReached: false,
-        trades: [],
-    };
+  state = {
+    pending: false,
+    endReached: false,
+    trades: [],
+  };
 
-    componentDidMount() {
-        this.load({page: 1})
+  componentDidMount() {
+    this.load({page: 1});
+  }
+
+  onRefresh = () => {
+    console.warn('refresh');
+    this.load({page: 1});
+  };
+
+  loadNext = () => {
+    if(!this.state.pending && !this.state.endReached) {
+        this.load({page: this.state.page + 1})
     }
-
-    loadNext = () => {
-        if(!this.state.pending && !this.state.endReached) {
-            this.load({page: this.state.page + 1})
-        }
-    };
+  };
 
     load = (params = {}) => {
         this.setState({...this.state, pending: true});
@@ -116,22 +124,23 @@ export default class Trades extends Component {
             })
     };
 
-    renderItem = ({item, index}) => {
-        const trade = item;
-        const partner = tradePartner(trade, this.props.user.id);
-        const alt = index % 2 === 1;
-        return (
-            <Touchable onPress={() => this.props.openTrade(trade.id)}>
-                <View style={[styles.rowContainer, alt ? styles.alternate_background : undefined]}>
-                    <Text style={styles.smallInfo}>#{trade.id}</Text>
-                    <Text style={styles.userName}>{partner.user_name}</Text>
-                    <Text style={styles.info}>{tradeType(trade, this.props.user.id) === tradeTypeBuy ? 'Покупка' : 'Продажа'}</Text>
-                    <Text style={styles.info}>{trade.status}</Text>
-                    <Text style={styles.amount}>{Price.build(trade.fee).viewCrypto}</Text>
-                    <Text style={styles.amount}>{Price.build(trade.price).viewFiat}</Text>
-                </View>
-            </Touchable>);
-    };
+  renderItem = ({item, index}) => {
+    const trade = item;
+    const partner = tradePartner(trade, this.props.user.id);
+    const alt = index % 2 === 1;
+    return (
+      <Touchable onPress={() => this.props.openTrade(trade.id)}>
+        <View style={[styles.rowContainer, alt ? styles.alternate_background : undefined]}>
+          <Text style={styles.smallInfo}>#{trade.id}</Text>
+          <Text style={styles.userName}>{partner.user_name}</Text>
+          <Text style={styles.info}>{tradeType(trade, this.props.user.id) === tradeTypeBuy ? 'Покупка' : 'Продажа'}</Text>
+          <Text style={styles.info}>{trade.status}</Text>
+          <Text style={styles.amount}>{Price.build(trade.fee).viewCrypto}</Text>
+          <Text style={styles.amount}>{Price.build(trade.price).viewFiat}</Text>
+        </View>
+      </Touchable>
+    );
+  };
 
   render() {
     return withCommonStatusBar(
@@ -143,6 +152,12 @@ export default class Trades extends Component {
                 <CenterProgressBar/> :
 
                 <FlatList data={this.state.trades}
+                          refreshControl={
+                            <RefreshControl
+                              refreshing={this.state.pending}
+                              onRefresh={this.onRefresh}
+                            />
+                          }
                           renderItem={this.renderItem}
                           keyExtractor={i => i.id}
                           ListEmptyComponent={<Text style={styles.centerMessage}>У вас ещё не было сделок</Text>}
