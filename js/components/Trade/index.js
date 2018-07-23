@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
-import {
-    StyleSheet,
-    Alert, ActivityIndicator
-} from 'react-native';
+import { Alert, ActivityIndicator } from 'react-native';
 import Api from "../../services/Api";
 
 import { tradePartner, tradeType, tradeTypeBuy } from "../../helpers";
@@ -93,15 +90,9 @@ export default class Trade extends Component {
         );
       };
     
-      onSubmit = () => {
-        if (this.state.textMessage.length) {
-            this.setState({textMessage:''});
-            this.sendMessage({body: this.state.textMessage});
-        }else{
-            Alert.alert(
-                'Enter message',
-              )
-        }
+      onSubmit = (msg, clearInput) => {
+            clearInput();
+            this.sendMessage({body: msg});
       };
 
     tradeActionHandlerFactory = (endpoint) => () => {

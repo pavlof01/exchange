@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import Api from '../../services/Api';
 import { keysToCamelCase } from '../../helpers';
 import {createBasicNavigationOptions } from "../../style/navigation";
@@ -100,15 +100,18 @@ export default class Ads extends Component {
 };
   render() {
     return (
-      <View>
-        <FlatList
+      <ScrollView contentContainerStyle={{flex:1}}>
+        {this.state.load ? 
+        (<ActivityIndicator style={{flex:1, alignItems:'center'}} size="large"/>)
+        :
+        (<FlatList
             data={this.state.ads}
             renderItem={this.renderItem}
             keyExtractor={i => i.id}
-            ListEmptyComponent={!this.state.load ? <Text style={styles.centerMessage}>У вас ещё не было сделок</Text>: null}
-            ListFooterComponent={this.state.load && <ActivityIndicator size="large"/>}
-        />
-      </View>
+            ListEmptyComponent={this.state.load ? null:<Text style={styles.centerMessage}>У вас ещё не было сделок</Text>}
+        />)} 
+            
+      </ScrollView>
     )
   }
 };

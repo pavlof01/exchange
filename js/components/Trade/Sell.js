@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
 
 export default class Sell extends Component {
     state = {
-        messages: [],
         textMessage:'',
         showInfoAboutPartner:false,
         showKeyboard:false,
@@ -53,7 +52,7 @@ export default class Sell extends Component {
 
       _keyboardDidShow = () => {
         this.setState({showKeyboard:true});
-        if (this.state.messages.length > 0){
+        if (this.props.messages.length > 0){
         this.messagesFlatList.scrollToIndex({animated: true, index: 0});
         }
       }
@@ -73,7 +72,6 @@ export default class Sell extends Component {
 
     renderMessage = (message) => {
         const messageUserId = message.item.user.id;
-        console.warn(JSON.stringify(message.item.attachment,null,2));
         return (
         <View style={{paddingLeft:10,paddingRight:10,marginTop:15}} key={messageUserId}>
             <View style={messageUserId === this.props.user.id ? styles.me : styles.trader}>
@@ -150,7 +148,9 @@ export default class Sell extends Component {
                     style={this.state.expandChat ? [styles.displayNone,{height:30}]:null}
                     placeholder="Enter message"
                     returnKeyType='send'
-                    onSubmitEditing={this.onSubmit} 
+                    maxLength={128}
+                    enablesReturnKeyAutomatically
+                    onSubmitEditing={() => this.props.sendMessage(this.state.textMessage,() => this.setState({textMessage:''}))} 
                     value={this.state.textMessage}
                     underlineColorAndroid="transparent"
                     onChangeText={(textMessage) => this.setState({textMessage})}
