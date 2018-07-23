@@ -117,7 +117,7 @@ export default class Trades extends Component {
         const trade = item;
         const partner = tradePartner(trade, this.props.user.id);
         const alt = index % 2 === 0;
-        console.warn(JSON.stringify(item,null,2));
+        //console.warn(JSON.stringify(item,null,2));
         return (
             <Touchable onPress={() => this.props.openTrade(trade.id)}>
                 <View style={[styles.rowContainer, alt ? styles.alternate_background : undefined]}>
@@ -141,10 +141,30 @@ export default class Trades extends Component {
         this.setState({trades:sortedTrades});
     }
 
+    sortByTypeActive = () => {
+        let sortedTrades =  this.state.trades.sort((trade) => {
+            return trade.status === 'cancelled' ? 1 : -1;
+        });
+        this.setState({trades:sortedTrades});
+    }
+
+    sortByCurrency = () => {
+        let sortedTrades =  this.state.trades.sort((trade) => {
+            return trade.ad.crypto_currency_code === 'ETH' ? -1 : 1;
+        });
+        this.setState({trades:sortedTrades});
+    }
+
     sortMessages = (sortType) => {
         switch (sortType){
             case 'byType':
                 this.sortByTypeSell();
+                break;
+            case 'byActive':
+                this.sortByTypeActive();
+                break;
+            case 'byCurrency':
+                this.sortByCurrency();
                 break;
             default:
                 console.log("default");
@@ -156,13 +176,17 @@ export default class Trades extends Component {
         <View style={styles.container}>
             <HeaderBar title={'TRADES'}/>
             <View style={styles.rowContainer}>
-                <Text style={{flex:1}}></Text>
+                <Touchable style={{flex:1}} onPress={() => this.sortMessages('byActive')}>
+                    <Text style={{flex:1}}>Active</Text>
+                </Touchable>
                 <Text style={styles.info}>#</Text>
                 <Text style={{flex:5}}>USER</Text>
                 <Touchable style={styles.info} onPress={() => this.sortMessages('byType')}>
                     <Text style={styles.info}>TYPE</Text>
                 </Touchable>
-                <Text style={styles.info}>CURR</Text>
+                <Touchable style={styles.info} onPress={() => this.sortMessages('byCurrency')}>
+                    <Text style={styles.info}>CURR</Text>
+                </Touchable>
             </View>
             {this.state.pending && this.state.trades.length === 0 ?
 
