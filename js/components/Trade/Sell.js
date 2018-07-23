@@ -25,12 +25,9 @@ const styles = StyleSheet.create({
     },
     info: {
         margin: 5,
-        //padding: 8,
-        //borderRadius: 4,
     },
     centeredText: {
         textAlign: 'center',
-        //flex: 1,
         margin: 8,
     },
     me: {
@@ -56,7 +53,7 @@ export default class Sell extends Component {
 
       _keyboardDidShow = () => {
         this.setState({showKeyboard:true});
-        if (this.state.messages.length > 4){
+        if (this.state.messages.length > 0){
         this.messagesFlatList.scrollToIndex({animated: true, index: 0});
         }
       }
@@ -68,109 +65,7 @@ export default class Sell extends Component {
     componentDidMount() {
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
-        /*let tunnelledHosts = ['papabit.com'];
-        let protocol = 'ws:';
-        let postfix = '/cable';*/
-        //let url = protocol + '//' + window.location.hostname + postfix;
-    
-        this.socket = new WebSocket('ws://91.228.155.81/cable');
-        this.socket.onopen = this.onConnect;
-        this.socket.onmessage = this.onMessage;
-        this.socket.onclose = this.onDisconnect;
       }
-
-      onConnect = () => {
-        let intervalId = setInterval(() => {
-          switch (this.socket.readyState) {
-            case this.socket.CLOSING:
-            case this.socket.CLOSED:
-              clearInterval(intervalId);
-              break;
-            case this.socket.OPEN:
-              this.send({command: 'subscribe'});
-              clearInterval(intervalId);
-              break;
-            default:
-              break;
-          }
-        }, 100);
-      };
-    
-      onMessage = (event) => {
-        let data = JSON.parse(event.data);
-        switch (data.type) {
-          case 'welcome':
-          case 'ping':
-            break;
-          case 'confirm_subscription':
-            console.log('Subscription confirmed (Api::V1::ChatChannel)');
-            break;
-          default:
-            let message = data.message;
-            if (message.messages) {
-              this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
-            } else if (message.error) {
-              this.setState({error: message.error})
-            }
-            break;
-        }
-      };
-    
-      onDisconnect = (event) => {
-        event.wasClean ?
-          console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
-          console.warn('Disconnect (Api::V1::ChatChannel):', event);
-      };
-    
-      sendMessage = (params = {}) => {
-        this.setState({error: null});
-        this.send({
-          command: 'message',
-          data: JSON.stringify({...params, action: 'create'}),
-        });
-      };
-    
-      send = (data) => {
-        this.socket.send(
-          JSON.stringify({
-            ...data,
-            identifier: JSON.stringify({
-              channel: 'Api::V1::ChatChannel',
-              conversation_id: this.props.trade.conversation_id
-            })
-          })
-        );
-      };
-    
-      onSubmit = () => {
-        if (this.state.textMessage.length) {
-            this.setState({textMessage:''});
-            this.sendMessage({body: this.state.textMessage});
-        }else{
-            Alert.alert(
-                'Введите сообщение',
-              )
-        }
-        
-      };
-    
-      formatDate(dateString) {
-        let time = new Time(dateString);
-        return time.hours + ':' + time.minutes;
-      }
-    
-      uploadFile = (event) => {
-        this.reader.readAsBinaryString(event.target.files[0]);
-      };
-    
-      fileChanged = (event) => {
-        this.sendMessage({
-          attachment: btoa(event.target.result),
-          filename: this.fileInput.files.item(0).name
-        });
-    
-        this.fileInput.value = '';
-      };
     
     showInfoAboutPartner = () => this.setState({showInfoAboutPartner:!this.state.showInfoAboutPartner});
 
@@ -178,14 +73,16 @@ export default class Sell extends Component {
 
     renderMessage = (message) => {
         const messageUserId = message.item.user.id;
+        console.warn(JSON.stringify(message.item.attachment,null,2));
         return (
         <View style={{paddingLeft:10,paddingRight:10,marginTop:15}} key={messageUserId}>
             <View style={messageUserId === this.props.user.id ? styles.me : styles.trader}>
             {messageUserId === this.props.user.id ? null:<Text style={{marginBottom:10, color:'grey'}}>{ message.item.user.userName}</Text>}
                 <View style={{width:'85%',backgroundColor:'#ffffff',padding:10, flex:1, borderRadius:10}}>
-                    <Text >
-                        {message.item.body}
-                    </Text>
+                {message.item.body.length ? 
+                    (<Text>{message.item.body}</Text>)
+                    :
+                    (<Image style={{width:150,height:150}} source={{uri : 'http://91.228.155.81' + message.item.attachment.url}} />)} 
                 </View>
                 <Text style={{fontSize:12,marginTop:5,color:'grey'}}>{moment(message.item.date).format('LT')} (MSK)</Text>
             </View>
@@ -244,14 +141,14 @@ export default class Sell extends Component {
                 <FlatList
                     style={{backgroundColor:'#F2F3F4'}}
                     ref={ref => this.messagesFlatList = ref}
-                    data={this.state.messages}
+                    data={this.props.messages}
                     keyExtractor={this._keyExtractor}
                     renderItem={this.renderMessage}
                     inverted={true}
                 />
                 <TextInput
                     style={this.state.expandChat ? [styles.displayNone,{height:30}]:null}
-                    placeholder="Введите сообщение"
+                    placeholder="Enter message"
                     returnKeyType='send'
                     onSubmitEditing={this.onSubmit} 
                     value={this.state.textMessage}
