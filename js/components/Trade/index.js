@@ -13,83 +13,104 @@ import { keysToCamelCase } from "../../helpers";
 export default class Trade extends Component {
     static navigationOptions = createBasicNavigationOptions('Сделка');
 
-    state = {
-        pending: false,
-        errors: undefined,
-        messages: [],
-    };
+  state = {
+    pending: false,
+    errors: undefined,
+    messages: [],
+    ws: null,
+  };
 
-    componentDidMount = () => {
-        this.props.updatePartnerActivity({[this.partner.id]: this.partner.online});
-        this.socket = new WebSocket('ws://91.228.155.81/cable');
-        this.socket.onopen = this.onConnect;
-        this.socket.onmessage = this.onMessage;
-        this.socket.onclose = this.onDisconnect;
+  componentDidMount() {
+    this.props.updatePartnerActivity({[this.partner.id]: this.partner.online});
+    this.socket = new WebSocket('ws://91.228.155.81/cable');
+    this.socket.onopen = this.onConnect;
+    this.socket.onmessage = this.onMessage;
+    this.socket.onclose = this.onDisconnect;
+  }
+
+  componentWillUnmount() {
+    if (this.socket instanceof WebSocket) {
+      this.socket.close()
     }
+  }
 
-    onConnect = () => {
-        let intervalId = setInterval(() => {
-          switch (this.socket.readyState) {
-            case this.socket.CLOSING:
-            case this.socket.CLOSED:
-              clearInterval(intervalId);
-              break;
-            case this.socket.OPEN:
-              this.send({command: 'subscribe'});
-              clearInterval(intervalId);
-              break;
-            default:
-              break;
-          }
-        }, 100);
-      };
-    
-      onMessage = (event) => {
-        let data = JSON.parse(event.data);
-        switch (data.type) {
-          case 'welcome':
-          case 'ping':
+  onConnect = () => {
+    let intervalId = setInterval(() => {
+      if (!!this.props.trade.conversation_id) {
+        switch (this.socket.readyState) {
+          case this.socket.CLOSING:
+          case this.socket.CLOSED:
+            clearInterval(intervalId);
             break;
-          case 'confirm_subscription':
-            console.log('Subscription confirmed (Api::V1::ChatChannel)');
+          case this.socket.OPEN:
+            this.subscribeOnChatConversation(this.props.trade.conversation_id);
+            clearInterval(intervalId);
             break;
           default:
-            let message = data.message;
-            if (message.messages) {
-              this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
-            } else if (message.error) {
-              this.setState({error: message.error})
-            }
             break;
         }
-      };
-    
-      onDisconnect = (event) => {
-        event.wasClean ?
-          console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
-          console.warn('Disconnect (Api::V1::ChatChannel):', event);
-      };
-    
-      sendMessage = (params = {}) => {
-        this.setState({error: null});
-        this.send({
-          command: 'message',
-          data: JSON.stringify({...params, action: 'create'}),
-        });
-      };
-    
-      send = (data) => {
-        this.socket.send(
-          JSON.stringify({
-            ...data,
-            identifier: JSON.stringify({
-              channel: 'Api::V1::ChatChannel',
-              conversation_id: this.props.trade.conversation_id
-            })
-          })
-        );
-      };
-    
+      }
+    }, 100);
+  };
+
+  onMessage = (event) => {
+    let data = JSON.parse(event.data);
+    switch (data.type) {
+      case 'welcome':
+      case 'ping':
+        break;
+      case 'confirm_subscription':
+        console.log('Subscription confirmed (Api::V1::ChatChannel)');
+        break;
+      default:
+        let message = data.message;
+        if (message.messages) {
+          this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
+        } else if (message.error) {
+          this.setState({error: message.error})
+        }
+        break;
+    }
+  };
+
+  onDisconnect = (event) => {
+    event.wasClean ?
+      console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
+      console.warn('Disconnect (Api::V1::ChatChannel):', event);
+  };
+
+  sendMessage = (params = {}) => {
+    this.setState({error: null});
+    this.send({
+      command: 'message',
+      data: JSON.stringify({...params, action: 'create'}),
+    });
+  };
+
+  send = (data) => {
+    this.socket.send(
+      JSON.stringify({
+        ...data,
+        identifier: JSON.stringify({
+          channel: 'Api::V1::ChatChannel',
+          conversation_id: this.props.trade.conversation_id
+        })
+      })
+    );
+  };
+
+  subscribeOnChatConversation = (conversationId) => {
+    this.socket.send(
+      JSON.stringify({
+        command: 'subscribe',
+        identifier: JSON.stringify({
+          channel: 'Api::V1::ChatChannel',
+          conversation_id: conversationId
+        })
+      })
+    );
+  };
+
       onSubmit = (msg, clearInput) => {
             clearInput();
             this.sendMessage({body: msg});
