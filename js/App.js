@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Platform, BackHandler } from 'react-native';
 import {  NavigationActions } from 'react-navigation';
+import OneSignal from 'react-native-onesignal';
 
 import AppNavigator from './AppNavigator';
 import { connect } from 'react-redux';
+import { ONE_SIGNAL_APP_ID } from './config.json';
 import {
     createReduxBoundAddListener,
     createNavigationPropConstructor,
@@ -24,6 +26,20 @@ class App extends Component {
         super(props);
     }
 
+    componentWillMount() {
+        OneSignal.init(ONE_SIGNAL_APP_ID);
+
+        OneSignal.addEventListener('received', this.onReceived);
+        OneSignal.addEventListener('opened', this.onOpened);
+        OneSignal.addEventListener('ids', this.onIds);
+    }
+
+    componentWillUnmount() {
+        OneSignal.removeEventListener('received', this.onReceived);
+        OneSignal.removeEventListener('opened', this.onOpened);
+        OneSignal.removeEventListener('ids', this.onIds);
+    }
+
     componentDidMount() {
         initializeListeners("root", this.props.nav);
         const { dispatch, nav } = this.props;
@@ -37,7 +53,27 @@ class App extends Component {
                 return true;
             });
         }
+
+        // Check push notification and OneSignal subscription statuses
+        OneSignal.getPermissionSubscriptionState((status) => {
+            console.warn(status);
+        });
     }
+
+    onReceived = (notification) => {
+        console.warn("Notification received: ", notification);
+    };
+
+    onOpened = (openResult) => {
+        console.log('Message: ', openResult.notification.payload.body);
+        console.log('Data: ', openResult.notification.payload.additionalData);
+        console.log('isActive: ', openResult.notification.isAppInFocus);
+        console.log('openResult: ', openResult);
+    };
+
+    onIds = (device) => {
+        console.warn('Device info: ', device);
+    };
 
     render() {
         const navigation = navigationPropConstructor(

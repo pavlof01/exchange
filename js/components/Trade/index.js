@@ -1,105 +1,99 @@
 import React, { Component } from 'react';
 
-import {
-    Text,
-    View,
-    StyleSheet,
-    Alert, Image, ScrollView, ActivityIndicator
-} from 'react-native';
+import { Alert, ActivityIndicator } from 'react-native';
 import Api from "../../services/Api";
-import Price from "../../values/Price";
-import {currencyCodeToSymbol, tradePartner, tradeType, tradeTypeBuy, tradeTypeSell} from "../../helpers";
-import PrimaryButton from "../../style/ActionButton";
-import EscrowTimer from "./EscrowTimer";
-import PartnerLink from "./PartnerLink";
-import Separator from "../../style/Separator";
-import TradeTrivia from "./TradeTrivia";
-import TradeAdvices from "./TradeAdvices";
-import {createBasicNavigationOptions, withCommonStatusBar} from "../../style/navigation";
-import Feedback from "./Feedback";
 
-const styles = StyleSheet.create({
-    centerContent: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-    },
-    pickerIcon: {
-        height: 24,
-        width: 24,
-    },
-    pickerRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-    },
-    formRow: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    formStyle: {
-        flex: 1,
-    },
-    huge: {
-        color: '#222222',
-        fontSize: 26,
-        marginBottom: 8,
-    },
-    header: {
-        color: '#222222',
-        fontWeight: 'bold',
-        fontSize: 20,
-        marginBottom: 8,
-    },
-    info: {
-        backgroundColor: 'white',
-        margin: 8,
-        padding: 8,
-        borderRadius: 4,
-    },
-    bold: {
-        margin: 2,
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    centeredText: {
-        textAlign: 'center',
-        flex: 1,
-        margin: 8,
-    },
-    error: {
-        color: '#dd0057',
-        marginBottom: 4,
-    },
-    warning: {
-        color: '#8b572a',
-        backgroundColor: '#fbf5eb',
-        borderColor: '#f5a623',
-        borderRadius: 4,
-        borderWidth: 1,
-        padding: 8,
-        margin: 8,
-    }
-});
+import { tradePartner, tradeType, tradeTypeBuy } from "../../helpers";
+import Buy from './Buy';
+import Sell from './Sell';
+import { createBasicNavigationOptions } from "../../style/navigation";
+import Feedback from "./Feedback";
+import { keysToCamelCase } from "../../helpers";
 
 export default class Trade extends Component {
     static navigationOptions = createBasicNavigationOptions('Сделка');
 
     state = {
         pending: false,
-        errors: undefined
+        errors: undefined,
+        messages: [],
     };
 
-    componentDidMount() {
-        this.props.updatePartnerActivity({[this.partner.id]: this.partner.online})
+    componentDidMount = () => {
+        this.props.updatePartnerActivity({[this.partner.id]: this.partner.online});
+        this.socket = new WebSocket('ws://91.228.155.81/cable');
+        this.socket.onopen = this.onConnect;
+        this.socket.onmessage = this.onMessage;
+        this.socket.onclose = this.onDisconnect;
     }
+
+    onConnect = () => {
+        let intervalId = setInterval(() => {
+          switch (this.socket.readyState) {
+            case this.socket.CLOSING:
+            case this.socket.CLOSED:
+              clearInterval(intervalId);
+              break;
+            case this.socket.OPEN:
+              this.send({command: 'subscribe'});
+              clearInterval(intervalId);
+              break;
+            default:
+              break;
+          }
+        }, 100);
+      };
+    
+      onMessage = (event) => {
+        let data = JSON.parse(event.data);
+        switch (data.type) {
+          case 'welcome':
+          case 'ping':
+            break;
+          case 'confirm_subscription':
+            console.log('Subscription confirmed (Api::V1::ChatChannel)');
+            break;
+          default:
+            let message = data.message;
+            if (message.messages) {
+              this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
+            } else if (message.error) {
+              this.setState({error: message.error})
+            }
+            break;
+        }
+      };
+    
+      onDisconnect = (event) => {
+        event.wasClean ?
+          console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
+          console.warn('Disconnect (Api::V1::ChatChannel):', event);
+      };
+    
+      sendMessage = (params = {}) => {
+        this.setState({error: null});
+        this.send({
+          command: 'message',
+          data: JSON.stringify({...params, action: 'create'}),
+        });
+      };
+    
+      send = (data) => {
+        this.socket.send(
+          JSON.stringify({
+            ...data,
+            identifier: JSON.stringify({
+              channel: 'Api::V1::ChatChannel',
+              conversation_id: this.props.trade.conversation_id
+            })
+          })
+        );
+      };
+    
+      onSubmit = (msg, clearInput) => {
+            clearInput();
+            this.sendMessage({body: msg});
+      };
 
     tradeActionHandlerFactory = (endpoint) => () => {
         Alert.alert('Вы уверены?', undefined, [
@@ -112,7 +106,7 @@ export default class Trade extends Component {
                         }).catch(error => {
                             const newState = {pending: false};
 
-                            console.warn(JSON.stringify(error, undefined, 2));
+                            //console.warn(JSON.stringify(error, undefined, 2));
                             if (error.response.status === 405) {
                                 newState.errors = error.response.data.errors;
                             }
@@ -141,19 +135,23 @@ export default class Trade extends Component {
         return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
     }
 
-    renderBuyActionBlock(status) {
-        if (status === 'new') {
-            return <View style={styles.formRow}>
-                    <PrimaryButton onPress={this.onCancelHandler} title={'Отменить сделку'} color={'#C00'} style={{margin: 8, flex: 1}}/>
-                    <PrimaryButton onPress={this.onPaidHandler} title={'Оплатить сделку'} style={{margin: 8, flex: 1}}/>
-                </View>
-        }
+    renderBuyActionBlock() {
+        return <Buy
+            messages={this.state.messages}
+            sendMessage={this.onSubmit}
+            partnerName={this.partner.user_name} 
+            isOnline = {this.props.partnerActivityStatuses[this.partner.id]} 
+            {...this.props}/>;
     }
 
-    renderSellActionBlock(status) {
-        if (['paid_confirmed', 'expired_and_paid'].includes(status)) {
-            return <PrimaryButton onPress={this.onCompleteHandler} title={'Отпустить крипту'} style={{margin: 8}}/>;
-        }
+    renderSellActionBlock() {
+        return <Sell
+            messages={this.state.messages}
+            sendMessage={this.onSubmit}
+            partnerName={this.partner.user_name} 
+            isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
+            createdAt = {this.createdAt} 
+            {...this.props}/>;
     };
 
     renderActionBlock = () => {
@@ -165,6 +163,7 @@ export default class Trade extends Component {
             return <ActivityIndicator size="large" />
         }
         const { status } = this.props.trade;
+
         return this.isUserBuying() ? this.renderBuyActionBlock(status) : this.renderSellActionBlock(status);
     };
 
@@ -185,54 +184,6 @@ export default class Trade extends Component {
     }
 
     render() {
-        let trade = this.props.trade || {};
-        let ad = trade.ad || {};
-
-        return withCommonStatusBar(<ScrollView keyboardShouldPersistTaps='always'>
-            <View>
-                    <Text style={[styles.header, styles.centeredText]}>{ad.payment_details}</Text>
-                    <View style={styles.info}>
-                        <Text style={[styles.huge, styles.centeredText]}>{ad.payment_method_code}</Text>
-                        <Text style={styles.centeredText}><Text style={styles.header}>Цена за 1 {ad.crypto_currency_code}:</Text> <Text style={[styles.huge, {color: '#25367E'}]}>{Price.build(ad.price).viewMain} {currencyCodeToSymbol(ad.currency_code)}</Text></Text>
-                    </View>
-
-                {
-                    this.isTradeLoaded() ? <View style={styles.info}>
-                        <Text>Ваш запрос Трейдеру <Text style={styles.bold}>{this.partner.user_name}</Text> на <Text
-                            style={styles.bold}>{this.actionTitle}</Text> криптовалюты от <Text>{this.createdAt}</Text></Text>
-
-                        <View style={styles.row}>
-                            <Text style={[styles.header, styles.centeredText]}>{Price.build(trade.amount * trade.price).viewMain} {ad.currency_code + ' '}</Text>
-                            <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16}]}/>
-                            <Text style={[styles.header, styles.centeredText]}>{' ' + Price.build(trade.amount).viewCrypto} {ad.crypto_currency_code}</Text>
-                        </View>
-                        {
-                            this.props.trade.status === 'new' && <Text>Осталось для оплаты <EscrowTimer
-                                expiredAt={this.props.trade.escrow_expired_at}/> минут</Text>
-                        }
-                    </View> : <ActivityIndicator size="large"/>
-                }
-
-                    {this.renderActionBlock()}
-
-                    <PartnerLink user={this.partner} isSeller={this.isUserBuying()}  onProfileOpen={this.props.openProfile}
-                                 online={this.props.partnerActivityStatuses[this.partner.id]} />
-
-                    <Separator/>
-
-                    <Text style={styles.row}><Text style={styles.bold}>Страна:</Text> {ad.country_code}</Text>
-
-                    {
-                        trade.feedback_allowed &&
-                            <View style={styles.info}>
-                                <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
-                            </View>
-                    }
-
-                    <TradeTrivia ad={ad}/>
-
-                    <TradeAdvices/>
-            </View>
-        </ScrollView>);
+        return this.renderActionBlock();
     }
 }
