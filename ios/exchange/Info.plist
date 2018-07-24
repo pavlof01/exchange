@@ -2,20 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>7f62b20f92a49b339c2e8dbf850cb3c5d852e026</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict/>
-				<key>KitName</key>
-				<string>Crashlytics</string>
-			</dict>
-		</array>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -36,6 +22,20 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>7f62b20f92a49b339c2e8dbf850cb3c5d852e026</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -50,7 +50,24 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Gilroy-Bold.otf</string>
+		<string>Gilroy-BoldItalic.otf</string>
+		<string>Gilroy-Extrabold.otf</string>
+		<string>Gilroy-ExtraboldItalic.otf</string>
+		<string>Gilroy-Medium.otf</string>
+		<string>Gilroy-MediumItalic.otf</string>
+		<string>Gilroy-Regular.otf</string>
+		<string>Gilroy-RegularItalic.otf</string>
+		<string>Gilroy-Semibold.otf</string>
+		<string>Gilroy-SemiboldItalic.otf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -65,18 +82,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Gilroy-Bold.otf</string>
-		<string>Gilroy-BoldItalic.otf</string>
-		<string>Gilroy-Extrabold.otf</string>
-		<string>Gilroy-ExtraboldItalic.otf</string>
-		<string>Gilroy-Medium.otf</string>
-		<string>Gilroy-MediumItalic.otf</string>
-		<string>Gilroy-Regular.otf</string>
-		<string>Gilroy-RegularItalic.otf</string>
-		<string>Gilroy-Semibold.otf</string>
-		<string>Gilroy-SemiboldItalic.otf</string>
-	</array>
 </dict>
 </plist>

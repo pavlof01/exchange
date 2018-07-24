@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    Text,
-    View,
-    StyleSheet, FlatList, ActivityIndicator,
+  ActivityIndicator,
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+  RefreshControl,
 } from 'react-native';
 import CenterProgressBar from "../../style/CenterProgressBar";
 import Api from "../../services/Api";
@@ -73,21 +76,25 @@ const styles = StyleSheet.create({
 });
 
 export default class Trades extends Component {
-    state = {
-        pending: false,
-        endReached: false,
-        trades: [],
-    };
+  state = {
+    pending: false,
+    endReached: false,
+    trades: [],
+  };
 
-    componentDidMount() {
-        this.load({page: 1})
+  componentDidMount() {
+    this.load({page: 1});
+  }
+
+  onRefresh = () => {
+    this.load({page: 1});
+  };
+
+  loadNext = () => {
+    if(!this.state.pending && !this.state.endReached) {
+        this.load({page: this.state.page + 1})
     }
-
-    loadNext = () => {
-        if(!this.state.pending && !this.state.endReached) {
-            this.load({page: this.state.page + 1})
-        }
-    };
+  };
 
     load = (params = {}) => {
         this.setState({...this.state, pending: true});
@@ -121,7 +128,7 @@ export default class Trades extends Component {
         return (
             <Touchable onPress={() => this.props.openTrade(trade.id)}>
                 <View style={[styles.rowContainer, alt ? styles.alternate_background : undefined]}>
-                    <View style={{flex:1, alignItems:'center'}}>{trade.status === 'cancelled' ? 
+                    <View style={{flex:1, alignItems:'center'}}>{trade.status === 'cancelled' ?
                         <View style={{width:10,height:10,backgroundColor:'#DADADA'}}/>
                         :
                         <View style={{width:10,height:10,backgroundColor:'#14D459'}}/>}
@@ -193,6 +200,12 @@ export default class Trades extends Component {
                 <CenterProgressBar/> :
 
                 <FlatList data={this.state.trades}
+                          refreshControl={
+                            <RefreshControl
+                              refreshing={this.state.pending}
+                              onRefresh={this.onRefresh}
+                            />
+                          }
                           renderItem={this.renderItem}
                           keyExtractor={i => i.id}
                           ListEmptyComponent={<Text style={styles.centerMessage}>У вас ещё не было сделок</Text>}
