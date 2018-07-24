@@ -83,21 +83,6 @@ export default class Buy extends Component {
 
   _keyExtractor = (item) => item.id;
 
-  onPaidHandler = () => {
-
-  };
-
-  onCancelHandler = () => {
-    Alert.alert(
-      null,
-      'Are you sure?',
-      [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ]
-    );
-  };
-
   renderMessage = (message) => {
     const messageUserId = message.item.user.id;
     return (
@@ -224,13 +209,13 @@ export default class Buy extends Component {
         </View>
         <View style={this.state.showKeyboard ? styles.displayNone : styles.bottomButtons}>
           <PrimaryButton
-            onPress={this.onPaidHandler}
+            onPress={this.props.onCompleteHandler}
             title={"COMPLETE THE TRANSACTION"}
             color={"#5B6EFF"}
             style={{marginTop: 30}}
           />
           <PrimaryButton
-            onPress={this.onCancelHandler}
+            onPress={this.props.onCancelHandler}
             title={"CANCEL THE TRANSACTION"}
             color={"#F5F5F5"}
             style={{marginTop: 30}}

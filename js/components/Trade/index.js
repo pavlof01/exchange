@@ -117,9 +117,9 @@ export default class Trade extends Component {
       };
 
     tradeActionHandlerFactory = (endpoint) => () => {
-        Alert.alert('Вы уверены?', undefined, [
-            {text: 'Отмена', onPress: () => {}, style: 'cancel'},
-            {text: 'Да', onPress: () => {
+        Alert.alert('Are you sure?', undefined, [
+            {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+            {text: 'OK', onPress: () => {
                     Api.post(`/trades/${this.props.trade.id}${endpoint}`)
                         .then(response => {
                             this.props.update(response.data.trade);
@@ -140,40 +140,45 @@ export default class Trade extends Component {
         ]);
     };
 
-    onPaidHandler = this.tradeActionHandlerFactory('/confirm');
-    onCancelHandler = this.tradeActionHandlerFactory('/cancel');
-    onCompleteHandler = this.tradeActionHandlerFactory('/complete');
+  onPaidHandler = this.tradeActionHandlerFactory('/confirm');
+  onCancelHandler = this.tradeActionHandlerFactory('/cancel');
+  onCompleteHandler = this.tradeActionHandlerFactory('/complete');
 
-    get createdAt() {
-        let date = new Date(this.props.trade.created_at);
+  get createdAt() {
+      let date = new Date(this.props.trade.created_at);
 
-        let day = ("0" + date.getDate()).slice(-2);
-        let month = ("0" + (date.getMonth() + 1)).slice(-2);
-        let year = date.getFullYear();
+      let day = ("0" + date.getDate()).slice(-2);
+      let month = ("0" + (date.getMonth() + 1)).slice(-2);
+      let year = date.getFullYear();
 
-        let hours = ("0" + date.getHours()).slice(-2);
-        let minutes = ("0" + date.getMinutes()).slice(-2);
-        return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
-    }
+      let hours = ("0" + date.getHours()).slice(-2);
+      let minutes = ("0" + date.getMinutes()).slice(-2);
+      return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
+  }
 
-    renderBuyActionBlock() {
-        return <Buy
-            messages={this.state.messages}
-            sendMessage={this.onSubmit}
-            partnerName={this.partner.user_name} 
-            isOnline = {this.props.partnerActivityStatuses[this.partner.id]} 
-            {...this.props}/>;
-    }
+  renderBuyActionBlock() {
+    return <Buy
+      messages={this.state.messages}
+      sendMessage={this.onSubmit}
+      partnerName={this.partner.user_name}
+      isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
+      onCancelHandler={this.onCancelHandler}
+      onCompleteHandler={this.onCompleteHandler}
+      {...this.props}
+    />;
+  }
 
-    renderSellActionBlock() {
-        return <Sell
-            messages={this.state.messages}
-            sendMessage={this.onSubmit}
-            partnerName={this.partner.user_name} 
-            isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
-            createdAt = {this.createdAt} 
-            {...this.props}/>;
-    };
+  renderSellActionBlock() {
+    return <Sell
+      messages={this.state.messages}
+      sendMessage={this.onSubmit}
+      partnerName={this.partner.user_name}
+      isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
+      createdAt = {this.createdAt}
+      onPaidHandler={this.onPaidHandler}
+      {...this.props}
+    />;
+  };
 
     renderActionBlock = () => {
         if(!this.isTradeLoaded){

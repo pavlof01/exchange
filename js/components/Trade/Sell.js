@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {
-  Alert,
   View,
   Text,
   StyleSheet,
@@ -82,17 +81,6 @@ export default class Sell extends Component {
   showInfoAboutPartner = () => this.setState({showInfoAboutPartner: !this.state.showInfoAboutPartner});
 
   _keyExtractor = (item) => item.id;
-
-  onCompleteHandler = () => {
-    Alert.alert(
-      null,
-      'Are you sure?',
-      [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ]
-    );
-  };
 
   renderMessage = (message) => {
     const messageUserId = message.item.user.id;
@@ -208,7 +196,7 @@ export default class Sell extends Component {
         </View>
         <View style={this.state.showKeyboard ? styles.displayNone : styles.bottomButtons}>
           <PrimaryButton
-            onPress={this.onCompleteHandler}
+            onPress={this.props.onPaidHandler}
             title={"Send crypt"}
             color={"#5B6EFF"}
             style={{marginTop: 30}}
