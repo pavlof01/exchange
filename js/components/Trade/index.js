@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
-import {
-    StyleSheet,
-    Alert, ActivityIndicator
-} from 'react-native';
+import { Alert, ActivityIndicator } from 'react-native';
 import Api from "../../services/Api";
 
 import { tradePartner, tradeType, tradeTypeBuy } from "../../helpers";
@@ -11,19 +8,92 @@ import Buy from './Buy';
 import Sell from './Sell';
 import { createBasicNavigationOptions } from "../../style/navigation";
 import Feedback from "./Feedback";
+import { keysToCamelCase } from "../../helpers";
 
 export default class Trade extends Component {
     static navigationOptions = createBasicNavigationOptions('Сделка');
 
     state = {
         pending: false,
-        errors: undefined
+        errors: undefined,
+        messages: [],
     };
 
     componentDidMount = () => {
         this.props.updatePartnerActivity({[this.partner.id]: this.partner.online});
-        //this.socket = new WebSocket('ws://91.228.155.81/cable');
+        this.socket = new WebSocket('ws://91.228.155.81/cable');
+        this.socket.onopen = this.onConnect;
+        this.socket.onmessage = this.onMessage;
+        this.socket.onclose = this.onDisconnect;
     }
+
+    onConnect = () => {
+        let intervalId = setInterval(() => {
+          switch (this.socket.readyState) {
+            case this.socket.CLOSING:
+            case this.socket.CLOSED:
+              clearInterval(intervalId);
+              break;
+            case this.socket.OPEN:
+              this.send({command: 'subscribe'});
+              clearInterval(intervalId);
+              break;
+            default:
+              break;
+          }
+        }, 100);
+      };
+    
+      onMessage = (event) => {
+        let data = JSON.parse(event.data);
+        switch (data.type) {
+          case 'welcome':
+          case 'ping':
+            break;
+          case 'confirm_subscription':
+            console.log('Subscription confirmed (Api::V1::ChatChannel)');
+            break;
+          default:
+            let message = data.message;
+            if (message.messages) {
+              this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
+            } else if (message.error) {
+              this.setState({error: message.error})
+            }
+            break;
+        }
+      };
+    
+      onDisconnect = (event) => {
+        event.wasClean ?
+          console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
+          console.warn('Disconnect (Api::V1::ChatChannel):', event);
+      };
+    
+      sendMessage = (params = {}) => {
+        this.setState({error: null});
+        this.send({
+          command: 'message',
+          data: JSON.stringify({...params, action: 'create'}),
+        });
+      };
+    
+      send = (data) => {
+        this.socket.send(
+          JSON.stringify({
+            ...data,
+            identifier: JSON.stringify({
+              channel: 'Api::V1::ChatChannel',
+              conversation_id: this.props.trade.conversation_id
+            })
+          })
+        );
+      };
+    
+      onSubmit = (msg, clearInput) => {
+            clearInput();
+            this.sendMessage({body: msg});
+      };
 
     tradeActionHandlerFactory = (endpoint) => () => {
         Alert.alert('Вы уверены?', undefined, [
@@ -67,7 +137,6 @@ export default class Trade extends Component {
 
     renderBuyActionBlock() {
         return <Buy
-            socket={this.socket} 
             partnerName={this.partner.user_name} 
             isOnline = {this.props.partnerActivityStatuses[this.partner.id]} 
             {...this.props}/>;
@@ -75,7 +144,8 @@ export default class Trade extends Component {
 
     renderSellActionBlock() {
         return <Sell
-            socket={this.socket} 
+            messages={this.state.messages}
+            sendMessage={this.onSubmit}
             partnerName={this.partner.user_name} 
             isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
             createdAt = {this.createdAt} 
