@@ -137,6 +137,8 @@ export default class Trade extends Component {
 
     renderBuyActionBlock() {
         return <Buy
+            messages={this.state.messages}
+            sendMessage={this.onSubmit}
             partnerName={this.partner.user_name} 
             isOnline = {this.props.partnerActivityStatuses[this.partner.id]} 
             {...this.props}/>;
