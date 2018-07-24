@@ -156,8 +156,7 @@ export default class Sell extends Component {
                     />
             </View>
             <View style={this.state.showKeyboard ? styles.displayNone:null}>
-                <PrimaryButton title={'Complete the transaction'} color={'#5B6EFF'} style={{marginTop:30}}/>
-                <PrimaryButton title={'Cancel the transaction'} color={'#ffffff'} style={{marginTop:30}} fontStyle={{color:'#696969'}}/>
+                <PrimaryButton title={'Send crypt'} color={'#5B6EFF'} style={{marginTop:30}}/>
             </View>
     </ScrollView>
         )
