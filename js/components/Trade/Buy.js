@@ -103,7 +103,7 @@ export default class Buy extends Component {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
     return (
-        <ScrollView keyboardShouldPersistTaps={true} scrollEnabled={!this.state.showKeyboard} style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10, flex:1}}>
+        <ScrollView keyboardShouldPersistTaps='always' scrollEnabled={!this.state.showKeyboard} style={{backgroundColor:'#fff',paddingLeft:10, paddingRight:10, flex:1}}>
         <View style={this.state.showKeyboard ? styles.displayNone:null}>    
         <View style={{width:'100%',paddingBottom:.5,borderBottomWidth:.5, borderColor: 'rgba(0,0,0, 0.3)',marginTop:15,}}>
             <Text style={{fontSize:18,  color:'grey',fontWeight:'bold'}}>TRANSFER VIA {ad.payment_method_code}</Text>
@@ -158,7 +158,7 @@ export default class Buy extends Component {
                 </View>
             </TouchableOpacity>
                 <FlatList
-                    keyboardShouldPersistTaps={true}
+                    keyboardShouldPersistTaps='handled'
                     style={{backgroundColor:'#F2F3F4'}}
                     ref={ref => this.messagesFlatList = ref}
                     data={this.props.messages}
