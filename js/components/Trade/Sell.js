@@ -86,7 +86,7 @@ export default class Sell extends Component {
   onCompleteHandler = () => {
     Alert.alert(
       null,
-      'Are you sure',
+      'Are you sure?',
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'OK', onPress: () => console.log('OK Pressed')},

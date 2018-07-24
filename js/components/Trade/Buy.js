@@ -9,7 +9,7 @@ import {
   ScrollView,
   FlatList,
   Keyboard,
-  Dimensions,
+  Dimensions, Alert,
 } from "react-native";
 import Price from "../../values/Price";
 import {currencyCodeToSymbol} from "../../helpers";
@@ -82,6 +82,21 @@ export default class Buy extends Component {
   showInfoAboutPartner = () => this.setState({showInfoAboutPartner: !this.state.showInfoAboutPartner});
 
   _keyExtractor = (item) => item.id;
+
+  onPaidHandler = () => {
+
+  };
+
+  onCancelHandler = () => {
+    Alert.alert(
+      null,
+      'Are you sure?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]
+    );
+  };
 
   renderMessage = (message) => {
     const messageUserId = message.item.user.id;
@@ -208,7 +223,19 @@ export default class Buy extends Component {
           />
         </View>
         <View style={this.state.showKeyboard ? styles.displayNone : styles.bottomButtons}>
-          <PrimaryButton title={"SEND REQUSET TO A TRADER"} color={"#5B6EFF"} style={{marginTop: 30}}/>
+          <PrimaryButton
+            onPress={this.onPaidHandler}
+            title={"COMPLETE THE TRANSACTION"}
+            color={"#5B6EFF"}
+            style={{marginTop: 30}}
+          />
+          <PrimaryButton
+            onPress={this.onCancelHandler}
+            title={"CANCEL THE TRANSACTION"}
+            color={"#F5F5F5"}
+            style={{marginTop: 30}}
+            fontStyle={{color: '#000000'}}
+          />
         </View>
       </ScrollView>
     );
