@@ -43,7 +43,6 @@ export default class Api {
             return Promise.reject(onError);
           });
         } else {
-          store.dispatch(logout());
           return Promise.reject(onError);
         }
       }
