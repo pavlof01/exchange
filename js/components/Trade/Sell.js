@@ -51,7 +51,10 @@ const styles = StyleSheet.create({
   },
   displayNone: {
     display: "none",
-  }
+  },
+  bottomButtons: {
+    paddingBottom: 24,
+  },
 });
 
 export default class Sell extends Component {
@@ -191,7 +194,7 @@ export default class Sell extends Component {
             onChangeText={(textMessage) => this.setState({textMessage})}
           />
         </View>
-        <View style={this.state.showKeyboard ? styles.displayNone : null}>
+        <View style={this.state.showKeyboard ? styles.displayNone : styles.bottomButtons}>
           <PrimaryButton title={"Send crypt"} color={"#5B6EFF"} style={{marginTop: 30}}/>
         </View>
       </ScrollView>
