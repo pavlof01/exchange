@@ -106,6 +106,7 @@ export default class Sell extends Component {
   render() {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
+    console.warn('status ' + this.props.trade.status);
     return (
       <ScrollView keyboardShouldPersistTaps='always'
                   style={{backgroundColor: "#fff", paddingLeft: 10, paddingRight: 10, flex: 1}}>
@@ -195,12 +196,14 @@ export default class Sell extends Component {
           />
         </View>
         <View style={this.state.showKeyboard ? styles.displayNone : styles.bottomButtons}>
-          <PrimaryButton
-            onPress={this.props.onPaidHandler}
-            title={"Send crypt"}
-            color={"#5B6EFF"}
-            style={{marginTop: 30}}
-          />
+          {['paid_confirmed', 'expired_and_paid'].includes(this.props.trade.status) &&
+            <PrimaryButton
+              onPress={this.props.onPaidHandler}
+              title={"Send crypt"}
+              color={"#5B6EFF"}
+              style={{marginTop: 30}}
+            />
+          }
         </View>
       </ScrollView>
     );

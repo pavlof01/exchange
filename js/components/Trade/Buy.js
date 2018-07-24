@@ -207,7 +207,7 @@ export default class Buy extends Component {
             onChangeText={(textMessage) => this.setState({textMessage})}
           />
         </View>
-        <View style={this.state.showKeyboard ? styles.displayNone : styles.bottomButtons}>
+        <View style={(this.state.showKeyboard || this.props.trade.status !== 'new') ? styles.displayNone : styles.bottomButtons}>
           <PrimaryButton
             onPress={this.props.onCompleteHandler}
             title={"COMPLETE THE TRANSACTION"}
