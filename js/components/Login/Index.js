@@ -5,7 +5,8 @@ import Validator from '../../services/Validator';
 import {
     View,
     Text,
-    ScrollView,
+    KeyboardAvoidingView,
+    Image,
     StyleSheet, ActivityIndicator,
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
@@ -16,10 +17,12 @@ import {withColoredStatusBar} from "../../style/navigation";
 import BorderlessButton from "../../style/BorderlessButton";
 import {fonts} from "../../style/resourceHelpers";
 import {common} from "../../style/common";
+import LinearGradient from 'react-native-linear-gradient';
+import Logo from '../../../assets/img/logo.png';
+import LogoText from '../../../assets/img/text.png';
 
 export default class Login extends Component {
     static navigationOptions = { header: props => null };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -71,16 +74,22 @@ export default class Login extends Component {
     }
 
     render() {
-        return (withColoredStatusBar('#AAAAAA',
-            <View style={[styles.paddingScreen]}>
-                <Text style={[styles.pageHeader]}>BitChange</Text>
-                <View style={[styles.formBlock]}>
-                    <View style={{marginBottom: 64}}>
+        return (
+            <KeyboardAvoidingView keyboardVerticalOffset={400} style={{flex:1}}><LinearGradient colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']} style={[styles.paddingScreen]}>
+                <View style={styles.logoContainer}>
+                    <Image style={{marginBottom:'10%'}} source={Logo} />
+                    <Image source={LogoText} />
+                </View>
+                <View>
+                    <View>
                         <FormTextInput
+                            style={{marginBottom: '10%', borderColor:'#94B7FF'}}  
+                            textStyle={{color:'#fff', fontSize: 18}}  
                             key={'login'}
                             error={!_.isEmpty(this.state.formError.loginError)}
                             ref={(ref) => (this.loginInput = ref)}
-                            placeholder="Username"
+                            placeholder="Enter username"
+                            placeholderTextColor="#B8CFFF"
                             keyboardType="email-address"
                             autoCapitalize={'none'}
                             onChangeText={(login) => {
@@ -92,40 +101,46 @@ export default class Login extends Component {
                         />
                         <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
                         <FormTextInput
+                            style={{borderColor:'#94B7FF'}}
+                            textStyle={{color:'#fff', fontSize: 18}}  
                             key={'pass'}
                             error={!_.isEmpty(this.state.formError.passwordError)}
                             ref={(ref) => (this.passwordInput = ref)}
-                            placeholder="Password"
+                            placeholder="Enter password"
+                            placeholderTextColor="#B8CFFF"
                             secureTextEntry
                             onChangeText={(password) => {
                                 this.setState({passwordValue: password});
                             }}
                             onSubmitEditing={this.onLoginPressed}
                         />
+                        <BorderlessButton
+                            style={{height:20}}
+                            textStyle={{fontWeight:'400', color:'#B8CFFF', fontSize:12, textAlign:'right'}} 
+                            onPress={this.onRecoverRequestPressed} 
+                            title={'Forgot password?'} />
                         <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
-                        <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
-                        <BorderlessButton onPress={this.onRecoverRequestPressed} title={'Забыли пароль?'} />
-                        <PrimaryButton onPress={this.onLoginPressed} title={'Войти'} disabled={this.props.isFetching} >
+                        <Text style={[styles.error,{marginBottom:20}]}>{this.state.formError.serverError}</Text>
+                        <PrimaryButton onPress={this.onLoginPressed} title={'SIGN'} disabled={this.props.isFetching} >
                             {this.props.isFetching ? <ActivityIndicator size="large"/> : undefined}
                         </PrimaryButton>
-
+                        
                     </View>
                     <Touchable onPress={this.onSignUpPressed}>
-                        <View>
-                            <Text style={[common.textCenter]}>Вы впервые на BitChange?</Text>
-                            <Text style={[common.textLink, common.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
-                        </View>
+                        
                     </Touchable>
-                </View>
-            </View>));
+                        </View>
+            </LinearGradient></KeyboardAvoidingView>
+            );
     }
 }
 
 const styles = StyleSheet.create({
     error: {
-        color: '#dd0057',
+        color: '#FFCACA',
         marginBottom: 4,
         fontFamily: fonts.regular.regular,
+        textAlign: 'center'
     },
     pageHeader: {
         textAlign: 'center',
@@ -136,10 +151,10 @@ const styles = StyleSheet.create({
         margin: 24,
     },
     paddingScreen: {
-        padding: 16,
+        padding: 42,
         flexDirection: 'column',
         flex: 1,
-        justifyContent: 'center',
+        //justifyContent: 'center',
     },
     formBlock: {
         paddingHorizontal: 20,
@@ -147,6 +162,11 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#fff',
     },
+    logoContainer: {
+        alignItems:'center',
+        marginBottom: '15%',
+        marginTop: '15%',
+    }
 });
 
 Login.propTypes = {

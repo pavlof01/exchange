@@ -9,7 +9,7 @@ import {
 import _ from 'lodash';
 import {fonts} from "../style/resourceHelpers";
 
-const errorRed = '#dd0057';
+const errorRed = '#FF8799';
 
 /**
  * A text input component for login scene.
@@ -22,20 +22,20 @@ class FormTextInput extends Component {
 
   render() {
     const {
-      error, style
+      error, style, textStyle
     } = this.props;
     const inputProps = _.omit(this.props, error);
     const containerStyles = [styles.container];
-    const textStyles = [styles.text];
+    const textStyles = [styles.text, textStyle];
     if (style) {
       containerStyles.push(style);
     }
     if (error) {
       containerStyles.push({ borderColor: errorRed });
     }
-    if (error) {
+    /*if (error) {
       textStyles.push({ color: errorRed });
-    }
+    }*/
     return (
       <View style={containerStyles}>
         <TextInput

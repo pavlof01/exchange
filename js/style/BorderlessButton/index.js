@@ -88,7 +88,7 @@ class BorderlessButton extends Component {
       style,
       textStyle,
     } = this.props;
-    const buttonStyles = [style, styles.button];
+    const buttonStyles = [ styles.button, style];
     const textStyles = [styles.text];
     if (color) {
       textStyles.push({ color });
