@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import moment from 'moment';
 import { fonts } from '../../style/resourceHelpers';
 import Price from "../../values/Price";
 
@@ -94,19 +95,26 @@ class TradeReportRating extends Component {
     }
     console.warn(JSON.stringify(trade, null, 2));
     const transactionId = trade.ad.id || '';
-    const received = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
-    const send = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
-    const date ='25.05.2018';
-    const time = '12:00 (MSK)';
+    const send = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
+    const received = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
+    let paid_confirmed_at = moment();
+    let date = '--.--.--';
+    let time = '--:-- (MSK)';
+    try {
+      const paidConfirmedAt = moment(trade.paid_confirmed_at);
+      date = paidConfirmedAt.format('DD.MM.YYYY');
+      time = `${paidConfirmedAt.format('HH:mm')} (MSK)`;
+    } catch (e) {
+    }
     return (
       <View style={styles.container}>
         <ScrollView>
           <Text style={styles.title}>{'Transaction complete'.toUpperCase()}</Text>
           <Text style={styles.tradeDescription}>{`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
           <Text style={styles.tradeSummary}>
-            <Text style={styles.tradeSummaryPrice}>{received}</Text>
-            <Text> for </Text>
             <Text style={styles.tradeSummaryPrice}>{send}</Text>
+            <Text> for </Text>
+            <Text style={styles.tradeSummaryPrice}>{received}</Text>
           </Text>
           <View style={styles.transactionDetailsBox}>
             <Text style={styles.transactionNumber}>{`Transaction: №${transactionId}`}</Text>
