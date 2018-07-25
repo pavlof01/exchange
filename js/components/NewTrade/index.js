@@ -113,8 +113,7 @@ const styles = StyleSheet.create({
   amountText: {
     paddingRight: 50,
     fontSize: 16,
-    paddingBottom: 10,
-    color: "#9b9b9b"
+    paddingBottom: 10
   }
 });
 
@@ -130,9 +129,7 @@ export default class NewTrade extends Component {
     },
     pending: false,
     errors: undefined,
-    showInfoAboutPartner: false,
-    amount: "",
-    msg: ""
+    showInfoAboutPartner: false
   };
 
   componentDidMount() {
@@ -157,6 +154,9 @@ export default class NewTrade extends Component {
       form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }
     });
   };
+
+  onMessageChange = value =>
+    this.setState({ form: { ...this.state.form, message: value } });
 
   onSubmit = values => {
     this.setState({ pending: true, errors: undefined });
@@ -189,6 +189,65 @@ export default class NewTrade extends Component {
       });
   };
 
+  static renderCurrencyInput(
+    limitMin,
+    limitMax,
+    curCode,
+    isCrypt,
+    value,
+    onChange
+  ) {
+    const min = Price.build(limitMin);
+    const max = Price.build(limitMax);
+
+    return (
+      <View style={styles.formStyle}>
+        <View style={styles.formRow}>
+          <FormTextInput
+            keyboardType="numeric"
+            style={{ paddingRight: 30, flex: 1 }}
+            placeholder={"0"}
+            value={value}
+            onChangeText={onChange}
+          />
+          <Text style={styles.currencyCode}>{curCode}</Text>
+        </View>
+        <Text
+          style={{ marginTop: 10, flex: 1, color: "#4a4a4a", fontSize: 12 }}
+        >
+          Limit:
+          {isCrypt ? min.viewCrypto : min.viewMain} –{" "}
+          {isCrypt ? max.viewCrypto : max.viewMain}{" "}
+          {currencyCodeToSymbol(curCode)}
+        </Text>
+      </View>
+    );
+  }
+
+  renderFiatCurrencyInput() {
+    const { ad, form } = this.state;
+    return NewTrade.renderCurrencyInput(
+      ad.limit_min,
+      ad.limit_max,
+      ad.currency_code,
+      false,
+      form.cost,
+      this.onCostChange
+    );
+  }
+
+  renderCryptoCurrencyInput() {
+    const { ad, form } = this.state;
+    return NewTrade.renderCurrencyInput(
+      ad.limit_min / ad.price,
+      ad.limit_max / ad.price,
+      ad.crypto_currency_code,
+      true,
+      form.amount,
+      this.onAmountChange
+    );
+  }
+
   showInfoAboutPartner = () =>
     this.setState({ showInfoAboutPartner: !this.state.showInfoAboutPartner });
 
@@ -199,7 +258,7 @@ export default class NewTrade extends Component {
     return (
       <ScrollView
         style={{ padding: 17, backgroundColor: "#fff" }}
-        keyboardShouldPersistTaps="always"
+        //keyboardShouldPersistTaps="always"
       >
         <View>
           <View
@@ -324,46 +383,14 @@ export default class NewTrade extends Component {
           >
             AMOUNT
           </Text>
-          <View style={{ flexDirection: "row" }}>
-            <View style={styles.amountInputsContainer}>
-              <TextInput
-                style={styles.amountText}
-                onChangeText={amount => this.setState({ amount })}
-                value={this.state.amount}
-                placeholder="0"
-                //defaultValue={"0"}
-              />
-              <Text style={styles.currencyCode}>{ad.currency_code}</Text>
-            </View>
+
+          <View style={styles.pickerRow}>
+            {this.renderFiatCurrencyInput()}
             <Image
               source={require("../../img/ic_swap.png")}
-              style={{ height: 18, width: 18, marginLeft: 15, marginRight: 15 }}
+              style={[styles.pickerIcon, { margin: 16 }]}
             />
-            <View style={styles.amountInputsContainer}>
-              <Text style={styles.amountText}>
-                {Price.build(this.state.amount / ad.price).viewCrypto || 0}
-              </Text>
-              <Text style={styles.currencyCode}>{ad.crypto_currency_code}</Text>
-            </View>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ marginTop: 10, flex: 1, color: "#4a4a4a" }}>
-              Limit: {Math.round(ad.limit_min * 10) / 10} -{" "}
-              {Math.round(ad.limit_max * 10) / 10}{" "}
-              {currencyCodeToSymbol(ad.currency_code)}
-            </Text>
-            <Text
-              style={{
-                marginTop: 10,
-                flex: 1,
-                textAlign: "right",
-                color: "#4a4a4a"
-              }}
-            >
-              Limit: {Math.round(ad.limit_min / ad.price) / 1000000} -{" "}
-              {Math.round(ad.limit_max / ad.price) / 1000000}{" "}
-              {currencyCodeToSymbol(ad.crypto_currency_code)}
-            </Text>
+            {this.renderCryptoCurrencyInput()}
           </View>
           <Text
             style={{
