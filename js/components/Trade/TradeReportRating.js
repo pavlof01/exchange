@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { fonts } from '../../style/resourceHelpers';
+import Price from "../../values/Price";
 
 const styles = StyleSheet.create({
   container: {
@@ -47,11 +48,19 @@ const styles = StyleSheet.create({
     marginStart: 17,
     fontFamily: fonts.medium.regular,
     fontSize: 14,
+    marginBottom: 17,
   },
   tradeSummaryPrice: {
     color: '#d61b38',
     fontFamily: fonts.bold.regular,
     fontSize: 22,
+  },
+  transactionDetailsBox: {
+    backgroundColor: '#f2f6f9',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingStart: 17,
+    paddingEnd: 17,
   },
 });
 
@@ -62,22 +71,28 @@ class TradeReportRating extends Component {
       partnerName,
       isUserBuying,
     } = this.props;
-    let operationPrefix = isUserBuying ? 'Buy' : 'Sell';
+    if (!trade) return null;
+    const operationPrefix = isUserBuying ? 'Buy' : 'Sell';
+    const currencyCode = trade.ad.currency_code || '';
+    const cryptoCurrencyCode = trade.ad.crypto_currency_code || '';
     let paymentMethodCode = "...";
     if (trade && trade.ad && trade.ad.payment_method_code) {
       paymentMethodCode = trade.ad.payment_method_code;
     }
+    console.warn(JSON.stringify(trade, null, 2));
     return (
       <View style={styles.container}>
         <ScrollView>
           <Text style={styles.title}>{'Transaction complete'.toUpperCase()}</Text>
           <Text style={styles.tradeDescription}>{`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
           <Text style={styles.tradeSummary}>
-            <Text style={styles.tradeSummaryPrice}>0.22124 BTC</Text>
+            <Text style={styles.tradeSummaryPrice}>{`${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`}</Text>
             <Text> for </Text>
-            <Text style={styles.tradeSummaryPrice}>100000 RUR</Text>
+            <Text style={styles.tradeSummaryPrice}>{`${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`}</Text>
           </Text>
+          <View style={styles.transactionDetailsBox}>
 
+          </View>
           <Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text>
         </ScrollView>
       </View>
