@@ -196,7 +196,6 @@ export default class Trades extends Component {
       <View style={styles.container}>
         <HeaderBar title={"TRADES"} />
         <View style={styles.rowContainer}>
-          <Touchable style={{ flex: 1 }} />
           <Text style={styles.info}>#</Text>
           <Text style={{ flex: 5 }}>USER</Text>
           <Touchable
