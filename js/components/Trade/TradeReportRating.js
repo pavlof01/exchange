@@ -57,10 +57,23 @@ const styles = StyleSheet.create({
   },
   transactionDetailsBox: {
     backgroundColor: '#f2f6f9',
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: 16,
+    paddingBottom: 16,
     paddingStart: 17,
     paddingEnd: 17,
+  },
+  transactionNumber: {
+    fontFamily: fonts.medium.regular,
+    fontSize: 14,
+    color: '#000000',
+    marginBottom: 3,
+    lineHeight: 22,
+  },
+  transactionRow: {
+    fontFamily: fonts.medium.regular,
+    fontSize: 14,
+    color: '#000000',
+    lineHeight: 22,
   },
 });
 
@@ -80,20 +93,29 @@ class TradeReportRating extends Component {
       paymentMethodCode = trade.ad.payment_method_code;
     }
     console.warn(JSON.stringify(trade, null, 2));
+    const transactionId = trade.ad.id || '';
+    const received = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
+    const send = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
+    const date ='25.05.2018';
+    const time = '12:00 (MSK)';
     return (
       <View style={styles.container}>
         <ScrollView>
           <Text style={styles.title}>{'Transaction complete'.toUpperCase()}</Text>
           <Text style={styles.tradeDescription}>{`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
           <Text style={styles.tradeSummary}>
-            <Text style={styles.tradeSummaryPrice}>{`${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`}</Text>
+            <Text style={styles.tradeSummaryPrice}>{received}</Text>
             <Text> for </Text>
-            <Text style={styles.tradeSummaryPrice}>{`${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`}</Text>
+            <Text style={styles.tradeSummaryPrice}>{send}</Text>
           </Text>
           <View style={styles.transactionDetailsBox}>
-
+            <Text style={styles.transactionNumber}>{`Transaction: №${transactionId}`}</Text>
+            <Text style={styles.transactionRow}>{`Received: ${received}`}</Text>
+            <Text style={styles.transactionRow}>{`Send: ${send}`}</Text>
+            <Text style={styles.transactionRow}>{`Date: ${date}`}</Text>
+            <Text style={styles.transactionRow}>{`Time: ${time}`}</Text>
           </View>
-          <Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text>
+          {/*<Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text>*/}
         </ScrollView>
       </View>
     );
