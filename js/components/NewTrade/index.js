@@ -158,9 +158,6 @@ export default class NewTrade extends Component {
     });
   };
 
-  onMessageChange = value =>
-    this.setState({ form: { ...this.state.form, message: value } });
-
   onSubmit = values => {
     this.setState({ pending: true, errors: undefined });
     Api.post(`/pro/${this.state.ad.id}/trades`, {
@@ -191,63 +188,6 @@ export default class NewTrade extends Component {
         this.setState(newState);
       });
   };
-
-  static renderCurrencyInput(
-    limitMin,
-    limitMax,
-    curCode,
-    isCrypt,
-    value,
-    onChange
-  ) {
-    const min = Price.build(limitMin);
-    const max = Price.build(limitMax);
-
-    return (
-      <View style={styles.formStyle}>
-        <View style={styles.formRow}>
-          <FormTextInput
-            keyboardType="numeric"
-            style={styles.formStyle}
-            placeholder={"0"}
-            value={value}
-            onChangeText={onChange}
-          />
-          <Text style={styles.header}>{curCode}</Text>
-        </View>
-        <Text>
-          Лимит:{"\n"}
-          {isCrypt ? min.viewCrypto : min.viewMain} –{" "}
-          {isCrypt ? max.viewCrypto : max.viewMain}{" "}
-          {currencyCodeToSymbol(curCode)}
-        </Text>
-      </View>
-    );
-  }
-
-  renderFiatCurrencyInput() {
-    const { ad, form } = this.state;
-    return NewTrade.renderCurrencyInput(
-      ad.limit_min,
-      ad.limit_max,
-      ad.currency_code,
-      false,
-      form.cost,
-      this.onCostChange
-    );
-  }
-
-  renderCryptoCurrencyInput() {
-    const { ad, form } = this.state;
-    return NewTrade.renderCurrencyInput(
-      ad.limit_min / ad.price,
-      ad.limit_max / ad.price,
-      ad.crypto_currency_code,
-      true,
-      form.amount,
-      this.onAmountChange
-    );
-  }
 
   showInfoAboutPartner = () =>
     this.setState({ showInfoAboutPartner: !this.state.showInfoAboutPartner });
