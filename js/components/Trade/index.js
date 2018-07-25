@@ -198,6 +198,7 @@ export default class Trade extends Component {
       <TradeReportRating
         trade={this.props.trade}
         partnerName={this.partner.user_name}
+        isUserBuying={this.isUserBuying()}
       />
     );
   };

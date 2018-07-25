@@ -45,6 +45,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginEnd: 17,
     marginStart: 17,
+    fontFamily: fonts.medium.regular,
+    fontSize: 14,
+  },
+  tradeSummaryPrice: {
+    color: '#d61b38',
+    fontFamily: fonts.bold.regular,
+    fontSize: 22,
   },
 });
 
@@ -53,7 +60,9 @@ class TradeReportRating extends Component {
     const {
       trade,
       partnerName,
+      isUserBuying,
     } = this.props;
+    let operationPrefix = isUserBuying ? 'Buy' : 'Sell';
     let paymentMethodCode = "...";
     if (trade && trade.ad && trade.ad.payment_method_code) {
       paymentMethodCode = trade.ad.payment_method_code;
@@ -62,11 +71,11 @@ class TradeReportRating extends Component {
       <View style={styles.container}>
         <ScrollView>
           <Text style={styles.title}>{'Transaction complete'.toUpperCase()}</Text>
-          <Text style={styles.tradeDescription}>{`Buy via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
+          <Text style={styles.tradeDescription}>{`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
           <Text style={styles.tradeSummary}>
-            <Text>0.22124 BTC</Text>
-            <Text>for</Text>
-            <Text>100000 RUR</Text>
+            <Text style={styles.tradeSummaryPrice}>0.22124 BTC</Text>
+            <Text> for </Text>
+            <Text style={styles.tradeSummaryPrice}>100000 RUR</Text>
           </Text>
 
           <Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text>
@@ -79,6 +88,7 @@ class TradeReportRating extends Component {
 TradeReportRating.propTypes = {
   trade: PropTypes.object,
   partnerName: PropTypes.string,
+  isUserBuying: PropTypes.boolean,
 };
 
 export default TradeReportRating;
