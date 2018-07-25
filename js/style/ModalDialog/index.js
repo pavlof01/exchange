@@ -42,9 +42,11 @@ const styles = StyleSheet.create({
   dialogMessage: {
     flex: 1,
     color: '#444444',
+    textAlign: 'center',
     fontSize: 20,
+    marginTop: 16,
+    marginBottom: 16,
     fontFamily: fonts.bold.regular,
-    marginBottom: 4,
   },
   buttonGroup: {
     flex: 1,
@@ -65,6 +67,15 @@ const styles = StyleSheet.create({
 });
 
 class ModalDialog extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isOpen: props.isOpen,
+    };
+
+    this.modal = null;
+  }
 
   onRequestClose = () => {
     const {
@@ -91,7 +102,7 @@ class ModalDialog extends Component {
     const {
       title,
     } = this.props;
-    if (!title && title.length === 0) return null;
+    if (!title) return null;
     return (
       <Text style={styles.dialogTitle}>{title}</Text>
     );
@@ -110,8 +121,13 @@ class ModalDialog extends Component {
   };
 
   render() {
+    const {
+      isOpen,
+    } = this.props;
+    if (!isOpen) return null;
     return (
       <Modal
+        ref={(ref) => (this.modal = ref)}
         animationType={'fade'}
         transparent={true}
         onRequestClose={this.onRequestClose}
@@ -151,6 +167,7 @@ ModalDialog.propTypes = {
   onPositivePress: PropTypes.func,
   onNegativePress: PropTypes.func,
   onClose: PropTypes.func,
+  isOpen: PropTypes.boolean,
 };
 
 export default ModalDialog;

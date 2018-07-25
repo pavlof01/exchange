@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-import { Alert, ActivityIndicator } from 'react-native';
+import { Alert, ActivityIndicator, View } from 'react-native';
 import Api from "../../services/Api";
 
 import { tradePartner, tradeType, tradeTypeBuy } from "../../helpers";
 import Buy from './Buy';
 import Sell from './Sell';
 import { createBasicNavigationOptions } from "../../style/navigation";
-import Feedback from "./Feedback";
 import { keysToCamelCase } from "../../helpers";
+import ModalDialog from '../../style/ModalDialog';
 
 export default class Trade extends Component {
     static navigationOptions = createBasicNavigationOptions('Сделка');
@@ -18,6 +18,8 @@ export default class Trade extends Component {
     errors: undefined,
     messages: [],
     ws: null,
+    isConfirming: false,
+    tradeEndpoint: null,
   };
 
   componentDidMount() {
@@ -116,29 +118,38 @@ export default class Trade extends Component {
             this.sendMessage({body: msg});
       };
 
-    tradeActionHandlerFactory = (endpoint) => () => {
-        Alert.alert('Are you sure?', undefined, [
-            {text: 'Cancel', onPress: () => {}, style: 'cancel'},
-            {text: 'OK', onPress: () => {
-                    Api.post(`/trades/${this.props.trade.id}${endpoint}`)
-                        .then(response => {
-                            this.props.update(response.data.trade);
-                            this.setState({pending: false});
-                        }).catch(error => {
-                            const newState = {pending: false};
+  tradeActionHandlerFactory = (endpoint) => () => {
+    this.setState({
+      isConfirming: true,
+      tradeEndpoint: endpoint,
+    });
+  };
 
-                            //console.warn(JSON.stringify(error, undefined, 2));
-                            if (error.response.status === 405) {
-                                newState.errors = error.response.data.errors;
-                            }
+  sendSelectedTradeRequest = () => {
+    const endpoint = this.state.tradeEndpoint;
+    if (endpoint) {
+      Api.post(`/trades/${this.props.trade.id}${endpoint}`)
+        .then(response => {
+          this.props.update(response.data.trade);
+          this.setState({pending: false});
+        })
+        .catch(error => {
+          const newState = {pending: false};
+          if (error.response.status === 405) {
+            newState.errors = error.response.data.errors;
+          }
+          this.setState(newState);
+        });
+      this.setState({
+        pending: true,
+        isConfirming: false,
+      });
+    }
+  };
 
-                            this.setState(newState);
-                        });
-
-                    this.setState({pending: true})
-                }},
-        ]);
-    };
+  closeModal = () => {
+    this.setState({ isConfirming: false });
+  };
 
   onPaidHandler = this.tradeActionHandlerFactory('/confirm');
   onCancelHandler = this.tradeActionHandlerFactory('/cancel');
@@ -210,6 +221,17 @@ export default class Trade extends Component {
     }
 
     render() {
-        return this.renderActionBlock();
+        return (
+          <View style={{ flex: 1 }}>
+            { this.renderActionBlock() }
+            <ModalDialog
+              title={'Are you sure?'.toUpperCase()}
+              isOpen={this.state.isConfirming}
+              onClose={this.closeModal}
+              onNegativePress={this.closeModal}
+              onPositivePress={this.sendSelectedTradeRequest}
+            />
+          </View>
+        )
     }
 }
