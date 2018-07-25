@@ -240,8 +240,17 @@ export default class Trade extends Component {
         return this.isUserBuying() ? 'ПОКУПКУ ОНЛАЙН' : 'ПРОДАЖУ ОНЛАЙН';
     }
 
+  renderProgress = () => {
+    return (
+      <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  };
+
   render() {
     let trade = this.props.trade || {};
+    if (!this.isTradeLoaded()) return this.renderProgress();
     return (
       <View style={{ flex: 1 }}>
         { this.renderActionBlock() }

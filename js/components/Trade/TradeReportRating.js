@@ -97,7 +97,6 @@ class TradeReportRating extends Component {
     const transactionId = trade.ad.id || '';
     const send = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
     const received = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
-    let paid_confirmed_at = moment();
     let date = '--.--.--';
     let time = '--:-- (MSK)';
     try {
