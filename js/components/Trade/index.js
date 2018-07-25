@@ -9,6 +9,8 @@ import Sell from './Sell';
 import { createBasicNavigationOptions } from "../../style/navigation";
 import { keysToCamelCase } from "../../helpers";
 import ModalDialog from '../../style/ModalDialog';
+import Feedback from './Feedback';
+import TradeReportRating from './TradeReportRating';
 
 export default class Trade extends Component {
     static navigationOptions = createBasicNavigationOptions('Сделка');
@@ -191,6 +193,15 @@ export default class Trade extends Component {
     />;
   };
 
+  renderTradeCompleted = () => {
+    return (
+      <TradeReportRating
+        trade={this.props.trade}
+        partnerName={this.partner.user_name}
+      />
+    );
+  };
+
     renderActionBlock = () => {
         if(!this.isTradeLoaded){
             return undefined;
@@ -200,6 +211,10 @@ export default class Trade extends Component {
             return <ActivityIndicator size="large" />
         }
         const { status } = this.props.trade;
+
+      if (this.isTradeCompleted()) {
+        return this.renderTradeCompleted();
+      }
 
         return this.isUserBuying() ? this.renderBuyActionBlock(status) : this.renderSellActionBlock(status);
     };
@@ -212,6 +227,10 @@ export default class Trade extends Component {
         return !!this.props.trade.status;
     };
 
+  isTradeCompleted = () => {
+    return this.isTradeLoaded() && this.props.trade.status === 'expired_and_paid';
+  };
+
     get partner() {
         return this.isTradeLoaded() ? tradePartner(this.props.trade, this.props.user.id) : "";
     }
@@ -220,18 +239,25 @@ export default class Trade extends Component {
         return this.isUserBuying() ? 'ПОКУПКУ ОНЛАЙН' : 'ПРОДАЖУ ОНЛАЙН';
     }
 
-    render() {
-        return (
-          <View style={{ flex: 1 }}>
-            { this.renderActionBlock() }
-            <ModalDialog
-              title={'Are you sure?'.toUpperCase()}
-              isOpen={this.state.isConfirming}
-              onClose={this.closeModal}
-              onNegativePress={this.closeModal}
-              onPositivePress={this.sendSelectedTradeRequest}
-            />
+  render() {
+    let trade = this.props.trade || {};
+    return (
+      <View style={{ flex: 1 }}>
+        { this.renderActionBlock() }
+        {
+          trade.feedback_allowed &&
+          <View style={styles.info}>
+            <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
           </View>
-        )
-    }
+        }
+        <ModalDialog
+          title={'Are you sure?'.toUpperCase()}
+          isOpen={this.state.isConfirming}
+          onClose={this.closeModal}
+          onNegativePress={this.closeModal}
+          onPositivePress={this.sendSelectedTradeRequest}
+        />
+      </View>
+    )
+  }
 }
