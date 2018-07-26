@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   chatContainer: {
-    height: 100,
+    height: 200,
     backgroundColor: '#f8f9fb',
   },
   chatContentContainer: {
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   messageContainer: {
+    flex: 1,
     marginEnd: 25,
     marginStart: 25,
   },
@@ -112,6 +113,12 @@ class ChatView extends Component {
     }
   };
 
+  handleStartShouldSetResponderCapture = () => {
+    if (typeof this.props.onStartShouldSetResponderCapture === 'function') {
+      this.props.onStartShouldSetResponderCapture();
+    }
+  };
+
   _keyExtractor = (item) => item.id;
 
   renderMessage = (message) => {
@@ -148,7 +155,7 @@ class ChatView extends Component {
         </TouchableOpacity>
         {
           isOpen && (
-            <View>
+            <View onStartShouldSetResponderCapture={this.handleStartShouldSetResponderCapture}>
               <FlatList
                 style={styles.chatContainer}
                 contentContainerStyle={styles.chatContentContainer}
@@ -178,6 +185,7 @@ ChatView.propTypes = {
   messages: PropTypes.array,
   onChangeText: PropTypes.func,
   onSubmitEditing: PropTypes.func,
+  onStartShouldSetResponderCapture: PropTypes.func,
 };
 
 export default ChatView;
