@@ -42,6 +42,7 @@ export default class Login extends Component {
         this.props.fetchDictionary();
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+        //this.onSignUpPressed();
     }
 
     componentWillUnmount() {
@@ -96,15 +97,19 @@ export default class Login extends Component {
                 colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
                 style={[styles.paddingScreen]}>
                 <View style={styles.logoContainer}>
-                    <Image style={this.state.textInFocus ? styles.logoStylesOnKeyboardShow : styles.logo} source={Logo} />
-                    <Image style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : null} source={LogoText} />
+                    <Image
+                        style={this.state.textInFocus ? styles.logoStylesOnKeyboardShow : styles.logo}
+                        source={Logo} />
+                    <Image
+                        style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : null}
+                        source={LogoText} />
                 </View>
                 <View style={{ flex: 2 }}>
                     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
                         <View style={{ flex: 1 }}>
                             <FormTextInput
-                                style={{ marginBottom: '10%', borderColor: '#94B7FF' }}
-                                textStyle={{ color: '#fff', fontSize: 18 }}
+                                style={styles.textInputContainer}
+                                textStyle={styles.textInput}
                                 key={'login'}
                                 error={!_.isEmpty(this.state.formError.loginError)}
                                 ref={(ref) => (this.loginInput = ref)}
@@ -121,8 +126,8 @@ export default class Login extends Component {
                             />
                             <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
                             <FormTextInput
-                                style={{ borderColor: '#94B7FF' }}
-                                textStyle={{ color: '#fff', fontSize: 18 }}
+                                style={styles.textInputContainer}
+                                textStyle={styles.textInput}
                                 key={'pass'}
                                 error={!_.isEmpty(this.state.formError.passwordError)}
                                 ref={(ref) => (this.passwordInput = ref)}
@@ -134,36 +139,36 @@ export default class Login extends Component {
                                 }}
                                 onSubmitEditing={this.onLoginPressed}
                             />
-
                             <BorderlessButton
-                                style={{ height: 20 }}
-                                textStyle={{ fontWeight: '400', color: '#B8CFFF', fontSize: 12, textAlign: 'right' }}
+                                textStyle={styles.forgetPasswordText}
                                 onPress={this.onRecoverRequestPressed}
                                 title={'Forgot password?'} />
                             <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
-                            <Text style={[styles.error, { marginBottom: 20 }]}>{this.state.formError.serverError}</Text>
-                            <PrimaryButton style={{ width: '50%', alignSelf: 'center', backgroundColor: '#5b6eff', }} onPress={this.onLoginPressed} title={'SIGN IN'} disabled={this.props.isFetching} >
-                                {this.props.isFetching ? <ActivityIndicator size="large" /> : undefined}
+                            <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
+                            <PrimaryButton
+                                style={styles.signInBtn}
+                                onPress={this.onLoginPressed}
+                                title={'SIGN IN'}
+                                disabled={this.props.isFetching} >
+                                {this.props.isFetching ?
+                                    <ActivityIndicator size="large" />
+                                    :
+                                    undefined}
                             </PrimaryButton>
                             <View style={styles.signUpContainer}>
-                                <Text style={{ color: '#f2f6f9', fontFamily: fonts.regular.regular, }}>Don’t have an accaunt?</Text>
-                                <Touchable
-                                    onPress={this.onSignUpPressed}
-                                >
-                                    <Text style={{ color: '#94b7ff', fontFamily: fonts.bold.regular, marginLeft: '5%' }}>Sign up</Text>
+                                <Text style={styles.textSignUp}>Don’t have an accaunt?</Text>
+                                <Touchable onPress={this.onSignUpPressed}>
+                                    <Text style={styles.btnSignUp}>Sign up</Text>
                                 </Touchable>
                             </View>
-                            <Touchable
-                                style={{ marginTop: 50 }}
-                            >
-                                <Text style={{ fontSize: 15, color: '#94b7ff', fontFamily: fonts.bold.regular, marginLeft: '5%', textAlign: 'center' }}>LOGIN WITH QR CODE</Text>
+                            <Touchable style={{ marginTop: 50 }}>
+                                <Text style={styles.loginQR}>LOGIN WITH QR CODE</Text>
                             </Touchable>
                         </View></KeyboardAvoidingView>
                     <Touchable onPress={this.onSignUpPressed}>
                     </Touchable>
                 </View>
             </LinearGradient>
-
         );
     }
 }
@@ -172,6 +177,7 @@ const styles = StyleSheet.create({
     error: {
         color: '#FFCACA',
         marginBottom: 4,
+        marginTop: 4,
         fontFamily: fonts.regular.regular,
         textAlign: 'center'
     },
@@ -187,7 +193,6 @@ const styles = StyleSheet.create({
         padding: 42,
         flexDirection: 'column',
         flex: 1,
-        //justifyContent: 'center',
     },
     formBlock: {
         paddingHorizontal: 20,
@@ -222,7 +227,42 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: '10%'
 
+    },
+    textInputContainer: {
+        borderColor: '#94B7FF'
+    },
+    textInput: {
+        color: '#fff',
+        fontSize: 18
+    },
+    forgetPasswordText: {
+        fontWeight: '400',
+        color: '#B8CFFF',
+        fontSize: 12,
+        textAlign: 'right'
+    },
+    signInBtn: {
+        width: '50%',
+        alignSelf: 'center',
+        backgroundColor: '#5b6eff',
+    },
+    textSignUp: {
+        color: '#f2f6f9',
+        fontFamily: fonts.regular.regular,
+    },
+    btnSignUp: {
+        color: '#94b7ff',
+        fontFamily: fonts.bold.regular,
+        marginLeft: '5%'
+    },
+    loginQR: {
+        fontSize: 15,
+        color: '#94b7ff',
+        fontFamily: fonts.bold.regular,
+        marginLeft: '5%',
+        textAlign: 'center'
     }
+
 });
 
 Login.propTypes = {
