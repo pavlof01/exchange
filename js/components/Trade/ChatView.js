@@ -49,6 +49,13 @@ const styles = StyleSheet.create({
   addIcon: {
     marginRight: 10,
   },
+  pickerIcon: {
+    marginLeft: 10,
+  },
+  pickerIconOpen: {
+    marginLeft: 10,
+    scaleY: -1,
+  },
   chatContainer: {
     height: 200,
     backgroundColor: '#f8f9fb',
@@ -165,6 +172,7 @@ class ChatView extends Component {
           <View style={styles.toggleChatBox}>
             <Image source={require('../../img/ic_add_message.png')} style={styles.addIcon} />
             <Text style={styles.toggleChatBoxText}>Add message</Text>
+            <Image source={require('../../img/ic_picker.png')} style={isOpen ? styles.pickerIconOpen : styles.pickerIcon} />
           </View>
         </TouchableOpacity>
         {
