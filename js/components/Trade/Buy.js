@@ -9,7 +9,7 @@ import {
   ScrollView,
   FlatList,
   Keyboard,
-  Dimensions, Alert,
+  Dimensions,
 } from "react-native";
 import Price from "../../values/Price";
 import {currencyCodeToSymbol} from "../../helpers";
@@ -18,6 +18,7 @@ import User from "../../models/User";
 import EscrowTimer from "./EscrowTimer";
 import PrimaryButton from "../../style/ActionButton";
 import moment from "moment";
+import { fonts } from "../../style/resourceHelpers";
 
 const styles = StyleSheet.create({
   row: {
@@ -51,6 +52,20 @@ const styles = StyleSheet.create({
   },
   bottomButtons: {
     paddingBottom: 24,
+    paddingStart: 60,
+    paddingEnd: 60,
+  },
+  title: {
+    color: '#9b9b9b',
+    marginEnd: 17,
+    marginStart: 17,
+    marginTop: 16,
+    paddingBottom: 3,
+    marginBottom: 3,
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+    borderBottomColor: '#D5D5D5',
+    borderBottomWidth: 1,
   },
 });
 
@@ -108,18 +123,14 @@ export default class Buy extends Component {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
     return (
-      <ScrollView keyboardShouldPersistTaps='always' scrollEnabled={!this.state.showKeyboard}
-                  style={{backgroundColor: "#fff", paddingLeft: 10, paddingRight: 10, flex: 1}}>
+      <ScrollView
+        keyboardShouldPersistTaps='always'
+        scrollEnabled={!this.state.showKeyboard}
+        style={{backgroundColor: "#fff", flex: 1}}
+      >
         <View style={this.state.showKeyboard ? styles.displayNone : null}>
-          <View style={{
-            width: "100%",
-            paddingBottom: .5,
-            borderBottomWidth: .5,
-            borderColor: "rgba(0,0,0, 0.3)",
-            marginTop: 15,
-          }}>
-            <Text style={{fontSize: 18, color: "grey", fontWeight: "bold"}}>TRANSFER VIA {ad.payment_method_code}</Text>
-          </View>
+          <Text style={styles.title}>{`Transfer via ${ad.payment_method_code}`.toUpperCase()}</Text>
+          <View style={{ paddingStart: 17, paddingEnd: 17 }}>
           <TouchableOpacity onPress={this.showInfoAboutPartner} style={{
             width: "100%",
             paddingBottom: .5,
@@ -218,9 +229,10 @@ export default class Buy extends Component {
             onPress={this.props.onCancelHandler}
             title={"CANCEL THE TRANSACTION"}
             color={"#F5F5F5"}
-            style={{marginTop: 30}}
+            style={{marginTop: 20}}
             fontStyle={{color: '#000000'}}
           />
+        </View>
         </View>
       </ScrollView>
     );
