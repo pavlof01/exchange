@@ -149,7 +149,7 @@ class ChatView extends Component {
     } = this.props;
     const messageUserId = message.item.user.id;
     const isMyMessage = messageUserId === userId;
-    const messageTime = `${moment(message.item.date).format("HH:mm")} (MSK)`;
+    const messageTime = `${moment(message.item.date).utcOffset('+0300').format("HH:mm")} (MSK)`;
     return (
       <View key={messageUserId} style={[styles.messageContainer, isMyMessage ? styles.me : styles.trader]}>
         <View style={styles.messageBubble}>
@@ -166,6 +166,7 @@ class ChatView extends Component {
     } = this.state;
     const {
       messages,
+      messageValue,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -193,6 +194,7 @@ class ChatView extends Component {
                 placeholder="You may leave a message"
                 underlineColorAndroid="transparent"
                 onChangeText={this.handleChangeText}
+                value={messageValue}
                 onSubmitEditing={this.handleSubmitEditing}
               />
             </View>
@@ -210,6 +212,7 @@ ChatView.propTypes = {
   onChangeText: PropTypes.func,
   onSubmitEditing: PropTypes.func,
   onStartShouldSetResponderCapture: PropTypes.func,
+  messageValue: PropTypes.string,
 };
 
 export default ChatView;
