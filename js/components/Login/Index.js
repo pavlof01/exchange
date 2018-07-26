@@ -158,9 +158,8 @@ export default class Login extends Component {
                             >
                                 <Text style={{ fontSize: 15, color: '#94b7ff', fontFamily: fonts.bold.regular, marginLeft: '5%', textAlign: 'center' }}>LOGIN WITH QR CODE</Text>
                             </Touchable>
-                        </View></KeyboardAvoidingView>
-                    <Touchable onPress={this.onSignUpPressed}>
-                    </Touchable>
+                        </View>
+                    </KeyboardAvoidingView>
                 </View>
             </LinearGradient>
 

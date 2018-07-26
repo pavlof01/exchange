@@ -9,6 +9,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+          new LinearGradientPackage(),
           new ReactNativeOneSignalPackage()
       );
     }
