@@ -161,6 +161,10 @@ export default class Buy extends Component {
   render() {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
+    const currencyCode = trade.ad.currency_code || '';
+    const cryptoCurrencyCode = trade.ad.crypto_currency_code || '';
+    const received = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
+    const send = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
     let date = '--.--.--';
     let time = '--:-- (MSK)';
     try {
@@ -205,11 +209,11 @@ export default class Buy extends Component {
           <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
 
           <View style={styles.swapContainer}>
-            <Text style={styles.swapTextLeft}>123</Text>
+            <Text style={styles.swapTextLeft}>{send}</Text>
             <Image source={require("../../img/ic_swap.png")}
                    style={{height: 18, width: 18, marginLeft: 15, marginRight: 15}}
             />
-            <Text style={styles.swapTextRight}>123</Text>
+            <Text style={styles.swapTextRight}>{received}</Text>
           </View>
           <View style={{marginTop: 20, justifyContent: "space-around", flexDirection: "row", flex: 1}}>
             <Text>Time limit for payment of seller's invoice:</Text>
