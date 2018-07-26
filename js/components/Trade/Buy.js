@@ -161,6 +161,14 @@ export default class Buy extends Component {
   render() {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
+    let date = '--.--.--';
+    let time = '--:-- (MSK)';
+    try {
+      const paidConfirmedAt = moment(trade.created_at).utcOffset('+0300');
+      date = paidConfirmedAt.format('DD.MM.YYYY');
+      time = `${paidConfirmedAt.format('HH:mm')} (MSK)`;
+    } catch (e) {
+    }
     return (
       <ScrollView
         keyboardShouldPersistTaps='always'
@@ -194,7 +202,7 @@ export default class Buy extends Component {
           ) : null
           }
           <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
-          <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n25.10.2017 15:03 (MSK) `}</Text>
+          <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
 
           <View style={styles.swapContainer}>
             <Text style={styles.swapTextLeft}>123</Text>
