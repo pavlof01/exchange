@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View,
   Text,
+  Image,
   FlatList,
   TextInput,
   TouchableOpacity,
@@ -33,8 +34,20 @@ const styles = StyleSheet.create({
     height: 50,
     marginEnd: 17,
     marginStart: 17,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderBottomColor: '#D5D5D5',
     borderBottomWidth: 1,
+  },
+  toggleChatBoxText: {
+    color: '#4a4a4a',
+    fontFamily: fonts.medium.regular,
+    fontSize: 16,
+    flex: 1,
+    lineHeight: 48,
+  },
+  addIcon: {
+    marginRight: 10,
   },
   chatContainer: {
     height: 200,
@@ -150,7 +163,8 @@ class ChatView extends Component {
         <Text style={styles.title}>{'CHAT'}</Text>
         <TouchableOpacity onPress={this.handleToggleChat}>
           <View style={styles.toggleChatBox}>
-
+            <Image source={require('../../img/ic_add_message.png')} style={styles.addIcon} />
+            <Text style={styles.toggleChatBoxText}>Add message</Text>
           </View>
         </TouchableOpacity>
         {
