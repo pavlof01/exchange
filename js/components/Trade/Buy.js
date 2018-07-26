@@ -83,7 +83,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: fonts.medium.regular,
   },
+  tradeDescriptionConfirmed: {
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#F9D749',
+    fontSize: 18,
+    fontFamily: fonts.medium.regular,
+  },
   tradeDescriptionBold: {
+    color: '#4a4a4a',
     fontFamily: fonts.bold.regular,
   },
   swapContainer: {
@@ -149,6 +157,15 @@ export default class Buy extends Component {
   }
 
   showInfoAboutPartner = () => this.setState({showInfoAboutPartner: !this.state.showInfoAboutPartner});
+
+  getTradeDescriptionStyleByStatus = (status) => {
+    switch (status) {
+      case 'paid_confirmed':
+        return styles.tradeDescriptionConfirmed;
+      default:
+        return styles.tradeDescription
+    }
+  };
 
   // TODO: Remove old render message method.
   renderMessage = (message) => {
@@ -230,7 +247,7 @@ export default class Buy extends Component {
               ) : null
               }
               <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
-              <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
+              <Text style={this.getTradeDescriptionStyleByStatus(trade.status)}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
               <View style={styles.swapContainer}>
                 <Text style={styles.swapTextLeft}>{send}</Text>
                 <Image source={require("../../img/ic_swap.png")}
