@@ -153,9 +153,9 @@ export default class Trade extends Component {
     this.setState({ isConfirming: false });
   };
 
-  onPaidHandler = this.tradeActionHandlerFactory('/confirm');
+  onPaidHandler = this.tradeActionHandlerFactory('/complete');
   onCancelHandler = this.tradeActionHandlerFactory('/cancel');
-  onCompleteHandler = this.tradeActionHandlerFactory('/complete');
+  onCompleteHandler = this.tradeActionHandlerFactory('/confirm');
 
   get createdAt() {
       let date = new Date(this.props.trade.created_at);
@@ -229,7 +229,10 @@ export default class Trade extends Component {
     };
 
   isTradeCompleted = () => {
-    return this.isTradeLoaded() && this.props.trade.status === 'expired_and_paid';
+    return this.isTradeLoaded() && (
+      this.props.trade.status === 'expired_and_paid'
+      || this.props.trade.status === 'completed_by_seller'
+    );
   };
 
     get partner() {
@@ -250,16 +253,11 @@ export default class Trade extends Component {
 
   render() {
     let trade = this.props.trade || {};
+    console.warn('status ' + this.props.trade.status);
     if (!this.isTradeLoaded()) return this.renderProgress();
     return (
       <View style={{ flex: 1 }}>
         { this.renderActionBlock() }
-        {
-          trade.feedback_allowed &&
-          <View style={styles.info}>
-            <Feedback {...this.props} feedback={trade.feedbacks[this.props.user.id]}/>
-          </View>
-        }
         <ModalDialog
           title={'Are you sure?'.toUpperCase()}
           isOpen={this.state.isConfirming}
