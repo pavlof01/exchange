@@ -18,6 +18,7 @@ import PrimaryButton from "../../style/ActionButton";
 import moment from "moment";
 import { fonts } from "../../style/resourceHelpers";
 import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
+import TraderInfo from '../TraderInfo';
 
 const styles = StyleSheet.create({
   container: {
@@ -135,7 +136,6 @@ export default class Buy extends Component {
   state = {
     amount: 0,
     textMessage: "",
-    showInfoAboutPartner: false,
     showKeyboard: false,
     expandChat: true,
     enableScrollViewScroll: true,
@@ -155,8 +155,6 @@ export default class Buy extends Component {
     this.keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", this._keyboardDidHide);
   }
-
-  showInfoAboutPartner = () => this.setState({showInfoAboutPartner: !this.state.showInfoAboutPartner});
 
   getTradeDescriptionStyleByStatus = (status) => {
     switch (status) {
@@ -222,30 +220,13 @@ export default class Buy extends Component {
           >
             <View style={this.state.showKeyboard ? styles.displayNone : null}>
               <Text style={styles.title}>{`Transfer via ${ad.payment_method_code}`.toUpperCase()}</Text>
+              <TraderInfo
+                isOnline={this.props.isOnline}
+                traderName={this.props.partnerName}
+                completedTradesCount={User.approximateTradesCount(this.props.user.completed_trades_count)}
+                countryCode={ad.country_code}
+              />
               <View style={{ paddingStart: 17, paddingEnd: 17 }}>
-              <TouchableOpacity onPress={this.showInfoAboutPartner} style={{
-                width: "100%",
-                paddingBottom: .5,
-                borderBottomWidth: .5,
-                borderColor: "rgba(0,0,0, 0.3)",
-                marginTop: 15,
-                flexDirection: "row",
-                alignItems: "center"
-              }}>
-                <OnlineStatus isOnline={this.props.isOnline}/>
-                <Text style={{fontSize: 18, fontWeight: "bold"}}>{this.props.partnerName}</Text>
-                <Text style={{marginLeft: 10}}>{User.approximateTradesCount(this.props.user.completed_trades_count)}</Text>
-              </TouchableOpacity>
-              {this.state.showInfoAboutPartner ? (
-                <View style={{backgroundColor: "#F8F9FB", paddingBottom: 15, paddingTop: 15}}>
-                  <Text style={{color: "#4A4A4A", fontSize: 10, marginTop: 10, marginBottom: 15}}>Country</Text>
-                  <Text style={{fontSize: 18}}>{ad.country_code}</Text>
-                  <Text style={{color: "#4A4A4A", fontSize: 10, marginTop: 10, marginBottom: 15}}>Term of transaction</Text>
-                  <Text style={{fontSize: 18}}>This advertisement is for cash transactions only. Make a request only when
-                    you can make a cash payment within 12 hours.</Text>
-                </View>
-              ) : null
-              }
               <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
               <Text style={this.getTradeDescriptionStyleByStatus(trade.status)}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
               <View style={styles.swapContainer}>
