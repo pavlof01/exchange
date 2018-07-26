@@ -17,6 +17,7 @@ import EscrowTimer from "./EscrowTimer";
 import PrimaryButton from "../../style/ActionButton";
 import moment from "moment";
 import { fonts } from "../../style/resourceHelpers";
+import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 
 const styles = StyleSheet.create({
   row: {
@@ -184,7 +185,8 @@ export default class Buy extends Component {
     } catch (e) {
     }
     return (
-      <View
+      <KeyboardAvoidingWrapView
+        behavior={'padding'}
         onStartShouldSetResponderCapture={() => {
           this.setState({ enableScrollViewScroll: true });
         }}
@@ -265,7 +267,7 @@ export default class Buy extends Component {
           </View>
           </View>
         </ScrollView>
-      </View>
+      </KeyboardAvoidingWrapView>
     );
   }
 };
