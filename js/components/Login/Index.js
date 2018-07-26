@@ -148,20 +148,13 @@ export default class Login extends Component {
                             <View style={styles.signUpContainer}>
                                 <Text style={{ color: '#f2f6f9', fontFamily: fonts.regular.regular, }}>Don’t have an accaunt?</Text>
                                 <Touchable
-                                //accessibilityLabel={accessibilityLabel}
-                                //testID={testID}
-                                //disabled={disabled}
-                                //onPress={this.onPress}
+                                    onPress={this.onSignUpPressed}
                                 >
                                     <Text style={{ color: '#94b7ff', fontFamily: fonts.bold.regular, marginLeft: '5%' }}>Sign up</Text>
                                 </Touchable>
                             </View>
                             <Touchable
                                 style={{ marginTop: 50 }}
-                            //accessibilityLabel={accessibilityLabel}
-                            //testID={testID}
-                            //disabled={disabled}
-                            //onPress={this.onPress}
                             >
                                 <Text style={{ fontSize: 15, color: '#94b7ff', fontFamily: fonts.bold.regular, marginLeft: '5%', textAlign: 'center' }}>LOGIN WITH QR CODE</Text>
                             </Touchable>
