@@ -1,31 +1,36 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Validator from '../../services/Validator';
 import {
     View,
     Text,
-    ScrollView,
+    KeyboardAvoidingView,
+    Image,
     StyleSheet, ActivityIndicator,
+    Keyboard
 } from 'react-native';
 import FormTextInput from '../../components/FormTextInput';
 import Touchable from '../../style/Touchable';
 import _ from 'lodash';
 import PrimaryButton from "../../style/ActionButton";
-import {withColoredStatusBar} from "../../style/navigation";
+import { withColoredStatusBar } from "../../style/navigation";
 import BorderlessButton from "../../style/BorderlessButton";
-import {fonts} from "../../style/resourceHelpers";
-import {common} from "../../style/common";
+import { fonts } from "../../style/resourceHelpers";
+import { common } from "../../style/common";
+import LinearGradient from 'react-native-linear-gradient';
+import Logo from '../../../assets/img/logo.png';
+import LogoText from '../../../assets/img/text.png';
 
 export default class Login extends Component {
     static navigationOptions = { header: props => null };
-
     constructor(props) {
         super(props);
         this.state = {
             loginValue: '',
             passwordValue: '',
             formError: {},
+            textInFocus: false
         };
 
         this.onLoginPressed = this.onLoginPressed.bind(this);
@@ -35,12 +40,27 @@ export default class Login extends Component {
 
     componentDidMount() {
         this.props.fetchDictionary();
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+    }
+
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.formError !== nextProps.formError) {
-            this.setState({formError: {serverError: nextProps.formError}})
+            this.setState({ formError: { serverError: nextProps.formError } })
         }
+    }
+
+    _keyboardDidShow = () => {
+        this.setState({ textInFocus: true });
+    }
+
+    _keyboardDidHide = () => {
+        this.setState({ textInFocus: false });
     }
 
     onLoginPressed() {
@@ -49,8 +69,8 @@ export default class Login extends Component {
             passwordValue,
         } = this.state;
 
-        const loginError = new Validator({presence: true}).validate(loginValue);
-        const passwordError = new Validator({presence: true}).validate(passwordValue);
+        const loginError = new Validator({ presence: true }).validate(loginValue);
+        const passwordError = new Validator({ presence: true }).validate(passwordValue);
 
         const validationErrors = {
             loginError: loginError && (loginError),
@@ -58,9 +78,9 @@ export default class Login extends Component {
         };
 
         if (!_.every(_.values(validationErrors), value => !value)) {
-            this.setState({formError: validationErrors});
+            this.setState({ formError: validationErrors });
         } else {
-            this.props.login({login: loginValue, password: passwordValue});
+            this.props.login({ login: loginValue, password: passwordValue });
         }
     }
     onSignUpPressed() {
@@ -71,61 +91,89 @@ export default class Login extends Component {
     }
 
     render() {
-        return (withColoredStatusBar('#AAAAAA',
-            <View style={[styles.paddingScreen]}>
-                <Text style={[styles.pageHeader]}>BitChange</Text>
-                <View style={[styles.formBlock]}>
-                    <View style={{marginBottom: 64}}>
-                        <FormTextInput
-                            key={'login'}
-                            error={!_.isEmpty(this.state.formError.loginError)}
-                            ref={(ref) => (this.loginInput = ref)}
-                            placeholder="Username"
-                            keyboardType="email-address"
-                            autoCapitalize={'none'}
-                            onChangeText={(login) => {
-                                this.setState({loginValue: login});
-                            }}
-                            onSubmitEditing={() => {
-                                this.passwordInput.focus();
-                            }}
-                        />
-                        <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
-                        <FormTextInput
-                            key={'pass'}
-                            error={!_.isEmpty(this.state.formError.passwordError)}
-                            ref={(ref) => (this.passwordInput = ref)}
-                            placeholder="Password"
-                            secureTextEntry
-                            onChangeText={(password) => {
-                                this.setState({passwordValue: password});
-                            }}
-                            onSubmitEditing={this.onLoginPressed}
-                        />
-                        <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
-                        <Text style={[styles.error]}>{this.state.formError.serverError}</Text>
-                        <BorderlessButton onPress={this.onRecoverRequestPressed} title={'Забыли пароль?'} />
-                        <PrimaryButton onPress={this.onLoginPressed} title={'Войти'} disabled={this.props.isFetching} >
-                            {this.props.isFetching ? <ActivityIndicator size="large"/> : undefined}
-                        </PrimaryButton>
+        return (
+            <LinearGradient
+                colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
+                style={[styles.paddingScreen]}>
+                <View style={styles.logoContainer}>
+                    <Image style={this.state.textInFocus ? styles.logoStylesOnKeyboardShow : styles.logo} source={Logo} />
+                    <Image style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : null} source={LogoText} />
+                </View>
+                <View style={{ flex: 2 }}>
+                    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+                        <View style={{ flex: 1 }}>
+                            <FormTextInput
+                                style={{ marginBottom: '10%', borderColor: '#94B7FF' }}
+                                textStyle={{ color: '#fff', fontSize: 18 }}
+                                key={'login'}
+                                error={!_.isEmpty(this.state.formError.loginError)}
+                                ref={(ref) => (this.loginInput = ref)}
+                                placeholder="Enter username"
+                                placeholderTextColor="#B8CFFF"
+                                keyboardType="email-address"
+                                autoCapitalize={'none'}
+                                onChangeText={(login) => {
+                                    this.setState({ loginValue: login });
+                                }}
+                                onSubmitEditing={() => {
+                                    this.passwordInput.focus();
+                                }}
+                            />
+                            <Text style={[styles.error]}>{this.state.formError.loginError}</Text>
+                            <FormTextInput
+                                style={{ borderColor: '#94B7FF' }}
+                                textStyle={{ color: '#fff', fontSize: 18 }}
+                                key={'pass'}
+                                error={!_.isEmpty(this.state.formError.passwordError)}
+                                ref={(ref) => (this.passwordInput = ref)}
+                                placeholder="Enter password"
+                                placeholderTextColor="#B8CFFF"
+                                secureTextEntry
+                                onChangeText={(password) => {
+                                    this.setState({ passwordValue: password });
+                                }}
+                                onSubmitEditing={this.onLoginPressed}
+                            />
 
-                    </View>
+                            <BorderlessButton
+                                style={{ height: 20 }}
+                                textStyle={{ fontWeight: '400', color: '#B8CFFF', fontSize: 12, textAlign: 'right' }}
+                                onPress={this.onRecoverRequestPressed}
+                                title={'Forgot password?'} />
+                            <Text style={[styles.error]}>{this.state.formError.passwordError}</Text>
+                            <Text style={[styles.error, { marginBottom: 20 }]}>{this.state.formError.serverError}</Text>
+                            <PrimaryButton style={{ width: '50%', alignSelf: 'center', backgroundColor: '#5b6eff', }} onPress={this.onLoginPressed} title={'SIGN IN'} disabled={this.props.isFetching} >
+                                {this.props.isFetching ? <ActivityIndicator size="large" /> : undefined}
+                            </PrimaryButton>
+                            <View style={styles.signUpContainer}>
+                                <Text style={{ color: '#f2f6f9', fontFamily: fonts.regular.regular, }}>Don’t have an accaunt?</Text>
+                                <Touchable
+                                    onPress={this.onSignUpPressed}
+                                >
+                                    <Text style={{ color: '#94b7ff', fontFamily: fonts.bold.regular, marginLeft: '5%' }}>Sign up</Text>
+                                </Touchable>
+                            </View>
+                            <Touchable
+                                style={{ marginTop: 50 }}
+                            >
+                                <Text style={{ fontSize: 15, color: '#94b7ff', fontFamily: fonts.bold.regular, marginLeft: '5%', textAlign: 'center' }}>LOGIN WITH QR CODE</Text>
+                            </Touchable>
+                        </View></KeyboardAvoidingView>
                     <Touchable onPress={this.onSignUpPressed}>
-                        <View>
-                            <Text style={[common.textCenter]}>Вы впервые на BitChange?</Text>
-                            <Text style={[common.textLink, common.textCenter]}>Зарегистрируйтесь прямо сейчас!</Text>
-                        </View>
                     </Touchable>
                 </View>
-            </View>));
+            </LinearGradient>
+
+        );
     }
 }
 
 const styles = StyleSheet.create({
     error: {
-        color: '#dd0057',
+        color: '#FFCACA',
         marginBottom: 4,
         fontFamily: fonts.regular.regular,
+        textAlign: 'center'
     },
     pageHeader: {
         textAlign: 'center',
@@ -136,10 +184,10 @@ const styles = StyleSheet.create({
         margin: 24,
     },
     paddingScreen: {
-        padding: 16,
+        padding: 42,
         flexDirection: 'column',
         flex: 1,
-        justifyContent: 'center',
+        //justifyContent: 'center',
     },
     formBlock: {
         paddingHorizontal: 20,
@@ -147,6 +195,34 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#fff',
     },
+    logoContainer: {
+        alignItems: 'center',
+        marginBottom: '15%',
+        marginTop: '15%',
+        flex: 1,
+    },
+    logo: {
+        marginBottom: '10%',
+    },
+    logoStylesOnKeyboardShow: {
+        opacity: 0.5,
+        transform: [
+            { scale: 0.5 },
+        ],
+    },
+    textLogoStylesOnKeyboardShow: {
+        opacity: 0.5,
+        transform: [
+            { scale: 0.5 },
+            { translateY: -40 }
+        ],
+    },
+    signUpContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: '10%'
+
+    }
 });
 
 Login.propTypes = {
