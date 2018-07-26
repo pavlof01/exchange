@@ -71,6 +71,11 @@ const styles = StyleSheet.create({
     marginEnd: 25,
     marginStart: 25,
   },
+  messageUserName: {
+    color: '#4a4a4a',
+    fontFamily: fonts.bold.regular,
+    fontSize: 12,
+  },
   messageBubble: {
     width: '85%',
     backgroundColor: "#ffffff",
@@ -79,6 +84,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 8,
     marginBottom: 8,
+  },
+  messageBubbleText: {
+    color: '#000000',
+    fontFamily: fonts.medium.regular,
+    fontSize: 14,
   },
   messageTimeText: {
     color: '#4a4a4a',
@@ -152,8 +162,13 @@ class ChatView extends Component {
     const messageTime = `${moment(message.item.date).utcOffset('+0300').format("HH:mm")} (MSK)`;
     return (
       <View key={messageUserId} style={[styles.messageContainer, isMyMessage ? styles.me : styles.trader]}>
+        {
+          !isMyMessage && (
+            <Text style={styles.messageUserName}>{message.item.user.userName}</Text>
+          )
+        }
         <View style={styles.messageBubble}>
-          <Text>{message.item.body}</Text>
+          <Text style={styles.messageBubbleText}>{message.item.body}</Text>
         </View>
         <Text style={styles.messageTimeText}>{messageTime}</Text>
       </View>
