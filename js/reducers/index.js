@@ -37,7 +37,7 @@ export default combineReducers({
   countries,
   ordersFilter,
   orders,
-  // mainSocket,
+  mainSocket,
   i18n,
   currentTrade,
   partnerActivity,

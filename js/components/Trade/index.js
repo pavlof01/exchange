@@ -68,6 +68,7 @@ export default class Trade extends Component {
         break;
       default:
         let message = data.message;
+        console.warn(JSON.stringify(message, null, 2));
         if (message.messages) {
           this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
         } else if (message.error) {

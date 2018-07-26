@@ -6,18 +6,19 @@ import {update as updateCurrentTrade} from '../actions/currentTrade'
 import {default as updatePartnerActivity} from '../actions/partnerActivity'
 
 const handler = message => {
+  // TODO: необходимо поправить логику дейстрия updateUser() - т.к. данные перевели на имутабельные структуры.
   switch (message.event) {
     case 'notice_count':
-      store.dispatch(updateUser({
-        notifications_count: message.data.count,
-        notifications: message.data.notifications
-      }));
+      // store.dispatch(updateUser({
+      //   notifications_count: message.data.count,
+      //   notifications: message.data.notifications
+      // }));
       break;
     case 'balance_amount':
-      store.dispatch(updateUser({balance: message.data.balance}));
+      // store.dispatch(updateUser({balance: message.data.balance}));
       break;
     case 'trade_partner_activity':
-      store.dispatch(updatePartnerActivity(message.data.statuses));
+      // store.dispatch(updatePartnerActivity(message.data.statuses));
       break;
     case 'trading_allowed':
       break;
