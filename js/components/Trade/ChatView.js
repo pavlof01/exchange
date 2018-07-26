@@ -54,7 +54,9 @@ const styles = StyleSheet.create({
   },
   pickerIconOpen: {
     marginLeft: 10,
-    scaleY: -1,
+    transform: [
+      { scaleY: -1 },
+    ],
   },
   chatContainer: {
     height: 200,
