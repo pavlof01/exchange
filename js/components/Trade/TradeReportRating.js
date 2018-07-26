@@ -100,7 +100,7 @@ class TradeReportRating extends Component {
     let date = '--.--.--';
     let time = '--:-- (MSK)';
     try {
-      const paidConfirmedAt = moment(trade.paid_confirmed_at);
+      const paidConfirmedAt = moment(trade.paid_confirmed_at).utcOffset('+0300');
       date = paidConfirmedAt.format('DD.MM.YYYY');
       time = `${paidConfirmedAt.format('HH:mm')} (MSK)`;
     } catch (e) {

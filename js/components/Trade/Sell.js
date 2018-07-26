@@ -106,7 +106,6 @@ export default class Sell extends Component {
   render() {
     let trade = this.props.trade || {};
     let ad = trade.ad || {};
-    console.warn('status ' + this.props.trade.status);
     return (
       <ScrollView keyboardShouldPersistTaps='always'
                   style={{backgroundColor: "#fff", paddingLeft: 10, paddingRight: 10, flex: 1}}>
