@@ -20,6 +20,9 @@ import { fonts } from "../../style/resourceHelpers";
 import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -187,86 +190,91 @@ export default class Buy extends Component {
     return (
       <KeyboardAvoidingWrapView
         behavior={'padding'}
-        onStartShouldSetResponderCapture={() => {
-          this.setState({ enableScrollViewScroll: true });
-        }}
-        style={{flex: 1}}
+        style={styles.container}
       >
-        <ScrollView
-          scrollEnabled={this.state.enableScrollViewScroll}
-          style={{backgroundColor: "#fff", flex: 1}}
+        <View
+          onStartShouldSetResponderCapture={() => {
+            this.setState({ enableScrollViewScroll: true });
+          }}
+          style={styles.container}
         >
-          <View style={this.state.showKeyboard ? styles.displayNone : null}>
-            <Text style={styles.title}>{`Transfer via ${ad.payment_method_code}`.toUpperCase()}</Text>
-            <View style={{ paddingStart: 17, paddingEnd: 17 }}>
-            <TouchableOpacity onPress={this.showInfoAboutPartner} style={{
-              width: "100%",
-              paddingBottom: .5,
-              borderBottomWidth: .5,
-              borderColor: "rgba(0,0,0, 0.3)",
-              marginTop: 15,
-              flexDirection: "row",
-              alignItems: "center"
-            }}>
-              <OnlineStatus isOnline={this.props.isOnline}/>
-              <Text style={{fontSize: 18, fontWeight: "bold"}}>{this.props.partnerName}</Text>
-              <Text style={{marginLeft: 10}}>{User.approximateTradesCount(this.props.user.completed_trades_count)}</Text>
-            </TouchableOpacity>
-            {this.state.showInfoAboutPartner ? (
-              <View style={{backgroundColor: "#F8F9FB", paddingBottom: 15, paddingTop: 15}}>
-                <Text style={{color: "#4A4A4A", fontSize: 10, marginTop: 10, marginBottom: 15}}>Country</Text>
-                <Text style={{fontSize: 18}}>{ad.country_code}</Text>
-                <Text style={{color: "#4A4A4A", fontSize: 10, marginTop: 10, marginBottom: 15}}>Term of transaction</Text>
-                <Text style={{fontSize: 18}}>This advertisement is for cash transactions only. Make a request only when
-                  you can make a cash payment within 12 hours.</Text>
+          <ScrollView
+            scrollEnabled={this.state.enableScrollViewScroll}
+            style={{backgroundColor: "#fff", flex: 1}}
+            keyBoardShouldPersistTaps={'never'}
+          >
+            <View style={this.state.showKeyboard ? styles.displayNone : null}>
+              <Text style={styles.title}>{`Transfer via ${ad.payment_method_code}`.toUpperCase()}</Text>
+              <View style={{ paddingStart: 17, paddingEnd: 17 }}>
+              <TouchableOpacity onPress={this.showInfoAboutPartner} style={{
+                width: "100%",
+                paddingBottom: .5,
+                borderBottomWidth: .5,
+                borderColor: "rgba(0,0,0, 0.3)",
+                marginTop: 15,
+                flexDirection: "row",
+                alignItems: "center"
+              }}>
+                <OnlineStatus isOnline={this.props.isOnline}/>
+                <Text style={{fontSize: 18, fontWeight: "bold"}}>{this.props.partnerName}</Text>
+                <Text style={{marginLeft: 10}}>{User.approximateTradesCount(this.props.user.completed_trades_count)}</Text>
+              </TouchableOpacity>
+              {this.state.showInfoAboutPartner ? (
+                <View style={{backgroundColor: "#F8F9FB", paddingBottom: 15, paddingTop: 15}}>
+                  <Text style={{color: "#4A4A4A", fontSize: 10, marginTop: 10, marginBottom: 15}}>Country</Text>
+                  <Text style={{fontSize: 18}}>{ad.country_code}</Text>
+                  <Text style={{color: "#4A4A4A", fontSize: 10, marginTop: 10, marginBottom: 15}}>Term of transaction</Text>
+                  <Text style={{fontSize: 18}}>This advertisement is for cash transactions only. Make a request only when
+                    you can make a cash payment within 12 hours.</Text>
+                </View>
+              ) : null
+              }
+              <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
+              <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
+              <View style={styles.swapContainer}>
+                <Text style={styles.swapTextLeft}>{send}</Text>
+                <Image source={require("../../img/ic_swap.png")}
+                       style={{height: 18, width: 18, marginLeft: 15, marginRight: 15}}
+                />
+                <Text style={styles.swapTextRight}>{received}</Text>
               </View>
-            ) : null
-            }
-            <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
-            <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
-            <View style={styles.swapContainer}>
-              <Text style={styles.swapTextLeft}>{send}</Text>
-              <Image source={require("../../img/ic_swap.png")}
-                     style={{height: 18, width: 18, marginLeft: 15, marginRight: 15}}
-              />
-              <Text style={styles.swapTextRight}>{received}</Text>
+
+              <Text style={styles.timeLeftText}>Time left to pay: <Text style={styles.timeLeftTimeText}><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text></Text>
+
             </View>
-
-            <Text style={styles.timeLeftText}>Time left to pay: <Text style={styles.timeLeftTimeText}><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text></Text>
-
-          </View>
-          <ChatView
-            onStartShouldSetResponderCapture={
-              () => {
-                this.setState({ enableScrollViewScroll: false });
-                if (this.state.enableScrollViewScroll === false) {
-                  this.setState({ enableScrollViewScroll: true });
+            <ChatView
+              onStartShouldSetResponderCapture={
+                () => {
+                  this.setState({ enableScrollViewScroll: false });
+                  if (this.state.enableScrollViewScroll === false) {
+                    this.setState({ enableScrollViewScroll: true });
+                  }
                 }
               }
-            }
-            messages={this.props.messages}
-            userId={this.props.user.id}
-            onChangeText={(textMessage) => this.setState({textMessage})}
-            onSubmitEditing={() => this.props.sendMessage(this.state.textMessage, () => this.setState({textMessage: ""}))}
-            messageValue={this.state.textMessage}
-          />
-          <View style={(this.state.showKeyboard || this.props.trade.status !== 'new') ? styles.displayNone : styles.bottomButtons}>
-            <PrimaryButton
-              onPress={this.props.onCompleteHandler}
-              title={"COMPLETE THE TRANSACTION"}
-              color={"#5B6EFF"}
-              style={{marginTop: 30}}
+              messages={this.props.messages}
+              userId={this.props.user.id}
+              onChangeText={(textMessage) => this.setState({textMessage})}
+              onSubmitEditing={() => this.props.sendMessage(this.state.textMessage, () => this.setState({textMessage: ""}))}
+              messageValue={this.state.textMessage}
             />
-            <PrimaryButton
-              onPress={this.props.onCancelHandler}
-              title={"CANCEL THE TRANSACTION"}
-              color={"#F5F5F5"}
-              style={{marginTop: 20}}
-              fontStyle={{color: '#000000'}}
-            />
-          </View>
-          </View>
-        </ScrollView>
+            <View style={(this.state.showKeyboard || this.props.trade.status !== 'new') ? styles.displayNone : styles.bottomButtons}>
+              <PrimaryButton
+                onPress={this.props.onCompleteHandler}
+                title={"COMPLETE THE TRANSACTION"}
+                color={"#5B6EFF"}
+                style={{marginTop: 30}}
+              />
+              <PrimaryButton
+                onPress={this.props.onCancelHandler}
+                title={"CANCEL THE TRANSACTION"}
+                color={"#F5F5F5"}
+                style={{marginTop: 20}}
+                fontStyle={{color: '#000000'}}
+              />
+            </View>
+            </View>
+          </ScrollView>
+        </View>
       </KeyboardAvoidingWrapView>
     );
   }
