@@ -85,6 +85,27 @@ const styles = StyleSheet.create({
   tradeDescriptionBold: {
     fontFamily: fonts.bold.regular,
   },
+  swapContainer: {
+    flexDirection: 'row',
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  swapTextLeft: {
+    flex: 1,
+    color: '#4a4a4a',
+    textAlign: 'right',
+    fontSize: 22,
+    lineHeight: 22,
+    fontFamily: fonts.bold.regular,
+  },
+  swapTextRight: {
+    flex: 1,
+    color: '#4a4a4a',
+    textAlign: 'left',
+    fontSize: 22,
+    lineHeight: 22,
+    fontFamily: fonts.bold.regular,
+  },
 });
 
 export default class Buy extends Component {
@@ -175,28 +196,12 @@ export default class Buy extends Component {
           <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
           <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n25.10.2017 15:03 (MSK) `}</Text>
 
-          <Text style={{color: "#4A4A4A", fontSize: 10, marginBottom: 10}}>AMOUNT</Text>
-          <View style={{flexDirection: "row"}}>
-            <View style={{borderColor: "gray", borderBottomWidth: 1, flex: 1, flexDirection: "row"}}>
-              <TextInput
-                style={{paddingRight: 30}}
-                placeholder='0'
-                onChangeText={(amount) => this.setState({amount})}
-                value={this.state.amount}/>
-              <Text style={{position: "absolute", right: 0, color: "grey"}}>{ad.currency_code}</Text>
-            </View>
+          <View style={styles.swapContainer}>
+            <Text style={styles.swapTextLeft}>123</Text>
             <Image source={require("../../img/ic_swap.png")}
-                   style={{height: 18, width: 18, marginLeft: 15, marginRight: 15}}/>
-            <View style={{borderColor: "gray", borderBottomWidth: 1, flex: 1, flexDirection: "row"}}>
-              <Text>{Price.build(this.state.amount / ad.price).viewCrypto}</Text>
-              <Text style={{position: "absolute", right: 0, color: "grey"}}>{ad.crypto_currency_code}</Text>
-            </View>
-          </View>
-          <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-            <Text
-              style={{marginTop: 10}}>Limit: {Math.round(ad.limit_min * 10) / 10} - {Math.round(ad.limit_max * 10) / 10} {currencyCodeToSymbol(ad.currency_code)}</Text>
-            <Text
-              style={{marginTop: 10}}>Limit: {Price.build(ad.limit_min / ad.price).viewCrypto} - {Price.build(ad.limit_max / ad.price).viewCrypto} {currencyCodeToSymbol(ad.currency_code)}</Text>
+                   style={{height: 18, width: 18, marginLeft: 15, marginRight: 15}}
+            />
+            <Text style={styles.swapTextRight}>123</Text>
           </View>
           <View style={{marginTop: 20, justifyContent: "space-around", flexDirection: "row", flex: 1}}>
             <Text>Time limit for payment of seller's invoice:</Text>
