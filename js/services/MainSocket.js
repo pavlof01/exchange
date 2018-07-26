@@ -4,9 +4,8 @@ export default class MainSocket {
   constructor(messageReceiver) {
     this.messageReceiver = messageReceiver;
 
-    let tunnelledHosts = ['papabit.com'];
-    let protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    let postfix = tunnelledHosts.indexOf(window.location.hostname) > -1 ? ':28080' : '/cable';
+    let protocol = 'ws:';
+    let postfix = '/cable';
 
     this.url = protocol + '//' + SOCKET_IP + postfix;
     this.socket = null
