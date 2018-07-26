@@ -67,6 +67,24 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D5D5D5',
     borderBottomWidth: 1,
   },
+  costText: {
+    color: '#2c09a3',
+    textAlign: 'center',
+    marginTop: 30,
+    marginBottom: 15,
+    fontSize: 18,
+    fontFamily: fonts.bold.regular,
+  },
+  tradeDescription: {
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#4a4a4a',
+    fontSize: 18,
+    fontFamily: fonts.medium.regular,
+  },
+  tradeDescriptionBold: {
+    fontFamily: fonts.bold.regular,
+  },
 });
 
 export default class Buy extends Component {
@@ -152,13 +170,11 @@ export default class Buy extends Component {
               <Text style={{fontSize: 18}}>This advertisement is for cash transactions only. Make a request only when
                 you can make a cash payment within 12 hours.</Text>
             </View>
-          ) : null}
+          ) : null
+          }
+          <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
+          <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n25.10.2017 15:03 (MSK) `}</Text>
 
-          <Text style={{color: "#4A4A4A", fontSize: 10, marginTop: 10}}>COST</Text>
-          <View style={styles.info}>
-            <Text style={styles.centeredText}><Text
-              style={styles.header}>1 {ad.crypto_currency_code} / {Price.build(ad.price).viewMain} {currencyCodeToSymbol(ad.currency_code)}</Text></Text>
-          </View>
           <Text style={{color: "#4A4A4A", fontSize: 10, marginBottom: 10}}>AMOUNT</Text>
           <View style={{flexDirection: "row"}}>
             <View style={{borderColor: "gray", borderBottomWidth: 1, flex: 1, flexDirection: "row"}}>
