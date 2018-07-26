@@ -106,6 +106,19 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontFamily: fonts.bold.regular,
   },
+  timeLeftText: {
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#4a4a4a',
+    fontSize: 12,
+    fontFamily: fonts.medium.regular,
+  },
+  timeLeftTimeText: {
+    lineHeight: 24,
+    color: '#2c09a3',
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+  },
 });
 
 export default class Buy extends Component {
@@ -207,7 +220,6 @@ export default class Buy extends Component {
           }
           <Text style={styles.costText}>{`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}</Text>
           <Text style={styles.tradeDescription}>{'Your request Trader '}<Text style={styles.tradeDescriptionBold}>{this.props.partnerName}</Text>{`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}</Text>
-
           <View style={styles.swapContainer}>
             <Text style={styles.swapTextLeft}>{send}</Text>
             <Image source={require("../../img/ic_swap.png")}
@@ -215,10 +227,9 @@ export default class Buy extends Component {
             />
             <Text style={styles.swapTextRight}>{received}</Text>
           </View>
-          <View style={{marginTop: 20, justifyContent: "space-around", flexDirection: "row", flex: 1}}>
-            <Text>Time limit for payment of seller's invoice:</Text>
-            <Text><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text>
-          </View>
+
+          <Text style={styles.timeLeftText}>Time left to pay: <Text style={styles.timeLeftTimeText}><EscrowTimer expiredAt={this.props.trade.escrow_expired_at}/> min</Text></Text>
+
         </View>
         <View style={{
           height: !this.state.expandChat ? Dimensions.get("window").height / 2.2 : 35,
