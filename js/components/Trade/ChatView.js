@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { fonts } from '../../style/resourceHelpers';
+import moment from "moment";
 
 const styles = StyleSheet.create({
   container: {
@@ -46,6 +47,20 @@ const styles = StyleSheet.create({
   messageContainer: {
     marginEnd: 25,
     marginStart: 25,
+  },
+  messageBubble: {
+    width: '85%',
+    backgroundColor: "#ffffff",
+    padding: 10,
+    flex: 1,
+    borderRadius: 4,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  messageTimeText: {
+    color: '#4a4a4a',
+    fontFamily: fonts.medium.regular,
+    fontSize: 12,
   },
   me: {
     flex: 1,
@@ -105,9 +120,13 @@ class ChatView extends Component {
     } = this.props;
     const messageUserId = message.item.user.id;
     const isMyMessage = messageUserId === userId;
+    const messageTime = `${moment(message.item.date).format("HH:mm")} (MSK)`;
     return (
-      <View key={messageUserId} style={styles.messageContainer}>
-        <Text>{message.item.body}</Text>
+      <View key={messageUserId} style={[styles.messageContainer, isMyMessage ? styles.me : styles.trader]}>
+        <View style={styles.messageBubble}>
+          <Text>{message.item.body}</Text>
+        </View>
+        <Text style={styles.messageTimeText}>{messageTime}</Text>
       </View>
     );
   };
