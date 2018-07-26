@@ -422,9 +422,7 @@ export default class NewTrade extends Component {
             <Text style={{ color: "#4a4a4a" }}>
               Time limit for payment of seller's invoice:
             </Text>
-            <Text style={{ fontWeight: "700" }}>
-              {" " + ad.escrow_time} min
-            </Text>
+            <Text style={{ fontWeight: "700" }}> 90 min</Text>
           </View>
 
           <PrimaryButton
