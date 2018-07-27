@@ -8,6 +8,7 @@ import {
     StyleSheet,
 } from "react-native";
 import { fonts } from '../../style/resourceHelpers';
+import Touchable from '../../style/Touchable';
 
 const styles = StyleSheet.create({
     settingsItemContainer: {
@@ -38,10 +39,10 @@ class SettingsItem extends Component {
         const { settingsItemContainer, text, arrow } = styles;
         const { styleContainer, textStyle } = this.props;
         return (
-            <View style={[settingsItemContainer, styleContainer]}>
+            <Touchable onPress={this.props.onPress} style={[settingsItemContainer, styleContainer]}>
                 <View><Text style={[text, textStyle]}>{this.props.text}</Text></View>
                 <View><Image style={arrow} source={require('../../img/ic_picker.png')} /></View>
-            </View>
+            </Touchable>
         );
     }
 

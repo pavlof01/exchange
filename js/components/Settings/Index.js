@@ -168,9 +168,9 @@ export default class Settings extends Component {
                         //onValueChange={this.onAdSellEnabledChanged}
                     text="Stop purchases" />*/}
                     <Title text="VERIFICATION" />
-                    <SettingsItem text="ID info" />
-                    <SettingsItem text="Phone number" />
-                    <SettingsItem text="Identity documents" />
+                    <SettingsItem onPress={this.props.openIdInfo} text="ID info" />
+                    <SettingsItem onPress={this.props.openPhoneVerify} text="Phone number" />
+                    <SettingsItem onPress={this.props.openIdentityDocs} text="Identity documents" />
                     <View style={styles.signOutContainer}>
                         <Touchable onPress={this.onLogoutPressed}>
                             <Text style={styles.signOutText}>SIGN OUT</Text>
