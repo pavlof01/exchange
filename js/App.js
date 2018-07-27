@@ -59,9 +59,9 @@ class App extends Component {
 
     // Check push notification and OneSignal subscription statuses
     OneSignal.getPermissionSubscriptionState((status) => {
-      const { pushToken } = status;
-      dispatch(setPushToken(pushToken));
-      Api.post('/one_signal_players', { token: pushToken });
+      const { userId } = status;
+      dispatch(setPushToken(userId));
+      Api.post('/one_signal_players', { token: userId });
     });
   }
 
