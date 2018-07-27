@@ -196,13 +196,13 @@ class ChatView extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
-CHAT
+          {'CHAT'}
         </Text>
         <TouchableOpacity onPress={this.handleToggleChat}>
           <View style={styles.toggleChatBox}>
             <Image source={require('../../img/ic_add_message.png')} style={styles.addIcon} />
             <Text style={styles.toggleChatBoxText}>
-Add message
+              {'Add message'}
             </Text>
             <Image source={require('../../img/ic_picker.png')} style={isOpen ? styles.pickerIconOpen : styles.pickerIcon} />
           </View>
