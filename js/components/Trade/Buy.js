@@ -272,7 +272,6 @@ class Buy extends Component {
                     {received}
                   </Text>
                 </View>
-
                 <Text style={styles.timeLeftText}>
                   {'Time left to pay: '}
                   <Text style={styles.timeLeftTimeText}>
@@ -280,7 +279,6 @@ class Buy extends Component {
                     {' min'}
                   </Text>
                 </Text>
-
               </View>
               <ChatView
                 onStartShouldSetResponderCapture={

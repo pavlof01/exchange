@@ -14,34 +14,88 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Price from '../../values/Price';
-import { currencyCodeToSymbol } from '../../helpers';
-import OnlineStatus from '../../style/OnlineStatus';
+import {
+  currencyCodeToSymbol,
+  getTradeTitle,
+} from '../../helpers';
+import TraderInfo from '../TraderInfo';
 import User from '../../models/User';
 import EscrowTimer from './EscrowTimer';
 import PrimaryButton from '../../style/ActionButton';
+import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
-  header: {
-    color: '#2C09A3',
-    fontWeight: 'bold',
-    fontSize: 24,
-    marginBottom: 8,
+  title: {
+    color: '#9b9b9b',
+    marginEnd: 17,
+    marginStart: 17,
+    marginTop: 16,
+    paddingBottom: 3,
+    marginBottom: 3,
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+    borderBottomColor: '#D5D5D5',
+    borderBottomWidth: 1,
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pickerIcon: {
-    height: 24,
-    width: 24,
-  },
-  info: {
-    margin: 5,
-  },
-  centeredText: {
+  costText: {
+    color: '#2c09a3',
     textAlign: 'center',
-    margin: 8,
+    marginTop: 30,
+    marginBottom: 15,
+    fontSize: 18,
+    fontFamily: fonts.bold.regular,
+  },
+  tradeDescription: {
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#4a4a4a',
+    fontSize: 18,
+    fontFamily: fonts.medium.regular,
+  },
+  tradeDescriptionConfirmed: {
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#F9D749',
+    fontSize: 18,
+    fontFamily: fonts.medium.regular,
+  },
+  tradeDescriptionBold: {
+    color: '#4a4a4a',
+    fontFamily: fonts.bold.regular,
+  },
+  swapContainer: {
+    flexDirection: 'row',
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  swapTextLeft: {
+    flex: 1,
+    color: '#4a4a4a',
+    textAlign: 'right',
+    fontSize: 22,
+    lineHeight: 22,
+    fontFamily: fonts.bold.regular,
+  },
+  swapTextRight: {
+    flex: 1,
+    color: '#4a4a4a',
+    textAlign: 'left',
+    fontSize: 22,
+    lineHeight: 22,
+    fontFamily: fonts.bold.regular,
+  },
+  timeLeftText: {
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#4a4a4a',
+    fontSize: 12,
+    fontFamily: fonts.medium.regular,
+  },
+  timeLeftTimeText: {
+    lineHeight: 24,
+    color: '#2c09a3',
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
   },
   me: {
     flex: 1,
@@ -79,6 +133,15 @@ class Sell extends Component {
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
+  getTradeDescriptionStyleByStatus = (status) => {
+    switch (status) {
+      case 'paid_confirmed':
+        return styles.tradeDescriptionConfirmed;
+      default:
+        return styles.tradeDescription;
+    }
+  };
+
   showInfoAboutPartner = () => {
     this.setState({ showInfoAboutPartner: !this.state.showInfoAboutPartner });
   };
@@ -88,7 +151,7 @@ class Sell extends Component {
   renderMessage = (message) => {
     const messageUserId = message.item.user.id;
     return (
-      <View style={{ paddingLeft: 10, paddingRight: 10, marginTop: 15 }} key={messageUserId}>
+      <View key={messageUserId}>
         <View style={messageUserId === this.props.user.id ? styles.me : styles.trader}>
           {messageUserId === this.props.user.id ? null
             : (
@@ -126,124 +189,82 @@ class Sell extends Component {
   };
 
   render() {
-    const trade = this.props.trade || {};
-    const ad = trade.ad || {};
+    const {
+      user,
+      trade,
+      isOnline,
+      partnerName,
+      messages,
+      sendMessage,
+      onCompleteHandler,
+      onCancelHandler,
+    } = this.props;
+    const { ad } = trade;
+    const currencyCode = trade.ad.currency_code || '';
+    const cryptoCurrencyCode = trade.ad.crypto_currency_code || '';
+    const received = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
+    const send = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
+    let date = '--.--.--';
+    let time = '--:-- (MSK)';
+    try {
+      const paidConfirmedAt = moment(trade.created_at).utcOffset('+0300');
+      date = paidConfirmedAt.format('DD.MM.YYYY');
+      time = `${paidConfirmedAt.format('HH:mm')} (MSK)`;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+    }
     return (
       <ScrollView
         keyboardShouldPersistTaps="always"
         style={{
-          backgroundColor: '#fff', paddingLeft: 10, paddingRight: 10, flex: 1,
+          backgroundColor: '#fff', flex: 1,
         }}
       >
         <View style={this.state.showKeyboard ? styles.displayNone : null}>
-          <View style={{
-            width: '100%',
-            paddingBottom: 0.5,
-            borderBottomWidth: 0.5,
-            borderColor: 'rgba(0,0,0, 0.3)',
-            marginTop: 15,
-          }}
-          >
-            <Text style={{ fontSize: 18, color: 'grey', fontWeight: 'bold' }}>
-TRANSFER VIA
-              {ad.payment_method_code}
+          <Text style={styles.title}>
+            {getTradeTitle(trade.status, ad.payment_method_code).toUpperCase()}
+          </Text>
+          <TraderInfo
+            isOnline={isOnline}
+            traderName={partnerName}
+            completedTradesCount={User.approximateTradesCount(ad.user.completed_trades_count)}
+            countryCode={ad.country_code}
+          />
+          <View style={{ paddingStart: 17, paddingEnd: 17 }}>
+            <Text style={styles.costText}>
+              {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
             </Text>
-          </View>
-          <TouchableOpacity
-            onPress={this.showInfoAboutPartner}
-            style={{
-              width: '100%',
-              paddingBottom: 0.5,
-              borderBottomWidth: 0.5,
-              borderColor: 'rgba(0,0,0, 0.3)',
-              marginTop: 15,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <OnlineStatus isOnline={this.props.isOnline} />
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-              {this.props.partnerName}
+            <Text style={this.getTradeDescriptionStyleByStatus(trade.status)}>
+              {'Your request Trader '}
+              <Text style={styles.tradeDescriptionBold}>
+                {partnerName}
+              </Text>
+              {`\nSELL ONLINE cryptocurrency from\n${date} ${time} `}
             </Text>
-            <Text style={{ marginLeft: 10 }}>
-              {User.approximateTradesCount(this.props.user.completed_trades_count)}
-            </Text>
-          </TouchableOpacity>
-          {this.state.showInfoAboutPartner ? (
-            <View style={{ backgroundColor: '#F8F9FB', paddingBottom: 15, paddingTop: 15 }}>
-              <Text style={{
-                color: '#4A4A4A', fontSize: 10, marginTop: 10, marginBottom: 15,
-              }}
-              >
-Country
+            <View style={styles.swapContainer}>
+              <Text style={styles.swapTextLeft}>
+                {send}
               </Text>
-              <Text style={{ fontSize: 18 }}>
-                {ad.country_code}
-              </Text>
-              <Text style={{
-                color: '#4A4A4A', fontSize: 10, marginTop: 10, marginBottom: 15,
-              }}
-              >
-Term of transaction
-              </Text>
-              <Text style={{ fontSize: 18 }}>
-This advertisement is for cash transactions only. Make a request only when
-                you can make a cash payment within 12 hours.
+              <Image
+                source={require('../../img/ic_swap.png')}
+                style={{
+                  height: 18, width: 18, marginLeft: 15, marginRight: 15,
+                }}
+              />
+              <Text style={styles.swapTextRight}>
+                {received}
               </Text>
             </View>
-          ) : null}
-          <View style={styles.info}>
-            <Text style={styles.centeredText}>
-              <Text
-                style={styles.header}
-              >
-1
-                {' '}
-                {ad.crypto_currency_code}
-                {' '}
-/
-                {' '}
-                {Price.build(ad.price).viewMain}
-                {' '}
-                {currencyCodeToSymbol(ad.currency_code)}
+            <Text style={styles.timeLeftText}>
+              {'Time left to pay: '}
+              <Text style={styles.timeLeftTimeText}>
+                <EscrowTimer expiredAt={trade.escrow_expired_at} />
+                {' min'}
               </Text>
             </Text>
           </View>
-          <Text style={{ textAlign: 'center' }}>
-            Your request Trader
-            {' '}
-            {this.props.partnerName}
-            {' '}
-PURCHASE ONLINE cryptocurrency from
-            {' '}
-            {this.props.createdAt}
-          </Text>
-          <View style={styles.row}>
-            <Text style={[styles.header, styles.centeredText]}>
-              {Price.build(trade.amount * trade.price).viewMain}
-              {' '}
-              {`${ad.currency_code} `}
-            </Text>
-            <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon]} />
-            <Text style={[styles.header, styles.centeredText]}>
-              {` ${Price.build(trade.amount).viewCrypto}`}
-              {' '}
-              {ad.crypto_currency_code}
-            </Text>
-          </View>
-          <View style={{
-            marginTop: 20, justifyContent: 'center', flexDirection: 'row', flex: 1,
-          }}
-          >
-            <Text>
-Time left to pay:
-            </Text>
-            <Text>
-              <EscrowTimer expiredAt={this.props.trade.escrow_expired_at} />
-              {' min'}
 
-            </Text>
-          </View>
         </View>
         <View style={{
           height: !this.state.expandChat ? Dimensions.get('window').height / 2.2 : 35,
