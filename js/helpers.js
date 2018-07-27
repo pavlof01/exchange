@@ -128,6 +128,21 @@ export function isTradeDone(status) {
 }
 
 /**
+ * Определяет успешность сделки по статусу.
+ * @param {string} status - статус сделки.
+ * @return {boolean} - true, если сделка успешно завершена.
+ */
+export function isTradeComplete(status) {
+  switch (status) {
+    case TRADE_STATUS_COMPLETED_BY_SELLER:
+    case TRADE_STATUS_COMPLETED_BY_ADMIN:
+      return true;
+    default:
+      return false;
+  }
+}
+
+/**
  * Возвращает заголовок транзакции по статусу сделки.
  * @param {string} status - статус сделки.
  * @param {string} paymentMethodCode - название способа оплаты.

@@ -11,7 +11,9 @@ import { fonts } from '../../style/resourceHelpers';
 import Price from "../../values/Price";
 import {
   getTradeTitle,
+  isTradeComplete,
 } from '../../helpers';
+import TransactionDetails from "./TransactionDetails";
 
 const styles = StyleSheet.create({
   container: {
@@ -59,26 +61,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
     fontSize: 22,
   },
-  transactionDetailsBox: {
-    backgroundColor: '#f2f6f9',
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingStart: 17,
-    paddingEnd: 17,
-  },
-  transactionNumber: {
-    fontFamily: fonts.medium.regular,
-    fontSize: 14,
-    color: '#000000',
-    marginBottom: 3,
-    lineHeight: 22,
-  },
-  transactionRow: {
-    fontFamily: fonts.medium.regular,
-    fontSize: 14,
-    color: '#000000',
-    lineHeight: 22,
-  },
 });
 
 class TradeReportRating extends Component {
@@ -98,14 +80,18 @@ class TradeReportRating extends Component {
     }
     console.warn(JSON.stringify(trade, null, 2));
     const transactionId = trade.ad.id || '';
-    const send = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
-    const received = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
+    const cryptoValue = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
+    const priceValue = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
+    const send = isUserBuying ? priceValue : cryptoValue;
+    const received = isUserBuying ? cryptoValue : priceValue;
     let date = '--.--.--';
     let time = '--:-- (MSK)';
     try {
       const paidConfirmedAt = moment(trade.paid_confirmed_at).utcOffset('+0300');
-      date = paidConfirmedAt.format('DD.MM.YYYY');
-      time = `${paidConfirmedAt.format('HH:mm')} (MSK)`;
+      if (paidConfirmedAt.isValid()) {
+        date = paidConfirmedAt.format('DD.MM.YYYY');
+        time = `${paidConfirmedAt.format('HH:mm')} (MSK)`;
+      }
     } catch (e) {
     }
     return (
@@ -118,13 +104,17 @@ class TradeReportRating extends Component {
             <Text> for </Text>
             <Text style={styles.tradeSummaryPrice}>{received}</Text>
           </Text>
-          <View style={styles.transactionDetailsBox}>
-            <Text style={styles.transactionNumber}>{`Transaction: №${transactionId}`}</Text>
-            <Text style={styles.transactionRow}>{`Received: ${received}`}</Text>
-            <Text style={styles.transactionRow}>{`Send: ${send}`}</Text>
-            <Text style={styles.transactionRow}>{`Date: ${date}`}</Text>
-            <Text style={styles.transactionRow}>{`Time: ${time}`}</Text>
-          </View>
+          {
+            isTradeComplete(trade.status) && (
+              <TransactionDetails
+                transactionId={transactionId}
+                received={received}
+                send={send}
+                date={date}
+                time={time}
+              />
+            )
+          }
           {/*<Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text>*/}
         </ScrollView>
       </View>
