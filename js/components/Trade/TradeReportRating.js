@@ -100,9 +100,9 @@ class TradeReportRating extends Component {
           <Text style={styles.title}>{getTradeTitle(trade.status, trade.ad.payment_method_code).toUpperCase()}</Text>
           <Text style={styles.tradeDescription}>{`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
           <Text style={styles.tradeSummary}>
-            <Text style={styles.tradeSummaryPrice}>{send}</Text>
-            <Text> for </Text>
             <Text style={styles.tradeSummaryPrice}>{received}</Text>
+            <Text> for </Text>
+            <Text style={styles.tradeSummaryPrice}>{send}</Text>
           </Text>
           {
             isTradeComplete(trade.status) && (
