@@ -3,6 +3,9 @@ export const OPEN_TRADE_REQUEST = 'OPEN_TRADE_REQUEST';
 export const OPEN_PROFILE_REQUEST = 'OPEN_PROFILE_REQUEST';
 export const OPEN_FEEDBACK_REQUEST = 'OPEN_FEEDBACK_REQUEST';
 export const OPEN_ADS = 'OPEN_ADS';
+export const IDINFO = 'ININFO';
+export const PHONE_VERIFY = 'PHONE_VERIFY';
+export const IDENTITY_DOCS = 'IDENTITY_DOCS';
 
 export function newTrade(ad) {
     return {
@@ -35,5 +38,23 @@ export function openFeedback(user_name) {
 export function openAds() {
     return {
         type: OPEN_ADS
+    };
+}
+
+export function openIdInfo() {
+    return {
+        type: IDINFO
+    };
+}
+
+export function openPhoneVerify() {
+    return {
+        type: PHONE_VERIFY
+    };
+}
+
+export function openIdentityDocs() {
+    return {
+        type: IDENTITY_DOCS
     };
 }
