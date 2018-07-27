@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -191,6 +192,7 @@ class Buy extends Component {
 
   render() {
     const {
+      user,
       trade,
       isOnline,
       partnerName,
@@ -272,7 +274,7 @@ class Buy extends Component {
                 </View>
 
                 <Text style={styles.timeLeftText}>
-                  {'Time left to pay:'}
+                  {'Time left to pay: '}
                   <Text style={styles.timeLeftTimeText}>
                     <EscrowTimer expiredAt={trade.escrow_expired_at} />
                     {' min'}
@@ -317,5 +319,16 @@ class Buy extends Component {
     );
   }
 }
+
+Buy.propTypes = {
+  user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  trade: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  isOnline: PropTypes.bool,
+  partnerName: PropTypes.string,
+  messages: PropTypes.array,
+  sendMessage: PropTypes.string,
+  onCompleteHandler: PropTypes.func,
+  onCancelHandler: PropTypes.func,
+};
 
 export default Buy;
