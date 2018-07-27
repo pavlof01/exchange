@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
   Text,
   StyleSheet,
-} from "react-native";
+} from 'react-native';
 import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
@@ -41,11 +41,21 @@ class TransactionDetails extends Component {
     } = this.props;
     return (
       <View style={styles.transactionDetailsBox}>
-        <Text style={styles.transactionNumber}>{`Transaction: №${transactionId}`}</Text>
-        <Text style={styles.transactionRow}>{`Received: ${received}`}</Text>
-        <Text style={styles.transactionRow}>{`Send: ${send}`}</Text>
-        <Text style={styles.transactionRow}>{`Date: ${date}`}</Text>
-        <Text style={styles.transactionRow}>{`Time: ${time}`}</Text>
+        <Text style={styles.transactionNumber}>
+          {`Transaction: №${transactionId}`}
+        </Text>
+        <Text style={styles.transactionRow}>
+          {`Received: ${received}`}
+        </Text>
+        <Text style={styles.transactionRow}>
+          {`Send: ${send}`}
+        </Text>
+        <Text style={styles.transactionRow}>
+          {`Date: ${date}`}
+        </Text>
+        <Text style={styles.transactionRow}>
+          {`Time: ${time}`}
+        </Text>
       </View>
     );
   }
