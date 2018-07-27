@@ -22,6 +22,14 @@ import PrimaryButton from '../../style/ActionButton';
 import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
+  displayNone: {
+    display: 'none',
+  },
+  bottomButtons: {
+    paddingBottom: 24,
+    paddingStart: 60,
+    paddingEnd: 60,
+  },
   title: {
     color: '#9b9b9b',
     marginEnd: 17,
@@ -93,12 +101,6 @@ const styles = StyleSheet.create({
     color: '#2c09a3',
     fontSize: 16,
     fontFamily: fonts.bold.regular,
-  },
-  displayNone: {
-    display: 'none',
-  },
-  bottomButtons: {
-    paddingBottom: 24,
   },
 });
 
@@ -228,7 +230,7 @@ class Sell extends Component {
           onSubmitEditing={() => sendMessage(textMessage, () => this.setState({ textMessage: '' }))}
           messageValue={textMessage}
         />
-        <View style={showKeyboard ? styles.displayNone : styles.bottomButtons}>
+        <View style={(showKeyboard) ? styles.displayNone : styles.bottomButtons}>
           {['paid_confirmed', 'expired_and_paid'].includes(trade.status)
             && (
             <PrimaryButton
