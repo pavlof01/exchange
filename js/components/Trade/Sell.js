@@ -14,7 +14,10 @@ import ChatView from './ChatView';
 import {
   currencyCodeToSymbol,
   getTradeTitle,
+  TRADE_STATUS_PAID_CONFIRMED,
+  TRADE_STATUS_EXPIRED_AND_PAID,
 } from '../../helpers';
+import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import TraderInfo from '../TraderInfo';
 import User from '../../models/User';
 import EscrowTimer from './EscrowTimer';
@@ -22,6 +25,9 @@ import PrimaryButton from '../../style/ActionButton';
 import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   displayNone: {
     display: 'none',
   },
@@ -126,7 +132,7 @@ class Sell extends Component {
 
   getTradeDescriptionStyleByStatus = (status) => {
     switch (status) {
-      case 'paid_confirmed':
+      case TRADE_STATUS_PAID_CONFIRMED:
         return styles.tradeDescriptionConfirmed;
       default:
         return styles.tradeDescription;
@@ -164,85 +170,97 @@ class Sell extends Component {
       console.log(e);
     }
     return (
-      <ScrollView
-        keyboardShouldPersistTaps="always"
-        style={{
-          backgroundColor: '#fff', flex: 1,
-        }}
+      <KeyboardAvoidingWrapView
+        behavior="padding"
+        style={styles.container}
       >
-        <View style={showKeyboard ? styles.displayNone : null}>
-          <Text style={styles.title}>
-            {getTradeTitle(trade.status, ad.payment_method_code).toUpperCase()}
-          </Text>
-          <TraderInfo
-            isOnline={isOnline}
-            traderName={partnerName}
-            completedTradesCount={User.approximateTradesCount(ad.user.completed_trades_count)}
-            countryCode={ad.country_code}
-          />
-          <View style={{ paddingStart: 17, paddingEnd: 17 }}>
-            <Text style={styles.costText}>
-              {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
-            </Text>
-            <Text style={this.getTradeDescriptionStyleByStatus(trade.status)}>
-              {'Your request Trader '}
-              <Text style={styles.tradeDescriptionBold}>
-                {partnerName}
+        <View
+          onStartShouldSetResponderCapture={() => {
+            this.setState({ enableScrollViewScroll: true });
+          }}
+          style={styles.container}
+        >
+          <ScrollView
+            keyboardShouldPersistTaps="always"
+            style={{
+              backgroundColor: '#fff', flex: 1,
+            }}
+          >
+            <View style={showKeyboard ? styles.displayNone : null}>
+              <Text style={styles.title}>
+                {getTradeTitle(trade.status, ad.payment_method_code).toUpperCase()}
               </Text>
-              {`\nSELL ONLINE cryptocurrency from\n${date} ${time} `}
-            </Text>
-            <View style={styles.swapContainer}>
-              <Text style={styles.swapTextLeft}>
-                {send}
-              </Text>
-              <Image
-                source={require('../../img/ic_swap.png')}
-                style={{
-                  height: 18, width: 18, marginLeft: 15, marginRight: 15,
-                }}
+              <TraderInfo
+                isOnline={isOnline}
+                traderName={partnerName}
+                completedTradesCount={User.approximateTradesCount(ad.user.completed_trades_count)}
+                countryCode={ad.country_code}
               />
-              <Text style={styles.swapTextRight}>
-                {received}
-              </Text>
-            </View>
-            <Text style={styles.timeLeftText}>
-              {'Time left to pay: '}
-              <Text style={styles.timeLeftTimeText}>
-                <EscrowTimer expiredAt={trade.escrow_expired_at} />
-                {' min'}
-              </Text>
-            </Text>
-          </View>
+              <View style={{ paddingStart: 17, paddingEnd: 17 }}>
+                <Text style={styles.costText}>
+                  {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
+                </Text>
+                <Text style={this.getTradeDescriptionStyleByStatus(trade.status)}>
+                  {'Your request Trader '}
+                  <Text style={styles.tradeDescriptionBold}>
+                    {partnerName}
+                  </Text>
+                  {`\nSELL ONLINE cryptocurrency from\n${date} ${time} `}
+                </Text>
+                <View style={styles.swapContainer}>
+                  <Text style={styles.swapTextLeft}>
+                    {send}
+                  </Text>
+                  <Image
+                    source={require('../../img/ic_swap.png')}
+                    style={{
+                      height: 18, width: 18, marginLeft: 15, marginRight: 15,
+                    }}
+                  />
+                  <Text style={styles.swapTextRight}>
+                    {received}
+                  </Text>
+                </View>
+                <Text style={styles.timeLeftText}>
+                  {'Time left to pay: '}
+                  <Text style={styles.timeLeftTimeText}>
+                    <EscrowTimer expiredAt={trade.escrow_expired_at} />
+                    {' min'}
+                  </Text>
+                </Text>
+              </View>
 
-        </View>
-        <ChatView
-          onStartShouldSetResponderCapture={
-            () => {
-              this.setState({ enableScrollViewScroll: false });
-              if (enableScrollViewScroll === false) {
-                this.setState({ enableScrollViewScroll: true });
+            </View>
+            <ChatView
+              onStartShouldSetResponderCapture={
+                () => {
+                  this.setState({ enableScrollViewScroll: false });
+                  if (enableScrollViewScroll === false) {
+                    this.setState({ enableScrollViewScroll: true });
+                  }
+                }
               }
-            }
-          }
-          messages={messages}
-          userId={user.id}
-          onChangeText={newTextMessage => this.setState({ textMessage: newTextMessage })}
-          onSubmitEditing={() => sendMessage(textMessage, () => this.setState({ textMessage: '' }))}
-          messageValue={textMessage}
-        />
-        <View style={(showKeyboard) ? styles.displayNone : styles.bottomButtons}>
-          {['paid_confirmed', 'expired_and_paid'].includes(trade.status)
-            && (
-            <PrimaryButton
-              onPress={onPaidHandler}
-              title="Send crypt"
-              color="#5B6EFF"
-              style={{ marginTop: 30 }}
+              messages={messages}
+              userId={user.id}
+              onChangeText={newTextMessage => this.setState({ textMessage: newTextMessage })}
+              onSubmitEditing={() => sendMessage(textMessage, () => this.setState({ textMessage: '' }))}
+              messageValue={textMessage}
             />
-            )
-          }
+            <View style={(showKeyboard) ? styles.displayNone : styles.bottomButtons}>
+              {[TRADE_STATUS_PAID_CONFIRMED, TRADE_STATUS_EXPIRED_AND_PAID].includes(trade.status)
+                && (
+                <PrimaryButton
+                  onPress={onPaidHandler}
+                  title="Send crypt"
+                  color="#5B6EFF"
+                  style={{ marginTop: 30 }}
+                />
+                )
+              }
+            </View>
+          </ScrollView>
         </View>
-      </ScrollView>
+      </KeyboardAvoidingWrapView>
     );
   }
 }

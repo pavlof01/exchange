@@ -20,6 +20,7 @@ import TraderInfo from '../TraderInfo';
 import {
   currencyCodeToSymbol,
   getTradeTitle,
+  TRADE_STATUS_PAID_CONFIRMED,
 } from '../../helpers';
 
 const styles = StyleSheet.create({
@@ -141,7 +142,7 @@ class Buy extends Component {
 
   getTradeDescriptionStyleByStatus = (status) => {
     switch (status) {
-      case 'paid_confirmed':
+      case TRADE_STATUS_PAID_CONFIRMED:
         return styles.tradeDescriptionConfirmed;
       default:
         return styles.tradeDescription;
