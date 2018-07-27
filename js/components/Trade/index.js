@@ -1,25 +1,30 @@
 import React, { Component } from 'react';
+import {
+  ActivityIndicator,
+  View,
+} from 'react-native';
+import Api from '../../services/Api';
 
-import { Alert, ActivityIndicator, View } from 'react-native';
-import Api from "../../services/Api";
-
-import { tradePartner, tradeType, tradeTypeBuy } from "../../helpers";
+import {
+  tradePartner,
+  tradeType,
+  tradeTypeBuy,
+  isTradeDone,
+  keysToCamelCase,
+} from '../../helpers';
 import Buy from './Buy';
 import Sell from './Sell';
-import { createBasicNavigationOptions } from "../../style/navigation";
-import { keysToCamelCase } from "../../helpers";
+import { createBasicNavigationOptions } from '../../style/navigation';
 import ModalDialog from '../../style/ModalDialog';
-import Feedback from './Feedback';
 import TradeReportRating from './TradeReportRating';
 
 export default class Trade extends Component {
-    static navigationOptions = createBasicNavigationOptions('Сделка');
+  static navigationOptions = createBasicNavigationOptions('Trade');
 
   state = {
     pending: false,
     errors: undefined,
     messages: [],
-    ws: null,
     isConfirming: false,
     tradeEndpoint: null,
   };
@@ -34,12 +39,12 @@ export default class Trade extends Component {
 
   componentWillUnmount() {
     if (this.socket instanceof WebSocket) {
-      this.socket.close()
+      this.socket.close();
     }
   }
 
   onConnect = () => {
-    let intervalId = setInterval(() => {
+    const intervalId = setInterval(() => {
       if (!!this.props.trade.conversation_id) {
         switch (this.socket.readyState) {
           case this.socket.CLOSING:
@@ -68,7 +73,6 @@ export default class Trade extends Component {
         break;
       default:
         let message = data.message;
-        console.warn(JSON.stringify(message, null, 2));
         if (message.messages) {
           this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
         } else if (message.error) {
@@ -79,16 +83,16 @@ export default class Trade extends Component {
   };
 
   onDisconnect = (event) => {
-    event.wasClean ?
-      console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
-      console.warn('Disconnect (Api::V1::ChatChannel):', event);
+    event.wasClean
+      ? console.log('Disconnect was clean (Api::V1::ChatChannel)')
+      : console.log('Disconnect (Api::V1::ChatChannel):', event);
   };
 
   sendMessage = (params = {}) => {
-    this.setState({error: null});
+    this.setState({ error: null });
     this.send({
       command: 'message',
-      data: JSON.stringify({...params, action: 'create'}),
+      data: JSON.stringify({ ...params, action: 'create' }),
     });
   };
 
@@ -98,9 +102,9 @@ export default class Trade extends Component {
         ...data,
         identifier: JSON.stringify({
           channel: 'Api::V1::ChatChannel',
-          conversation_id: this.props.trade.conversation_id
-        })
-      })
+          conversation_id: this.props.trade.conversation_id,
+        }),
+      }),
     );
   };
 
@@ -111,15 +115,15 @@ export default class Trade extends Component {
         identifier: JSON.stringify({
           channel: 'Api::V1::ChatChannel',
           conversation_id: conversationId
-        })
-      })
+        }),
+      }),
     );
   };
 
-      onSubmit = (msg, clearInput) => {
-            clearInput();
-            this.sendMessage({body: msg});
-      };
+  onSubmit = (msg, clearInput) => {
+    clearInput();
+    this.sendMessage({ body: msg });
+  };
 
   tradeActionHandlerFactory = (endpoint) => () => {
     this.setState({
@@ -155,7 +159,9 @@ export default class Trade extends Component {
   };
 
   onPaidHandler = this.tradeActionHandlerFactory('/complete');
+
   onCancelHandler = this.tradeActionHandlerFactory('/cancel');
+
   onCompleteHandler = this.tradeActionHandlerFactory('/confirm');
 
   get createdAt() {
@@ -171,28 +177,44 @@ export default class Trade extends Component {
   }
 
   renderBuyActionBlock() {
-    return <Buy
-      messages={this.state.messages}
-      sendMessage={this.onSubmit}
-      partnerName={this.partner.user_name}
-      isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
-      onCancelHandler={this.onCancelHandler}
-      onCompleteHandler={this.onCompleteHandler}
-      {...this.props}
-    />;
+    const {
+      messages,
+    } = this.state;
+    const {
+      partnerActivityStatuses,
+    } = this.props;
+    return (
+      <Buy
+        messages={messages}
+        sendMessage={this.onSubmit}
+        partnerName={this.partner.user_name}
+        isOnline={partnerActivityStatuses[this.partner.id]}
+        onCancelHandler={this.onCancelHandler}
+        onCompleteHandler={this.onCompleteHandler}
+        {...this.props}
+      />
+    );
   }
 
   renderSellActionBlock() {
-    return <Sell
-      messages={this.state.messages}
-      sendMessage={this.onSubmit}
-      partnerName={this.partner.user_name}
-      isOnline = {this.props.partnerActivityStatuses[this.partner.id]}
-      createdAt = {this.createdAt}
-      onPaidHandler={this.onPaidHandler}
-      {...this.props}
-    />;
-  };
+    const {
+      messages,
+    } = this.state;
+    const {
+      partnerActivityStatuses,
+    } = this.props;
+    return (
+      <Sell
+        messages={messages}
+        sendMessage={this.onSubmit}
+        partnerName={this.partner.user_name}
+        isOnline={partnerActivityStatuses[this.partner.id]}
+        createdAt={this.createdAt}
+        onPaidHandler={this.onPaidHandler}
+        {...this.props}
+      />
+    );
+  }
 
   renderTradeCompleted = () => {
     return (
@@ -230,10 +252,11 @@ export default class Trade extends Component {
     };
 
   isTradeCompleted = () => {
-    return this.isTradeLoaded() && (
-      this.props.trade.status === 'expired_and_paid'
-      || this.props.trade.status === 'completed_by_seller'
-    );
+    if (this.isTradeLoaded()) {
+      const { status } = this.props.trade;
+      return isTradeDone(status);
+    }
+    return false;
   };
 
     get partner() {
@@ -253,8 +276,6 @@ export default class Trade extends Component {
   };
 
   render() {
-    let trade = this.props.trade || {};
-    console.warn('status ' + this.props.trade.status);
     if (!this.isTradeLoaded()) return this.renderProgress();
     return (
       <View style={{ flex: 1 }}>
@@ -267,6 +288,6 @@ export default class Trade extends Component {
           onPositivePress={this.sendSelectedTradeRequest}
         />
       </View>
-    )
+    );
   }
 }

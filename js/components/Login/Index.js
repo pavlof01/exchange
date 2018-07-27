@@ -42,7 +42,6 @@ export default class Login extends Component {
         this.props.fetchDictionary();
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
-        //this.onSignUpPressed();
     }
 
     componentWillUnmount() {

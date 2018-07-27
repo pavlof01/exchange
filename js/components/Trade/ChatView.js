@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
@@ -8,9 +8,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from "react-native";
+} from 'react-native';
+import moment from 'moment';
 import { fonts } from '../../style/resourceHelpers';
-import moment from "moment";
 
 const styles = StyleSheet.create({
   container: {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   messageBubble: {
     width: '85%',
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     padding: 10,
     flex: 1,
     borderRadius: 4,
@@ -97,15 +97,24 @@ const styles = StyleSheet.create({
   },
   me: {
     flex: 1,
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
   },
   trader: {
     flex: 1,
   },
+  messageInput: {
+    color: '#4a4a4a',
+    fontFamily: fonts.medium.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingStart: 17,
+    paddingEnd: 17,
+  },
 });
 
 class ChatView extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -115,15 +124,14 @@ class ChatView extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
+    const { isOpen } = this.state;
+    if (prevState.isOpen !== isOpen && isOpen) {
       this.focus();
     }
   }
 
   handleToggleChat = () => {
-    const {
-      isOpen,
-    } = this.state;
+    const { isOpen } = this.state;
     this.setState({ isOpen: !isOpen });
   };
 
@@ -134,24 +142,27 @@ class ChatView extends Component {
   };
 
   handleChangeText = (value) => {
-    if (typeof this.props.onChangeText === 'function') {
-      this.props.onChangeText(value);
+    const { onChangeText } = this.props;
+    if (typeof onChangeText === 'function') {
+      onChangeText(value);
     }
   };
 
   handleSubmitEditing = () => {
-    if (typeof this.props.onSubmitEditing === 'function') {
-      this.props.onSubmitEditing();
+    const { onSubmitEditing } = this.props;
+    if (typeof onSubmitEditing === 'function') {
+      onSubmitEditing();
     }
   };
 
   handleStartShouldSetResponderCapture = () => {
-    if (typeof this.props.onStartShouldSetResponderCapture === 'function') {
-      this.props.onStartShouldSetResponderCapture();
+    const { onStartShouldSetResponderCapture } = this.props;
+    if (typeof onStartShouldSetResponderCapture === 'function') {
+      onStartShouldSetResponderCapture();
     }
   };
 
-  _keyExtractor = (item) => item.id;
+  _keyExtractor = item => item.id;
 
   renderMessage = (message) => {
     const {
@@ -159,18 +170,27 @@ class ChatView extends Component {
     } = this.props;
     const messageUserId = message.item.user.id;
     const isMyMessage = messageUserId === userId;
-    const messageTime = `${moment(message.item.date).utcOffset('+0300').format("HH:mm")} (MSK)`;
+    const messageTime = `${moment(message.item.date).utcOffset('+0300').format('HH:mm')} (MSK)`;
     return (
-      <View key={messageUserId} style={[styles.messageContainer, isMyMessage ? styles.me : styles.trader]}>
+      <View
+        key={messageUserId}
+        style={[styles.messageContainer, isMyMessage ? styles.me : styles.trader]}
+      >
         {
           !isMyMessage && (
-            <Text style={styles.messageUserName}>{message.item.user.userName}</Text>
+            <Text style={styles.messageUserName}>
+              {message.item.user.userName}
+            </Text>
           )
         }
         <View style={styles.messageBubble}>
-          <Text style={styles.messageBubbleText}>{message.item.body}</Text>
+          <Text style={styles.messageBubbleText}>
+            {message.item.body}
+          </Text>
         </View>
-        <Text style={styles.messageTimeText}>{messageTime}</Text>
+        <Text style={styles.messageTimeText}>
+          {messageTime}
+        </Text>
       </View>
     );
   };
@@ -185,11 +205,15 @@ class ChatView extends Component {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{'CHAT'}</Text>
+        <Text style={styles.title}>
+          {'CHAT'}
+        </Text>
         <TouchableOpacity onPress={this.handleToggleChat}>
           <View style={styles.toggleChatBox}>
             <Image source={require('../../img/ic_add_message.png')} style={styles.addIcon} />
-            <Text style={styles.toggleChatBoxText}>Add message</Text>
+            <Text style={styles.toggleChatBoxText}>
+              {'Add message'}
+            </Text>
             <Image source={require('../../img/ic_picker.png')} style={isOpen ? styles.pickerIconOpen : styles.pickerIcon} />
           </View>
         </TouchableOpacity>
@@ -205,7 +229,10 @@ class ChatView extends Component {
                 inverted
               />
               <TextInput
+                // eslint-disable-next-line arrow-parens, no-return-assign
                 ref={(ref) => this.input = ref}
+                style={styles.messageInput}
+                autoCorrect={false}
                 placeholder="You may leave a message"
                 underlineColorAndroid="transparent"
                 onChangeText={this.handleChangeText}
@@ -221,9 +248,9 @@ class ChatView extends Component {
 }
 
 ChatView.propTypes = {
-  isOpen: PropTypes.boolean,
+  isOpen: PropTypes.bool,
   userId: PropTypes.number,
-  messages: PropTypes.array,
+  messages: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   onChangeText: PropTypes.func,
   onSubmitEditing: PropTypes.func,
   onStartShouldSetResponderCapture: PropTypes.func,
