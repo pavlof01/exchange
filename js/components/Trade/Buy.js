@@ -323,7 +323,7 @@ Buy.propTypes = {
   trade: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   isOnline: PropTypes.bool,
   partnerName: PropTypes.string,
-  messages: PropTypes.array,
+  messages: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   sendMessage: PropTypes.string,
   onCompleteHandler: PropTypes.func,
   onCancelHandler: PropTypes.func,
