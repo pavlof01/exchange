@@ -4,16 +4,13 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  TouchableOpacity,
   ScrollView,
   Image,
-  FlatList,
   Keyboard,
-  Dimensions,
 } from 'react-native';
 import moment from 'moment';
 import Price from '../../values/Price';
+import ChatView from './ChatView';
 import {
   currencyCodeToSymbol,
   getTradeTitle,
@@ -97,13 +94,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fonts.bold.regular,
   },
-  me: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  trader: {
-    flex: 1,
-  },
   displayNone: {
     display: 'none',
   },
@@ -115,9 +105,8 @@ const styles = StyleSheet.create({
 class Sell extends Component {
   state = {
     textMessage: '',
-    showInfoAboutPartner: false,
     showKeyboard: false,
-    expandChat: true,
+    enableScrollViewScroll: true,
   };
 
   _keyboardDidShow = () => {
@@ -142,52 +131,6 @@ class Sell extends Component {
     }
   };
 
-  showInfoAboutPartner = () => {
-    this.setState({ showInfoAboutPartner: !this.state.showInfoAboutPartner });
-  };
-
-  _keyExtractor = item => item.id;
-
-  renderMessage = (message) => {
-    const messageUserId = message.item.user.id;
-    return (
-      <View key={messageUserId}>
-        <View style={messageUserId === this.props.user.id ? styles.me : styles.trader}>
-          {messageUserId === this.props.user.id ? null
-            : (
-              <Text style={{ marginBottom: 10, color: 'grey' }}>
-                {message.item.user.userName}
-              </Text>
-            )}
-          <View style={{
-            width: '85%', backgroundColor: '#ffffff', padding: 10, flex: 1, borderRadius: 10,
-          }}
-          >
-            {message.item.body.length
-              ? (
-                <Text>
-                  {message.item.body}
-                </Text>
-              )
-              : (
-                <Image
-                  style={{ width: 150, height: 150 }}
-                  source={{ uri: `http://91.228.155.81${message.item.attachment.url}` }}
-                />
-              )}
-          </View>
-          <Text
-            style={{ fontSize: 12, marginTop: 5, color: 'grey' }}
-          >
-            {moment(message.item.date).format('LT')}
-            {' '}
-(MSK)
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
   render() {
     const {
       user,
@@ -196,9 +139,13 @@ class Sell extends Component {
       partnerName,
       messages,
       sendMessage,
-      onCompleteHandler,
-      onCancelHandler,
+      onPaidHandler,
     } = this.props;
+    const {
+      enableScrollViewScroll,
+      showKeyboard,
+      textMessage,
+    } = this.state;
     const { ad } = trade;
     const currencyCode = trade.ad.currency_code || '';
     const cryptoCurrencyCode = trade.ad.crypto_currency_code || '';
@@ -221,7 +168,7 @@ class Sell extends Component {
           backgroundColor: '#fff', flex: 1,
         }}
       >
-        <View style={this.state.showKeyboard ? styles.displayNone : null}>
+        <View style={showKeyboard ? styles.displayNone : null}>
           <Text style={styles.title}>
             {getTradeTitle(trade.status, ad.payment_method_code).toUpperCase()}
           </Text>
@@ -266,49 +213,26 @@ class Sell extends Component {
           </View>
 
         </View>
-        <View style={{
-          height: !this.state.expandChat ? Dimensions.get('window').height / 2.2 : 35,
-          marginBottom: 15,
-          marginTop: 15,
-        }}
-        >
-          <TouchableOpacity onPress={() => this.setState({ expandChat: !this.state.expandChat })}>
-            <View
-              style={{
-                width: '100%', borderBottomWidth: 0.5, borderColor: 'grey', paddingBottom: 2, marginBottom: 15,
-              }}
-            >
-              <Text style={{ color: 'grey' }}>
-CHAT
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <FlatList
-            keyboardShouldPersistTaps="handled"
-            style={{ backgroundColor: '#F2F3F4' }}
-            ref={ref => this.messagesFlatList = ref}
-            data={this.props.messages}
-            keyExtractor={this._keyExtractor}
-            renderItem={this.renderMessage}
-            inverted
-          />
-          <TextInput
-            style={this.state.expandChat ? [styles.displayNone, { height: 30 }] : null}
-            placeholder="Enter message"
-            // returnKeyType='send'
-            maxLength={128}
-            // enablesReturnKeyAutomatically
-            onSubmitEditing={() => this.props.sendMessage(this.state.textMessage, () => this.setState({ textMessage: '' }))}
-            value={this.state.textMessage}
-            underlineColorAndroid="transparent"
-            onChangeText={textMessage => this.setState({ textMessage })}
-          />
-        </View>
-        <View style={this.state.showKeyboard ? styles.displayNone : styles.bottomButtons}>
-          {['paid_confirmed', 'expired_and_paid'].includes(this.props.trade.status)
+        <ChatView
+          onStartShouldSetResponderCapture={
+            () => {
+              this.setState({ enableScrollViewScroll: false });
+              if (enableScrollViewScroll === false) {
+                this.setState({ enableScrollViewScroll: true });
+              }
+            }
+          }
+          messages={messages}
+          userId={user.id}
+          onChangeText={newTextMessage => this.setState({ textMessage: newTextMessage })}
+          onSubmitEditing={() => sendMessage(textMessage, () => this.setState({ textMessage: '' }))}
+          messageValue={textMessage}
+        />
+        <View style={showKeyboard ? styles.displayNone : styles.bottomButtons}>
+          {['paid_confirmed', 'expired_and_paid'].includes(trade.status)
             && (
             <PrimaryButton
-              onPress={this.props.onPaidHandler}
+              onPress={onPaidHandler}
               title="Send crypt"
               color="#5B6EFF"
               style={{ marginTop: 30 }}
