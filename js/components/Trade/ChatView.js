@@ -124,7 +124,7 @@ class ChatView extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isOpen } = this.props;
+    const { isOpen } = this.state;
     if (prevState.isOpen !== isOpen && isOpen) {
       this.focus();
     }
@@ -232,6 +232,7 @@ class ChatView extends Component {
                 // eslint-disable-next-line arrow-parens, no-return-assign
                 ref={(ref) => this.input = ref}
                 style={styles.messageInput}
+                autoCorrect={false}
                 placeholder="You may leave a message"
                 underlineColorAndroid="transparent"
                 onChangeText={this.handleChangeText}

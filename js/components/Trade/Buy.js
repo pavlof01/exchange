@@ -120,24 +120,25 @@ class Buy extends Component {
   state = {
     textMessage: '',
     showKeyboard: false,
-    expandChat: true,
     enableScrollViewScroll: true,
   };
 
-  _keyboardDidShow = () => {
-    const { expandChat } = this.state;
-    if (!expandChat) {
-      this.setState({ showKeyboard: true });
-    }
+  keyboardWillShow = () => {
+    // this.setState({ showKeyboard: true });
   };
 
-  _keyboardDidHide = () => {
+  keyboardWillHide = () => {
     this.setState({ showKeyboard: false });
   };
 
   componentDidMount() {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
   }
 
   getTradeDescriptionStyleByStatus = (status) => {
