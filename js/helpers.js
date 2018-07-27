@@ -58,6 +58,101 @@ export function currencyCodeToSymbol(code) {
   }[code] || code;
 }
 
+/**
+ * сделка только создана.
+ * @constant {string} TRADE_STATUS_NEW
+ */
+export const TRADE_STATUS_NEW = 'new';
+/**
+ * покупатель нажал "оплатить".
+ * @constant {string} TRADE_STATUS_PAID_CONFIRMED
+ */
+export const TRADE_STATUS_PAID_CONFIRMED = 'paid_confirmed';
+/**
+ * продавец отпустил крипту, сделка успешно завершена.
+ * @constant {string} TRADE_STATUS_COMPLETED_BY_SELLER
+ */
+export const TRADE_STATUS_COMPLETED_BY_SELLER = 'completed_by_seller';
+/**
+ * была спорная ситуация, крипту отпустил админ.
+ * @constant {string} TRADE_STATUS_COMPLETED_BY_ADMIN
+ */
+export const TRADE_STATUS_COMPLETED_BY_ADMIN = 'completed_by_admin';
+/**
+ * сделка отменена.
+ * @constant {string} TRADE_STATUS_CANCELLED
+ */
+export const TRADE_STATUS_CANCELLED = 'cancelled';
+/**
+ * покупатель нажал "отменить" сделку.
+ * @constant {string} TRADE_STATUS_CANCELLED_BY_BUYER
+ */
+export const TRADE_STATUS_CANCELLED_BY_BUYER = 'cancelled_by_buyer';
+/**
+ * была спорная ситуация, крипту отпустил админ.
+ * @constant {string} TRADE_STATUS_CANCELLED_BY_ADMIN
+ */
+export const TRADE_STATUS_CANCELLED_BY_ADMIN = 'cancelled_by_admin';
+/**
+ * спорная ситуация, покупатель нажал "я оплатил", но `продавец не отпускает крипту.
+ * @constant {string} TRADE_STATUS_EXPIRED_AND_PAID
+ */
+export const TRADE_STATUS_EXPIRED_AND_PAID = 'expired_and_paid';
+/**
+ * покупатель не оплатил, время вышло.
+ * @constant {string} TRADE_STATUS_EXPIRED
+ */
+export const TRADE_STATUS_EXPIRED = 'expired';
+
+/**
+ * Определяет завершенность сделки по статусу.
+ * @param {string} status - статус сделки.
+ * @return {boolean} - true, если сделка завершена.
+ */
+export function isTradeDone(status) {
+  switch (status) {
+    case TRADE_STATUS_NEW:
+    case TRADE_STATUS_PAID_CONFIRMED:
+      return false;
+    case TRADE_STATUS_COMPLETED_BY_SELLER:
+    case TRADE_STATUS_COMPLETED_BY_ADMIN:
+    case TRADE_STATUS_CANCELLED:
+    case TRADE_STATUS_CANCELLED_BY_BUYER:
+    case TRADE_STATUS_CANCELLED_BY_ADMIN:
+    case TRADE_STATUS_EXPIRED_AND_PAID:
+    case TRADE_STATUS_EXPIRED:
+      return true;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Возвращает заголовок транзакции по статусу сделки.
+ * @param {string} status - статус сделки.
+ * @param {string} paymentMethodCode - название способа оплаты.
+ * @return {string} - заголовок транзакции.
+ */
+export function getTradeTitle(status, paymentMethodCode) {
+  switch (status) {
+    case TRADE_STATUS_NEW:
+    case TRADE_STATUS_PAID_CONFIRMED:
+      return `Transfer via ${paymentMethodCode}`;
+    case TRADE_STATUS_COMPLETED_BY_SELLER:
+    case TRADE_STATUS_COMPLETED_BY_ADMIN:
+      return 'Transaction complete';
+    case TRADE_STATUS_CANCELLED:
+    case TRADE_STATUS_CANCELLED_BY_BUYER:
+    case TRADE_STATUS_CANCELLED_BY_ADMIN:
+      return 'Transaction cancelled';
+    case TRADE_STATUS_EXPIRED_AND_PAID:
+    case TRADE_STATUS_EXPIRED:
+      return 'Transaction expired';
+    default:
+      return '';
+  }
+}
+
 export const tradeTypeBuy = 'buy';
 export const tradeTypeSell = 'sell';
 

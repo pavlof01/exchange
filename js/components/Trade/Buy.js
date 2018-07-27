@@ -19,6 +19,9 @@ import moment from "moment";
 import { fonts } from "../../style/resourceHelpers";
 import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import TraderInfo from '../TraderInfo';
+import {
+  getTradeTitle,
+} from "../../helpers";
 
 const styles = StyleSheet.create({
   container: {
@@ -219,7 +222,7 @@ export default class Buy extends Component {
             keyBoardShouldPersistTaps={'never'}
           >
             <View style={this.state.showKeyboard ? styles.displayNone : null}>
-              <Text style={styles.title}>{`Transfer via ${ad.payment_method_code}`.toUpperCase()}</Text>
+              <Text style={styles.title}>{getTradeTitle(trade.status, ad.payment_method_code).toUpperCase()}</Text>
               <TraderInfo
                 isOnline={this.props.isOnline}
                 traderName={this.props.partnerName}

@@ -3,7 +3,12 @@ import React, { Component } from 'react';
 import { Alert, ActivityIndicator, View } from 'react-native';
 import Api from "../../services/Api";
 
-import { tradePartner, tradeType, tradeTypeBuy } from "../../helpers";
+import {
+  tradePartner,
+  tradeType,
+  tradeTypeBuy,
+  isTradeDone,
+} from "../../helpers";
 import Buy from './Buy';
 import Sell from './Sell';
 import { createBasicNavigationOptions } from "../../style/navigation";
@@ -230,10 +235,11 @@ export default class Trade extends Component {
     };
 
   isTradeCompleted = () => {
-    return this.isTradeLoaded() && (
-      this.props.trade.status === 'expired_and_paid'
-      || this.props.trade.status === 'completed_by_seller'
-    );
+    if (this.isTradeLoaded()) {
+      const { status } = this.props.trade;
+      return isTradeDone(status);
+    }
+    return false;
   };
 
     get partner() {

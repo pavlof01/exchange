@@ -9,6 +9,9 @@ import {
 import moment from 'moment';
 import { fonts } from '../../style/resourceHelpers';
 import Price from "../../values/Price";
+import {
+  getTradeTitle,
+} from '../../helpers';
 
 const styles = StyleSheet.create({
   container: {
@@ -108,7 +111,7 @@ class TradeReportRating extends Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-          <Text style={styles.title}>{'Transaction complete'.toUpperCase()}</Text>
+          <Text style={styles.title}>{getTradeTitle(trade.status, trade.ad.payment_method_code).toUpperCase()}</Text>
           <Text style={styles.tradeDescription}>{`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
           <Text style={styles.tradeSummary}>
             <Text style={styles.tradeSummaryPrice}>{send}</Text>
