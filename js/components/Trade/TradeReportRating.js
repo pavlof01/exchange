@@ -78,7 +78,6 @@ class TradeReportRating extends Component {
     if (trade && trade.ad && trade.ad.payment_method_code) {
       paymentMethodCode = trade.ad.payment_method_code;
     }
-    console.warn(JSON.stringify(trade, null, 2));
     const transactionId = trade.ad.id || '';
     const cryptoValue = `${Price.build(trade.amount).viewCrypto} ${cryptoCurrencyCode}`;
     const priceValue = `${Price.build(trade.amount * trade.price).viewMain} ${currencyCode}`;
@@ -113,9 +112,7 @@ class TradeReportRating extends Component {
               {received}
             </Text>
             <Text>
-              {' '}
-for
-              {' '}
+              {' for '}
             </Text>
             <Text style={styles.tradeSummaryPrice}>
               {send}
