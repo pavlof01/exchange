@@ -102,6 +102,16 @@ const styles = StyleSheet.create({
   trader: {
     flex: 1,
   },
+  messageInput: {
+    color: '#4a4a4a',
+    fontFamily: fonts.medium.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingStart: 17,
+    paddingEnd: 17,
+  },
 });
 
 class ChatView extends Component {
@@ -221,6 +231,7 @@ class ChatView extends Component {
               <TextInput
                 // eslint-disable-next-line arrow-parens, no-return-assign
                 ref={(ref) => this.input = ref}
+                style={styles.messageInput}
                 placeholder="You may leave a message"
                 underlineColorAndroid="transparent"
                 onChangeText={this.handleChangeText}
