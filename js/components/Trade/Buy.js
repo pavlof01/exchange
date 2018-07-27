@@ -226,7 +226,7 @@ export default class Buy extends Component {
               <TraderInfo
                 isOnline={this.props.isOnline}
                 traderName={this.props.partnerName}
-                completedTradesCount={User.approximateTradesCount(this.props.user.completed_trades_count)}
+                completedTradesCount={User.approximateTradesCount(ad.user.completed_trades_count)}
                 countryCode={ad.country_code}
               />
               <View style={{ paddingStart: 17, paddingEnd: 17 }}>

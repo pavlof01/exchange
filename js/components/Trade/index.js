@@ -73,7 +73,6 @@ export default class Trade extends Component {
         break;
       default:
         let message = data.message;
-        console.warn(JSON.stringify(message, null, 2));
         if (message.messages) {
           this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
         } else if (message.error) {
@@ -85,8 +84,8 @@ export default class Trade extends Component {
 
   onDisconnect = (event) => {
     event.wasClean ?
-      console.warn('Disconnect was clean (Api::V1::ChatChannel)') :
-      console.warn('Disconnect (Api::V1::ChatChannel):', event);
+      console.log('Disconnect was clean (Api::V1::ChatChannel)') :
+      console.log('Disconnect (Api::V1::ChatChannel):', event);
   };
 
   sendMessage = (params = {}) => {
