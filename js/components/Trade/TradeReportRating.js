@@ -1,19 +1,19 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
   Text,
   ScrollView,
   StyleSheet,
-} from "react-native";
+} from 'react-native';
 import moment from 'moment';
 import { fonts } from '../../style/resourceHelpers';
-import Price from "../../values/Price";
+import Price from '../../values/Price';
 import {
   getTradeTitle,
   isTradeComplete,
 } from '../../helpers';
-import TransactionDetails from "./TransactionDetails";
+import TransactionDetails from './TransactionDetails';
 
 const styles = StyleSheet.create({
   container: {
@@ -74,7 +74,7 @@ class TradeReportRating extends Component {
     const operationPrefix = isUserBuying ? 'Buy' : 'Sell';
     const currencyCode = trade.ad.currency_code || '';
     const cryptoCurrencyCode = trade.ad.crypto_currency_code || '';
-    let paymentMethodCode = "...";
+    let paymentMethodCode = '...';
     if (trade && trade.ad && trade.ad.payment_method_code) {
       paymentMethodCode = trade.ad.payment_method_code;
     }
@@ -93,16 +93,33 @@ class TradeReportRating extends Component {
         time = `${paidConfirmedAt.format('HH:mm')} (MSK)`;
       }
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
     }
     return (
       <View style={styles.container}>
         <ScrollView>
-          <Text style={styles.title}>{getTradeTitle(trade.status, trade.ad.payment_method_code).toUpperCase()}</Text>
-          <Text style={styles.tradeDescription}>{`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}<Text style={styles.tradeDescriptionBold}>{partnerName}</Text></Text>
+          <Text style={styles.title}>
+            {getTradeTitle(trade.status, trade.ad.payment_method_code).toUpperCase()}
+          </Text>
+          <Text style={styles.tradeDescription}>
+            {`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}
+            <Text style={styles.tradeDescriptionBold}>
+              {partnerName}
+            </Text>
+          </Text>
           <Text style={styles.tradeSummary}>
-            <Text style={styles.tradeSummaryPrice}>{received}</Text>
-            <Text> for </Text>
-            <Text style={styles.tradeSummaryPrice}>{send}</Text>
+            <Text style={styles.tradeSummaryPrice}>
+              {received}
+            </Text>
+            <Text>
+              {' '}
+for
+              {' '}
+            </Text>
+            <Text style={styles.tradeSummaryPrice}>
+              {send}
+            </Text>
           </Text>
           {
             isTradeComplete(trade.status) && (
@@ -115,7 +132,7 @@ class TradeReportRating extends Component {
               />
             )
           }
-          {/*<Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text>*/}
+          {/* <Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text> */}
         </ScrollView>
       </View>
     );
@@ -123,9 +140,9 @@ class TradeReportRating extends Component {
 }
 
 TradeReportRating.propTypes = {
-  trade: PropTypes.object,
+  trade: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   partnerName: PropTypes.string,
-  isUserBuying: PropTypes.boolean,
+  isUserBuying: PropTypes.bool,
 };
 
 export default TradeReportRating;
