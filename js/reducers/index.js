@@ -20,6 +20,7 @@ import paymentMethodBanks from './paymentMethodBanks'
 import navigation from './navigation';
 import signUp from './signUp';
 import recoverPassword from './recoverPassword';
+import pushNotifications from './pushNotifications';
 
 export default combineReducers({
   nav: navigation,
@@ -43,4 +44,5 @@ export default combineReducers({
   partnerActivity,
   groupedPaymentMethods,
   paymentMethodBanks,
+  pushNotifications,
 });

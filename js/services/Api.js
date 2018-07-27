@@ -1,7 +1,7 @@
-import axios from 'axios'
-import { API_BASE_URL } from '../config.json';
+import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { dispatch } from 'redux';
+import { API_BASE_URL } from '../config.json';
 import { logout } from '../actions/session';
 import store from '../store';
 
@@ -11,13 +11,13 @@ export default class Api {
   static createApiWithToken(value) {
     Api.currentToken = value;
     Api.instance = axios.create({
-        baseURL: API_BASE_URL,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ZXhjaGFuZ2U6MTIzNjU0',
-            'X-Access-Token': value,
-        }
+      baseURL: API_BASE_URL,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ZXhjaGFuZ2U6MTIzNjU0',
+        'X-Access-Token': value,
+      },
     });
 
     Api.instance.interceptors.response.use(
@@ -37,20 +37,19 @@ export default class Api {
                   Api.currentToken = newToken;
                   Api.createApiWithToken(newToken);
                   return axios(request);
-                })
-          }).catch(() => {
-            store.dispatch(logout());
-            return Promise.reject(onError);
-          });
-        } else {
-          return Promise.reject(onError);
+                });
+            }).catch(() => {
+              store.dispatch(logout());
+              return Promise.reject(onError);
+            });
         }
-      }
+        return Promise.reject(onError);
+      },
     );
   }
 
   static get(uri, params = {}) {
-    return Api.instance.get(uri, {params: params});
+    return Api.instance.get(uri, { params });
   }
 
   static post(uri, params = {}) {
