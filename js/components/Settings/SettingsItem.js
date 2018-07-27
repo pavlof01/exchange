@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
+        height: 18,
         fontSize: 18,
         fontFamily: fonts.regular.regular,
         letterSpacing: 0.2,

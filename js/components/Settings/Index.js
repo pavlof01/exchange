@@ -157,16 +157,7 @@ export default class Settings extends Component {
                     <Title text="SECURITY" />
                     <Switcher
                         value={this.state.ad_sell_enabled}
-                        //onValueChange={this.onAdSellEnabledChanged}
                         text="Passcode" />
-                    {/*<Switcher
-                        value={this.state.ad_sell_enabled}
-                        //onValueChange={this.onAdSellEnabledChanged}
-                        text="Stop selling" />
-                    <Switcher
-                        value={this.state.ad_sell_enabled}
-                        //onValueChange={this.onAdSellEnabledChanged}
-                    text="Stop purchases" />*/}
                     <Title text="VERIFICATION" />
                     <SettingsItem onPress={this.props.openIdInfo} text="ID info" />
                     <SettingsItem onPress={this.props.openPhoneVerify} text="Phone number" />
