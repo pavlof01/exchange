@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Platform, BackHandler } from 'react-native';
+import { Platform, BackHandler } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import OneSignal from 'react-native-onesignal';
 import { connect } from 'react-redux';
@@ -12,8 +12,7 @@ import {
 
 import AppNavigator from './AppNavigator';
 import { ONE_SIGNAL_APP_ID } from './config.json';
-import Api from "./services/Api";
-import {signUpRequest} from "./actions/signUp";
+import Api from './services/Api';
 import { setPushToken } from './actions/pushNotifications';
 
 export const navMiddleware = createReactNavigationReduxMiddleware(
@@ -27,6 +26,7 @@ const navigationPropConstructor = createNavigationPropConstructor('root');
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {};
   }
 
   componentWillMount() {
@@ -44,8 +44,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    initializeListeners('root', this.props.nav);
     const { dispatch, nav } = this.props;
+    initializeListeners('root', nav);
     if (Platform.OS === 'android') {
       this.backButtonListener = BackHandler.addEventListener('hardwareBackPress', () => {
         if (nav.routes.length === 1 && (nav.routes[0].routeName === 'Main'
@@ -81,9 +81,10 @@ class App extends Component {
     };
 
     render() {
+      const { dispatch, nav } = this.props;
       const navigation = navigationPropConstructor(
-        this.props.dispatch,
-        this.props.nav,
+        dispatch,
+        nav,
         addListener,
       );
       return (
