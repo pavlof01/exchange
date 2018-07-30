@@ -14,6 +14,7 @@ import AppNavigator from './AppNavigator';
 import { ONE_SIGNAL_APP_ID } from './config.json';
 import Api from './services/Api';
 import { setPushToken } from './actions/pushNotifications';
+import LanguageProvider from './containers/LanguageProvider';
 
 export const navMiddleware = createReactNavigationReduxMiddleware(
   'root',
@@ -88,9 +89,11 @@ class App extends Component {
         addListener,
       );
       return (
-        <AppNavigator
-          navigation={navigation}
-        />
+        <LanguageProvider>
+          <AppNavigator
+            navigation={navigation}
+          />
+        </LanguageProvider>
       );
     }
 }
