@@ -135,6 +135,10 @@ export default class Settings extends Component {
         // this.setState({pending:true});
     };
 
+    setPasscode = () => {
+        console.warn("switch");
+    }
+
     onLogoutPressed = () => this.props.logout();
     onIntroductionChanged = (value) => this.setState({ introduction: value });
     onAdBuyEnabledChanged = (value) => this.setState({ ad_buy_enabled: value });
@@ -156,7 +160,8 @@ export default class Settings extends Component {
                     <SettingsItem text="Native currency" />
                     <Title text="SECURITY" />
                     <Switcher
-                        value={this.state.ad_sell_enabled}
+                        //value={this.state.ad_sell_enabled}
+                        onValueChange={this.props.openPincode}
                         text="Passcode" />
                     <Title text="VERIFICATION" />
                     <SettingsItem onPress={this.props.openIdInfo} text="ID info" />

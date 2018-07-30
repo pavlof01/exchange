@@ -6,6 +6,7 @@ export const OPEN_ADS = 'OPEN_ADS';
 export const IDINFO = 'ININFO';
 export const PHONE_VERIFY = 'PHONE_VERIFY';
 export const IDENTITY_DOCS = 'IDENTITY_DOCS';
+export const PINCODE = 'PINCODE';
 
 export function newTrade(ad) {
     return {
@@ -56,5 +57,11 @@ export function openPhoneVerify() {
 export function openIdentityDocs() {
     return {
         type: IDENTITY_DOCS
+    };
+}
+
+export function openPincode() {
+    return {
+        type: PINCODE
     };
 }
