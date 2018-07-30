@@ -2,6 +2,6 @@
   "app.navigation.bottomLabel.Offers": "Объявления",
   "app.navigation.bottomLabel.Wallet": "Кошелек",
   "app.navigation.bottomLabel.Trades": "Сделки",
-  "app.navigation.bottomLabel.Setting": "Настройки",
+  "app.navigation.bottomLabel.Settings": "Настройки",
   "app.navigation.settings.Logout": "Выйти"
 }
