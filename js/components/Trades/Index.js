@@ -15,6 +15,8 @@ import {
   tradePartner,
   tradeType,
   tradeTypeBuy,
+  TRADE_STATUS_NEW,
+  TRADE_STATUS_PAID_CONFIRMED,
 } from '../../helpers';
 import Touchable from '../../style/Touchable';
 import HeaderBar from '../../style/HeaderBar';
@@ -55,6 +57,7 @@ export default class Trades extends Component {
     pending: false,
     endReached: false,
     trades: [],
+    page: 0,
   };
 
   componentDidMount() {
@@ -66,8 +69,13 @@ export default class Trades extends Component {
   };
 
   loadNext = () => {
-    if (!this.state.pending && !this.state.endReached) {
-      this.load({ page: this.state.page + 1 });
+    const {
+      pending,
+      endReached,
+      page,
+    } = this.state;
+    if (!pending && !endReached) {
+      this.load({ page: page + 1 });
     }
   };
 
@@ -97,6 +105,8 @@ export default class Trades extends Component {
     });
   };
 
+  isActiveTrade = status => status === TRADE_STATUS_NEW || status === TRADE_STATUS_PAID_CONFIRMED;
+
   renderItem = ({ item, index }) => {
     const trade = item;
     const partner = tradePartner(trade, this.props.user.id);
@@ -111,7 +121,7 @@ export default class Trades extends Component {
           ]}
         >
           <View style={{ flex: 1, alignItems: 'center' }}>
-            {trade.status !== 'new' ? (
+            {!this.isActiveTrade(trade.status) ? (
               <View
                 style={{ width: 10, height: 10, backgroundColor: '#DADADA' }}
               />
