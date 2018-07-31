@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import {
-    ActivityIndicator, ScrollView,
-    StyleSheet, Switch,
-    Text, TextInput,
+    ScrollView,
+    StyleSheet,
+    Text,
     View,
+    AsyncStorage
 } from 'react-native';
 import Touchable from '../../style/Touchable';
-import BorderlessButton from "../../style/BorderlessButton";
-import OwnProfileLink from "./OwnProfileLink";
-import Separator from "../../style/Separator";
-import FormTextInput from "../FormTextInput";
-import PrimaryButton from "../../style/ActionButton";
 import HeaderBar from "../../style/HeaderBar";
 import Title from './Title';
 import SettingsItem from './SettingsItem';
@@ -107,8 +102,19 @@ export default class Settings extends Component {
         pending: false,
         introduction: this.props.user.introduction,
         ad_sell_enabled: this.props.user.ad_buy_enabled,
-        ad_buy_enabled: this.props.user.ad_sell_enabled
+        ad_buy_enabled: this.props.user.ad_sell_enabled,
+        passcode: false
     };
+
+    componentWillMount() {
+        this.checkPasscode();
+        this.props.navigation.addListener(
+            'willFocus',
+            () => {
+                this.checkPasscode();
+            }
+        );
+    }
 
     componentWillReceiveProps({ user }) {
         const { user: { introduction, ad_buy_enabled, ad_sell_enabled } } = this.props;
@@ -135,8 +141,11 @@ export default class Settings extends Component {
         // this.setState({pending:true});
     };
 
-    setPasscode = () => {
-        console.warn("switch");
+    checkPasscode = async () => {
+        const passcode = await AsyncStorage.getItem('pincode');
+        if (passcode) {
+            this.setState({ passcode: true });
+        }
     }
 
     onLogoutPressed = () => this.props.logout();
@@ -145,8 +154,6 @@ export default class Settings extends Component {
     onAdSellEnabledChanged = (value) => this.setState({ ad_sell_enabled: value });
 
     render() {
-        const { user } = this.props;
-        //console.warn(JSON.stringify(this.props.user, null, 2));
         return (
             <View style={styles.mainContainer}>
                 <HeaderBar title={'SETTINGS'} />
@@ -160,7 +167,7 @@ export default class Settings extends Component {
                     <SettingsItem text="Native currency" />
                     <Title text="SECURITY" />
                     <Switcher
-                        //value={this.state.ad_sell_enabled}
+                        value={this.state.passcode}
                         onValueChange={this.props.openPincode}
                         text="Passcode" />
                     <Title text="VERIFICATION" />
@@ -174,75 +181,7 @@ export default class Settings extends Component {
                     </View>
                 </ScrollView>
             </View>
-            /*
-            <View style={styles.rowItem}>
-                <HeaderBar title={'SETTINGS'} />
-                <View style={styles.row}>
-                    <View style={styles.wideRowItem}>
-                        <OwnProfileLink user={this.props.user} onProfileOpen={this.props.openProfile} />
-                    </View>
-                    <View style={styles.rowItem}>
-                        <BorderlessButton
-                            onPress={this.onLogoutPressed}
-                            textStyle={{ fontWeight: 'bold' }}
-                            title={'Logout'}
-                        />
-                    </View>
-                </View>
-
-                <ScrollView keyboardShouldPersistTaps='always'>
-
-                    <View style={styles.info}>
-                        {!user.email_verified_date && <Text style={styles.warning}>
-                            Вы еще не подтвердили вашу электронную почту.
-                        У вас осталось примерно <Bold>2&nbsp;дня, 23&nbsp;часа</Bold>,
-                                                        до того как срок действия email подтверждения истечет. Проверьте вашу почту.
-                    </Text>}
-
-
-                        <Header>Email</Header>
-                        <Bold>{user.email}</Bold>
-
-                        {!user.email_verified_date &&
-                            <Text style={[styles.bold, { color: 'red' }]}>E-mail не подтвержден</Text>}
-
-                        {user.email_verified_date &&
-                            <Text style={[styles.bold, { color: 'green' }]}>E-mail подтвержден</Text>}
-
-                        <Separator />
-
-                        <Header>О себе</Header>
-                        <TextInput
-                            onChangeText={this.onIntroductionChanged}
-                            multiline
-                            style={{ height: 150 }}
-                            value={this.state.introduction ? this.state.introduction : ""}
-                            onChange={this.onIntroductionChanged}
-                            placeholder="Показывается в общедоступном профиле. Только текст, не более 200 символов."
-                        />
-
-                        <View style={styles.row2}>
-                            <Text style={[styles.infoText, styles.rowItem]}>Продажи временно приостановлены</Text>
-                            <Switch
-                                value={this.state.ad_sell_enabled}
-                                onValueChange={this.onAdSellEnabledChanged} />
-                        </View>
-
-                        <View style={styles.row2}>
-                            <Text style={[styles.infoText, styles.rowItem]}>Покупки временно приостановлены</Text>
-                            <Switch
-                                value={this.state.ad_buy_enabled}
-                                onValueChange={this.onAdBuyEnabledChanged} />
-                        </View>
-
-                        <PrimaryButton onPress={this.onSubmitUserMeta} title={'Сохранить профиль'} disabled={this.state.pending}>
-                            {this.state.pending ? <ActivityIndicator size="large" /> : undefined}
-                        </PrimaryButton>
-                        <PrimaryButton style={{ marginTop: 10 }} onPress={this.props.openAds} title={'Объявления'} />
-                    </View>
-                </ScrollView>
-            </View>
-                        */)
+        )
     }
 }
 

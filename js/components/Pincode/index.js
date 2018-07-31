@@ -3,6 +3,7 @@ import {
   View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import ModalDialog from '../../style/ModalDialog';
 
 export default class Pincode extends Component {
   static navigationOptions = { header: props => null };
@@ -11,6 +12,8 @@ export default class Pincode extends Component {
     this.state = {
       pincode: '',
       confirm: false,
+      openModal: false,
+      textModal: '',
     };
   }
 
@@ -32,14 +35,12 @@ export default class Pincode extends Component {
     if (this.state.pincode.length > 0 < 4) {
       const pincode = String(this.state.pincode);
       const newPin = pincode.slice(0, -1);
-      this.setState({ pincode: newPin }/* , () => console.warn(this.state.pincode) */);
+      this.setState({ pincode: newPin });
     }
   }
 
   savePincode = async () => {
     await AsyncStorage.setItem('pincode', this.state.pincode);
-    // const value = await AsyncStorage.getItem('pincode');
-    // console.warn(value);
     this.setState({ pincode: '', confirm: true });
   }
 
@@ -47,9 +48,10 @@ export default class Pincode extends Component {
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
     if (pincode !== confirmPincode) {
-      console.warn('WRONG PINCODE');
+      AsyncStorage.removeItem('pincode');
+      this.setState({ openModal: true, textModal: 'wrong pincode' });
     } else {
-      console.warn('PINCODE SET');
+      this.setState({ openModal: true, textModal: 'pincode set' });
     }
   }
 
@@ -59,6 +61,12 @@ export default class Pincode extends Component {
         colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
         style={[styles.paddingScreen]}
       >
+        <ModalDialog
+          title={this.state.textModal.toUpperCase()}
+          isOpen={this.state.openModal}
+          noCancel
+          onPositivePress={() => this.setState({ openModal: false }, () => this.props.navigation.goBack())}
+        />
         <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
         <Text style={styles.pincode}>
           {this.state.confirm ? 'CONFIRM PINCODE' : 'PIN CODE'}
