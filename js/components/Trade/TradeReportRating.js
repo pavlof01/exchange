@@ -14,6 +14,7 @@ import {
   isTradeComplete,
 } from '../../helpers';
 import TransactionDetails from './TransactionDetails';
+import Feedback from './Feedback';
 
 const styles = StyleSheet.create({
   container: {
@@ -69,6 +70,7 @@ class TradeReportRating extends Component {
       trade,
       partnerName,
       isUserBuying,
+      user,
     } = this.props;
     if (!trade) return null;
     const operationPrefix = isUserBuying ? 'Buy' : 'Sell';
@@ -129,7 +131,14 @@ class TradeReportRating extends Component {
               />
             )
           }
-          {/* <Text style={styles.title}>{'Leave a rating for the trader'.toUpperCase()}</Text> */}
+          {
+            trade.feedback_allowed && (
+              <Feedback
+                feedback={trade.feedbacks[user.id]}
+                trade={trade}
+              />
+            )
+          }
         </ScrollView>
       </View>
     );
@@ -140,6 +149,7 @@ TradeReportRating.propTypes = {
   trade: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   partnerName: PropTypes.string,
   isUserBuying: PropTypes.bool,
+  user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default TradeReportRating;

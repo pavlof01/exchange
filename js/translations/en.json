@@ -10,5 +10,7 @@
   "app.trade.feedback.checkbox.positiveText": "Leave your trading partner a Positive rating to increase his reputation",
   "app.trade.feedback.checkbox.neutralText": "Leave your trading partner a Neutral rating, which will not affect his reputation",
   "app.trade.feedback.checkbox.negativeText": "Leave your trading partner a Negative rating, which will lower his reputation",
+  "app.trade.feedback.button.save": "Save feedback",
+  "app.trade.feedback.button.update": "Update feedback",
   "app.navigation.settings.Logout": "Logout"
 }

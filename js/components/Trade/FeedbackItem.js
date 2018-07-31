@@ -21,6 +21,19 @@ const styles = StyleSheet.create({
   checkBoxColumn: {
     width: 18,
   },
+  checkBoxBorder: {
+    marginTop: 3,
+    width: 14,
+    height: 14,
+    borderColor: '#dadada',
+    borderWidth: 2,
+  },
+  checkBoxIndicator: {
+    margin: 1,
+    width: 8,
+    height: 8,
+    backgroundColor: '#dadada',
+  },
   descriptionsColumn: {
     flex: 1,
     flexDirection: 'column',
@@ -44,11 +57,22 @@ class FeedbackItem extends React.PureComponent {
       title,
       titleColor,
       description,
+      disabled,
     } = this.props;
     return (
-      <Touchable onPress={onPress}>
+      <Touchable
+        onPress={onPress}
+        disabled={disabled}
+      >
         <View style={styles.container}>
           <View style={styles.checkBoxColumn}>
+            <View style={styles.checkBoxBorder}>
+              {
+                active && (
+                  <View style={[styles.checkBoxIndicator, { backgroundColor: titleColor }]} />
+                )
+              }
+            </View>
           </View>
           <View style={styles.descriptionsColumn}>
             <Text style={[styles.title, { color: titleColor }]}>
@@ -70,6 +94,7 @@ FeedbackItem.propTypes = {
   title: PropTypes.string,
   titleColor: PropTypes.string,
   description: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default FeedbackItem;

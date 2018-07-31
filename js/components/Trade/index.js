@@ -222,6 +222,7 @@ export default class Trade extends Component {
         trade={this.props.trade}
         partnerName={this.partner.user_name}
         isUserBuying={this.isUserBuying()}
+        user={this.props.user}
       />
     );
   };
