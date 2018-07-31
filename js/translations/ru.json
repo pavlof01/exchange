@@ -3,5 +3,14 @@
   "app.navigation.bottomLabel.Wallet": "Кошелек",
   "app.navigation.bottomLabel.Trades": "Сделки",
   "app.navigation.bottomLabel.Settings": "Настройки",
+  "app.trade.feedback.title": "Оставьте отзыв трейдеру",
+  "app.trade.feedback.checkbox.positive": "Положительно",
+  "app.trade.feedback.checkbox.neutral": "Нейтрально",
+  "app.trade.feedback.checkbox.negative": "Отрицательно",
+  "app.trade.feedback.checkbox.positiveText": "Оставьте вашему торговому партнеру Положительную оценку для увеличения его репутации.",
+  "app.trade.feedback.checkbox.neutralText": "Оставьте вашему торговому партнеру Нейтральную оценку, которая не повлияет на его репутацию.",
+  "app.trade.feedback.checkbox.negativeText": "Оставьте вашему торговому партнеру Отрицательную оценку, которая понизит его репутацию.",
+  "app.trade.feedback.button.save": "Оставить отзыв",
+  "app.trade.feedback.button.update": "Обновить отзыв",
   "app.navigation.settings.Logout": "Выйти"
 }
