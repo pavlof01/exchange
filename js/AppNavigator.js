@@ -16,6 +16,7 @@ import Ads from './containers/Ads/Index';
 import IdInfo from './components/Settings/components/IdInfo';
 import IdentityDocs from './components/Settings/components/IdentityDoc';
 import PhoneVerify from './components/Settings/components/PhoneVerify';
+import Pincode from './containers/Pincode/Index/';
 
 import { bottomBarStyle, createBottomBarOptions } from './style/navigation';
 
@@ -27,7 +28,7 @@ const Main = createBottomTabNavigator({
 }, bottomBarStyle);
 
 const AppNavigator = createStackNavigator({
-  Main: { screen: Main, navigationOptions: () => ({ header: () => null }) },
+  Main: { screen: Main, navigationOptions: () => ({ header: props => null }) },
   NewTrade: { screen: NewTrade },
   Trade: { screen: Trade },
   Feedback: { screen: Feedback },
@@ -40,6 +41,8 @@ const AppNavigator = createStackNavigator({
   IdInfo: { screen: IdInfo },
   IdentityDocs: { screen: IdentityDocs },
   PhoneVerify: { screen: PhoneVerify },
-});
+  Pincode: { screen: Pincode },
+},
+);
 
 export default AppNavigator;

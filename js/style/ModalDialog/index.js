@@ -136,16 +136,20 @@ class ModalDialog extends Component {
           <ScrollView keyboardShouldPersistTaps='always'>
             <View style={styles.dialogContainer}>
               <View style={styles.headerContainer}>
-                { this.renderHeader() }
+                {this.renderHeader()}
               </View>
-              { this.renderContent() }
+              {this.renderContent()}
               <View style={styles.buttonGroup}>
-                <PrimaryButton
-                  onPress={this.onNegativePress}
-                  title={'CANCEL'}
-                  secondary
-                  style={styles.negativeButton}
-                />
+                {this.props.noCancel ?
+                  null
+                  :
+                  (<PrimaryButton
+                    onPress={this.onNegativePress}
+                    title={'CANCEL'}
+                    secondary
+                    style={styles.negativeButton}
+                  />)}
+
                 <PrimaryButton
                   onPress={this.onPositivePress}
                   title={'OK'}
@@ -168,6 +172,7 @@ ModalDialog.propTypes = {
   onNegativePress: PropTypes.func,
   onClose: PropTypes.func,
   isOpen: PropTypes.boolean,
+  noCancel: PropTypes.boolean,
 };
 
 export default ModalDialog;
