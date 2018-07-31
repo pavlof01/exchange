@@ -18,7 +18,7 @@ import { createBasicNavigationOptions } from '../../style/navigation';
 import ModalDialog from '../../style/ModalDialog';
 import TradeReportRating from './TradeReportRating';
 
-export default class Trade extends Component {
+class Trade extends Component {
   static navigationOptions = createBasicNavigationOptions('Trade');
 
   state = {
@@ -45,14 +45,17 @@ export default class Trade extends Component {
 
   onConnect = () => {
     const intervalId = setInterval(() => {
-      if (!!this.props.trade.conversation_id) {
+      const {
+        trade,
+      } = this.props;
+      if (trade.conversation_id) {
         switch (this.socket.readyState) {
           case this.socket.CLOSING:
           case this.socket.CLOSED:
             clearInterval(intervalId);
             break;
           case this.socket.OPEN:
-            this.subscribeOnChatConversation(this.props.trade.conversation_id);
+            this.subscribeOnChatConversation(trade.conversation_id);
             clearInterval(intervalId);
             break;
           default:
@@ -83,6 +86,7 @@ export default class Trade extends Component {
   };
 
   onDisconnect = (event) => {
+    console.warn('chat disconnect');
     event.wasClean
       ? console.log('Disconnect was clean (Api::V1::ChatChannel)')
       : console.log('Disconnect (Api::V1::ChatChannel):', event);
@@ -217,40 +221,58 @@ export default class Trade extends Component {
   }
 
   renderTradeCompleted = () => {
+    const {
+      messages,
+    } = this.state;
+    const {
+      trade,
+      user,
+    } = this.props;
     return (
       <TradeReportRating
-        trade={this.props.trade}
+        trade={trade}
+        messages={messages}
+        sendMessage={this.onSubmit}
         partnerName={this.partner.user_name}
         isUserBuying={this.isUserBuying()}
-        user={this.props.user}
+        user={user}
       />
     );
   };
 
-    renderActionBlock = () => {
-        if(!this.isTradeLoaded){
-            return undefined;
-        }
+  renderActionBlock = () => {
+    if (!this.isTradeLoaded) {
+      return undefined;
+    }
 
-        if(this.state.pending) {
-            return <ActivityIndicator size="large" />
-        }
-        const { status } = this.props.trade;
+    if (this.state.pending) {
+      return <ActivityIndicator size="large" />
+    }
+    const { status } = this.props.trade;
 
-      if (this.isTradeCompleted()) {
-        return this.renderTradeCompleted();
-      }
+    if (this.isTradeCompleted()) {
+      return this.renderTradeCompleted();
+    }
 
-        return this.isUserBuying() ? this.renderBuyActionBlock(status) : this.renderSellActionBlock(status);
-    };
+    return this.isUserBuying()
+      ? this.renderBuyActionBlock(status)
+      : this.renderSellActionBlock(status);
+  };
 
-    isUserBuying = () => {
-        return this.isTradeLoaded() && (tradeType(this.props.trade, this.props.user.id) === tradeTypeBuy);
-    };
+  isUserBuying = () => {
+    const {
+      trade,
+      user,
+    } = this.props;
+    return this.isTradeLoaded() && (tradeType(trade, user.id) === tradeTypeBuy);
+  };
 
-    isTradeLoaded = () => {
-        return !!this.props.trade.status;
-    };
+  isTradeLoaded = () => {
+    const {
+      trade,
+    } = this.props;
+    return !!(trade && trade.status);
+  };
 
   isTradeCompleted = () => {
     if (this.isTradeLoaded()) {
@@ -260,13 +282,13 @@ export default class Trade extends Component {
     return false;
   };
 
-    get partner() {
-        return this.isTradeLoaded() ? tradePartner(this.props.trade, this.props.user.id) : "";
-    }
-
-    get actionTitle () {
-        return this.isUserBuying() ? 'ПОКУПКУ ОНЛАЙН' : 'ПРОДАЖУ ОНЛАЙН';
-    }
+  get partner() {
+    const {
+      trade,
+      user,
+    } = this.props;
+    return this.isTradeLoaded() ? tradePartner(trade, user.id) : '';
+  }
 
   renderProgress = () => {
     return (
@@ -277,13 +299,16 @@ export default class Trade extends Component {
   };
 
   render() {
+    const {
+      isConfirming,
+    } = this.state;
     if (!this.isTradeLoaded()) return this.renderProgress();
     return (
       <View style={{ flex: 1 }}>
         { this.renderActionBlock() }
         <ModalDialog
           title={'Are you sure?'.toUpperCase()}
-          isOpen={this.state.isConfirming}
+          isOpen={isConfirming}
           onClose={this.closeModal}
           onNegativePress={this.closeModal}
           onPositivePress={this.sendSelectedTradeRequest}
@@ -292,3 +317,5 @@ export default class Trade extends Component {
     );
   }
 }
+
+export default Trade;

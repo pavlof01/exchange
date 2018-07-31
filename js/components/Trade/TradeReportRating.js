@@ -15,6 +15,7 @@ import {
 } from '../../helpers';
 import TransactionDetails from './TransactionDetails';
 import Feedback from './Feedback';
+import ChatView from "./ChatView";
 
 const styles = StyleSheet.create({
   container: {
@@ -65,13 +66,24 @@ const styles = StyleSheet.create({
 });
 
 class TradeReportRating extends Component {
+  state = {
+    textMessage: '',
+    enableScrollViewScroll: true,
+  };
+
   render() {
     const {
       trade,
       partnerName,
       isUserBuying,
       user,
+      messages,
+      sendMessage,
     } = this.props;
+    const {
+      enableScrollViewScroll,
+      textMessage,
+    } = this.state;
     if (!trade) return null;
     const operationPrefix = isUserBuying ? 'Buy' : 'Sell';
     const currencyCode = trade.ad.currency_code || '';
@@ -99,7 +111,12 @@ class TradeReportRating extends Component {
     }
     return (
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView
+          scrollEnabled={enableScrollViewScroll}
+          style={{ backgroundColor: '#fff', flex: 1 }}
+          keyBoardShouldPersistTaps="never"
+          nestedScrollEnabled
+        >
           <Text style={styles.title}>
             {getTradeTitle(trade.status, trade.ad.payment_method_code).toUpperCase()}
           </Text>
@@ -131,6 +148,21 @@ class TradeReportRating extends Component {
               />
             )
           }
+          <ChatView
+            onStartShouldSetResponderCapture={
+              () => {
+                this.setState({ enableScrollViewScroll: false });
+                if (enableScrollViewScroll === false) {
+                  this.setState({ enableScrollViewScroll: true });
+                }
+              }
+            }
+            messages={messages}
+            userId={user.id}
+            onChangeText={newTextMessage => this.setState({ textMessage: newTextMessage })}
+            onSubmitEditing={() => sendMessage(textMessage, () => this.setState({ textMessage: '' }))}
+            messageValue={textMessage}
+          />
           {
             trade.feedback_allowed && (
               <Feedback
@@ -150,6 +182,8 @@ TradeReportRating.propTypes = {
   partnerName: PropTypes.string,
   isUserBuying: PropTypes.bool,
   user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  messages: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  sendMessage: PropTypes.string,
 };
 
 export default TradeReportRating;

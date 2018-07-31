@@ -1,27 +1,29 @@
-import { connect } from 'react-redux'
-import Settings from '../../components/Settings/Index'
-import { logout, updateUserMeta } from "../../actions/session";
+import { connect } from 'react-redux';
+import Settings from '../../components/Settings/Index';
+import { logout, updateUserMeta } from '../../actions/session';
 import {
-    openProfile,
-    openAds,
-    openIdentityDocs,
-    openPhoneVerify,
-    openIdInfo
-} from "../../actions/navigation";
+  openProfile,
+  openAds,
+  openIdentityDocs,
+  openPhoneVerify,
+  openIdInfo,
+  openPincode,
+} from '../../actions/navigation';
 
 
 const mapDispatchToProps = dispatch => ({
-    logout: () => { dispatch(logout()) },
-    openProfile: (profile) => dispatch(openProfile(profile)),
-    updateUserMeta: params => dispatch(updateUserMeta(params, dispatch)),
-    openAds: () => dispatch(openAds()),
-    openIdentityDocs: () => dispatch(openIdentityDocs()),
-    openPhoneVerify: () => dispatch(openPhoneVerify()),
-    openIdInfo: () => dispatch(openIdInfo())
+  logout: () => { dispatch(logout()); },
+  openProfile: profile => dispatch(openProfile(profile)),
+  updateUserMeta: params => dispatch(updateUserMeta(params, dispatch)),
+  openAds: () => dispatch(openAds()),
+  openIdentityDocs: () => dispatch(openIdentityDocs()),
+  openPhoneVerify: () => dispatch(openPhoneVerify()),
+  openIdInfo: () => dispatch(openIdInfo()),
+  openPincode: () => dispatch(openPincode()),
 });
 
-const mapStateToProps = (state) => ({
-    user: state.session.user,
+const mapStateToProps = state => ({
+  user: state.session.user,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
