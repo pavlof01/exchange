@@ -3,5 +3,12 @@
   "app.navigation.bottomLabel.Wallet": "Wallet",
   "app.navigation.bottomLabel.Trades": "Trades",
   "app.navigation.bottomLabel.Settings": "Settings",
+  "app.trade.feedback.title": "Leave a rating for the trader",
+  "app.trade.feedback.checkbox.positive": "Positive",
+  "app.trade.feedback.checkbox.neutral": "Neutral",
+  "app.trade.feedback.checkbox.negative": "Negative",
+  "app.trade.feedback.checkbox.positiveText": "Leave your trading partner a Positive rating to increase his reputation",
+  "app.trade.feedback.checkbox.neutralText": "Leave your trading partner a Neutral rating, which will not affect his reputation",
+  "app.trade.feedback.checkbox.negativeText": "Leave your trading partner a Negative rating, which will lower his reputation",
   "app.navigation.settings.Logout": "Logout"
 }
