@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, Text, StyleSheet, Image, TouchableOpacity,
+  View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -10,6 +10,7 @@ export default class Pincode extends Component {
     super(props);
     this.state = {
       pincode: '',
+      confirm: false,
     };
   }
 
@@ -17,7 +18,13 @@ export default class Pincode extends Component {
     if (this.state.pincode.length < 4) {
       let pincode = this.state.pincode;
       pincode += num;
-      this.setState({ pincode }, () => console.warn(this.state.pincode));
+      this.setState({ pincode }, () => {
+        if (this.state.pincode.length >= 4 && !this.state.confirm) {
+          this.savePincode();
+        } else if (this.state.pincode.length >= 4 && this.state.confirm) {
+          this.compareAndSave();
+        }
+      });
     }
   }
 
@@ -25,7 +32,24 @@ export default class Pincode extends Component {
     if (this.state.pincode.length > 0 < 4) {
       const pincode = String(this.state.pincode);
       const newPin = pincode.slice(0, -1);
-      this.setState({ pincode: newPin }, () => console.warn(this.state.pincode));
+      this.setState({ pincode: newPin }/* , () => console.warn(this.state.pincode) */);
+    }
+  }
+
+  savePincode = async () => {
+    await AsyncStorage.setItem('pincode', this.state.pincode);
+    // const value = await AsyncStorage.getItem('pincode');
+    // console.warn(value);
+    this.setState({ pincode: '', confirm: true });
+  }
+
+  compareAndSave = async () => {
+    const pincode = await AsyncStorage.getItem('pincode');
+    const confirmPincode = this.state.pincode;
+    if (pincode !== confirmPincode) {
+      console.warn('WRONG PINCODE');
+    } else {
+      console.warn('PINCODE SET');
     }
   }
 
@@ -37,7 +61,7 @@ export default class Pincode extends Component {
       >
         <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
         <Text style={styles.pincode}>
-          PIN CODE
+          {this.state.confirm ? 'CONFIRM PINCODE' : 'PIN CODE'}
         </Text>
         <View style={styles.circleContainer}>
           <View style={this.state.pincode.length > 0 ? styles.circleFill : styles.circle} />
