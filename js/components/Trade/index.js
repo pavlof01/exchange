@@ -44,10 +44,10 @@ class Trade extends Component {
   }
 
   onConnect = () => {
-    const {
-      trade,
-    } = this.props;
     const intervalId = setInterval(() => {
+      const {
+        trade,
+      } = this.props;
       if (trade.conversation_id) {
         switch (this.socket.readyState) {
           case this.socket.CLOSING:
@@ -86,6 +86,7 @@ class Trade extends Component {
   };
 
   onDisconnect = (event) => {
+    console.warn('chat disconnect');
     event.wasClean
       ? console.log('Disconnect was clean (Api::V1::ChatChannel)')
       : console.log('Disconnect (Api::V1::ChatChannel):', event);
@@ -220,12 +221,21 @@ class Trade extends Component {
   }
 
   renderTradeCompleted = () => {
+    const {
+      messages,
+    } = this.state;
+    const {
+      trade,
+      user,
+    } = this.props;
     return (
       <TradeReportRating
-        trade={this.props.trade}
+        trade={trade}
+        messages={messages}
+        sendMessage={this.onSubmit}
         partnerName={this.partner.user_name}
         isUserBuying={this.isUserBuying()}
-        user={this.props.user}
+        user={user}
       />
     );
   };

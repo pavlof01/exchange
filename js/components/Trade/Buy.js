@@ -238,6 +238,7 @@ class Buy extends Component {
             scrollEnabled={enableScrollViewScroll}
             style={{ backgroundColor: '#fff', flex: 1 }}
             keyBoardShouldPersistTaps="never"
+            nestedScrollEnabled
           >
             <View style={showKeyboard ? styles.displayNone : null}>
               <Text style={styles.title}>
