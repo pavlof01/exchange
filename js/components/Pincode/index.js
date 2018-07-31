@@ -14,7 +14,19 @@ export default class Pincode extends Component {
       confirm: false,
       openModal: false,
       textModal: '',
+      deletePincode: false,
     };
+  }
+
+  componentWillMount() {
+    this.checkPasscode();
+  }
+
+  checkPasscode = async () => {
+    const passcode = await AsyncStorage.getItem('pincode');
+    if (passcode) {
+      this.setState({ deletePincode: true });
+    }
   }
 
   setPincode = (num) => {
@@ -22,7 +34,9 @@ export default class Pincode extends Component {
       let pincode = this.state.pincode;
       pincode += num;
       this.setState({ pincode }, () => {
-        if (this.state.pincode.length >= 4 && !this.state.confirm) {
+        if (this.state.pincode.length >= 4 && this.state.deletePincode) {
+          this.deletePincode();
+        } else if (this.state.pincode.length >= 4 && !this.state.confirm) {
           this.savePincode();
         } else if (this.state.pincode.length >= 4 && this.state.confirm) {
           this.compareAndSave();
@@ -47,11 +61,23 @@ export default class Pincode extends Component {
   compareAndSave = async () => {
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
-    if (pincode !== confirmPincode) {
+    if (pincode == confirmPincode) {
+      this.setState({ openModal: true, textModal: 'pincode set' });
+    } else {
       AsyncStorage.removeItem('pincode');
       this.setState({ openModal: true, textModal: 'wrong pincode' });
+    }
+  }
+
+  deletePincode = async () => {
+    const pincode = await AsyncStorage.getItem('pincode');
+    const confirmPincode = this.state.pincode;
+    //console.warn(pincode == confirmPincode);
+    if (pincode == confirmPincode) {
+      AsyncStorage.removeItem('pincode');
+      this.setState({ openModal: true, textModal: 'pincode deleted' });
     } else {
-      this.setState({ openModal: true, textModal: 'pincode set' });
+      this.setState({ openModal: true, textModal: 'wrong pincode' });
     }
   }
 

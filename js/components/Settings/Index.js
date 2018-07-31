@@ -143,9 +143,11 @@ export default class Settings extends Component {
 
     checkPasscode = async () => {
         const passcode = await AsyncStorage.getItem('pincode');
-        if (passcode) {
-            this.setState({ passcode: true });
-        }
+        passcode ?
+            this.setState({ passcode: true })
+            :
+            this.setState({ passcode: false });
+
     }
 
     onLogoutPressed = () => this.props.logout();
