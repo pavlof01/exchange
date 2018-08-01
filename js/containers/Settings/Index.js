@@ -8,6 +8,8 @@ import {
   openPhoneVerify,
   openIdInfo,
   openPincode,
+  openSelectCountries,
+  openSelectNativeCurrency,
 } from '../../actions/navigation';
 
 
@@ -20,6 +22,8 @@ const mapDispatchToProps = dispatch => ({
   openPhoneVerify: () => dispatch(openPhoneVerify()),
   openIdInfo: () => dispatch(openIdInfo()),
   openPincode: () => dispatch(openPincode()),
+  openSelectCountries: () => dispatch(openSelectCountries()),
+  openSelectNativeCurrency: () => dispatch(openSelectNativeCurrency()),
 });
 
 const mapStateToProps = state => ({
