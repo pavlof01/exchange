@@ -38,6 +38,15 @@ class PickerModal extends React.Component {
         items,
         defaultValueLabel,
       } = this.props;
+      const {
+        shouldPick,
+      } = this.state;
+      let selectedName = defaultValueLabel || 'none selected';
+      items.forEach((item) => {
+        if (item.value === selectedValue) {
+          selectedName = item.label;
+        }
+      });
       if (isAndroid) {
         return (
           <View style={styles.pickerContainer}>
@@ -46,11 +55,18 @@ class PickerModal extends React.Component {
               style={{ height: 50 }}
               onValueChange={onValueChange}
             >
-              <Picker.Item value="ANY" label={defaultValueLabel || 'none selected'} />
+              <Picker.Item
+                value="ANY"
+                label={defaultValueLabel || 'none selected'}
+              />
               {
                 items.map(
                   item => (
-                    <Picker.Item key={item.label} value={item.value} label={item.label} />
+                    <Picker.Item
+                      key={item.value}
+                      value={item.value}
+                      label={item.label}
+                    />
                   ),
                 )
               }
@@ -62,12 +78,13 @@ class PickerModal extends React.Component {
       return (
         <React.Fragment>
           <BorderlessButton
-            title={(this.props.countryMap[this.props.countryCode] || { name: 'Не выбрано' }).name} onPress={this.open}
+            title={selectedName}
+            onPress={this.open}
           />
           <Modal
             animationType="slide"
             transparent
-            visible={this.state.shouldPick}
+            visible={shouldPick}
             onRequestClose={this.hide}
           >
             <View style={styles.container}>
@@ -79,11 +96,17 @@ class PickerModal extends React.Component {
                 />
                 <PickerIOS
                   selectedValue={selectedValue || 'ANY'}
-                  onValueChange={this.props.onCountryCodeChange}
+                  onValueChange={onValueChange}
                 >
-                  <PickerIOS.Item value="ANY" label="Не выбрано" />
-                  {this.props.countries.map(
-                    country => <PickerIOS.Item key={country.code} value={country.code} label={country.name} />,
+                  <PickerIOS.Item value="ANY" label={defaultValueLabel || 'none selected'} />
+                  {items.map(
+                    item => (
+                      <PickerIOS.Item
+                        key={item.value}
+                        value={item.value}
+                        label={item.label}
+                      />
+                    ),
                   )}
                 </PickerIOS>
               </View>
@@ -96,9 +119,9 @@ class PickerModal extends React.Component {
 
 PickerModal.propTypes = {
   defaultValueLabel: PropTypes.string,
-  selectedValue: PropTypes.any,
+  selectedValue: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   onValueChange: PropTypes.func.isRequired,
-  items: PropTypes.array,
+  items: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
 
 export default PickerModal;
