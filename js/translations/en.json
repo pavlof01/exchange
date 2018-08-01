@@ -8,6 +8,7 @@
   "app.offers.operation.buy": "Buy",
   "app.offers.operation.sell": "Sell",
   "app.offers.pickerLabel.youSell": "You sell",
+  "app.offers.pickerLabel.youBuy": "You buy",
   "app.offers.pickerLabel.for": "For",
   "app.offers.pickerLabel.selectPaymentMethod": "Select payment method",
   "app.offers.title.currentOffers": "Current offers",

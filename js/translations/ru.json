@@ -8,6 +8,7 @@
   "app.offers.operation.buy": "Купить",
   "app.offers.operation.sell": "Продать",
   "app.offers.pickerLabel.youSell": "Вы продаете",
+  "app.offers.pickerLabel.youBuy": "Вы покупаете",
   "app.offers.pickerLabel.for": "За",
   "app.offers.pickerLabel.selectPaymentMethod": "Способ оплаты",
   "app.offers.title.currentOffers": "Текущие сделки",
