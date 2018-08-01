@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  RefreshControl,
   StyleSheet,
   Text,
   View,
@@ -244,6 +245,14 @@ class Offers extends React.PureComponent {
 
   onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
 
+  onRefresh = () => {
+    const {
+      filter,
+      updateFilter,
+    } = this.props;
+    updateFilter(filter);
+  };
+
   static itemWithIcon(label, icon) {
     return (
       <View style={styles.pickerRow}>
@@ -477,6 +486,12 @@ class Offers extends React.PureComponent {
             : (
               <FlatList
                 data={orders.list}
+                refreshControl={(
+                  <RefreshControl
+                    refreshing={orders.pending}
+                    onRefresh={this.onRefresh}
+                  />
+                )}
                 renderItem={this.renderItem}
                 keyExtractor={i => String(i.id)}
                 ListHeaderComponent={this.renderHeader}
