@@ -11,6 +11,7 @@
   "app.offers.title.currentOffers": "Current offers",
   "app.offers.label.limits": "Limits",
   "app.offers.label.value": "Value",
+  "app.offers.selector.paymentMethodAny": "Any",
   "app.trade.feedback.title": "Leave a rating for the trader",
   "app.trade.feedback.checkbox.positive": "Positive",
   "app.trade.feedback.checkbox.neutral": "Neutral",

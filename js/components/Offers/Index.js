@@ -14,7 +14,7 @@ import { cryptoIcons, fonts } from '../../style/resourceHelpers';
 import Touchable from '../../style/Touchable';
 import { currencyCodeToSymbol } from '../../helpers';
 import Price from '../../values/Price';
-import OnlineStatus from '../../style/OnlineStatus';
+import PickerModal from '../../style/PickerModal';
 
 const styles = StyleSheet.create({
   container: {
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     color: '#9b9b9b',
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: fonts.bold.regular,
   },
   itemHeadLabel: {
@@ -142,6 +142,23 @@ class Offers extends React.PureComponent {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    // console.warn(JSON.stringify(nextProps, null, 2));
+  }
+
+  componentDidMount() {
+    const {
+      fetchCurrencies,
+      fetchPaymentMethods,
+      fetchCountries,
+      updateFilter,
+    } = this.props;
+    fetchCurrencies();
+    fetchPaymentMethods();
+    fetchCountries();
+    updateFilter({});
+  }
+
   showOffersToSell = () => {
     const {
       updateFilter,
@@ -163,6 +180,15 @@ class Offers extends React.PureComponent {
     newTrade(ad);
   };
 
+  onFilterChangeFactory = name => (value) => {
+    const {
+      updateFilter,
+    } = this.props;
+    updateFilter({ [name]: value });
+  };
+
+  onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
+
   static itemWithIcon(label, icon) {
     return (
       <View style={styles.pickerRow}>
@@ -182,6 +208,7 @@ class Offers extends React.PureComponent {
     const {
       intl,
       filter,
+      paymentMethods,
     } = this.props;
     return (
       <View style={styles.header}>
@@ -233,7 +260,12 @@ class Offers extends React.PureComponent {
             {intl.formatMessage({ id: 'app.offers.pickerLabel.selectPaymentMethod', defaultMessage: 'Select payment method' }).toUpperCase()}
           </Text>
           <View style={styles.pickerShadow}>
-            <Text>picker</Text>
+            <PickerModal
+              items={paymentMethods.map(method => ({ label: method.name, value: method.code }))}
+              onValueChange={this.onPaymentMethodCodeChange}
+              defaultValueLabel={intl.formatMessage({ id: 'app.offers.selector.paymentMethodAny', defaultMessage: 'Any' })}
+              selectedValue={filter.paymentMethodCode}
+            />
           </View>
           <Separator style={{ marginTop: 20, marginBottom: 16 }} />
           <Text style={styles.title}>
@@ -329,6 +361,7 @@ class Offers extends React.PureComponent {
           renderItem={this.renderItem}
           keyExtractor={i => String(i.id)}
           ListHeaderComponent={this.renderHeader}
+          refreshing={orders.pending}
         />
       </View>
     );
@@ -343,9 +376,14 @@ Offers.propTypes = {
   }),
   filter: PropTypes.shape({
     type: PropTypes.string,
+    paymentMethodCode: PropTypes.string,
   }),
+  fetchCurrencies: PropTypes.func.isRequired,
+  fetchPaymentMethods: PropTypes.func.isRequired,
+  fetchCountries: PropTypes.func.isRequired,
   updateFilter: PropTypes.func.isRequired,
   newTrade: PropTypes.func.isRequired,
+  paymentMethods: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
 
 export default injectIntl(Offers);

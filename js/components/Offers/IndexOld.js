@@ -176,6 +176,7 @@ export default class Offers extends Component {
     }
 
     render() {
+        console.warn(JSON.stringify(this.props.paymentMethods, null, 2));
         let header;
         if(this.userWantsToBuy()) {
             header = 'BUY OFFERS';
@@ -244,10 +245,10 @@ export default class Offers extends Component {
 
                 <Hint>SELECT A COUNTRY</Hint>
 
-                <PickerModal countryCode={this.props.filter.countryCode}
-                    onCountryCodeChange={this.onCountryCodeChange}
-                    countries={this.props.countries}
-                    countryMap={this.props.countryMap}/>
+                {/*<PickerModal countryCode={this.props.filter.countryCode}*/}
+                    {/*onCountryCodeChange={this.onCountryCodeChange}*/}
+                    {/*countries={this.props.countries}*/}
+                    {/*countryMap={this.props.countryMap}/>*/}
 
 
                 <Separator />

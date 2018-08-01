@@ -11,6 +11,7 @@
   "app.offers.title.currentOffers": "Текущие сделки",
   "app.offers.label.limits": "Лимиты",
   "app.offers.label.value": "Цена",
+  "app.offers.selector.paymentMethodAny": "Любой",
   "app.trade.feedback.title": "Оставьте отзыв трейдеру",
   "app.trade.feedback.checkbox.positive": "Положительно",
   "app.trade.feedback.checkbox.neutral": "Нейтрально",
