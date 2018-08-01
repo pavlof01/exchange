@@ -165,7 +165,7 @@ export default class Settings extends Component {
                         <Text style={styles.email}>{this.props.user.email}</Text>
                     </View>
                     <Title text="ACCOUNT" />
-                    <SettingsItem text="Russian Federation" />
+                    <SettingsItem onPress={this.props.openSelectCountries} text="Russian Federation" />
                     <SettingsItem text="Native currency" />
                     <Title text="SECURITY" />
                     <Switcher

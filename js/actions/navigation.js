@@ -7,6 +7,7 @@ export const IDINFO = 'ININFO';
 export const PHONE_VERIFY = 'PHONE_VERIFY';
 export const IDENTITY_DOCS = 'IDENTITY_DOCS';
 export const PINCODE = 'PINCODE';
+export const SELECT_COUNTRIES = 'SELECT_COUNTRIES';
 
 export function newTrade(ad) {
     return {
@@ -63,5 +64,11 @@ export function openIdentityDocs() {
 export function openPincode() {
     return {
         type: PINCODE
+    };
+}
+
+export function openSelectCountries() {
+    return {
+        type: SELECT_COUNTRIES
     };
 }

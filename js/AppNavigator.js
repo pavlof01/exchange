@@ -17,6 +17,7 @@ import IdInfo from './components/Settings/components/IdInfo';
 import IdentityDocs from './components/Settings/components/IdentityDoc';
 import PhoneVerify from './components/Settings/components/PhoneVerify';
 import Pincode from './containers/Pincode/Index/';
+import SelectCountries from './containers/Settings/SelectCountries';
 
 import { bottomBarStyle, createBottomBarOptions } from './style/navigation';
 
@@ -42,6 +43,7 @@ const AppNavigator = createStackNavigator({
   IdentityDocs: { screen: IdentityDocs },
   PhoneVerify: { screen: PhoneVerify },
   Pincode: { screen: Pincode },
+  SelectCountries: { screen: SelectCountries },
 },
 );
 
