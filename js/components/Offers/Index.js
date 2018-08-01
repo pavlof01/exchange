@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   },
   currencySymbol: {
     fontSize: 16,
+    lineHeight: 20,
     fontWeight: 'bold',
     color: '#c3c3c3',
     width: 20,
