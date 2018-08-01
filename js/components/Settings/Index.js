@@ -103,15 +103,18 @@ export default class Settings extends Component {
         introduction: this.props.user.introduction,
         ad_sell_enabled: this.props.user.ad_buy_enabled,
         ad_buy_enabled: this.props.user.ad_sell_enabled,
-        passcode: false
+        passcode: false,
+        selectedCountry: false
     };
 
     componentWillMount() {
+        this.selectedCountry();
         this.checkPasscode();
         this.props.navigation.addListener(
             'willFocus',
             () => {
                 this.checkPasscode();
+                this.selectedCountry();
             }
         );
     }
@@ -150,6 +153,11 @@ export default class Settings extends Component {
 
     }
 
+    selectedCountry = async () => {
+        const selectedCountry = await AsyncStorage.getItem('selectedCountry');
+        this.setState({ selectedCountry });
+    }
+
     onLogoutPressed = () => this.props.logout();
     onIntroductionChanged = (value) => this.setState({ introduction: value });
     onAdBuyEnabledChanged = (value) => this.setState({ ad_buy_enabled: value });
@@ -165,8 +173,8 @@ export default class Settings extends Component {
                         <Text style={styles.email}>{this.props.user.email}</Text>
                     </View>
                     <Title text="ACCOUNT" />
-                    <SettingsItem onPress={this.props.openSelectCountries} text="Russian Federation" />
-                    <SettingsItem text="Native currency" />
+                    <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
+                    <SettingsItem onPress={this.props.openSelectNativeCurrency} /*text={this.state.selectedCountry || 'Select Country'}*/ text="Native currency" />
                     <Title text="SECURITY" />
                     <Switcher
                         value={this.state.passcode}

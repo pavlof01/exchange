@@ -18,6 +18,7 @@ import IdentityDocs from './components/Settings/components/IdentityDoc';
 import PhoneVerify from './components/Settings/components/PhoneVerify';
 import Pincode from './containers/Pincode/Index/';
 import SelectCountries from './containers/Settings/SelectCountries';
+import SelectNativeCurrency from './containers/Settings/SelectNativeCurr';
 
 import { bottomBarStyle, createBottomBarOptions } from './style/navigation';
 
@@ -44,6 +45,7 @@ const AppNavigator = createStackNavigator({
   PhoneVerify: { screen: PhoneVerify },
   Pincode: { screen: Pincode },
   SelectCountries: { screen: SelectCountries },
+  SelectNativeCurrency: { screen: SelectNativeCurrency },
 },
 );
 
