@@ -50,6 +50,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 2,
   },
+  empty: {
+    flex: 1,
+  },
 });
 
 export default class Trades extends Component {
@@ -127,8 +130,8 @@ export default class Trades extends Component {
               />
             ) : (
               <View
-                style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
-              />
+                  style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
+                />
             )}
           </View>
           <Text style={styles.info}>
@@ -178,6 +181,7 @@ export default class Trades extends Component {
       <View style={styles.container}>
         <HeaderBar title="TRADES" />
         <View style={styles.rowContainer}>
+          <Text style={styles.empty} />
           <Text style={styles.info}>
             {'#'}
           </Text>
@@ -205,26 +209,26 @@ export default class Trades extends Component {
           <CenterProgressBar />
         ) : (
           <FlatList
-            data={this.state.trades}
-            refreshControl={(
-              <RefreshControl
-                refreshing={this.state.pending}
-                onRefresh={this.onRefresh}
-              />
-            )}
-            renderItem={this.renderItem}
-            keyExtractor={i => i.id}
-            ListEmptyComponent={(
-              <Text style={styles.centerMessage}>
-                {'У вас ещё не было сделок'}
-              </Text>
-            )}
-            ListFooterComponent={
-              this.state.pending && <ActivityIndicator size="large" />
-            }
-            onEndReached={this.loadNext}
-            onEndReachedThreshold={0.3}
-          />
+              data={this.state.trades}
+              refreshControl={(
+                <RefreshControl
+                  refreshing={this.state.pending}
+                  onRefresh={this.onRefresh}
+                />
+              )}
+              renderItem={this.renderItem}
+              keyExtractor={i => i.id}
+              ListEmptyComponent={(
+                <Text style={styles.centerMessage}>
+                  {'У вас ещё не было сделок'}
+                </Text>
+              )}
+              ListFooterComponent={
+                this.state.pending && <ActivityIndicator size="large" />
+              }
+              onEndReached={this.loadNext}
+              onEndReachedThreshold={0.3}
+            />
         )}
       </View>,
     );
