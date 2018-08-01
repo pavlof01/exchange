@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -241,6 +242,8 @@ class Offers extends React.PureComponent {
 
   onCryptoCurrencyCodeChange = this.onFilterChangeFactory('cryptoCurrencyCode');
 
+  onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
+
   static itemWithIcon(label, icon) {
     return (
       <View style={styles.pickerRow}>
@@ -266,6 +269,13 @@ class Offers extends React.PureComponent {
         </View>
       </View>);
   }
+
+  isFetching = () => {
+    const {
+      filter,
+    } = this.props;
+    return (filter.pending);
+  };
 
   renderHeader = () => {
     const {
@@ -458,13 +468,19 @@ class Offers extends React.PureComponent {
     return (
       <View style={styles.container}>
         <HeaderBar title={header} />
-        <FlatList
-          data={orders.list}
-          renderItem={this.renderItem}
-          keyExtractor={i => String(i.id)}
-          ListHeaderComponent={this.renderHeader}
-          refreshing={orders.pending}
-        />
+        {
+          this.isFetching()
+            ? <ActivityIndicator size="large" style={{ margin: 16 }} />
+            : (
+              <FlatList
+                data={orders.list}
+                renderItem={this.renderItem}
+                keyExtractor={i => String(i.id)}
+                ListHeaderComponent={this.renderHeader}
+                refreshing={orders.pending}
+              />
+            )
+        }
       </View>
     );
   }
