@@ -135,6 +135,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const FILTER_SELL = 'sell';
+const FILTER_BUY = 'buy';
+
 class Offers extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -164,14 +167,14 @@ class Offers extends React.PureComponent {
     const {
       updateFilter,
     } = this.props;
-    updateFilter({ type: 'sell', sort: 'price' });
+    updateFilter({ type: FILTER_SELL, sort: 'price' });
   };
 
   showOffersToBuy = () => {
     const {
       updateFilter,
     } = this.props;
-    updateFilter({ type: 'buy', sort: '-price' });
+    updateFilter({ type: FILTER_BUY, sort: '-price' });
   };
 
   openNewTrade = (ad) => {
@@ -216,7 +219,7 @@ class Offers extends React.PureComponent {
         <View style={styles.rowContainer}>
           <TopButton
             title={intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }).toUpperCase()}
-            selected={filter.type === 'sell'}
+            selected={filter.type === FILTER_SELL}
             onPress={this.showOffersToSell}
             selectedColor="green"
           />
@@ -226,7 +229,7 @@ class Offers extends React.PureComponent {
           />
           <TopButton
             title={intl.formatMessage({ id: 'app.offers.operation.sell', defaultMessage: 'Sell' }).toUpperCase()}
-            selected={filter.type === 'buy'}
+            selected={filter.type === FILTER_BUY}
             onPress={this.showOffersToBuy}
             selectedColor="red"
           />
@@ -356,13 +359,12 @@ class Offers extends React.PureComponent {
       orders,
       filter,
     } = this.props;
-    const header = filter.type === 'sell'
+    const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     return (
       <View style={styles.container}>
         <HeaderBar title={header} />
-        {/*{ this.renderHeader() }*/}
         <FlatList
           data={orders.list}
           renderItem={this.renderItem}
