@@ -15,6 +15,7 @@ import Touchable from '../../style/Touchable';
 import { currencyCodeToSymbol } from '../../helpers';
 import Price from '../../values/Price';
 import PickerModal from '../../style/PickerModal';
+import HeaderBar from '../../style/HeaderBar';
 
 const styles = StyleSheet.create({
   container: {
@@ -351,10 +352,16 @@ class Offers extends React.PureComponent {
 
   render() {
     const {
+      intl,
       orders,
+      filter,
     } = this.props;
+    const header = filter.type === 'sell'
+      ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
+      : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     return (
       <View style={styles.container}>
+        <HeaderBar title={header} />
         {/*{ this.renderHeader() }*/}
         <FlatList
           data={orders.list}
