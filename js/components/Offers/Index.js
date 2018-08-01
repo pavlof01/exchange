@@ -273,8 +273,9 @@ class Offers extends React.PureComponent {
   isFetching = () => {
     const {
       filter,
+      paymentMethods,
     } = this.props;
-    return (filter.pending);
+    return (filter.pending && (!paymentMethods || paymentMethods.length === 0));
   };
 
   renderHeader = () => {
@@ -413,7 +414,9 @@ class Offers extends React.PureComponent {
   renderItem = ({ item, index }) => {
     const ad = item;
     const alt = index % 2 === 1;
-    const bankName = ad.payment_method_banks.map(bank => bank.name);
+    const bankName = ad.payment_method_banks.length > 0
+      ? ad.payment_method_banks.map(bank => bank.name)
+      : ad.payment_method.name;
     return (
       <Touchable
         onPress={() => this.openNewTrade(ad)}
