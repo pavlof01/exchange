@@ -14,6 +14,7 @@ import { cryptoIcons, fonts } from '../../style/resourceHelpers';
 import Touchable from '../../style/Touchable';
 import { currencyCodeToSymbol } from '../../helpers';
 import Price from '../../values/Price';
+import OnlineStatus from '../../style/OnlineStatus';
 
 const styles = StyleSheet.create({
   container: {
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEEEEE',
   },
   statusCol: {
-    width: 30,
+    width: 18,
     height: 46,
     justifyContent: 'center',
   },
@@ -117,6 +118,19 @@ const styles = StyleSheet.create({
     color: '#9b9b9b',
     fontSize: 12,
     fontFamily: fonts.bold.regular,
+  },
+  status: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'gray',
+    marginLeft: 6,
+  },
+  onlineStatus: {
+    backgroundColor: '#14d459',
+  },
+  offlineStatus: {
+    backgroundColor: 'red',
   },
 });
 
@@ -260,13 +274,19 @@ class Offers extends React.PureComponent {
   renderItem = ({ item, index }) => {
     const ad = item;
     const alt = index % 2 === 1;
+    const bankName = ad.payment_method_banks.map(bank => bank.name);
     return (
       <Touchable
         onPress={() => this.openNewTrade(ad)}
       >
         <View style={[styles.itemContainer, alt ? styles.alternateBackground : null]}>
           <View style={styles.statusCol}>
-            { null }
+            <View
+              style={[
+                styles.status,
+                ad.user.online ? styles.onlineStatus : styles.offlineStatus,
+              ]}
+            />
           </View>
           <View style={styles.itemCol}>
             <Text style={styles.itemName}>
@@ -283,7 +303,7 @@ class Offers extends React.PureComponent {
           </View>
           <View style={styles.itemCol}>
             <Text style={styles.itemTextLite}>
-              {'test'}
+              {bankName}
             </Text>
           </View>
           <View style={styles.itemCol}>
