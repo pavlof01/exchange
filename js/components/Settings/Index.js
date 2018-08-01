@@ -103,15 +103,21 @@ export default class Settings extends Component {
         introduction: this.props.user.introduction,
         ad_sell_enabled: this.props.user.ad_buy_enabled,
         ad_buy_enabled: this.props.user.ad_sell_enabled,
-        passcode: false
+        passcode: false,
+        selectedCountry: undefined,
+        selectedCurrency: undefined
     };
 
     componentWillMount() {
+        this.selectedCountry();
+        this.selectedCurr();
         this.checkPasscode();
         this.props.navigation.addListener(
             'willFocus',
             () => {
                 this.checkPasscode();
+                this.selectedCountry();
+                this.selectedCurr();
             }
         );
     }
@@ -150,6 +156,16 @@ export default class Settings extends Component {
 
     }
 
+    selectedCountry = async () => {
+        const selectedCountry = await AsyncStorage.getItem('selectedCountry');
+        this.setState({ selectedCountry });
+    }
+
+    selectedCurr = async () => {
+        const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
+        this.setState({ selectedCurrency });
+    }
+
     onLogoutPressed = () => this.props.logout();
     onIntroductionChanged = (value) => this.setState({ introduction: value });
     onAdBuyEnabledChanged = (value) => this.setState({ ad_buy_enabled: value });
@@ -165,8 +181,8 @@ export default class Settings extends Component {
                         <Text style={styles.email}>{this.props.user.email}</Text>
                     </View>
                     <Title text="ACCOUNT" />
-                    <SettingsItem text="Russian Federation" />
-                    <SettingsItem text="Native currency" />
+                    <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
+                    <SettingsItem onPress={this.props.openSelectNativeCurrency} text={this.state.selectedCurrency || 'Select Currency'} />
                     <Title text="SECURITY" />
                     <Switcher
                         value={this.state.passcode}

@@ -1,276 +1,530 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
-import {ActivityIndicator, FlatList, Image, Picker, StyleSheet, Text, View,} from 'react-native';
-import TopButton from "../../style/TopButton";
-import Separator from "../../style/Separator";
-import HeaderBar from "../../style/HeaderBar";
-import Price from "../../values/Price";
-import CardPicker from "../../style/CardPicker";
-import {MenuOption} from "react-native-popup-menu";
-import Touchable from "../../style/Touchable";
-import OnlineStatus from "../../style/OnlineStatus";
-import {currencyCodeToSymbol} from "../../helpers";
-import {cryptoIcons} from "../../style/resourceHelpers";
-import {withCommonStatusBar} from "../../style/navigation";
-import PickerModal from "../../style/PickerModal";
-import {Hint} from "../../style/common";
+import { injectIntl, intlShape } from 'react-intl';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { MenuOption } from 'react-native-popup-menu';
+import TopButton from '../../style/TopButton';
+import Separator from '../../style/Separator';
+import { cryptoIcons, fonts } from '../../style/resourceHelpers';
+import Touchable from '../../style/Touchable';
+import { currencyCodeToSymbol } from '../../helpers';
+import Price from '../../values/Price';
+import PickerModal from '../../style/PickerModal';
+import HeaderBar from '../../style/HeaderBar';
+import CardPicker from '../../style/CardPicker';
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  header: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 56,
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
+  selectorsBox: {
+    paddingStart: 17,
+    paddingEnd: 17,
+    flex: 1,
+  },
+  convertRow: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  convertColumn: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  convertCenter: {
+    width: 60,
+    paddingTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pickerLabel: {
+    marginTop: 16,
+    marginBottom: 6,
+    fontSize: 10,
+    fontFamily: fonts.medium.regular,
+  },
+  pickerShadow: {
+    elevation: 4,
+    borderRadius: 4,
+    backgroundColor: 'white',
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    centerMessage: {
-        flex: 1,
-        height: 64,
-        fontSize: 18,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-    },
-    rowContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 56,
-        paddingLeft: 8,
-        paddingRight: 8,
-    },
-    pickerRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 8,
-    },
-    userName: {
-        fontWeight: 'bold',
-        color: '#333333',
-        fontSize: 16,
-        marginLeft: 4,
-        flex: 1,
-    },
-    amount: {
-        color: '#111111',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        flex: 1,
-    },
-    limitsAmount: {
-        color: '#111111',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        flex: 2,
-    },
-    pickerIcon: {
-        height: 24,
-        width: 24,
-    },
-    picker: {
-        height: 50,
-        width: 100,
-    },
-    cardText: {
-        fontSize: 24,
-        color: '#333333',
-        margin: 8,
-        fontWeight: "bold",
-    },
-    currency_circle: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        backgroundColor: '#c3c3c3',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    currency_subcircle: {
-        width: 20,
-        height: 20,
-        borderRadius: 10,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    currency_symbol: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: '#c3c3c3',
-        width: 20,
-        height: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center'
-    },
-    alternate_background: {
-        backgroundColor: '#EEEEEE'
-    }
+    shadowRadius: 3,
+    shadowOpacity: 0.5,
+    flexDirection: 'row',
+  },
+  picker: {
+    flexDirection: 'row',
+  },
+  pickerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+  },
+  pickerIcon: {
+    height: 24,
+    width: 24,
+  },
+  cardText: {
+    fontSize: 24,
+    color: '#333333',
+    margin: 8,
+    fontWeight: 'bold',
+  },
+  currencyCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#c3c3c3',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  currencySubcircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  currencySymbol: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: 'bold',
+    color: '#c3c3c3',
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  title: {
+    color: '#9b9b9b',
+    fontSize: 14,
+    fontFamily: fonts.bold.regular,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    height: 46,
+    marginLeft: 8,
+    marginRight: 8,
+  },
+  alternateBackground: {
+    backgroundColor: '#EEEEEE',
+  },
+  statusCol: {
+    width: 18,
+    height: 46,
+    justifyContent: 'center',
+  },
+  itemCol: {
+    flex: 1,
+    height: 46,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  itemLimits: {
+    flex: 1.4,
+    height: 46,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  itemText: {
+    color: '#000000',
+    fontSize: 10,
+    fontFamily: fonts.bold.regular,
+  },
+  itemTextLite: {
+    color: '#9b9b9b',
+    fontSize: 10,
+    fontFamily: fonts.medium.regular,
+  },
+  itemName: {
+    color: '#9b9b9b',
+    fontSize: 12,
+    fontFamily: fonts.bold.regular,
+  },
+  itemHeadLabel: {
+    color: '#9b9b9b',
+    fontSize: 12,
+    fontFamily: fonts.bold.regular,
+  },
+  status: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'gray',
+    marginLeft: 6,
+  },
+  onlineStatus: {
+    backgroundColor: '#14d459',
+  },
+  offlineStatus: {
+    backgroundColor: 'red',
+  },
 });
 
-export default class Offers extends Component {
+const FILTER_SELL = 'sell';
+const FILTER_BUY = 'buy';
 
-    constructor(props) {
-        super(props);
-    }
+class Offers extends React.PureComponent {
+  constructor(props) {
+    super(props);
 
-    componentDidMount() {
-        this.props.fetchCurrencies();
-        this.props.fetchPaymentMethods();
-        this.props.fetchCountries();
-        this.props.updateFilter({});
-    }
-
-    onFilterChangeFactory = (name) => (value) => {
-        this.props.updateFilter({[name]: value});
+    this.state = {
     };
+  }
 
-    onCryptoCurrencyCodeChange = this.onFilterChangeFactory('cryptoCurrencyCode');
-    onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
-    onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
-    onCountryCodeChange = this.onFilterChangeFactory('countryCode');
+  componentDidMount() {
+    const {
+      fetchCurrencies,
+      fetchPaymentMethods,
+      fetchCountries,
+      updateFilter,
+    } = this.props;
+    fetchCurrencies();
+    fetchPaymentMethods();
+    fetchCountries();
+    updateFilter({});
+  }
 
-    /* When the user is looking to _buy_, they filter for offers to _sell_ and vice versa*/
-    userWantsToBuy = () => this.props.filter.type === 'sell';
-    showOffersToSell = () => this.props.updateFilter({type: 'sell', sort: 'price'});
+  showOffersToSell = () => {
+    const {
+      updateFilter,
+    } = this.props;
+    updateFilter({ type: FILTER_SELL, sort: 'price' });
+  };
 
-    userWantsToSell = () => this.props.filter.type === 'buy';
-    showOffersToBuy = () => this.props.updateFilter({type: 'buy', sort: '-price'});
+  showOffersToBuy = () => {
+    const {
+      updateFilter,
+    } = this.props;
+    updateFilter({ type: FILTER_BUY, sort: '-price' });
+  };
 
-    openNewTrade = (ad) => {
-        this.props.newTrade(ad)
-    };
+  openNewTrade = (ad) => {
+    const {
+      newTrade,
+    } = this.props;
+    newTrade(ad);
+  };
 
-    renderItem = ({item, index}) => {
-        const ad = item;
-        const alt = index % 2 === 1;
-        return (
-            <Touchable onPress={() => this.openNewTrade(ad)}>
-                <View style={[styles.rowContainer, alt ? styles.alternate_background : undefined]}>
-                    <OnlineStatus isOnline={ad.user.online}/>
-                    <Text style={styles.userName}>{ad.user.user_name}</Text>
-                    {ad.payment_method_banks.map(
-                        bank => <Text key={bank.id}>{bank.name}</Text>
-                    )}
-                    <Text style={styles.limitsAmount}>{currencyCodeToSymbol(ad.currency_code)}{Price.build(ad.limit_min).viewMain} – {Price.build(ad.limit_max).viewMain}</Text>
-                    <Text style={styles.amount}>{currencyCodeToSymbol(ad.currency_code)}{Price.build(ad.price).viewMain} </Text>
-                </View>
-            </Touchable>);
-    };
+  onFilterChangeFactory = name => (value) => {
+    const {
+      updateFilter,
+    } = this.props;
+    updateFilter({ [name]: value });
+  };
 
-    static ItemWithIcon(label, icon) {
-        return (<View style={styles.pickerRow}>{icon}<Text style={styles.cardText}>{label}</Text></View>)
-    }
+  onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
 
-    static CryptItem(code) {
-        return Offers.ItemWithIcon(code, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode='contain'/>);
-    }
+  onCryptoCurrencyCodeChange = this.onFilterChangeFactory('cryptoCurrencyCode');
 
-    static FiatItem(code) {
-        return Offers.ItemWithIcon(code,
-            <View style={styles.currency_circle}>
-                <View style={styles.currency_subcircle}>
-                    <Text style={styles.currency_symbol}>{currencyCodeToSymbol(code)}</Text>
-                </View>
-            </View>);
-    }
+  onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
 
-    render() {
-        let header;
-        if(this.userWantsToBuy()) {
-            header = 'BUY OFFERS';
-        } else {
-            header = 'SELL OFFERS';
-        }
-        return withCommonStatusBar(
-            <View style={styles.container}>
-                <HeaderBar title={header}/>
+  onRefresh = () => {
+    const {
+      filter,
+      updateFilter,
+    } = this.props;
+    updateFilter(filter);
+  };
 
-                <View style={styles.rowContainer}>
-                    <TopButton title={'BUY'}
-                               selected={this.userWantsToBuy()}
-                               onPress={this.showOffersToSell}
-                               selectedColor={'green'}/>
+  static itemWithIcon(label, icon) {
+    return (
+      <View style={styles.pickerRow}>
+        { icon }
+        <Text style={styles.cardText}>
+          { label }
+        </Text>
+      </View>
+    );
+  }
 
-                    <Separator vertical padding={8}/>
+  static cryptItem(code) {
+    return Offers.itemWithIcon(code, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode="contain" />);
+  }
 
-                    <TopButton title={'SELL'}
-                               selected={this.userWantsToSell()}
-                               onPress={this.showOffersToBuy}
-                               selectedColor={'red'}/>
-                </View>
+  static fiatItem(code) {
+    return Offers.itemWithIcon(code,
+      <View style={styles.currencyCircle}>
+        <View style={styles.currencySubcircle}>
+          <Text style={styles.currencySymbol}>
+            {currencyCodeToSymbol(code)}
+          </Text>
+        </View>
+      </View>);
+  }
 
-                <Separator padding={16} />
+  isFetching = () => {
+    const {
+      filter,
+      paymentMethods,
+    } = this.props;
+    return (filter.pending && (!paymentMethods || paymentMethods.length === 0));
+  };
 
-                <View style={styles.pickerRow}>
-                    <View>
-                        <Hint>YOU {this.userWantsToBuy() ? 'BUY' : 'SELL'}</Hint>
-                        <CardPicker style={styles.picker} onValueChange={this.onCryptoCurrencyCodeChange}
-                                selectedValue={this.props.filter.cryptoCurrencyCode} mode={'dropdown'}
-                                renderButton={Offers.CryptItem}>
-                            {this.props.cryptoCurrencies.map(
-                                currency => <MenuOption key={currency.code} value={currency.code}>
-                                    {Offers.CryptItem(currency.code)}
-                                </MenuOption>
-                            )}
-                        </CardPicker>
-                    </View>
-
-                    <Image source={require('../../img/ic_swap.png')} style={[styles.pickerIcon, {margin: 16, marginTop: 32}]}/>
-
-                    <View>
-                        <Hint>FOR</Hint>
-                        <CardPicker style={styles.picker} onValueChange={this.onCurrencyCodeChange}
-                                selectedValue={this.props.filter.currencyCode} mode={'dropdown'}
-                                    renderButton={Offers.FiatItem}>
-                            {this.props.currencies.map(
-                                currency => <MenuOption key={currency.code} value={currency.code}>
-                                        {Offers.FiatItem(currency.code)}
-                                </MenuOption>
-                            )}
-                        </CardPicker>
-                    </View>
-                </View>
-
-                <Hint>SELECT PAYMENT METHOD</Hint>
-                <CardPicker style={styles.picker} onValueChange={this.onPaymentMethodCodeChange}
-                        selectedValue={this.props.filter.paymentMethodCode || 'ANY'}
-                            renderButton={(value, text) => <Text style={styles.cardText}>{text}</Text>}>
-                    <MenuOption value="ANY" text={'любым способом'}/>
-                    {this.props.paymentMethods.map(
-                        method => <MenuOption key={method.code} value={method.code} text={method.name}/>
-                    )}
-                </CardPicker>
-
-                <Hint>SELECT A COUNTRY</Hint>
-
-                <PickerModal countryCode={this.props.filter.countryCode}
-                    onCountryCodeChange={this.onCountryCodeChange}
-                    countries={this.props.countries}
-                    countryMap={this.props.countryMap}/>
-
-
-                <Separator />
-
-                {this.props.orders.pending ?
-
-                    <ActivityIndicator size="large" style={{margin: 16}} /> :
-
-                    <FlatList data={this.props.orders.list}
-                              renderItem={this.renderItem}
-                              ListEmptyComponent={<Text style={styles.centerMessage}>Нет соответствующих предложений</Text>}
-                              />}
-
+  renderHeader = () => {
+    const {
+      intl,
+      filter,
+      paymentMethods,
+      cryptoCurrencies,
+      currencies,
+    } = this.props;
+    return (
+      <View style={styles.header}>
+        <View style={styles.rowContainer}>
+          <TopButton
+            title={intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }).toUpperCase()}
+            selected={filter.type === FILTER_SELL}
+            onPress={this.showOffersToSell}
+            selectedColor="green"
+          />
+          <Separator
+            vertical
+            padding={8}
+          />
+          <TopButton
+            title={intl.formatMessage({ id: 'app.offers.operation.sell', defaultMessage: 'Sell' }).toUpperCase()}
+            selected={filter.type === FILTER_BUY}
+            onPress={this.showOffersToBuy}
+            selectedColor="red"
+          />
+        </View>
+        <View style={styles.selectorsBox}>
+          <Separator />
+          <View style={styles.convertRow}>
+            <View style={styles.convertColumn}>
+              <Text style={styles.pickerLabel}>
+                {
+                  filter.type === FILTER_SELL
+                    ? intl.formatMessage({ id: 'app.offers.pickerLabel.youSell', defaultMessage: 'You sell' }).toUpperCase()
+                    : intl.formatMessage({ id: 'app.offers.pickerLabel.youBuy', defaultMessage: 'You buy' }).toUpperCase()
+                }
+              </Text>
+              <CardPicker
+                style={styles.picker}
+                onValueChange={this.onCryptoCurrencyCodeChange}
+                selectedValue={filter.cryptoCurrencyCode}
+                mode="dropdown"
+                renderButton={Offers.cryptItem}
+              >
+                {
+                  cryptoCurrencies.map(
+                    currency => (
+                      <MenuOption key={currency.code} value={currency.code}>
+                        {Offers.cryptItem(currency.code)}
+                      </MenuOption>
+                    ),
+                  )
+                }
+              </CardPicker>
             </View>
-        )
-    }
+            <View style={styles.convertCenter}>
+              <Image
+                source={require('../../img/ic_swap.png')}
+                style={[styles.pickerIcon]}
+              />
+            </View>
+            <View style={styles.convertColumn}>
+              <Text style={styles.pickerLabel}>
+                {intl.formatMessage({ id: 'app.offers.pickerLabel.for', defaultMessage: 'For' }).toUpperCase()}
+              </Text>
+              <CardPicker
+                style={styles.picker}
+                onValueChange={this.onCurrencyCodeChange}
+                selectedValue={filter.currencyCode}
+                mode="dropdown"
+                renderButton={Offers.fiatItem}
+              >
+                {
+                  currencies.map(
+                    currency => (
+                      <MenuOption key={currency.code} value={currency.code}>
+                        {Offers.fiatItem(currency.code)}
+                      </MenuOption>
+                    ),
+                  )
+                }
+              </CardPicker>
+            </View>
+          </View>
+          <Text style={styles.pickerLabel}>
+            {intl.formatMessage({ id: 'app.offers.pickerLabel.selectPaymentMethod', defaultMessage: 'Select payment method' }).toUpperCase()}
+          </Text>
+          <View style={styles.pickerShadow}>
+            <PickerModal
+              items={paymentMethods.map(method => ({ label: method.name, value: method.code }))}
+              onValueChange={this.onPaymentMethodCodeChange}
+              defaultValueLabel={intl.formatMessage({ id: 'app.offers.selector.paymentMethodAny', defaultMessage: 'Any' })}
+              selectedValue={filter.paymentMethodCode}
+            />
+          </View>
+          <Separator style={{ marginTop: 20, marginBottom: 16 }} />
+          <Text style={styles.title}>
+            {intl.formatMessage({ id: 'app.offers.title.currentOffers', defaultMessage: 'Current offers' }).toUpperCase()}
+          </Text>
+        </View>
+        <View style={styles.itemContainer}>
+          <View style={styles.statusCol}>
+            <Text>
+              {''}
+            </Text>
+          </View>
+          <View style={styles.itemCol}>
+            <Text>
+              {''}
+            </Text>
+          </View>
+          <View style={styles.itemLimits}>
+            <Text style={styles.itemHeadLabel}>
+              {intl.formatMessage({ id: 'app.offers.label.limits', defaultMessage: 'Limits' }).toUpperCase()}
+            </Text>
+          </View>
+          <View style={styles.itemCol}>
+            <Text>
+              {''}
+            </Text>
+          </View>
+          <View style={styles.itemCol}>
+            <Text style={styles.itemHeadLabel}>
+              {intl.formatMessage({ id: 'app.offers.label.value', defaultMessage: 'Value' }).toUpperCase()}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  renderItem = ({ item, index }) => {
+    const ad = item;
+    const alt = index % 2 === 1;
+    const bankName = ad.payment_method_banks.length > 0
+      ? ad.payment_method_banks.map(bank => bank.name)
+      : ad.payment_method.name;
+    return (
+      <Touchable
+        onPress={() => this.openNewTrade(ad)}
+      >
+        <View style={[styles.itemContainer, alt ? styles.alternateBackground : null]}>
+          <View style={styles.statusCol}>
+            <View
+              style={[
+                styles.status,
+                ad.user.online ? styles.onlineStatus : styles.offlineStatus,
+              ]}
+            />
+          </View>
+          <View style={styles.itemCol}>
+            <Text style={styles.itemName}>
+              {ad.user.user_name}
+            </Text>
+          </View>
+          <View style={styles.itemLimits}>
+            <Text style={styles.itemText}>
+              {currencyCodeToSymbol(ad.currency_code)}
+              {Price.build(ad.limit_min).viewMain}
+              {' – '}
+              {Price.build(ad.limit_max).viewMain}
+            </Text>
+          </View>
+          <View style={styles.itemCol}>
+            <Text style={styles.itemTextLite}>
+              {bankName}
+            </Text>
+          </View>
+          <View style={styles.itemCol}>
+            <Text style={styles.itemText}>
+              {currencyCodeToSymbol(ad.currency_code)}
+              {Price.build(ad.price).viewMain}
+            </Text>
+          </View>
+        </View>
+      </Touchable>
+    );
+  };
+
+  render() {
+    const {
+      intl,
+      orders,
+      filter,
+    } = this.props;
+    const header = filter.type === FILTER_SELL
+      ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
+      : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
+    return (
+      <View style={styles.container}>
+        <HeaderBar title={header} />
+        {
+          this.isFetching()
+            ? <ActivityIndicator size="large" style={{ margin: 16 }} />
+            : (
+              <FlatList
+                data={orders.list}
+                refreshControl={(
+                  <RefreshControl
+                    refreshing={orders.pending}
+                    onRefresh={this.onRefresh}
+                  />
+                )}
+                renderItem={this.renderItem}
+                keyExtractor={i => String(i.id)}
+                ListHeaderComponent={this.renderHeader}
+                refreshing={orders.pending}
+              />
+            )
+        }
+      </View>
+    );
+  }
 }
 
 Offers.propTypes = {
-    isFetching: PropTypes.bool,
-    updateFilter: PropTypes.func,
-    fetchCurrencies: PropTypes.func,
-    fetchPaymentMethods: PropTypes.func,
-    fetchCountries: PropTypes.func,
-    newTrade: PropTypes.func,
+  intl: intlShape.isRequired,
+  orders: PropTypes.shape({
+    list: PropTypes.array,
+    pending: PropTypes.bool,
+  }),
+  filter: PropTypes.shape({
+    type: PropTypes.string,
+    paymentMethodCode: PropTypes.string,
+    cryptoCurrencyCode: PropTypes.string,
+    currencyCode: PropTypes.string,
+  }),
+  fetchCurrencies: PropTypes.func.isRequired,
+  fetchPaymentMethods: PropTypes.func.isRequired,
+  fetchCountries: PropTypes.func.isRequired,
+  updateFilter: PropTypes.func.isRequired,
+  newTrade: PropTypes.func.isRequired,
+  paymentMethods: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  cryptoCurrencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  currencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
+
+export default injectIntl(Offers);

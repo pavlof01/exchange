@@ -37,9 +37,11 @@ const styles = StyleSheet.create({
 class SettingsItem extends Component {
   render() {
     const { settingsItemContainer, text, arrow } = styles;
-    const { styleContainer, textStyle } = this.props;
+    const {
+      styleContainer, textStyle, onPress,
+    } = this.props;
     return (
-      <Touchable onPress={this.props.onPress}>
+      <Touchable onPress={onPress}>
         <View style={[settingsItemContainer, styleContainer]}>
           <View>
             <Text style={[text, textStyle]}>

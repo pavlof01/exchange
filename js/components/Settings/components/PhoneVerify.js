@@ -33,8 +33,12 @@ export default class PhoneVerify extends Component {
             <View style={styles.mainContainer}>
                 <ScrollView style={styles.scrollContainer}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.text1}>Verify your phone number</Text>
-                        <Text style={styles.text2}>to increase account sequrity</Text>
+                      <Text style={styles.text1}>
+                        {'Verify your phone number'}
+                      </Text>
+                      <Text style={styles.text2}>
+                        {'to increase account security'}
+                      </Text>
                     </View>
                     <SettingsItem styleContainer={{ borderTopWidth: 1, borderTopColor: '#d5d5d5', }} text="Country" />
                     <FormTextInput

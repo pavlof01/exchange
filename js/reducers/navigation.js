@@ -18,6 +18,8 @@ import {
   PHONE_VERIFY,
   IDENTITY_DOCS,
   PINCODE,
+  SELECT_COUNTRIES,
+  SELECT_NATIVE_CURRENCY,
 } from '../actions/navigation';
 
 const firstAction = AppNavigator.router.getActionForPathAndParams('SplashScreen');
@@ -102,6 +104,18 @@ export default function navigationReducer(state = initialState, action) {
     case PINCODE:
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'Pincode' }),
+        state,
+      );
+      break;
+    case SELECT_COUNTRIES:
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'SelectCountries' }),
+        state,
+      );
+      break;
+    case SELECT_NATIVE_CURRENCY:
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'SelectNativeCurrency' }),
         state,
       );
       break;
