@@ -40,7 +40,6 @@ class SettingsItem extends Component {
     const {
       styleContainer, textStyle, onPress,
     } = this.props;
-
     return (
       <Touchable onPress={onPress}>
         <View style={[settingsItemContainer, styleContainer]}>
