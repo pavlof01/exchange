@@ -60,7 +60,7 @@ class Feedback extends React.PureComponent {
       pending: false,
       feedback: props.feedback || {},
       form: {
-        grade: ((props.feedback || {}).grade) || 'neutral',
+        grade: ((props.feedback || {}).grade) || NEUTRAL,
         body: (props.feedback && props.feedback.body) || '',
       },
       errors: null,
