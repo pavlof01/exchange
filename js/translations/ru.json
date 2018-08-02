@@ -34,5 +34,9 @@
   "app.trade.feedback.checkbox.negativeText": "Оставьте вашему торговому партнеру Отрицательную оценку, которая понизит его репутацию.",
   "app.trade.feedback.button.save": "Оставить отзыв",
   "app.trade.feedback.button.update": "Обновить отзыв",
+  "app.settings.title": "Настройки",
+  "app.settings.title.profile": "Профиль",
+  "app.settings.title.account": "Аккаунт",
+  "app.settings.title.security": "Безопасность",
   "app.navigation.settings.Logout": "Выйти"
 }

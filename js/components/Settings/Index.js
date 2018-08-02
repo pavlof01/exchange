@@ -7,6 +7,7 @@ import {
   View,
   AsyncStorage,
 } from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
 import Touchable from '../../style/Touchable';
 import HeaderBar from '../../style/HeaderBar';
 import Title from './Title';
@@ -105,7 +106,7 @@ const Bold = props => (
   </Text>
 );
 
-export default class Settings extends Component {
+class Settings extends Component {
   state = {
     pending: false,
     introduction: this.props.user.introduction,
@@ -188,21 +189,23 @@ export default class Settings extends Component {
   onAdSellEnabledChanged = value => this.setState({ ad_sell_enabled: value });
 
   render() {
+    const {
+      intl,
+    } = this.props;
     return (
       <View style={styles.mainContainer}>
-        <HeaderBar title="SETTINGS" />
+        <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
         <ScrollView style={styles.scrollContainer}>
-          <Title text="PROFILE" />
+          <Title text={intl.formatMessage({ id: 'app.settings.title.profile', defaultMessage: 'Profile' }).toUpperCase()} />
           <View style={styles.emailContainer}>
             <Text style={styles.email}>
               {this.props.user.email}
             </Text>
           </View>
-          <Title text="ACCOUNT" />
+          <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
           <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
           <SettingsItem onPress={this.props.openSelectNativeCurrency} text={this.state.selectedCurrency || 'Select Currency'} />
-          <SettingsItem onPress={this.props.openSelectLanguage} text={this.state.selectedLanguage || 'Select Language'} />
-          <Title text="SECURITY" />
+          <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
           <Switcher
             value={this.state.passcode}
             onValueChange={this.props.openPincode}
@@ -225,3 +228,5 @@ Settings.propTypes = {
   user: PropTypes.object,
   logout: PropTypes.func,
 };
+
+export default injectIntl(Settings);

@@ -34,5 +34,9 @@
   "app.trade.feedback.checkbox.negativeText": "Leave your trading partner a Negative rating, which will lower his reputation",
   "app.trade.feedback.button.save": "Save feedback",
   "app.trade.feedback.button.update": "Update feedback",
+  "app.settings.title": "Settings",
+  "app.settings.title.profile": "Profile",
+  "app.settings.title.account": "Account",
+  "app.settings.title.security": "Security",
   "app.navigation.settings.Logout": "Logout"
 }
