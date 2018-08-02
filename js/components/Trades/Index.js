@@ -55,7 +55,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Trades extends Component {
+const PAGE_SIZE = 2;
+
+class Trades extends Component {
   state = {
     pending: false,
     endReached: false,
@@ -64,21 +66,45 @@ export default class Trades extends Component {
   };
 
   componentDidMount() {
-    this.load({ page: 1 });
+    // this.load({ page: 1 });
+    this.onRefresh();
   }
 
   onRefresh = () => {
-    this.load({ page: 1 });
+    const {
+      refreshTrades,
+    } = this.props;
+    const params = {
+      ...this.props.params,
+      sort: this.state.sort,
+      scope: 'info_panel',
+      limit: PAGE_SIZE,
+      page: 1,
+    };
+    refreshTrades(params);
   };
 
   loadNext = () => {
     const {
+      fetchTrades,
+      lastLoadedPage,
+    } = this.props;
+    const {
       pending,
       endReached,
-      page,
     } = this.state;
+    const nextPage = lastLoadedPage + 1;
+    const params = {
+      ...this.props.params,
+      sort: this.state.sort,
+      scope: 'info_panel',
+      limit: PAGE_SIZE,
+      page: nextPage,
+    };
+
     if (!pending && !endReached) {
-      this.load({ page: page + 1 });
+      // this.load({ page: page + 1 });
+      fetchTrades(params);
     }
   };
 
@@ -209,7 +235,7 @@ export default class Trades extends Component {
           <CenterProgressBar />
         ) : (
           <FlatList
-              data={this.state.trades}
+              data={this.props.trades}
               refreshControl={(
                 <RefreshControl
                   refreshing={this.state.pending}
@@ -234,3 +260,12 @@ export default class Trades extends Component {
     );
   }
 }
+
+Trades.propTypes = {
+  refreshTrades: PropTypes.func.isRequired,
+  fetchTrades: PropTypes.func.isRequired,
+  trades: PropTypes.array,
+  lastLoadedPage: PropTypes.number,
+};
+
+export default Trades;

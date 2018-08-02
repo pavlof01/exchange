@@ -1,5 +1,12 @@
 import { TRADES } from '../actions';
 
+export function refreshTrades(filterParams) {
+  return {
+    type: TRADES.REFRESH_TRADES,
+    payload: filterParams,
+  };
+}
+
 export function fetchTrades(filterParams) {
   return {
     type: TRADES.FETCH_TRADES_STARTED,
@@ -7,10 +14,10 @@ export function fetchTrades(filterParams) {
   };
 }
 
-export function fetchTradesSuccess(trades) {
+export function fetchTradesSuccess(tradesPage) {
   return {
     type: TRADES.FETCH_TRADES_SUCCEED,
-    payload: trades,
+    payload: tradesPage,
   };
 }
 
