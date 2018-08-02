@@ -20,6 +20,7 @@ import {
   PINCODE,
   SELECT_COUNTRIES,
   SELECT_NATIVE_CURRENCY,
+  SELECT_LANGUAGE,
 } from '../actions/navigation';
 
 const firstAction = AppNavigator.router.getActionForPathAndParams('SplashScreen');
@@ -116,6 +117,12 @@ export default function navigationReducer(state = initialState, action) {
     case SELECT_NATIVE_CURRENCY:
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'SelectNativeCurrency' }),
+        state,
+      );
+      break;
+    case SELECT_LANGUAGE:
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'SelectLanguage' }),
         state,
       );
       break;

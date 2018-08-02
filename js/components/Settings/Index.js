@@ -19,6 +19,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  centerContent: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   scrollContainer: {
     paddingLeft: 25,
     paddingRight: 25,
@@ -44,6 +50,37 @@ const styles = StyleSheet.create({
     margin: 2,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  wideRowItem: {
+    flex: 2,
+  },
+  row: {
+    flexDirection: 'row',
+    padding: 4,
+    alignItems: 'center',
+  },
+  row2: {
+    flexDirection: 'row',
+    padding: 8,
+  },
+  info: {
+    backgroundColor: 'white',
+    margin: 8,
+    padding: 8,
+    borderRadius: 4,
+  },
+  infoText: {
+    margin: 2,
+    fontSize: 16,
+  },
+  warning: {
+    color: '#8b572a',
+    backgroundColor: '#fbf5eb',
+    borderColor: '#f5a623',
+    borderRadius: 4,
+    borderWidth: 1,
+    padding: 8,
+    margin: 8,
   },
   signOutContainer: {
     paddingBottom: 20,
@@ -77,18 +114,21 @@ export default class Settings extends Component {
     passcode: false,
     selectedCountry: undefined,
     selectedCurrency: undefined,
+    selectedLanguage: undefined,
   };
 
   componentWillMount() {
     this.selectedCountry();
     this.selectedCurr();
     this.checkPasscode();
+    this.selectedLang();
     this.props.navigation.addListener(
       'willFocus',
       () => {
         this.checkPasscode();
         this.selectedCountry();
         this.selectedCurr();
+        this.selectedLang();
       },
     );
   }
@@ -134,6 +174,11 @@ export default class Settings extends Component {
     this.setState({ selectedCurrency });
   }
 
+  selectedLang = async () => {
+    const selectedLanguage = await AsyncStorage.getItem('selectedLanguage');
+    this.setState({ selectedLanguage });
+  }
+
   onLogoutPressed = () => this.props.logout();
 
   onIntroductionChanged = value => this.setState({ introduction: value });
@@ -156,6 +201,7 @@ export default class Settings extends Component {
           <Title text="ACCOUNT" />
           <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
           <SettingsItem onPress={this.props.openSelectNativeCurrency} text={this.state.selectedCurrency || 'Select Currency'} />
+          <SettingsItem onPress={this.props.openSelectLanguage} text={this.state.selectedLanguage || 'Select Language'} />
           <Title text="SECURITY" />
           <Switcher
             value={this.state.passcode}
