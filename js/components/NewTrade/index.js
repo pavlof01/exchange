@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
   pickerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
   },
   formRow: {
     flex: 1,
@@ -94,14 +93,6 @@ const styles = StyleSheet.create({
     padding: 8,
     margin: 8,
   },
-  amountInputsContainer: {
-    borderColor: '#d5d5d5',
-    borderBottomWidth: 1,
-    flex: 1,
-    flexDirection: 'row',
-    // paddingBottom: 10,
-    alignItems: 'center',
-  },
   currencyCode: {
     position: 'absolute',
     right: 0,
@@ -114,6 +105,11 @@ const styles = StyleSheet.create({
     paddingRight: 50,
     fontSize: 16,
     paddingBottom: 10,
+  },
+  sendButton: {
+    marginStart: 60,
+    marginEnd: 60,
+    marginTop: 30,
   },
 });
 
@@ -132,7 +128,6 @@ class NewTrade extends Component {
       },
       pending: false,
       errors: undefined,
-      showInfoAboutPartner: false,
     };
   }
 
@@ -257,8 +252,6 @@ class NewTrade extends Component {
     );
   }
 
-  showInfoAboutPartner = () => this.setState({ showInfoAboutPartner: !this.state.showInfoAboutPartner });
-
   render() {
     const {
       intl,
@@ -269,7 +262,6 @@ class NewTrade extends Component {
       form,
       msg,
     } = this.state;
-    const { user } = ad;
     return (
       <ScrollView
         style={{ backgroundColor: '#fff' }}
@@ -296,6 +288,15 @@ class NewTrade extends Component {
               {intl.formatMessage({ id: 'app.newTrade.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
             </Text>
 
+            <View style={styles.pickerRow}>
+              {this.renderFiatCurrencyInput()}
+              <Image
+                source={require('../../img/ic_swap.png')}
+                style={[styles.pickerIcon, { margin: 16 }]}
+              />
+              {this.renderCryptoCurrencyInput()}
+            </View>
+
             <Text style={styles.label}>
               {intl.formatMessage({ id: 'app.newTrade.label.message', defaultMessage: 'Message' }).toUpperCase()}
             </Text>
@@ -314,25 +315,11 @@ class NewTrade extends Component {
             </Text>
           </View>
 
-          <View style={styles.pickerRow}>
-            {this.renderFiatCurrencyInput()}
-            <Image
-              source={require('../../img/ic_swap.png')}
-              style={[styles.pickerIcon, { margin: 16 }]}
-            />
-            {this.renderCryptoCurrencyInput()}
-          </View>
-
           <PrimaryButton
+            style={styles.sendButton}
             onPress={() => this.onSubmit(form)}
-            title="SEND A REQUSET TO TRADER"
+            title={intl.formatMessage({ id: 'app.newTrade.button.sendRequestToTrader', defaultMessage: 'Send a request to trader' }).toUpperCase()}
             disabled={pending}
-            style={{
-              marginTop: 30,
-              flex: 1,
-              backgroundColor: '#5b6eff',
-              boxShadow: '0 3 5 -3 rgba(31, 89, 230, 0.8)',
-            }}
           >
             {pending ? <ActivityIndicator size="large" /> : undefined}
           </PrimaryButton>

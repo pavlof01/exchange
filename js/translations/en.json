@@ -21,6 +21,7 @@
   "app.newTrade.label.message": "Message",
   "app.newTrade.text.timeLeft": "Time limit for payment of seller's invoice:",
   "app.newTrade.text.timeLeftValue": "{time} min",
+  "app.newTrade.button.sendRequestToTrader": "Send a request to trader",
   "app.trade.feedback.title": "Leave a rating for the trader",
   "app.trade.feedback.checkbox.positive": "Positive",
   "app.trade.feedback.checkbox.neutral": "Neutral",

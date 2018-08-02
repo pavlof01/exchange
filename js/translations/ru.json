@@ -21,6 +21,7 @@
   "app.newTrade.label.message": "Сообщение",
   "app.newTrade.text.timeLeft": "Окно оплаты счёта продавца:",
   "app.newTrade.text.timeLeftValue": "{time} мин",
+  "app.newTrade.button.sendRequestToTrader": "Отправить запрос Трейдеру",
   "app.trade.feedback.title": "Оставьте отзыв трейдеру",
   "app.trade.feedback.checkbox.positive": "Положительно",
   "app.trade.feedback.checkbox.neutral": "Нейтрально",
