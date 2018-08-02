@@ -13,6 +13,7 @@ import {
 import {
   resetTradesData,
   tradesData,
+  resetTradesAfterSetNew,
 } from './trades';
 
 const rootSagas = function* root() {
@@ -24,6 +25,7 @@ const rootSagas = function* root() {
     fork(recoverData),
     fork(resetTradesData),
     fork(tradesData),
+    fork(resetTradesAfterSetNew),
   ]);
 };
 
