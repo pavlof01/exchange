@@ -10,6 +10,7 @@ import {
   openPincode,
   openSelectCountries,
   openSelectNativeCurrency,
+  openSelectLanguage,
 } from '../../actions/navigation';
 
 
@@ -24,6 +25,7 @@ const mapDispatchToProps = dispatch => ({
   openPincode: () => dispatch(openPincode()),
   openSelectCountries: () => dispatch(openSelectCountries()),
   openSelectNativeCurrency: () => dispatch(openSelectNativeCurrency()),
+  openSelectLanguage: () => dispatch(openSelectLanguage()),
 });
 
 const mapStateToProps = state => ({
