@@ -8,21 +8,37 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
-  TouchableOpacity,
   TextInput,
 } from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
 import {
   createBasicNavigationOptions,
 } from '../../style/navigation';
 import FormTextInput from '../FormTextInput';
 import Price from '../../values/Price';
-import { currencyCodeToSymbol, objMap } from '../../helpers';
+import {
+  currencyCodeToSymbol,
+  objMap,
+} from '../../helpers';
 import PrimaryButton from '../../style/ActionButton';
 import Api from '../../services/Api';
-import OnlineStatus from '../../style/OnlineStatus';
 import User from '../../models/User';
+import TraderInfo from '../TraderInfo';
+import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
+  title: {
+    color: '#9b9b9b',
+    marginEnd: 17,
+    marginStart: 17,
+    marginTop: 16,
+    paddingBottom: 3,
+    marginBottom: 3,
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+    borderBottomColor: '#D5D5D5',
+    borderBottomWidth: 1,
+  },
   pickerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -85,20 +101,24 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class NewTrade extends Component {
+class NewTrade extends Component {
   static navigationOptions = createBasicNavigationOptions('REQUEST');
 
-  state = {
-    ad: this.props.navigation.getParam('ad', { id: 'NO-ID' }),
-    form: {
-      amount: undefined,
-      cost: undefined,
-      message: undefined,
-    },
-    pending: false,
-    errors: undefined,
-    showInfoAboutPartner: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      ad: props.navigation.getParam('ad', { id: 'NO-ID' }),
+      form: {
+        amount: undefined,
+        cost: undefined,
+        message: undefined,
+      },
+      pending: false,
+      errors: undefined,
+      showInfoAboutPartner: false,
+    };
+  }
 
   componentDidMount() {
     this.setState({ pending: true });
@@ -224,111 +244,30 @@ export default class NewTrade extends Component {
   showInfoAboutPartner = () => this.setState({ showInfoAboutPartner: !this.state.showInfoAboutPartner });
 
   render() {
-    const { ad, pending, form } = this.state;
+    const {
+      intl,
+    } = this.props;
+    const {
+      ad,
+      pending,
+      form,
+    } = this.state;
     const { user } = ad;
-    console.warn(JSON.stringify(ad, null, 2));
     return (
       <ScrollView
-        style={{ padding: 17, backgroundColor: '#fff' }}
+        style={{ backgroundColor: '#fff' }}
         // keyboardShouldPersistTaps="always"
       >
         <View>
-          <View
-            style={{
-              width: '100%',
-              paddingBottom: 6,
-              borderBottomWidth: 2,
-              borderColor: '#d5d5d5',
-            }}
-          >
-            <Text style={{ fontSize: 18, color: 'grey', fontWeight: 'bold' }}>
-              TRANSFER VIA
-              {' '}
-              {ad.payment_method_code}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={this.showInfoAboutPartner}
-            style={{
-              width: '100%',
-              marginTop: 15,
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderBottomWidth: this.state.showInfoAboutPartner ? 0 : 2,
-              paddingBottom: 10,
-              borderColor: '#d5d5d5',
-              alignItems: 'center',
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <OnlineStatus isOnline={ad.user.online} />
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                {ad.user.user_name}
-              </Text>
-              <View
-                style={{
-                  marginLeft: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text>
-                  {User.approximateTradesCount(ad.user.completed_trades_count)}
-                </Text>
-              </View>
-            </View>
-            <View>
-              <Image
-                style={{ width: 12, height: 6, justifyContent: 'flex-end' }}
-                source={require('../../../assets/icons/Line.png')}
-              />
-            </View>
-          </TouchableOpacity>
-          {this.state.showInfoAboutPartner ? (
-            <View
-              style={{
-                backgroundColor: '#F8F9FB',
-                paddingBottom: 15,
-                paddingTop: 15,
-                borderBottomWidth: 2,
-                borderColor: '#d5d5d5',
-              }}
-            >
-              <Text
-                style={{
-                  color: '#4A4A4A',
-                  fontSize: 12,
-                  letterSpacing: 1.5,
-                }}
-              >
-                Country
-              </Text>
-              <Text style={{ fontSize: 18, marginTop: 10, color: '#4a4a4a' }}>
-                {ad.country_code}
-              </Text>
-              <Text
-                style={{
-                  color: '#4A4A4A',
-                  fontSize: 12,
-                  marginTop: 10,
-                  marginBottom: 5,
-                  letterSpacing: 1,
-                }}
-              >
-                Term of transaction
-              </Text>
-              <Text style={{ fontSize: 18, color: '#4a4a4a' }}>
-                This advertisement is for cash transactions only. Make a request
-                only when you can make a cash payment within 12 hours.
-              </Text>
-            </View>
-          ) : null}
+          <Text style={styles.title}>
+            {`${intl.formatMessage({ id: 'app.newTrade.title', defaultMessage: 'Transfer via' }).toUpperCase()} ${ad.payment_method_code}`}
+          </Text>
+          <TraderInfo
+            isOnline={ad.user.online}
+            traderName={ad.user.user_name}
+            completedTradesCount={User.approximateTradesCount(ad.user.completed_trades_count)}
+            countryCode={ad.country_code}
+          />
           <Text
             style={{
               color: '#4A4A4A',
@@ -423,7 +362,7 @@ export default class NewTrade extends Component {
           {objMap(this.state.errors, (key, value) => (
             <Text style={styles.warning} key={key}>
               {key}
-:
+              {':'}
               {value.join('. ')}
             </Text>
           ))}
@@ -434,6 +373,10 @@ export default class NewTrade extends Component {
 }
 
 NewTrade.propTypes = {
+  intl: intlShape.isRequired,
+  navigation: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   isFetching: PropTypes.bool,
   openTrade: PropTypes.func,
 };
+
+export default injectIntl(NewTrade);
