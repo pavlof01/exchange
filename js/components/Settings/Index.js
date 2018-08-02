@@ -20,15 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  centerContent: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   scrollContainer: {
-    paddingLeft: 25,
-    paddingRight: 25,
   },
   header: {
     color: '#222222',
@@ -226,6 +218,7 @@ class Settings extends Component {
 }
 
 Settings.propTypes = {
+  intl: intlShape.isRequired,
   user: PropTypes.object,
   logout: PropTypes.func,
 };

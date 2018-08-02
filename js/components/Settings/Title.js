@@ -1,46 +1,43 @@
-import React, { Component } from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
-    View,
-    Text,
-    Image,
-    TextInput,
-    StyleSheet,
-} from "react-native";
+  Text,
+  StyleSheet,
+} from 'react-native';
 import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
-    titleContainer: {
-        marginTop: 25,
-        borderBottomWidth: 1,
-        borderBottomColor: '#d5d5d5',
-    },
-    text: {
-        color: '#9b9b9b',
-        fontSize: 18,
-        fontFamily: fonts.bold.regular,
-        letterSpacing: 0.2,
-    }
+  text: {
+    color: '#9b9b9b',
+    marginEnd: 17,
+    marginStart: 17,
+    marginTop: 16,
+    paddingBottom: 3,
+    marginBottom: 3,
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+    borderBottomColor: '#D5D5D5',
+    borderBottomWidth: 1,
+  },
 });
 
-class Title extends Component {
-
-    render() {
-        const { titleContainer, text } = styles;
-        const { styleContainer, textStyle } = this.props;
-        return (
-            <View style={[titleContainer, styleContainer]}>
-                <Text style={[text, textStyle]}>{this.props.text || "Your TEXT"}</Text>
-            </View>
-        );
-    }
-
+class Title extends React.PureComponent {
+  render() {
+    const {
+      textStyle,
+      text,
+    } = this.props;
+    return (
+      <Text style={[styles.text, textStyle]}>
+        {text || 'Your TEXT'}
+      </Text>
+    );
+  }
 }
 
 Title.propTypes = {
-    text: PropTypes.string,
-    textStyle: PropTypes.object,
-    styleContainer: PropTypes.object
+  text: PropTypes.string,
+  textStyle: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default Title;
