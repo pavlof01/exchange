@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet, ActivityIndicator,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
@@ -98,94 +99,96 @@ export default class Login extends Component {
         colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
         style={[styles.paddingScreen]}
       >
-        <View style={styles.logoContainer}>
-          <Image
-            style={this.state.textInFocus ? styles.logoStylesOnKeyboardShow : styles.logo}
-            source={Logo}
-          />
-          <Image
-            style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : null}
-            source={LogoText}
-          />
-        </View>
-        <View style={{ flex: 2 }}>
-          <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-            <View style={{ flex: 1 }}>
-              <FormTextInput
-                style={styles.textInputContainer}
-                textStyle={styles.textInput}
-                key="login"
-                error={!_.isEmpty(this.state.formError.loginError)}
-                ref={ref => (this.loginInput = ref)}
-                placeholder="Enter username"
-                placeholderTextColor="#B8CFFF"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onChangeText={(login) => {
-                  this.setState({ loginValue: login });
-                }}
-                onSubmitEditing={() => {
-                  this.passwordInput.focus();
-                }}
-              />
-              <Text style={[styles.error]}>
-                {this.state.formError.loginError}
-              </Text>
-              <FormTextInput
-                style={styles.textInputContainer}
-                textStyle={styles.textInput}
-                key="pass"
-                error={!_.isEmpty(this.state.formError.passwordError)}
-                ref={ref => (this.passwordInput = ref)}
-                placeholder="Enter password"
-                placeholderTextColor="#B8CFFF"
-                secureTextEntry
-                onChangeText={(password) => {
-                  this.setState({ passwordValue: password });
-                }}
-                onSubmitEditing={this.onLoginPressed}
-              />
-              <View style={{ alignItems: 'flex-end' }}>
-                <BorderlessButton
-                  textStyle={styles.forgetPasswordText}
-                  onPress={this.onRecoverRequestPressed}
-                  title="Forgot password?"
+        <ScrollView>
+          <View style={styles.logoContainer}>
+            <Image
+              style={this.state.textInFocus ? styles.logoStylesOnKeyboardShow : styles.logo}
+              source={Logo}
+            />
+            <Image
+              style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : null}
+              source={LogoText}
+            />
+          </View>
+          <View style={{ flex: 2 }}>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+              <View style={{ flex: 1 }}>
+                <FormTextInput
+                  style={styles.textInputContainer}
+                  textStyle={styles.textInput}
+                  key="login"
+                  error={!_.isEmpty(this.state.formError.loginError)}
+                  ref={ref => (this.loginInput = ref)}
+                  placeholder="Enter username"
+                  placeholderTextColor="#B8CFFF"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  onChangeText={(login) => {
+                    this.setState({ loginValue: login });
+                  }}
+                  onSubmitEditing={() => {
+                    this.passwordInput.focus();
+                  }}
                 />
-              </View>
-              <Text style={[styles.error]}>
-                {this.state.formError.passwordError}
-              </Text>
-              <Text style={[styles.error]}>
-                {this.state.formError.serverError}
-              </Text>
-              <PrimaryButton
-                style={styles.signInBtn}
-                onPress={this.onLoginPressed}
-                title="SIGN IN"
-                disabled={this.props.isFetching}
-              >
-                {this.props.isFetching
-                  ? <ActivityIndicator size="large" />
-                  : undefined}
-              </PrimaryButton>
-              <View style={styles.signUpContainer}>
-                <Text style={styles.textSignUp}>
-                  Don’t have an accaunt?
+                <Text style={[styles.error]}>
+                  {this.state.formError.loginError}
                 </Text>
-                <Touchable onPress={this.onSignUpPressed}>
-                  <Text style={styles.btnSignUp}>
-                    Sign up
+                <FormTextInput
+                  style={styles.textInputContainer}
+                  textStyle={styles.textInput}
+                  key="pass"
+                  error={!_.isEmpty(this.state.formError.passwordError)}
+                  ref={ref => (this.passwordInput = ref)}
+                  placeholder="Enter password"
+                  placeholderTextColor="#B8CFFF"
+                  secureTextEntry
+                  onChangeText={(password) => {
+                    this.setState({ passwordValue: password });
+                  }}
+                  onSubmitEditing={this.onLoginPressed}
+                />
+                <View style={{ alignItems: 'flex-end' }}>
+                  <BorderlessButton
+                    textStyle={styles.forgetPasswordText}
+                    onPress={this.onRecoverRequestPressed}
+                    title="Forgot password?"
+                  />
+                </View>
+                <Text style={[styles.error]}>
+                  {this.state.formError.passwordError}
+                </Text>
+                <Text style={[styles.error]}>
+                  {this.state.formError.serverError}
+                </Text>
+                <PrimaryButton
+                  style={styles.signInBtn}
+                  onPress={this.onLoginPressed}
+                  title="SIGN IN"
+                  disabled={this.props.isFetching}
+                >
+                  {this.props.isFetching
+                    ? <ActivityIndicator size="large" />
+                    : undefined}
+                </PrimaryButton>
+                <View style={styles.signUpContainer}>
+                  <Text style={styles.textSignUp}>
+                    Don’t have an accaunt?
+                  </Text>
+                  <Touchable onPress={this.onSignUpPressed}>
+                    <Text style={styles.btnSignUp}>
+                      Sign up
+                    </Text>
+                  </Touchable>
+                </View>
+                <Touchable style={{ marginTop: 50 }}>
+                  <Text style={styles.loginQR}>
+                    LOGIN WITH QR CODE
                   </Text>
                 </Touchable>
               </View>
-              <Touchable style={{ marginTop: 50 }}>
-                <Text style={styles.loginQR}>
-                  LOGIN WITH QR CODE
-                </Text>
-              </Touchable>
-            </View>
-          </KeyboardAvoidingView>
-        </View>
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
       </LinearGradient>
     );
   }
