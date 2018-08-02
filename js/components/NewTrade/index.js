@@ -21,9 +21,13 @@ import PrimaryButton from '../../style/ActionButton';
 import Api from '../../services/Api';
 import User from '../../models/User';
 import TraderInfo from '../TraderInfo';
+import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   title: {
     color: '#9b9b9b',
     marginEnd: 17,
@@ -277,78 +281,79 @@ class NewTrade extends Component {
       errors,
     } = this.state;
     return (
-      <ScrollView
-        style={{ backgroundColor: '#fff' }}
-        // keyboardShouldPersistTaps="always"
+      <KeyboardAvoidingWrapView
+        behavior="padding"
+        style={styles.container}
       >
-        <View>
-          <Text style={styles.title}>
-            {`${intl.formatMessage({ id: 'app.newTrade.title', defaultMessage: 'Transfer via' }).toUpperCase()} ${ad.payment_method_code}`}
-          </Text>
-          <TraderInfo
-            isOnline={ad.user.online}
-            traderName={ad.user.user_name}
-            completedTradesCount={
-              String(User.approximateTradesCount(ad.user.completed_trades_count) || '')
-            }
-            countryCode={ad.country_code}
-          />
-          <View style={styles.infoContainer}>
-            <Text style={styles.label}>
-              {intl.formatMessage({ id: 'app.newTrade.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
+        <ScrollView
+          style={{ backgroundColor: '#fff' }}
+          // keyboardShouldPersistTaps="always"
+        >
+          <View>
+            <Text style={styles.title}>
+              {`${intl.formatMessage({ id: 'app.newTrade.title', defaultMessage: 'Transfer via' }).toUpperCase()} ${ad.payment_method_code}`}
             </Text>
-            <Text style={styles.costText}>
-              {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
-            </Text>
-            <Text style={styles.label}>
-              {intl.formatMessage({ id: 'app.newTrade.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
-            </Text>
-
-            <View style={styles.pickerRow}>
-              {this.renderFiatCurrencyInput()}
-              <Image
-                source={require('../../img/ic_swap.png')}
-                style={[styles.pickerIcon, { margin: 16 }]}
-              />
-              {this.renderCryptoCurrencyInput()}
-            </View>
-
-            <Text style={styles.label}>
-              {intl.formatMessage({ id: 'app.newTrade.label.message', defaultMessage: 'Message' }).toUpperCase()}
-            </Text>
-            <TextInput
-              style={styles.amountText}
-              onChangeText={message => this.setState({ msg: message })}
-              placeholder="You may leave a message"
-              value={msg}
+            <TraderInfo
+              isOnline={ad.user.online}
+              traderName={ad.user.user_name}
+              completedTradesCount={
+                String(User.approximateTradesCount(ad.user.completed_trades_count) || '')
+              }
+              countryCode={ad.country_code}
             />
-            <Text style={styles.timeLeft}>
-              {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
-              {' '}
-              <Text style={styles.timeLeftBold}>
-                {intl.formatMessage({ id: 'app.newTrade.text.timeLeftValue', defaultMessage: '{time} min' }, { time: 90 })}
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>
+                {intl.formatMessage({ id: 'app.newTrade.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
               </Text>
-            </Text>
+              <Text style={styles.costText}>
+                {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
+              </Text>
+              <Text style={styles.label}>
+                {intl.formatMessage({ id: 'app.newTrade.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
+              </Text>
+              <View style={styles.pickerRow}>
+                {this.renderFiatCurrencyInput()}
+                <Image
+                  source={require('../../img/ic_swap.png')}
+                  style={[styles.pickerIcon, { margin: 16 }]}
+                />
+                {this.renderCryptoCurrencyInput()}
+              </View>
+              <Text style={styles.label}>
+                {intl.formatMessage({ id: 'app.newTrade.label.message', defaultMessage: 'Message' }).toUpperCase()}
+              </Text>
+              <TextInput
+                style={styles.amountText}
+                onChangeText={message => this.setState({ msg: message })}
+                placeholder="You may leave a message"
+                value={msg}
+              />
+              <Text style={styles.timeLeft}>
+                {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
+                {' '}
+                <Text style={styles.timeLeftBold}>
+                  {intl.formatMessage({ id: 'app.newTrade.text.timeLeftValue', defaultMessage: '{time} min' }, { time: 90 })}
+                </Text>
+              </Text>
+            </View>
+            <PrimaryButton
+              style={styles.sendButton}
+              onPress={() => this.onSubmit(form)}
+              title={intl.formatMessage({ id: 'app.newTrade.button.sendRequestToTrader', defaultMessage: 'Send a request to trader' }).toUpperCase()}
+              disabled={pending}
+            >
+              {pending ? <ActivityIndicator size="large" /> : undefined}
+            </PrimaryButton>
+            {objMap(errors, (key, value) => (
+              <Text style={styles.warning} key={key}>
+                {key}
+                {':'}
+                {value.join('. ')}
+              </Text>
+            ))}
           </View>
-
-          <PrimaryButton
-            style={styles.sendButton}
-            onPress={() => this.onSubmit(form)}
-            title={intl.formatMessage({ id: 'app.newTrade.button.sendRequestToTrader', defaultMessage: 'Send a request to trader' }).toUpperCase()}
-            disabled={pending}
-          >
-            {pending ? <ActivityIndicator size="large" /> : undefined}
-          </PrimaryButton>
-
-          {objMap(errors, (key, value) => (
-            <Text style={styles.warning} key={key}>
-              {key}
-              {':'}
-              {value.join('. ')}
-            </Text>
-          ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingWrapView>
     );
   }
 }
