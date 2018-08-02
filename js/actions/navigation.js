@@ -9,73 +9,80 @@ export const IDENTITY_DOCS = 'IDENTITY_DOCS';
 export const PINCODE = 'PINCODE';
 export const SELECT_COUNTRIES = 'SELECT_COUNTRIES';
 export const SELECT_NATIVE_CURRENCY = 'SELECT_NATIVE_CURRENCY';
+export const SELECT_LANGUAGE = 'SELECT_LANGUAGE';
 
 export function newTrade(ad) {
-    return {
-        type: NEW_TRADE_REQUEST,
-        ad
-    };
+  return {
+    type: NEW_TRADE_REQUEST,
+    ad,
+  };
 }
 
 export function openTrade(id) {
-    return {
-        type: OPEN_TRADE_REQUEST,
-        id
-    };
+  return {
+    type: OPEN_TRADE_REQUEST,
+    id,
+  };
 }
 
 export function openProfile(profile) {
-    return {
-        type: OPEN_PROFILE_REQUEST,
-        profile
-    };
+  return {
+    type: OPEN_PROFILE_REQUEST,
+    profile,
+  };
 }
 
 export function openFeedback(user_name) {
-    return {
-        type: OPEN_FEEDBACK_REQUEST,
-        user_name
-    };
+  return {
+    type: OPEN_FEEDBACK_REQUEST,
+    user_name,
+  };
 }
 
 export function openAds() {
-    return {
-        type: OPEN_ADS
-    };
+  return {
+    type: OPEN_ADS,
+  };
 }
 
 export function openIdInfo() {
-    return {
-        type: IDINFO
-    };
+  return {
+    type: IDINFO,
+  };
 }
 
 export function openPhoneVerify() {
-    return {
-        type: PHONE_VERIFY
-    };
+  return {
+    type: PHONE_VERIFY,
+  };
 }
 
 export function openIdentityDocs() {
-    return {
-        type: IDENTITY_DOCS
-    };
+  return {
+    type: IDENTITY_DOCS,
+  };
 }
 
 export function openPincode() {
-    return {
-        type: PINCODE
-    };
+  return {
+    type: PINCODE,
+  };
 }
 
 export function openSelectCountries() {
-    return {
-        type: SELECT_COUNTRIES
-    };
+  return {
+    type: SELECT_COUNTRIES,
+  };
 }
 
 export function openSelectNativeCurrency() {
-    return {
-        type: SELECT_NATIVE_CURRENCY
-    };
+  return {
+    type: SELECT_NATIVE_CURRENCY,
+  };
+}
+
+export function openSelectLanguage() {
+  return {
+    type: SELECT_LANGUAGE,
+  };
 }

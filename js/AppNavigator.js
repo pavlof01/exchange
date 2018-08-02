@@ -19,6 +19,7 @@ import PhoneVerify from './components/Settings/components/PhoneVerify';
 import Pincode from './containers/Pincode/Index';
 import SelectCountries from './containers/Settings/SelectCountries';
 import SelectNativeCurrency from './containers/Settings/SelectNativeCurr';
+import SelectLanguage from './containers/Settings/SelectLanguage';
 
 import {
   bottomBarStyle,
@@ -50,6 +51,7 @@ const AppNavigator = createStackNavigator({
   Pincode: { screen: Pincode },
   SelectCountries: { screen: SelectCountries },
   SelectNativeCurrency: { screen: SelectNativeCurrency },
+  SelectLanguage: { screen: SelectLanguage },
 });
 
 export default AppNavigator;
