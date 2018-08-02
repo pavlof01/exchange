@@ -7,6 +7,7 @@ import {
   View,
   AsyncStorage,
 } from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
 import Touchable from '../../style/Touchable';
 import HeaderBar from '../../style/HeaderBar';
 import Title from './Title';
@@ -19,15 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  centerContent: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   scrollContainer: {
-    paddingLeft: 25,
-    paddingRight: 25,
   },
   header: {
     color: '#222222',
@@ -38,11 +31,14 @@ const styles = StyleSheet.create({
   emailContainer: {
     paddingBottom: 20,
     paddingTop: 20,
+    marginStart: 17,
+    marginEnd: 17,
+    borderBottomColor: '#D5D5D5',
     borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
   },
   email: {
     fontSize: 17,
+    lineHeight: 17,
     color: '#14d459',
     fontFamily: fonts.regular.regular,
   },
@@ -85,6 +81,8 @@ const styles = StyleSheet.create({
   signOutContainer: {
     paddingBottom: 20,
     paddingTop: 20,
+    paddingStart: 17,
+    paddingEnd: 17,
   },
   signOutText: {
     color: '#d61b38',
@@ -105,7 +103,7 @@ const Bold = props => (
   </Text>
 );
 
-export default class Settings extends Component {
+class Settings extends Component {
   state = {
     pending: false,
     introduction: this.props.user.introduction,
@@ -188,33 +186,56 @@ export default class Settings extends Component {
   onAdSellEnabledChanged = value => this.setState({ ad_sell_enabled: value });
 
   render() {
+    const {
+      intl,
+      user,
+      openSelectCountries,
+      openSelectNativeCurrency,
+      openSelectLanguage,
+      openPincode,
+    } = this.props;
+    const {
+      selectedCountry,
+      selectedCurrency,
+      selectedLanguage,
+      passcode,
+    } = this.state;
     return (
       <View style={styles.mainContainer}>
-        <HeaderBar title="SETTINGS" />
+        <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
         <ScrollView style={styles.scrollContainer}>
-          <Title text="PROFILE" />
+          <Title text={intl.formatMessage({ id: 'app.settings.title.profile', defaultMessage: 'Profile' }).toUpperCase()} />
           <View style={styles.emailContainer}>
             <Text style={styles.email}>
-              {this.props.user.email}
+              {user.email}
             </Text>
           </View>
-          <Title text="ACCOUNT" />
-          <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
-          <SettingsItem onPress={this.props.openSelectNativeCurrency} text={this.state.selectedCurrency || 'Select Currency'} />
-          <SettingsItem onPress={this.props.openSelectLanguage} text={this.state.selectedLanguage || 'Select Language'} />
-          <Title text="SECURITY" />
+          <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
+          <SettingsItem
+            onPress={openSelectCountries}
+            text={selectedCountry || 'Select Country'}
+          />
+          <SettingsItem
+            onPress={openSelectNativeCurrency}
+            text={selectedCurrency || 'Select Currency'}
+          />
+          <SettingsItem
+            onPress={openSelectLanguage}
+            text={selectedLanguage || 'Select Language'}
+          />
+          <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
           <Switcher
-            value={this.state.passcode}
-            onValueChange={this.props.openPincode}
+            value={passcode}
+            onValueChange={openPincode}
             text="Passcode"
           />
-          <View style={styles.signOutContainer}>
-            <Touchable onPress={this.onLogoutPressed}>
+          <Touchable onPress={this.onLogoutPressed}>
+            <View style={styles.signOutContainer}>
               <Text style={styles.signOutText}>
                 SIGN OUT
               </Text>
-            </Touchable>
-          </View>
+            </View>
+          </Touchable>
         </ScrollView>
       </View>
     );
@@ -222,6 +243,13 @@ export default class Settings extends Component {
 }
 
 Settings.propTypes = {
-  user: PropTypes.object,
+  intl: intlShape.isRequired,
+  user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   logout: PropTypes.func,
+  openSelectCountries: PropTypes.func.isRequired,
+  openSelectNativeCurrency: PropTypes.func.isRequired,
+  openSelectLanguage: PropTypes.func.isRequired,
+  openPincode: PropTypes.func.isRequired,
 };
+
+export default injectIntl(Settings);
