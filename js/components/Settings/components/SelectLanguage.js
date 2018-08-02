@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -10,69 +11,9 @@ import {
 } from 'react-native';
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
-
-export default class SelectCountries extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: 'SELECT CURRENCY',
-    headerRight: (
-      <Button
-        onPress={navigation.getParam('selectLang')}
-        title="Select"
-        color="#fff"
-      />
-    ),
-    headerStyle: { backgroundColor: '#2B2B82' },
-    headerTitleStyle: { color: 'white' },
-    headerTintColor: 'white',
-  });
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedLanguage: '',
-      languages: [{ name: 'Русский' }, { name: 'English' }],
-    };
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ selectLang: this.selectLang });
-  }
-
-  languageKeyExtractor = currency => currency.code;
-
-  selectLang = () => {
-    AsyncStorage.setItem('selectedLanguage', this.state.selectedLanguage);
-    this.props.navigation.goBack();
-  }
-
-  renderLanguageItem = (lang) => {
-    const active = this.state.selectedLanguage == lang.item.name;
-    return (
-      <Touchable onPress={() => this.setState({ selectedLanguage: lang.item.name })}>
-        <View style={active ? styles.active : styles.currencyContainer}>
-          <Text style={styles.currencyName}>
-            {lang.item.name}
-          </Text>
-        </View>
-      </Touchable>
-    );
-  }
-
-  render() {
-    return (
-      <View style={styles.mainContainer}>
-        <ScrollView style={styles.scrollContainer}>
-          <FlatList
-            data={this.state.languages}
-            extraData={this.state.selectedLanguage}
-            keyExtractor={this.languageKeyExtractor}
-            renderItem={this.renderLanguageItem}
-          />
-        </ScrollView>
-      </View>
-    );
-  }
-}
+import {
+  getLocaleDisplayName,
+} from '../../../utils/i18n';
 
 const styles = StyleSheet.create({
   active: {
@@ -105,8 +46,82 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular.regular,
     letterSpacing: 0.2,
   },
-  headerStyle: {
-    backgroundColor: 'red',
-  },
-
 });
+
+class SelectLanguage extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'SELECT CURRENCY',
+    headerRight: (
+      <Button
+        onPress={navigation.getParam('selectLang')}
+        title="Select"
+        color="#fff"
+      />
+    ),
+    headerStyle: { backgroundColor: '#2B2B82' },
+    headerTitleStyle: { color: 'white' },
+    headerTintColor: 'white',
+  });
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedLanguage: '',
+      languages: [{ name: 'Русский' }, { name: 'English' }],
+    };
+  }
+
+  componentDidMount() {
+    AsyncStorage.setItem('locale', 'en');
+    this.props.navigation.setParams({ selectLang: this.selectLang });
+  }
+
+  languageKeyExtractor = lang => lang.item;
+
+  selectLang = () => {
+    AsyncStorage.setItem('selectedLanguage', this.state.selectedLanguage);
+    this.props.navigation.goBack();
+  };
+
+  renderLanguageItem = (lang) => {
+    const {
+      selectedLocale,
+    } = this.props;
+    const active = selectedLocale === lang.item;
+    return (
+      <Touchable onPress={() => this.setState({ selectedLanguage: lang.item.name })}>
+        <View style={active ? styles.active : styles.currencyContainer}>
+          <Text style={styles.currencyName}>
+            {getLocaleDisplayName(lang.item)}
+          </Text>
+        </View>
+      </Touchable>
+    );
+  };
+
+  render() {
+    const {
+      locales,
+      selectedLocale,
+    } = this.props;
+    return (
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.scrollContainer}>
+          <FlatList
+            data={locales}
+            extraData={selectedLocale}
+            keyExtractor={this.languageKeyExtractor}
+            renderItem={this.renderLanguageItem}
+          />
+        </ScrollView>
+      </View>
+    );
+  }
+}
+
+SelectLanguage.propTypes = {
+  locales: PropTypes.arrayOf(PropTypes.string),
+  selectedLocale: PropTypes.string,
+};
+
+export default SelectLanguage;
