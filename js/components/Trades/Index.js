@@ -10,7 +10,6 @@ import {
   RefreshControl,
 } from 'react-native';
 import CenterProgressBar from '../../style/CenterProgressBar';
-import Api from '../../services/Api';
 import {
   tradePartner,
   tradeType,
@@ -55,18 +54,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 15;
 
 class Trades extends Component {
   state = {
-    pending: false,
-    endReached: false,
     trades: [],
-    page: 0,
   };
 
   componentDidMount() {
-    // this.load({ page: 1 });
     this.onRefresh();
   }
 
@@ -75,8 +70,6 @@ class Trades extends Component {
       refreshTrades,
     } = this.props;
     const params = {
-      ...this.props.params,
-      sort: this.state.sort,
       scope: 'info_panel',
       limit: PAGE_SIZE,
       page: 1,
@@ -88,50 +81,19 @@ class Trades extends Component {
     const {
       fetchTrades,
       lastLoadedPage,
+      isFetch,
+      isReachEnd,
     } = this.props;
-    const {
-      pending,
-      endReached,
-    } = this.state;
     const nextPage = lastLoadedPage + 1;
     const params = {
-      ...this.props.params,
-      sort: this.state.sort,
       scope: 'info_panel',
       limit: PAGE_SIZE,
       page: nextPage,
     };
 
-    if (!pending && !endReached) {
-      // this.load({ page: page + 1 });
+    if (!isFetch && !isReachEnd) {
       fetchTrades(params);
     }
-  };
-
-  load = (params = {}) => {
-    this.setState({ ...this.state, pending: true });
-
-    params = {
-      ...this.props.params,
-      sort: this.state.sort,
-      scope: 'info_panel',
-      limit: 15,
-      ...params,
-    };
-
-    Api.get('/trades', params).then((response) => {
-      this.setState({
-        pending: false,
-        trades:
-          response.data.page === 1
-            ? response.data.trades
-            : [...this.state.trades, ...response.data.trades],
-        page: response.data.page,
-        pages: response.data.pages,
-        sort: params.sort,
-        endReached: response.data.trades.length === 0,
-      });
-    });
   };
 
   isActiveTrade = status => status === TRADE_STATUS_NEW || status === TRADE_STATUS_PAID_CONFIRMED;
@@ -140,7 +102,6 @@ class Trades extends Component {
     const trade = item;
     const partner = tradePartner(trade, this.props.user.id);
     const alt = index % 2 === 0;
-    // console.warn(JSON.stringify(item, null, 2));
     return (
       <Touchable onPress={() => this.props.openTrade(trade.id)}>
         <View
@@ -156,8 +117,8 @@ class Trades extends Component {
               />
             ) : (
               <View
-                  style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
-                />
+                style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
+              />
             )}
           </View>
           <Text style={styles.info}>
@@ -203,6 +164,10 @@ class Trades extends Component {
   };
 
   render() {
+    const {
+      isFetch,
+      trades,
+    } = this.props;
     return withCommonStatusBar(
       <View style={styles.container}>
         <HeaderBar title="TRADES" />
@@ -231,30 +196,30 @@ class Trades extends Component {
             </Text>
           </Touchable>
         </View>
-        {this.state.pending && this.state.trades.length === 0 ? (
+        {isFetch && trades.length === 0 ? (
           <CenterProgressBar />
         ) : (
           <FlatList
-              data={this.props.trades}
-              refreshControl={(
-                <RefreshControl
-                  refreshing={this.state.pending}
-                  onRefresh={this.onRefresh}
-                />
-              )}
-              renderItem={this.renderItem}
-              keyExtractor={i => i.id}
-              ListEmptyComponent={(
-                <Text style={styles.centerMessage}>
-                  {'У вас ещё не было сделок'}
-                </Text>
-              )}
-              ListFooterComponent={
-                this.state.pending && <ActivityIndicator size="large" />
-              }
-              onEndReached={this.loadNext}
-              onEndReachedThreshold={0.3}
-            />
+            data={trades}
+            refreshControl={(
+              <RefreshControl
+                refreshing={isFetch}
+                onRefresh={this.onRefresh}
+              />
+            )}
+            renderItem={this.renderItem}
+            keyExtractor={i => i.id}
+            ListEmptyComponent={(
+              <Text style={styles.centerMessage}>
+                {'У вас ещё не было сделок'}
+              </Text>
+            )}
+            ListFooterComponent={
+              isFetch && <ActivityIndicator size="large" />
+            }
+            onEndReached={this.loadNext}
+            onEndReachedThreshold={0.3}
+          />
         )}
       </View>,
     );
@@ -264,8 +229,10 @@ class Trades extends Component {
 Trades.propTypes = {
   refreshTrades: PropTypes.func.isRequired,
   fetchTrades: PropTypes.func.isRequired,
-  trades: PropTypes.array,
+  trades: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   lastLoadedPage: PropTypes.number,
+  isFetch: PropTypes.bool,
+  isReachEnd: PropTypes.bool,
 };
 
 export default Trades;

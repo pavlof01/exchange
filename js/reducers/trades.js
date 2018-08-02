@@ -35,6 +35,7 @@ const tradesReducer = (state = initialState, action) => {
         .set('isFetch', false)
         .set('items', newTrades)
         .set('lastLoadedPage', page)
+        .set('isReachEnd', trades.length === 0 || false)
         .set('error', null);
     }
 

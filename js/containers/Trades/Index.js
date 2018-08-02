@@ -24,6 +24,8 @@ const mapStateToProps = state => ({
   user: state.session.user,
   trades: state.trades.get('items').toJS(),
   lastLoadedPage: state.trades.get('lastLoadedPage'),
+  isFetch: state.trades.get('isFetch'),
+  isReachEnd: state.trades.get('isReachEnd'),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Trades);
