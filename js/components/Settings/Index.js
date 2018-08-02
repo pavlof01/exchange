@@ -81,6 +81,8 @@ const styles = StyleSheet.create({
   signOutContainer: {
     paddingBottom: 20,
     paddingTop: 20,
+    paddingStart: 17,
+    paddingEnd: 17,
   },
   signOutText: {
     color: '#d61b38',
@@ -227,13 +229,13 @@ class Settings extends Component {
             onValueChange={openPincode}
             text="Passcode"
           />
-          <View style={styles.signOutContainer}>
-            <Touchable onPress={this.onLogoutPressed}>
+          <Touchable onPress={this.onLogoutPressed}>
+            <View style={styles.signOutContainer}>
               <Text style={styles.signOutText}>
                 SIGN OUT
               </Text>
-            </Touchable>
-          </View>
+            </View>
+          </Touchable>
         </ScrollView>
       </View>
     );
@@ -242,7 +244,7 @@ class Settings extends Component {
 
 Settings.propTypes = {
   intl: intlShape.isRequired,
-  user: PropTypes.object,
+  user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   logout: PropTypes.func,
   openSelectCountries: PropTypes.func.isRequired,
   openSelectNativeCurrency: PropTypes.func.isRequired,
