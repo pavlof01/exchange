@@ -190,7 +190,14 @@ class Settings extends Component {
       openSelectCountries,
       openSelectNativeCurrency,
       openSelectLanguage,
+      openPincode,
     } = this.props;
+    const {
+      selectedCountry,
+      selectedCurrency,
+      selectedLanguage,
+      passcode,
+    } = this.state;
     return (
       <View style={styles.mainContainer}>
         <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
@@ -204,20 +211,20 @@ class Settings extends Component {
           <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
           <SettingsItem
             onPress={openSelectCountries}
-            text={this.state.selectedCountry || 'Select Country'}
+            text={selectedCountry || 'Select Country'}
           />
           <SettingsItem
             onPress={openSelectNativeCurrency}
-            text={this.state.selectedCurrency || 'Select Currency'}
+            text={selectedCurrency || 'Select Currency'}
           />
           <SettingsItem
             onPress={openSelectLanguage}
-            text={this.state.selectedLanguage || 'Select Language'}
+            text={selectedLanguage || 'Select Language'}
           />
           <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
           <Switcher
-            value={this.state.passcode}
-            onValueChange={this.props.openPincode}
+            value={passcode}
+            onValueChange={openPincode}
             text="Passcode"
           />
           <View style={styles.signOutContainer}>
@@ -240,6 +247,7 @@ Settings.propTypes = {
   openSelectCountries: PropTypes.func.isRequired,
   openSelectNativeCurrency: PropTypes.func.isRequired,
   openSelectLanguage: PropTypes.func.isRequired,
+  openPincode: PropTypes.func.isRequired,
 };
 
 export default injectIntl(Settings);
