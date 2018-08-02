@@ -1,23 +1,32 @@
-import {all, fork} from 'redux-saga/effects';
+import { all, fork } from 'redux-saga/effects';
 import {
-    dynamicInitialRouteData,
-    loginData,
-    logoutData,
+  dynamicInitialRouteData,
+  loginData,
+  logoutData,
 } from './authorization';
 import {
-    signUpData,
+  signUpData,
 } from './signup';
 import {
-    recoverData
+  recoverData,
 } from './recoverPassword';
+import {
+  resetTradesData,
+  tradesData,
+  resetTradesAfterSetNew,
+} from './trades';
+
 const rootSagas = function* root() {
-    yield all([
-        fork(dynamicInitialRouteData),
-        fork(loginData),
-        fork(logoutData),
-        fork(signUpData),
-        fork(recoverData),
-    ]);
+  yield all([
+    fork(dynamicInitialRouteData),
+    fork(loginData),
+    fork(logoutData),
+    fork(signUpData),
+    fork(recoverData),
+    fork(resetTradesData),
+    fork(tradesData),
+    fork(resetTradesAfterSetNew),
+  ]);
 };
 
 export default rootSagas;
