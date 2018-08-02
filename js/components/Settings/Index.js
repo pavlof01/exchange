@@ -187,6 +187,9 @@ class Settings extends Component {
     const {
       intl,
       user,
+      openSelectCountries,
+      openSelectNativeCurrency,
+      openSelectLanguage,
     } = this.props;
     return (
       <View style={styles.mainContainer}>
@@ -199,9 +202,18 @@ class Settings extends Component {
             </Text>
           </View>
           <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
-          <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
-          <SettingsItem onPress={this.props.openSelectNativeCurrency} text={this.state.selectedCurrency || 'Select Currency'} />
-          <SettingsItem onPress={this.props.openSelectLanguage} text={this.state.selectedLanguage || 'Select Language'} />
+          <SettingsItem
+            onPress={openSelectCountries}
+            text={this.state.selectedCountry || 'Select Country'}
+          />
+          <SettingsItem
+            onPress={openSelectNativeCurrency}
+            text={this.state.selectedCurrency || 'Select Currency'}
+          />
+          <SettingsItem
+            onPress={openSelectLanguage}
+            text={this.state.selectedLanguage || 'Select Language'}
+          />
           <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
           <Switcher
             value={this.state.passcode}
@@ -225,6 +237,9 @@ Settings.propTypes = {
   intl: intlShape.isRequired,
   user: PropTypes.object,
   logout: PropTypes.func,
+  openSelectCountries: PropTypes.func.isRequired,
+  openSelectNativeCurrency: PropTypes.func.isRequired,
+  openSelectLanguage: PropTypes.func.isRequired,
 };
 
 export default injectIntl(Settings);
