@@ -208,10 +208,6 @@ export default class Settings extends Component {
             onValueChange={this.props.openPincode}
             text="Passcode"
           />
-          <Title text="VERIFICATION" />
-          <SettingsItem onPress={this.props.openIdInfo} text="ID info" />
-          <SettingsItem onPress={this.props.openPhoneVerify} text="Phone number" />
-          <SettingsItem onPress={this.props.openIdentityDocs} text="Identity documents" />
           <View style={styles.signOutContainer}>
             <Touchable onPress={this.onLogoutPressed}>
               <Text style={styles.signOutText}>
