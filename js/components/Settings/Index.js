@@ -205,12 +205,7 @@ class Settings extends Component {
           <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
           <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
           <SettingsItem onPress={this.props.openSelectNativeCurrency} text={this.state.selectedCurrency || 'Select Currency'} />
-<<<<<<< HEAD
           <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
-=======
-          <SettingsItem onPress={this.props.openSelectLanguage} text={this.state.selectedLanguage || 'Select Language'} />
-          <Title text="SECURITY" />
->>>>>>> 729be5a410c873d97ffb79c6aa1e6e6c6dcc1610
           <Switcher
             value={this.state.passcode}
             onValueChange={this.props.openPincode}
