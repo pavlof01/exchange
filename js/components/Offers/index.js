@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pickerLabel: {
+    color: '#4a4a4a',
     marginTop: 16,
     marginBottom: 6,
     fontSize: 10,

@@ -58,6 +58,20 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: fonts.medium.regular,
   },
+  timeLeft: {
+    color: '#4a4a4a',
+    marginTop: 16,
+    marginBottom: 6,
+    fontSize: 12,
+    fontFamily: fonts.medium.regular,
+  },
+  timeLeftBold: {
+    color: '#4a4a4a',
+    marginTop: 16,
+    marginBottom: 6,
+    fontSize: 14,
+    fontFamily: fonts.bold.regular,
+  },
   pickerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -70,23 +84,6 @@ const styles = StyleSheet.create({
   },
   formStyle: {
     flex: 1,
-  },
-  header: {
-    color: '#2c09a3',
-    fontWeight: 'bold',
-    fontSize: 26,
-    marginBottom: 8,
-  },
-  info: {
-    backgroundColor: 'white',
-    margin: 8,
-    padding: 8,
-    borderRadius: 4,
-  },
-  centeredText: {
-    textAlign: 'center',
-    flex: 1,
-    margin: 8,
   },
   warning: {
     color: '#8b572a',
@@ -270,6 +267,7 @@ class NewTrade extends Component {
       ad,
       pending,
       form,
+      msg,
     } = this.state;
     const { user } = ad;
     return (
@@ -301,6 +299,19 @@ class NewTrade extends Component {
             <Text style={styles.label}>
               {intl.formatMessage({ id: 'app.newTrade.label.message', defaultMessage: 'Message' }).toUpperCase()}
             </Text>
+            <TextInput
+              style={styles.amountText}
+              onChangeText={message => this.setState({ msg: message })}
+              placeholder="You may leave a message"
+              value={msg}
+            />
+            <Text style={styles.timeLeft}>
+              {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
+              {' '}
+              <Text style={styles.timeLeftBold}>
+                {intl.formatMessage({ id: 'app.newTrade.text.timeLeftValue', defaultMessage: '{time} min' }, { time: 90 })}
+              </Text>
+            </Text>
           </View>
 
           <View style={styles.pickerRow}>
@@ -310,40 +321,6 @@ class NewTrade extends Component {
               style={[styles.pickerIcon, { margin: 16 }]}
             />
             {this.renderCryptoCurrencyInput()}
-          </View>
-          <Text
-            style={{
-              color: '#4A4A4A',
-              fontSize: 12,
-              marginTop: 30,
-              marginBottom: 10,
-              letterSpacing: 1,
-            }}
-          >
-            MESSAGE
-          </Text>
-          <View style={styles.amountInputsContainer}>
-            <TextInput
-              style={styles.amountText}
-              onChangeText={msg => this.setState({ msg })}
-              placeholder="You may leave a message"
-              value={this.state.msg}
-            />
-          </View>
-
-          <View
-            style={{
-              marginTop: 20,
-              flexDirection: 'row',
-              flex: 1,
-            }}
-          >
-            <Text style={{ color: '#4a4a4a' }}>
-              Time limit for payment of seller's invoice:
-            </Text>
-            <Text style={{ fontWeight: '700' }}>
-              {' 90 min' /* TODO: Get time value */ }
-            </Text>
           </View>
 
           <PrimaryButton
