@@ -24,6 +24,7 @@
   "app.newTrade.button.sendRequestToTrader": "Send a request to trader",
   "app.TraderInfo.label.country": "Country",
   "app.TraderInfo.label.termOfTransaction": "Term of transaction",
+  "app.TraderInfo.label.termDescription": "This advertisement is for cash transactions only. Make a request only when you can make a cash payment within 12 hours.",
   "app.trade.feedback.title": "Leave a rating for the trader",
   "app.trade.feedback.checkbox.positive": "Positive",
   "app.trade.feedback.checkbox.neutral": "Neutral",

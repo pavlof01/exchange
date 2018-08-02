@@ -289,7 +289,7 @@ class NewTrade extends Component {
             isOnline={ad.user.online}
             traderName={ad.user.user_name}
             completedTradesCount={
-              String(User.approximateTradesCount(ad.user.completed_trades_count))
+              String(User.approximateTradesCount(ad.user.completed_trades_count) || '')
             }
             countryCode={ad.country_code}
           />

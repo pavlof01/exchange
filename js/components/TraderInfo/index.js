@@ -127,7 +127,7 @@ class TraderInfo extends Component {
                 {intl.formatMessage({ id: 'app.TraderInfo.label.termOfTransaction', defaultMessage: 'Term of transaction' }).toUpperCase()}
               </Text>
               <Text style={styles.infoText}>
-                {'This advertisement is for cash transactions only. Make a request only when you can make a cash payment within 12 hours.'}
+                {intl.formatMessage({ id: 'app.TraderInfo.label.termDescription' })}
               </Text>
             </View>
           )

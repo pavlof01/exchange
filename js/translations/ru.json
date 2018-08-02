@@ -24,6 +24,7 @@
   "app.newTrade.button.sendRequestToTrader": "Отправить запрос Трейдеру",
   "app.TraderInfo.label.country": "Страна",
   "app.TraderInfo.label.termOfTransaction": "Условие транзакции",
+  "app.TraderInfo.label.termDescription": "Это объявление предназначено только для денежных операций. Делайте запрос только тогда, когда вы можете совершить платеж в течение 12 часов.",
   "app.trade.feedback.title": "Оставьте отзыв трейдеру",
   "app.trade.feedback.checkbox.positive": "Положительно",
   "app.trade.feedback.checkbox.neutral": "Нейтрально",
