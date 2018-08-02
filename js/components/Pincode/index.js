@@ -5,19 +5,16 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import ModalDialog from '../../style/ModalDialog';
 
-const PASSCODE_LENGTH = 4;
-
 export default class Pincode extends Component {
   static navigationOptions = { header: props => null };
-
   constructor(props) {
     super(props);
     this.state = {
-      passcode: '',
+      pincode: '',
       confirm: false,
       openModal: false,
       textModal: '',
-      deletePasscode: false,
+      deletePincode: false,
     };
   }
 
@@ -26,22 +23,22 @@ export default class Pincode extends Component {
   }
 
   checkPasscode = async () => {
-    const passcode = await AsyncStorage.getItem('passcode');
+    const passcode = await AsyncStorage.getItem('pincode');
     if (passcode) {
-      this.setState({ deletePasscode: true });
+      this.setState({ deletePincode: true });
     }
   }
 
-  setPasscode = (num) => {
-    if (this.state.passcode.length < PASSCODE_LENGTH) {
-      let passcode = this.state.passcode;
-      passcode += num;
-      this.setState({ passcode }, () => {
-        if (this.state.passcode.length >= PASSCODE_LENGTH && this.state.deletePasscode) {
-          this.deletePasscode();
-        } else if (this.state.passcode.length >= PASSCODE_LENGTH && !this.state.confirm) {
-          this.savePasscode();
-        } else if (this.state.passcode.length >= PASSCODE_LENGTH && this.state.confirm) {
+  setPincode = (num) => {
+    if (this.state.pincode.length < 4) {
+      let pincode = this.state.pincode;
+      pincode += num;
+      this.setState({ pincode }, () => {
+        if (this.state.pincode.length >= 4 && this.state.deletePincode) {
+          this.deletePincode();
+        } else if (this.state.pincode.length >= 4 && !this.state.confirm) {
+          this.savePincode();
+        } else if (this.state.pincode.length >= 4 && this.state.confirm) {
           this.compareAndSave();
         }
       });
@@ -49,37 +46,38 @@ export default class Pincode extends Component {
   }
 
   delete = () => {
-    if (this.state.passcode.length > 0 < PASSCODE_LENGTH) {
-      const passcode = String(this.state.passcode);
-      const newPin = passcode.slice(0, -1);
-      this.setState({ passcode: newPin });
+    if (this.state.pincode.length > 0 < 4) {
+      const pincode = String(this.state.pincode);
+      const newPin = pincode.slice(0, -1);
+      this.setState({ pincode: newPin });
     }
   }
 
-  savePasscode = async () => {
-    await AsyncStorage.setItem('passcode', this.state.passcode);
-    this.setState({ passcode: '', confirm: true });
+  savePincode = async () => {
+    await AsyncStorage.setItem('pincode', this.state.pincode);
+    this.setState({ pincode: '', confirm: true });
   }
 
   compareAndSave = async () => {
-    const passcode = await AsyncStorage.getItem('passcode');
-    const confirmPasscode = this.state.passcode;
-    if (passcode == confirmPasscode) {
-      this.setState({ openModal: true, textModal: 'passcode set' });
+    const pincode = await AsyncStorage.getItem('pincode');
+    const confirmPincode = this.state.pincode;
+    if (pincode == confirmPincode) {
+      this.setState({ openModal: true, textModal: 'pincode set' });
     } else {
-      AsyncStorage.removeItem('passcode');
-      this.setState({ openModal: true, textModal: 'wrong passcode' });
+      AsyncStorage.removeItem('pincode');
+      this.setState({ openModal: true, textModal: 'wrong pincode' });
     }
   }
 
-  deletePasscode = async () => {
-    const passcode = await AsyncStorage.getItem('passcode');
-    const confirmPasscode = this.state.passcode;
-    if (passcode == confirmPasscode) {
-      AsyncStorage.removeItem('passcode');
-      this.setState({ openModal: true, textModal: 'passcode deleted' });
+  deletePincode = async () => {
+    const pincode = await AsyncStorage.getItem('pincode');
+    const confirmPincode = this.state.pincode;
+    //console.warn(pincode == confirmPincode);
+    if (pincode == confirmPincode) {
+      AsyncStorage.removeItem('pincode');
+      this.setState({ openModal: true, textModal: 'pincode deleted' });
     } else {
-      this.setState({ openModal: true, textModal: 'wrong passcode' });
+      this.setState({ openModal: true, textModal: 'wrong pincode' });
     }
   }
 
@@ -97,61 +95,61 @@ export default class Pincode extends Component {
         />
         <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
         <Text style={styles.pincode}>
-          {this.state.confirm ? 'CONFIRM PASSCODE' : 'PASSCODE'}
+          {this.state.confirm ? 'CONFIRM PINCODE' : 'PIN CODE'}
         </Text>
         <View style={styles.circleContainer}>
-          <View style={this.state.passcode.length > 0 ? styles.circleFill : styles.circle} />
-          <View style={this.state.passcode.length > 1 ? styles.circleFill : styles.circle} />
-          <View style={this.state.passcode.length > 2 ? styles.circleFill : styles.circle} />
-          <View style={this.state.passcode.length > 3 ? styles.circleFill : styles.circle} />
+          <View style={this.state.pincode.length > 0 ? styles.circleFill : styles.circle} />
+          <View style={this.state.pincode.length > 1 ? styles.circleFill : styles.circle} />
+          <View style={this.state.pincode.length > 2 ? styles.circleFill : styles.circle} />
+          <View style={this.state.pincode.length > 3 ? styles.circleFill : styles.circle} />
         </View>
         <View style={styles.numbersContainer}>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => this.setPasscode('1')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('1')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 1
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPasscode('2')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('2')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 2
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPasscode('3')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('3')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 3
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => this.setPasscode('4')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('4')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 4
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPasscode('5')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('5')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 5
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPasscode('6')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('6')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 6
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => this.setPasscode('7')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('7')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 7
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPasscode('8')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('8')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 8
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPasscode('9')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('9')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 9
               </Text>
@@ -159,7 +157,7 @@ export default class Pincode extends Component {
           </View>
           <View style={styles.row}>
             <View style={styles.empty} />
-            <TouchableOpacity onPress={() => this.setPasscode('0')} style={styles.circleNumber}>
+            <TouchableOpacity onPress={() => this.setPincode('0')} style={styles.circleNumber}>
               <Text style={styles.numberText}>
                 0
               </Text>

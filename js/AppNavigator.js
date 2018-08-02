@@ -16,11 +16,15 @@ import Ads from './containers/Ads/Index';
 import IdInfo from './components/Settings/components/IdInfo';
 import IdentityDocs from './components/Settings/components/IdentityDoc';
 import PhoneVerify from './components/Settings/components/PhoneVerify';
-import Pincode from './containers/Pincode/Index/';
+import Pincode from './containers/Pincode/Index';
 import SelectCountries from './containers/Settings/SelectCountries';
 import SelectNativeCurrency from './containers/Settings/SelectNativeCurr';
 
-import { bottomBarStyle, createBottomBarOptions } from './style/navigation';
+import {
+  bottomBarStyle,
+  createBasicNavigationOptions,
+  createBottomBarOptions,
+} from './style/navigation';
 
 const Main = createBottomTabNavigator({
   Offers: { screen: Offers, navigationOptions: createBottomBarOptions('app.navigation.bottomLabel.Offers', require('./img/ic_offer.png')) },
@@ -31,7 +35,7 @@ const Main = createBottomTabNavigator({
 
 const AppNavigator = createStackNavigator({
   Main: { screen: Main, navigationOptions: () => ({ header: props => null }) },
-  NewTrade: { screen: NewTrade },
+  NewTrade: { screen: NewTrade, navigationOptions: createBasicNavigationOptions('REQUEST') },
   Trade: { screen: Trade },
   Feedback: { screen: Feedback },
   Profile: { screen: Profile },
@@ -46,7 +50,6 @@ const AppNavigator = createStackNavigator({
   Pincode: { screen: Pincode },
   SelectCountries: { screen: SelectCountries },
   SelectNativeCurrency: { screen: SelectNativeCurrency },
-},
-);
+});
 
 export default AppNavigator;

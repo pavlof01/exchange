@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Text,
@@ -8,167 +8,181 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
-  TouchableOpacity,
-  TextInput
-} from "react-native";
+  TextInput,
+} from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
+import FormTextInput from '../FormTextInput';
+import Price from '../../values/Price';
 import {
-  createBasicNavigationOptions,
-  withCommonStatusBar
-} from "../../style/navigation";
-import FormTextInput from "../FormTextInput";
-import Price from "../../values/Price";
-import { currencyCodeToSymbol, objMap } from "../../helpers";
-import PrimaryButton from "../../style/ActionButton";
-import Separator from "../../style/Separator";
-import Api from "../../services/Api";
-import OnlineStatus from "../../style/OnlineStatus";
-import User from "../../models/User";
-import PartnerLink from "../Trade/PartnerLink";
+  currencyCodeToSymbol,
+  objMap,
+} from '../../helpers';
+import PrimaryButton from '../../style/ActionButton';
+import Api from '../../services/Api';
+import User from '../../models/User';
+import TraderInfo from '../TraderInfo';
+import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
+import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
-  centerContent: {
+  container: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center"
   },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 8
+  title: {
+    color: '#9b9b9b',
+    marginEnd: 17,
+    marginStart: 17,
+    marginTop: 16,
+    paddingBottom: 3,
+    marginBottom: 3,
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+    borderBottomColor: '#D5D5D5',
+    borderBottomWidth: 1,
+  },
+  infoContainer: {
+    paddingStart: 17,
+    paddingEnd: 17,
+  },
+  costText: {
+    color: '#2c09a3',
+    textAlign: 'center',
+    marginTop: 30,
+    marginBottom: 15,
+    fontSize: 22,
+    fontFamily: fonts.bold.regular,
+  },
+  label: {
+    color: '#4a4a4a',
+    marginTop: 16,
+    marginBottom: 6,
+    fontSize: 10,
+    fontFamily: fonts.medium.regular,
+  },
+  timeLeft: {
+    color: '#4a4a4a',
+    marginTop: 16,
+    marginBottom: 6,
+    fontSize: 12,
+    fontFamily: fonts.medium.regular,
+  },
+  timeLeftBold: {
+    color: '#4a4a4a',
+    marginTop: 16,
+    marginBottom: 6,
+    fontSize: 14,
+    fontFamily: fonts.bold.regular,
   },
   pickerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 8
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   formRow: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   formStyle: {
-    flex: 1
-  },
-  huge: {
-    color: "#222222",
-    fontSize: 26,
-    marginBottom: 8
-  },
-  header: {
-    color: "#2c09a3",
-    fontWeight: "bold",
-    fontSize: 26,
-    marginBottom: 8
-  },
-  info: {
-    backgroundColor: "white",
-    margin: 8,
-    padding: 8,
-    borderRadius: 4
-  },
-  infoText: {
-    margin: 2,
-    fontSize: 16
-  },
-  bold: {
-    margin: 2,
-    fontSize: 16,
-    fontWeight: "bold"
-  },
-  centeredText: {
-    textAlign: "center",
     flex: 1,
-    margin: 8
-  },
-  error: {
-    color: "#dd0057",
-    marginBottom: 4
   },
   warning: {
-    color: "#8b572a",
-    backgroundColor: "#fbf5eb",
-    borderColor: "#f5a623",
+    color: '#8b572a',
+    backgroundColor: '#fbf5eb',
+    borderColor: '#f5a623',
     borderRadius: 4,
     borderWidth: 1,
     padding: 8,
-    margin: 8
-  },
-  amountInputsContainer: {
-    borderColor: "#d5d5d5",
-    borderBottomWidth: 1,
-    flex: 1,
-    flexDirection: "row",
-    //paddingBottom: 10,
-    alignItems: "center"
+    margin: 8,
   },
   currencyCode: {
-    position: "absolute",
+    position: 'absolute',
     right: 0,
-    color: "#4a4a4a",
-    fontWeight: "700",
+    color: '#4a4a4a',
+    fontWeight: '700',
     fontSize: 19,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   amountText: {
     paddingRight: 50,
     fontSize: 16,
-    paddingBottom: 10
-  }
+    paddingBottom: 10,
+  },
+  sendButton: {
+    marginStart: 60,
+    marginEnd: 60,
+    marginTop: 30,
+    marginBottom: 30,
+  },
 });
 
-export default class NewTrade extends Component {
-  static navigationOptions = createBasicNavigationOptions("REQUEST");
+class NewTrade extends Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    ad: this.props.navigation.getParam("ad", { id: "NO-ID" }),
-    form: {
-      amount: undefined,
-      cost: undefined,
-      message: undefined
-    },
-    pending: false,
-    errors: undefined,
-    showInfoAboutPartner: false
-  };
-
-  componentDidMount() {
-    this.setState({ pending: true });
-    Api.get("/pro/" + this.state.ad.id)
-      .then(response => this.setState({ ad: response.data.ad, pending: false }))
-      .catch(error => alert("Ad not found"));
+    this.state = {
+      ad: props.navigation.getParam('ad', { id: 'NO-ID' }),
+      form: {
+        amount: undefined,
+        cost: undefined,
+        message: undefined,
+      },
+      pending: false,
+      errors: undefined,
+    };
   }
 
-  onCostChange = value => {
-    value = value || 0.0;
-    const amount = value / this.state.ad.price;
+  componentDidMount() {
+    const {
+      ad,
+    } = this.state;
+    Api.get(`/pro/${ad.id}`)
+      .then(response => this.setState({ ad: response.data.ad, pending: false }))
+      .catch(() => {});
+    this.setState({ pending: true });
+  }
+
+  onCostChange = (value) => {
+    const {
+      ad,
+      form,
+    } = this.state;
+    const newValue = value || 0.0;
+    const amount = newValue / ad.price;
     this.setState({
-      form: { ...this.state.form, cost: value, amount: amount.toFixed(8) }
+      form: { ...form, cost: newValue, amount: amount.toFixed(8) },
     });
   };
 
-  onAmountChange = value => {
-    value = value || 0.0;
-    const cost = value * this.state.ad.price;
+  onAmountChange = (value) => {
+    const {
+      ad,
+      form,
+    } = this.state;
+    const newValue = value || 0.0;
+    const cost = newValue * ad.price;
     this.setState({
-      form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }
+      form: { ...form, amount: newValue, cost: cost.toFixed(2) },
     });
   };
 
-  onMessageChange = value =>
-    this.setState({ form: { ...this.state.form, message: value } });
+  onMessageChange = value => this.setState({ form: { ...this.state.form, message: value } });
 
-  onSubmit = values => {
-    this.setState({ pending: true, errors: undefined });
-    Api.post(`/pro/${this.state.ad.id}/trades`, {
+  onSubmit = (values) => {
+    const {
+      openTrade,
+    } = this.props;
+    const {
+      ad,
+    } = this.state;
+    Api.post(`/pro/${ad.id}/trades`, {
       trade: values,
-      ad: { price: this.state.ad.price }
+      ad: { price: ad.price },
     })
-      .then(response => {
+      .then((response) => {
         this.setState({ pending: false });
-        this.props.openTrade(response.data.trade);
+        openTrade(response.data.trade);
       })
-      .catch(error => {
+      .catch((error) => {
         const newState = { pending: false };
 
         if (error.response.status === 422) {
@@ -178,15 +192,16 @@ export default class NewTrade extends Component {
         } else if (error.response.status === 410) {
           newState.errors = {
             schedule: [
-              "Трейдер в данный момент не работает, смотрите расписание"
-            ]
+              'Трейдер в данный момент не работает, смотрите расписание',
+            ],
           };
         } else if (error.response.status === 405) {
-          newState.errors = { yourself: ["Торговля с собой"] };
+          newState.errors = { yourself: ['Торговля с собой'] };
         }
 
         this.setState(newState);
       });
+    this.setState({ pending: true, errors: undefined });
   };
 
   static renderCurrencyInput(
@@ -195,7 +210,7 @@ export default class NewTrade extends Component {
     curCode,
     isCrypt,
     value,
-    onChange
+    onChange,
   ) {
     const min = Price.build(limitMin);
     const max = Price.build(limitMax);
@@ -206,18 +221,24 @@ export default class NewTrade extends Component {
           <FormTextInput
             keyboardType="numeric"
             style={{ paddingRight: 30, flex: 1 }}
-            placeholder={"0"}
+            placeholder="0"
             value={value}
             onChangeText={onChange}
           />
-          <Text style={styles.currencyCode}>{curCode}</Text>
+          <Text style={styles.currencyCode}>
+            {curCode}
+          </Text>
         </View>
         <Text
-          style={{ marginTop: 10, flex: 1, color: "#4a4a4a", fontSize: 12 }}
+          style={{
+            marginTop: 10, flex: 1, color: '#4a4a4a', fontSize: 12,
+          }}
         >
           Limit:
-          {isCrypt ? min.viewCrypto : min.viewMain} –{" "}
-          {isCrypt ? max.viewCrypto : max.viewMain}{" "}
+          {isCrypt ? min.viewCrypto : min.viewMain}
+          {' - '}
+          {isCrypt ? max.viewCrypto : max.viewMain}
+          {' '}
           {currencyCodeToSymbol(curCode)}
         </Text>
       </View>
@@ -232,7 +253,7 @@ export default class NewTrade extends Component {
       ad.currency_code,
       false,
       form.cost,
-      this.onCostChange
+      this.onCostChange,
     );
   }
 
@@ -244,213 +265,104 @@ export default class NewTrade extends Component {
       ad.crypto_currency_code,
       true,
       form.amount,
-      this.onAmountChange
+      this.onAmountChange,
     );
   }
 
-  showInfoAboutPartner = () =>
-    this.setState({ showInfoAboutPartner: !this.state.showInfoAboutPartner });
-
   render() {
-    const { ad, pending, form } = this.state;
-    const { user } = ad;
-    console.warn(JSON.stringify(ad, null, 2));
+    const {
+      intl,
+    } = this.props;
+    const {
+      ad,
+      pending,
+      form,
+      msg,
+      errors,
+    } = this.state;
     return (
-      <ScrollView
-        style={{ padding: 17, backgroundColor: "#fff" }}
-        //keyboardShouldPersistTaps="always"
+      <KeyboardAvoidingWrapView
+        behavior="padding"
+        style={styles.container}
       >
-        <View>
-          <View
-            style={{
-              width: "100%",
-              paddingBottom: 6,
-              borderBottomWidth: 2,
-              borderColor: "#d5d5d5"
-            }}
-          >
-            <Text style={{ fontSize: 18, color: "grey", fontWeight: "bold" }}>
-              TRANSFER VIA {ad.payment_method_code}
+        <ScrollView
+          style={{ backgroundColor: '#fff' }}
+          // keyboardShouldPersistTaps="always"
+        >
+          <View>
+            <Text style={styles.title}>
+              {`${intl.formatMessage({ id: 'app.newTrade.title', defaultMessage: 'Transfer via' }).toUpperCase()} ${ad.payment_method_code}`}
             </Text>
-          </View>
-          <TouchableOpacity
-            onPress={this.showInfoAboutPartner}
-            style={{
-              width: "100%",
-              marginTop: 15,
-              flexDirection: "row",
-              alignItems: "center",
-              borderBottomWidth: this.state.showInfoAboutPartner ? 0 : 2,
-              paddingBottom: 10,
-              borderColor: "#d5d5d5",
-              alignItems: "center"
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "center"
-              }}
-            >
-              <OnlineStatus isOnline={ad.user.online} />
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                {ad.user.user_name}
+            <TraderInfo
+              isOnline={ad.user.online}
+              traderName={ad.user.user_name}
+              completedTradesCount={
+                String(User.approximateTradesCount(ad.user.completed_trades_count) || '')
+              }
+              countryCode={ad.country_code}
+            />
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>
+                {intl.formatMessage({ id: 'app.newTrade.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
               </Text>
-              <View
-                style={{
-                  marginLeft: 10,
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <Text>
-                  {User.approximateTradesCount(ad.user.completed_trades_count)}
-                </Text>
+              <Text style={styles.costText}>
+                {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
+              </Text>
+              <Text style={styles.label}>
+                {intl.formatMessage({ id: 'app.newTrade.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
+              </Text>
+              <View style={styles.pickerRow}>
+                {this.renderFiatCurrencyInput()}
+                <Image
+                  source={require('../../img/ic_swap.png')}
+                  style={[styles.pickerIcon, { margin: 16 }]}
+                />
+                {this.renderCryptoCurrencyInput()}
               </View>
-            </View>
-            <View>
-              <Image
-                style={{ width: 12, height: 6, justifyContent: "flex-end" }}
-                source={require("../../../assets/icons/Line.png")}
+              <Text style={styles.label}>
+                {intl.formatMessage({ id: 'app.newTrade.label.message', defaultMessage: 'Message' }).toUpperCase()}
+              </Text>
+              <TextInput
+                style={styles.amountText}
+                onChangeText={message => this.setState({ msg: message })}
+                placeholder="You may leave a message"
+                value={msg}
               />
+              <Text style={styles.timeLeft}>
+                {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
+                {' '}
+                <Text style={styles.timeLeftBold}>
+                  {intl.formatMessage({ id: 'app.newTrade.text.timeLeftValue', defaultMessage: '{time} min' }, { time: 90 })}
+                </Text>
+              </Text>
             </View>
-          </TouchableOpacity>
-          {this.state.showInfoAboutPartner ? (
-            <View
-              style={{
-                backgroundColor: "#F8F9FB",
-                paddingBottom: 15,
-                paddingTop: 15,
-                borderBottomWidth: 2,
-                borderColor: "#d5d5d5"
-              }}
+            <PrimaryButton
+              style={styles.sendButton}
+              onPress={() => this.onSubmit(form)}
+              title={intl.formatMessage({ id: 'app.newTrade.button.sendRequestToTrader', defaultMessage: 'Send a request to trader' }).toUpperCase()}
+              disabled={pending}
             >
-              <Text
-                style={{
-                  color: "#4A4A4A",
-                  fontSize: 12,
-                  letterSpacing: 1.5
-                }}
-              >
-                Country
+              {pending ? <ActivityIndicator size="large" /> : undefined}
+            </PrimaryButton>
+            {objMap(errors, (key, value) => (
+              <Text style={styles.warning} key={key}>
+                {key}
+                {':'}
+                {value.join('. ')}
               </Text>
-              <Text style={{ fontSize: 18, marginTop: 10, color: "#4a4a4a" }}>
-                {ad.country_code}
-              </Text>
-              <Text
-                style={{
-                  color: "#4A4A4A",
-                  fontSize: 12,
-                  marginTop: 10,
-                  marginBottom: 5,
-                  letterSpacing: 1
-                }}
-              >
-                Term of transaction
-              </Text>
-              <Text style={{ fontSize: 18, color: "#4a4a4a" }}>
-                This advertisement is for cash transactions only. Make a request
-                only when you can make a cash payment within 12 hours.
-              </Text>
-            </View>
-          ) : null}
-          <Text
-            style={{
-              color: "#4A4A4A",
-              fontSize: 12,
-              marginTop: 16,
-              letterSpacing: 1
-            }}
-          >
-            COST
-          </Text>
-          <View style={styles.info}>
-            <Text style={styles.centeredText}>
-              <Text style={styles.header}>
-                1 {ad.crypto_currency_code} / {Price.build(ad.price).viewMain}{" "}
-                {currencyCodeToSymbol(ad.currency_code)}
-              </Text>
-            </Text>
+            ))}
           </View>
-          <Text
-            style={{
-              color: "#4A4A4A",
-              fontSize: 12,
-              marginBottom: 10,
-              letterSpacing: 1
-            }}
-          >
-            AMOUNT
-          </Text>
-
-          <View style={styles.pickerRow}>
-            {this.renderFiatCurrencyInput()}
-            <Image
-              source={require("../../img/ic_swap.png")}
-              style={[styles.pickerIcon, { margin: 16 }]}
-            />
-            {this.renderCryptoCurrencyInput()}
-          </View>
-          <Text
-            style={{
-              color: "#4A4A4A",
-              fontSize: 12,
-              marginTop: 30,
-              marginBottom: 10,
-              letterSpacing: 1
-            }}
-          >
-            MESSAGE
-          </Text>
-          <View style={styles.amountInputsContainer}>
-            <TextInput
-              style={styles.amountText}
-              onChangeText={msg => this.setState({ msg })}
-              placeholder="You may leave a message"
-              value={this.state.msg}
-            />
-          </View>
-
-          <View
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              flex: 1
-            }}
-          >
-            <Text style={{ color: "#4a4a4a" }}>
-              Time limit for payment of seller's invoice:
-            </Text>
-            <Text style={{ fontWeight: "700" }}> 90 min</Text>
-          </View>
-
-          <PrimaryButton
-            onPress={() => this.onSubmit(form)}
-            title={"SEND A REQUSET TO TRADER"}
-            disabled={pending}
-            style={{
-              marginTop: 30,
-              flex: 1,
-              backgroundColor: "#5b6eff",
-              boxShadow: "0 3 5 -3 rgba(31, 89, 230, 0.8)"
-            }}
-          >
-            {pending ? <ActivityIndicator size="large" /> : undefined}
-          </PrimaryButton>
-
-          {objMap(this.state.errors, (key, value) => (
-            <Text style={styles.warning} key={key}>
-              {key}: {value.join(". ")}
-            </Text>
-          ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingWrapView>
     );
   }
 }
 
 NewTrade.propTypes = {
+  intl: intlShape.isRequired,
+  navigation: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   isFetching: PropTypes.bool,
-  openTrade: PropTypes.func
+  openTrade: PropTypes.func.isRequired,
 };
+
+export default injectIntl(NewTrade);
