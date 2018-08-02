@@ -274,7 +274,9 @@ class NewTrade extends Component {
           <TraderInfo
             isOnline={ad.user.online}
             traderName={ad.user.user_name}
-            completedTradesCount={User.approximateTradesCount(ad.user.completed_trades_count)}
+            completedTradesCount={
+              String(User.approximateTradesCount(ad.user.completed_trades_count))
+            }
             countryCode={ad.country_code}
           />
           <View style={styles.infoContainer}>

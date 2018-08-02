@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
 import Touchable from '../../style/Touchable';
 import OnlineStatus from '../../style/OnlineStatus';
 import { fonts } from '../../style/resourceHelpers';
@@ -102,8 +103,12 @@ class TraderInfo extends Component {
         <Touchable onPress={this.handleToggleInfo}>
           <View style={styles.statusLine}>
             <OnlineStatus isOnline={isOnline} />
-            <Text style={styles.traderName}>{traderName}</Text>
-            <Text style={styles.completedTradesCount}>{completedTradesCount}</Text>
+            <Text style={styles.traderName}>
+              {traderName}
+            </Text>
+            <Text style={styles.completedTradesCount}>
+              {completedTradesCount}
+            </Text>
             <View style={styles.container} />
             <Image source={require('../../img/ic_picker.png')} style={isOpen ? styles.pickerIconOpen : styles.pickerIcon} />
           </View>
@@ -111,10 +116,18 @@ class TraderInfo extends Component {
         {
           isOpen && (
             <View style={styles.infoContainer}>
-              <Text style={styles.infoTitle}>{'Country'.toUpperCase()}</Text>
-              <Text style={[styles.infoText, styles.infoTextMargin]}>{countryCode}</Text>
-              <Text style={styles.infoTitle}>{'Term of transaction'.toUpperCase()}</Text>
-              <Text style={styles.infoText}>This advertisement is for cash transactions only. Make a request only when you can make a cash payment within 12 hours.</Text>
+              <Text style={styles.infoTitle}>
+                {'Country'.toUpperCase()}
+              </Text>
+              <Text style={[styles.infoText, styles.infoTextMargin]}>
+                {countryCode}
+              </Text>
+              <Text style={styles.infoTitle}>
+                {'Term of transaction'.toUpperCase()}
+              </Text>
+              <Text style={styles.infoText}>
+                {'This advertisement is for cash transactions only. Make a request only when you can make a cash payment within 12 hours.'}
+              </Text>
             </View>
           )
         }
@@ -125,6 +138,7 @@ class TraderInfo extends Component {
 }
 
 TraderInfo.propTypes = {
+  intl: intlShape.isRequired,
   isOpen: PropTypes.bool,
   isOnline: PropTypes.bool,
   traderName: PropTypes.string,
@@ -132,4 +146,4 @@ TraderInfo.propTypes = {
   countryCode: PropTypes.string,
 };
 
-export default TraderInfo;
+export default injectIntl(TraderInfo);
