@@ -53,7 +53,12 @@ class SelectLanguage extends Component {
     title: 'SELECT LANGUAGE',
     headerRight: (
       <Button
-        onPress={navigation.getParam('updateLang')}
+        onPress={() => {
+          const handleSave = navigation.getParam('handleSave');
+          if (typeof handleSave === 'function') {
+            handleSave.call();
+          }
+        }}
         title="Select"
         color="#fff"
       />
@@ -72,10 +77,13 @@ class SelectLanguage extends Component {
 
   componentDidMount() {
     AsyncStorage.setItem('locale', 'en');
-    this.props.navigation.setParams({ selectLang: this.selectLang });
+    const {
+      navigation,
+    } = this.props;
+    navigation.setParams({ handleSave: this.updateLang });
   }
 
-  languageKeyExtractor = lang => lang.item;
+  languageKeyExtractor = lang => lang;
 
   selectLang = (value) => {
     this.setState({ selectedLocale: value });
@@ -84,13 +92,14 @@ class SelectLanguage extends Component {
   updateLang = () => {
     const {
       setLocale,
+      navigation,
     } = this.props;
     const {
       selectedLocale,
     } = this.state;
     setLocale(selectedLocale);
     //AsyncStorage.setItem('selectedLanguage', this.state.selectedLocale);
-    this.props.navigation.goBack();
+    navigation.goBack();
   };
 
   renderLanguageItem = (lang) => {
@@ -132,6 +141,7 @@ class SelectLanguage extends Component {
 }
 
 SelectLanguage.propTypes = {
+  navigation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   setLocale: PropTypes.func.isRequired,
   locales: PropTypes.arrayOf(PropTypes.string),
   selectedLocale: PropTypes.string,
