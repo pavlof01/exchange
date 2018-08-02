@@ -98,7 +98,6 @@ class SelectLanguage extends Component {
       selectedLocale,
     } = this.state;
     setLocale(selectedLocale);
-    //AsyncStorage.setItem('selectedLanguage', this.state.selectedLocale);
     navigation.goBack();
   };
 
