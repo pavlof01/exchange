@@ -39,6 +39,25 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D5D5D5',
     borderBottomWidth: 1,
   },
+  infoContainer: {
+    paddingStart: 17,
+    paddingEnd: 17,
+  },
+  costText: {
+    color: '#2c09a3',
+    textAlign: 'center',
+    marginTop: 30,
+    marginBottom: 15,
+    fontSize: 22,
+    fontFamily: fonts.bold.regular,
+  },
+  label: {
+    color: '#4a4a4a',
+    marginTop: 16,
+    marginBottom: 6,
+    fontSize: 10,
+    fontFamily: fonts.medium.regular,
+  },
   pickerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -268,39 +287,21 @@ class NewTrade extends Component {
             completedTradesCount={User.approximateTradesCount(ad.user.completed_trades_count)}
             countryCode={ad.country_code}
           />
-          <Text
-            style={{
-              color: '#4A4A4A',
-              fontSize: 12,
-              marginTop: 16,
-              letterSpacing: 1,
-            }}
-          >
-            COST
-          </Text>
-          <View style={styles.info}>
-            <Text style={styles.centeredText}>
-              <Text style={styles.header}>
-                1
-                {' '}
-                {ad.crypto_currency_code}
-                {' / '}
-                {Price.build(ad.price).viewMain}
-                {' '}
-                {currencyCodeToSymbol(ad.currency_code)}
-              </Text>
+          <View style={styles.infoContainer}>
+            <Text style={styles.label}>
+              {intl.formatMessage({ id: 'app.newTrade.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
+            </Text>
+            <Text style={styles.costText}>
+              {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
+            </Text>
+            <Text style={styles.label}>
+              {intl.formatMessage({ id: 'app.newTrade.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
+            </Text>
+
+            <Text style={styles.label}>
+              {intl.formatMessage({ id: 'app.newTrade.label.message', defaultMessage: 'Message' }).toUpperCase()}
             </Text>
           </View>
-          <Text
-            style={{
-              color: '#4A4A4A',
-              fontSize: 12,
-              marginBottom: 10,
-              letterSpacing: 1,
-            }}
-          >
-            AMOUNT
-          </Text>
 
           <View style={styles.pickerRow}>
             {this.renderFiatCurrencyInput()}
