@@ -13,7 +13,6 @@ import {
 import Api from '../services/Api';
 
 function fetchTradesViaApi(filterParams) {
-  console.warn('fetchTradesViaApi');
   return Api.get('/trades', filterParams)
     .then((response) => {
       const page = filterParams.page || 0;
