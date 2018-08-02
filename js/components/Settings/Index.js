@@ -31,11 +31,14 @@ const styles = StyleSheet.create({
   emailContainer: {
     paddingBottom: 20,
     paddingTop: 20,
+    marginStart: 17,
+    marginEnd: 17,
+    borderBottomColor: '#D5D5D5',
     borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
   },
   email: {
     fontSize: 17,
+    lineHeight: 17,
     color: '#14d459',
     fontFamily: fonts.regular.regular,
   },
@@ -183,6 +186,7 @@ class Settings extends Component {
   render() {
     const {
       intl,
+      user,
     } = this.props;
     return (
       <View style={styles.mainContainer}>
@@ -191,7 +195,7 @@ class Settings extends Component {
           <Title text={intl.formatMessage({ id: 'app.settings.title.profile', defaultMessage: 'Profile' }).toUpperCase()} />
           <View style={styles.emailContainer}>
             <Text style={styles.email}>
-              {this.props.user.email}
+              {user.email}
             </Text>
           </View>
           <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
