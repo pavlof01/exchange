@@ -11,9 +11,6 @@ import {
   TextInput,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
-import {
-  createBasicNavigationOptions,
-} from '../../style/navigation';
 import FormTextInput from '../FormTextInput';
 import Price from '../../values/Price';
 import {
@@ -131,39 +128,55 @@ class NewTrade extends Component {
   }
 
   componentDidMount() {
-    this.setState({ pending: true });
-    Api.get(`/pro/${this.state.ad.id}`)
+    const {
+      ad,
+    } = this.state;
+    Api.get(`/pro/${ad.id}`)
       .then(response => this.setState({ ad: response.data.ad, pending: false }))
-      .catch(error => alert('Ad not found'));
+      .catch(() => {});
+    this.setState({ pending: true });
   }
 
   onCostChange = (value) => {
-    value = value || 0.0;
-    const amount = value / this.state.ad.price;
+    const {
+      ad,
+      form,
+    } = this.state;
+    const newValue = value || 0.0;
+    const amount = newValue / ad.price;
     this.setState({
-      form: { ...this.state.form, cost: value, amount: amount.toFixed(8) },
+      form: { ...form, cost: newValue, amount: amount.toFixed(8) },
     });
   };
 
   onAmountChange = (value) => {
-    value = value || 0.0;
-    const cost = value * this.state.ad.price;
+    const {
+      ad,
+      form,
+    } = this.state;
+    const newValue = value || 0.0;
+    const cost = newValue * ad.price;
     this.setState({
-      form: { ...this.state.form, amount: value, cost: cost.toFixed(2) },
+      form: { ...form, amount: newValue, cost: cost.toFixed(2) },
     });
   };
 
   onMessageChange = value => this.setState({ form: { ...this.state.form, message: value } });
 
   onSubmit = (values) => {
-    this.setState({ pending: true, errors: undefined });
-    Api.post(`/pro/${this.state.ad.id}/trades`, {
+    const {
+      openTrade,
+    } = this.props;
+    const {
+      ad,
+    } = this.state;
+    Api.post(`/pro/${ad.id}/trades`, {
       trade: values,
-      ad: { price: this.state.ad.price },
+      ad: { price: ad.price },
     })
       .then((response) => {
         this.setState({ pending: false });
-        this.props.openTrade(response.data.trade);
+        openTrade(response.data.trade);
       })
       .catch((error) => {
         const newState = { pending: false };
@@ -184,6 +197,7 @@ class NewTrade extends Component {
 
         this.setState(newState);
       });
+    this.setState({ pending: true, errors: undefined });
   };
 
   static renderCurrencyInput(
@@ -260,6 +274,7 @@ class NewTrade extends Component {
       pending,
       form,
       msg,
+      errors,
     } = this.state;
     return (
       <ScrollView
@@ -325,7 +340,7 @@ class NewTrade extends Component {
             {pending ? <ActivityIndicator size="large" /> : undefined}
           </PrimaryButton>
 
-          {objMap(this.state.errors, (key, value) => (
+          {objMap(errors, (key, value) => (
             <Text style={styles.warning} key={key}>
               {key}
               {':'}
@@ -342,7 +357,7 @@ NewTrade.propTypes = {
   intl: intlShape.isRequired,
   navigation: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   isFetching: PropTypes.bool,
-  openTrade: PropTypes.func,
+  openTrade: PropTypes.func.isRequired,
 };
 
 export default injectIntl(NewTrade);
