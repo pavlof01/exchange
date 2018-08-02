@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     paddingEnd: 17,
   },
   settingsItemContainer: {
-    paddingBottom: 20,
+    paddingBottom: 18,
     paddingTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -24,9 +24,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D5D5D5',
   },
   text: {
+    paddingTop: 2,
+    alignContent: 'center',
     color: '#000000',
     fontSize: 17,
-    lineHeight: 18,
+    lineHeight: 17,
     fontFamily: fonts.regular.regular,
     letterSpacing: 0.2,
   },
