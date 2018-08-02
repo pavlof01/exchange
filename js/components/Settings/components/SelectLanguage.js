@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
 
 class SelectLanguage extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'SELECT CURRENCY',
+    title: 'SELECT LANGUAGE',
     headerRight: (
       <Button
-        onPress={navigation.getParam('selectLang')}
+        onPress={navigation.getParam('updateLang')}
         title="Select"
         color="#fff"
       />
@@ -66,8 +66,7 @@ class SelectLanguage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedLanguage: '',
-      languages: [{ name: 'Русский' }, { name: 'English' }],
+      selectedLocale: props.selectedLocale,
     };
   }
 
@@ -78,18 +77,29 @@ class SelectLanguage extends Component {
 
   languageKeyExtractor = lang => lang.item;
 
-  selectLang = () => {
-    AsyncStorage.setItem('selectedLanguage', this.state.selectedLanguage);
+  selectLang = (value) => {
+    this.setState({ selectedLocale: value });
+  };
+
+  updateLang = () => {
+    const {
+      setLocale,
+    } = this.props;
+    const {
+      selectedLocale,
+    } = this.state;
+    setLocale(selectedLocale);
+    //AsyncStorage.setItem('selectedLanguage', this.state.selectedLocale);
     this.props.navigation.goBack();
   };
 
   renderLanguageItem = (lang) => {
     const {
       selectedLocale,
-    } = this.props;
+    } = this.state;
     const active = selectedLocale === lang.item;
     return (
-      <Touchable onPress={() => this.setState({ selectedLanguage: lang.item.name })}>
+      <Touchable onPress={() => this.selectLang(lang.item)}>
         <View style={active ? styles.active : styles.currencyContainer}>
           <Text style={styles.currencyName}>
             {getLocaleDisplayName(lang.item)}
@@ -102,8 +112,10 @@ class SelectLanguage extends Component {
   render() {
     const {
       locales,
-      selectedLocale,
     } = this.props;
+    const {
+      selectedLocale,
+    } = this.state;
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContainer}>
@@ -120,6 +132,7 @@ class SelectLanguage extends Component {
 }
 
 SelectLanguage.propTypes = {
+  setLocale: PropTypes.func.isRequired,
   locales: PropTypes.arrayOf(PropTypes.string),
   selectedLocale: PropTypes.string,
 };
