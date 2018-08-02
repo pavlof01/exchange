@@ -110,12 +110,11 @@ const styles = StyleSheet.create({
     marginStart: 60,
     marginEnd: 60,
     marginTop: 30,
+    marginBottom: 30,
   },
 });
 
 class NewTrade extends Component {
-  static navigationOptions = createBasicNavigationOptions('REQUEST');
-
   constructor(props) {
     super(props);
 
