@@ -16,34 +16,36 @@ import {
 } from '../../../utils/i18n';
 
 const styles = StyleSheet.create({
-  active: {
-    backgroundColor: '#7F63A5',
-    paddingBottom: 20,
-    paddingTop: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
-    flexDirection: 'row',
-  },
   mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
   scrollContainer: {
-    paddingLeft: 25,
-    paddingRight: 25,
     flex: 1,
   },
-  currencyContainer: {
+  settingContainer: {
     paddingBottom: 20,
     paddingTop: 20,
+    paddingStart: 17,
+    paddingEnd: 17,
     borderBottomWidth: 1,
     borderBottomColor: '#d5d5d5',
     flexDirection: 'row',
   },
-  currencyName: {
+  settingName: {
+    color: '#111111',
     height: 18,
     fontSize: 18,
-    fontFamily: fonts.regular.regular,
+    lineHeight: 18,
+    fontFamily: fonts.medium.regular,
+    letterSpacing: 0.2,
+  },
+  settingNameActive: {
+    color: '#000000',
+    height: 18,
+    fontSize: 18,
+    lineHeight: 18,
+    fontFamily: fonts.bold.regular,
     letterSpacing: 0.2,
   },
 });
@@ -108,8 +110,8 @@ class SelectLanguage extends Component {
     const active = selectedLocale === lang.item;
     return (
       <Touchable onPress={() => this.selectLang(lang.item)}>
-        <View style={active ? styles.active : styles.currencyContainer}>
-          <Text style={styles.currencyName}>
+        <View style={styles.settingContainer}>
+          <Text style={active ? styles.settingNameActive : styles.settingName}>
             {getLocaleDisplayName(lang.item)}
           </Text>
         </View>
