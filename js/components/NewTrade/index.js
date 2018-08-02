@@ -361,7 +361,6 @@ class NewTrade extends Component {
 NewTrade.propTypes = {
   intl: intlShape.isRequired,
   navigation: PropTypes.any, // eslint-disable-line react/forbid-prop-types
-  isFetching: PropTypes.bool,
   openTrade: PropTypes.func.isRequired,
 };
 
