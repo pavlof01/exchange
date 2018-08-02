@@ -114,18 +114,21 @@ export default class Settings extends Component {
     passcode: false,
     selectedCountry: undefined,
     selectedCurrency: undefined,
+    selectedLanguage: undefined,
   };
 
   componentWillMount() {
     this.selectedCountry();
     this.selectedCurr();
     this.checkPasscode();
+    this.selectedLang();
     this.props.navigation.addListener(
       'willFocus',
       () => {
         this.checkPasscode();
         this.selectedCountry();
         this.selectedCurr();
+        this.selectedLang();
       },
     );
   }
@@ -171,6 +174,11 @@ export default class Settings extends Component {
     this.setState({ selectedCurrency });
   }
 
+  selectedLang = async () => {
+    const selectedLanguage = await AsyncStorage.getItem('selectedLanguage');
+    this.setState({ selectedLanguage });
+  }
+
   onLogoutPressed = () => this.props.logout();
 
   onIntroductionChanged = value => this.setState({ introduction: value });
@@ -193,7 +201,7 @@ export default class Settings extends Component {
           <Title text="ACCOUNT" />
           <SettingsItem onPress={this.props.openSelectCountries} text={this.state.selectedCountry || 'Select Country'} />
           <SettingsItem onPress={this.props.openSelectNativeCurrency} text={this.state.selectedCurrency || 'Select Currency'} />
-          <SettingsItem text="Select Language" onPress={this.props.openSelectLanguage} /* text={this.state.selectedCurrency || 'Select Currency'} */ />
+          <SettingsItem onPress={this.props.openSelectLanguage} text={this.state.selectedLanguage || 'Select Language'} />
           <Title text="SECURITY" />
           <Switcher
             value={this.state.passcode}

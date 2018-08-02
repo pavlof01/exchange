@@ -12,66 +12,66 @@ import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
 
 export default class SelectCountries extends Component {
-    static navigationOptions = ({ navigation }) => ({
-      title: 'SELECT CURRENCY',
-      headerRight: (
-          <Button
-              onPress={navigation.getParam('selectCurrency')}
-              title="Select"
-              color="#fff"
-            />
-      ),
-      headerStyle: { backgroundColor: '#2B2B82' },
-      headerTitleStyle: { color: 'white' },
-      headerTintColor: 'white',
-    });
+  static navigationOptions = ({ navigation }) => ({
+    title: 'SELECT CURRENCY',
+    headerRight: (
+      <Button
+        onPress={navigation.getParam('selectLang')}
+        title="Select"
+        color="#fff"
+      />
+    ),
+    headerStyle: { backgroundColor: '#2B2B82' },
+    headerTitleStyle: { color: 'white' },
+    headerTintColor: 'white',
+  });
 
-    constructor(props) {
-      super(props);
-      this.state = {
-        selectedCurrency: '',
-      };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedLanguage: '',
+      languages: [{ name: 'Русский' }, { name: 'English' }],
+    };
+  }
 
-    /* componentDidMount() {
-      this.props.navigation.setParams({ selectCurrency: this.selectCurrency });
-    }
+  componentDidMount() {
+    this.props.navigation.setParams({ selectLang: this.selectLang });
+  }
 
-    countryKeyExtractor = currency => currency.code;
+  languageKeyExtractor = currency => currency.code;
 
-    selectCurrency = () => {
-      AsyncStorage.setItem('selectedCurrency', this.state.selectedCurrency);
-      this.props.navigation.goBack();
-    }
+  selectLang = () => {
+    AsyncStorage.setItem('selectedLanguage', this.state.selectedLanguage);
+    this.props.navigation.goBack();
+  }
 
-    renderCurrencyItem = (currency) => {
-      const active = this.state.selectedCurrency == currency.item.name;
-      return (
-        <Touchable onPress={() => this.setState({ selectedCurrency: currency.item.name })}>
-          <View style={active ? styles.active : styles.currencyContainer}>
-            <Text style={styles.currencyName}>{currency.item.name}</Text>
-          </View>
-        </Touchable>
-      );
-    } */
+  renderLanguageItem = (lang) => {
+    const active = this.state.selectedLanguage == lang.item.name;
+    return (
+      <Touchable onPress={() => this.setState({ selectedLanguage: lang.item.name })}>
+        <View style={active ? styles.active : styles.currencyContainer}>
+          <Text style={styles.currencyName}>
+            {lang.item.name}
+          </Text>
+        </View>
+      </Touchable>
+    );
+  }
 
-    render() {
-      return (<Text>
-            TEST
-        </Text>
-      /*
+  render() {
+    return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContainer}>
           <FlatList
-            data={this.props.currencies}
-            extraData={this.state.selectedCurrency}
-            keyExtractor={this.countryKeyExtractor}
-            renderItem={this.renderCurrencyItem}
+            data={this.state.languages}
+            extraData={this.state.selectedLanguage}
+            keyExtractor={this.languageKeyExtractor}
+            renderItem={this.renderLanguageItem}
           />
         </ScrollView>
       </View>
-    */);
-    }
+    );
+  }
 }
 
 const styles = StyleSheet.create({
