@@ -17,7 +17,18 @@ export const appLocales = [
   'ru',
 ];
 
-const DEFAULT_LOCALE = appLocales[0];
+export const getLocaleDisplayName = (locale) => {
+  switch (locale) {
+    case 'en':
+      return 'English';
+    case 'ru':
+      return 'Русский';
+    default:
+      return '';
+  }
+};
+
+export const DEFAULT_LOCALE = appLocales[0];
 
 const formatTranslationMessages = (locale, messages) => {
   const defaultFormattedMessages = locale !== DEFAULT_LOCALE

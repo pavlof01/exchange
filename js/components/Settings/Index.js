@@ -14,6 +14,7 @@ import Title from './Title';
 import SettingsItem from './SettingsItem';
 import Switcher from './Switcher';
 import { fonts } from '../../style/resourceHelpers';
+import { getLocaleDisplayName } from '../../utils/i18n';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -193,13 +194,14 @@ class Settings extends Component {
       openSelectNativeCurrency,
       openSelectLanguage,
       openPincode,
+      selectedLocale,
     } = this.props;
     const {
       selectedCountry,
       selectedCurrency,
-      selectedLanguage,
       passcode,
     } = this.state;
+    const displaySelectedLanguage = getLocaleDisplayName(selectedLocale);
     return (
       <View style={styles.mainContainer}>
         <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
@@ -221,7 +223,7 @@ class Settings extends Component {
           />
           <SettingsItem
             onPress={openSelectLanguage}
-            text={selectedLanguage || 'Select Language'}
+            text={displaySelectedLanguage || 'Select Language'}
           />
           <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
           <Switcher
@@ -250,6 +252,7 @@ Settings.propTypes = {
   openSelectNativeCurrency: PropTypes.func.isRequired,
   openSelectLanguage: PropTypes.func.isRequired,
   openPincode: PropTypes.func.isRequired,
+  selectedLocale: PropTypes.string,
 };
 
 export default injectIntl(Settings);

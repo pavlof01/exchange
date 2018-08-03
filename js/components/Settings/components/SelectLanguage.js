@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -10,13 +11,56 @@ import {
 } from 'react-native';
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
+import {
+  getLocaleDisplayName,
+} from '../../../utils/i18n';
 
-export default class SelectCountries extends Component {
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  settingContainer: {
+    paddingBottom: 20,
+    paddingTop: 20,
+    paddingStart: 17,
+    paddingEnd: 17,
+    borderBottomWidth: 1,
+    borderBottomColor: '#d5d5d5',
+    flexDirection: 'row',
+  },
+  settingName: {
+    color: '#111111',
+    height: 18,
+    fontSize: 18,
+    lineHeight: 18,
+    fontFamily: fonts.medium.regular,
+    letterSpacing: 0.2,
+  },
+  settingNameActive: {
+    color: '#000000',
+    height: 18,
+    fontSize: 18,
+    lineHeight: 18,
+    fontFamily: fonts.bold.regular,
+    letterSpacing: 0.2,
+  },
+});
+
+class SelectLanguage extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'SELECT CURRENCY',
+    title: 'SELECT LANGUAGE',
     headerRight: (
       <Button
-        onPress={navigation.getParam('selectLang')}
+        onPress={() => {
+          const handleSave = navigation.getParam('handleSave');
+          if (typeof handleSave === 'function') {
+            handleSave.call();
+          }
+        }}
         title="Select"
         color="#fff"
       />
@@ -29,42 +73,67 @@ export default class SelectCountries extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedLanguage: '',
-      languages: [{ name: 'Русский' }, { name: 'English' }],
+      selectedLocale: props.selectedLocale,
     };
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ selectLang: this.selectLang });
+    const {
+      navigation,
+    } = this.props;
+    navigation.setParams({ handleSave: this.updateLang });
   }
 
-  languageKeyExtractor = currency => currency.code;
+  languageKeyExtractor = lang => lang;
 
-  selectLang = () => {
-    AsyncStorage.setItem('selectedLanguage', this.state.selectedLanguage);
-    this.props.navigation.goBack();
-  }
+  selectLang = (value) => {
+    this.setState({ selectedLocale: value });
+  };
+
+  updateLang = () => {
+    const {
+      setLocale,
+      navigation,
+    } = this.props;
+    const {
+      selectedLocale,
+    } = this.state;
+    if (selectedLocale) {
+      setLocale(selectedLocale);
+      AsyncStorage.setItem('locale', selectedLocale);
+      navigation.goBack();
+    }
+  };
 
   renderLanguageItem = (lang) => {
-    const active = this.state.selectedLanguage == lang.item.name;
+    const {
+      selectedLocale,
+    } = this.state;
+    const active = selectedLocale === lang.item;
     return (
-      <Touchable onPress={() => this.setState({ selectedLanguage: lang.item.name })}>
-        <View style={active ? styles.active : styles.currencyContainer}>
-          <Text style={styles.currencyName}>
-            {lang.item.name}
+      <Touchable onPress={() => this.selectLang(lang.item)}>
+        <View style={styles.settingContainer}>
+          <Text style={active ? styles.settingNameActive : styles.settingName}>
+            {getLocaleDisplayName(lang.item)}
           </Text>
         </View>
       </Touchable>
     );
-  }
+  };
 
   render() {
+    const {
+      locales,
+    } = this.props;
+    const {
+      selectedLocale,
+    } = this.state;
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContainer}>
           <FlatList
-            data={this.state.languages}
-            extraData={this.state.selectedLanguage}
+            data={locales}
+            extraData={selectedLocale}
             keyExtractor={this.languageKeyExtractor}
             renderItem={this.renderLanguageItem}
           />
@@ -74,39 +143,11 @@ export default class SelectCountries extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  active: {
-    backgroundColor: '#7F63A5',
-    paddingBottom: 20,
-    paddingTop: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
-    flexDirection: 'row',
-  },
-  mainContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  scrollContainer: {
-    paddingLeft: 25,
-    paddingRight: 25,
-    flex: 1,
-  },
-  currencyContainer: {
-    paddingBottom: 20,
-    paddingTop: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
-    flexDirection: 'row',
-  },
-  currencyName: {
-    height: 18,
-    fontSize: 18,
-    fontFamily: fonts.regular.regular,
-    letterSpacing: 0.2,
-  },
-  headerStyle: {
-    backgroundColor: 'red',
-  },
+SelectLanguage.propTypes = {
+  navigation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  setLocale: PropTypes.func.isRequired,
+  locales: PropTypes.arrayOf(PropTypes.string),
+  selectedLocale: PropTypes.string,
+};
 
-});
+export default SelectLanguage;

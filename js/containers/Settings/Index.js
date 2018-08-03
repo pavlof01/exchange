@@ -30,6 +30,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   user: state.session.user,
+  selectedLocale: state.i18n.locale,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
