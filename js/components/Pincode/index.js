@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalDialog from '../../style/ModalDialog';
+import PinCodeNumberButton from './PinCodeNumberButton';
 
 const styles = StyleSheet.create({
   paddingScreen: {
@@ -183,63 +184,23 @@ class Pincode extends Component {
         </View>
         <View style={styles.numbersContainer}>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => this.setPincode('1')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                1
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPincode('2')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                2
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPincode('3')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                3
-              </Text>
-            </TouchableOpacity>
+            <PinCodeNumberButton onPress={() => this.setPincode('1')} value="1" />
+            <PinCodeNumberButton onPress={() => this.setPincode('2')} value="2" />
+            <PinCodeNumberButton onPress={() => this.setPincode('3')} value="3" />
           </View>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => this.setPincode('4')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                4
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPincode('5')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                5
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPincode('6')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                6
-              </Text>
-            </TouchableOpacity>
+            <PinCodeNumberButton onPress={() => this.setPincode('4')} value="4" />
+            <PinCodeNumberButton onPress={() => this.setPincode('5')} value="5" />
+            <PinCodeNumberButton onPress={() => this.setPincode('6')} value="6" />
           </View>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => this.setPincode('7')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                7
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPincode('8')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                8
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setPincode('9')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                9
-              </Text>
-            </TouchableOpacity>
+            <PinCodeNumberButton onPress={() => this.setPincode('7')} value="7" />
+            <PinCodeNumberButton onPress={() => this.setPincode('8')} value="8" />
+            <PinCodeNumberButton onPress={() => this.setPincode('9')} value="9" />
           </View>
           <View style={styles.row}>
             <View style={styles.empty} />
-            <TouchableOpacity onPress={() => this.setPincode('0')} style={styles.circleNumber}>
-              <Text style={styles.numberText}>
-                0
-              </Text>
-            </TouchableOpacity>
+            <PinCodeNumberButton onPress={() => this.setPincode('0')} value="0" />
             <TouchableOpacity onPress={this.delete} style={styles.delete}>
               <Image source={require('../../img/delete.png')} />
             </TouchableOpacity>
