@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   ColorPropType,
   StyleSheet,
-  Platform,
   Text,
   View,
   ViewPropTypes,
@@ -143,8 +142,10 @@ class PrimaryButton extends Component {
       style,
       fontStyle,
     } = this.props;
-    const buttonStyles = [disabled ? styles.buttonDisabled : secondary ? styles.buttonSecondary : styles.button, style];
-    const textStyles = [disabled ? styles.textDisabled : secondary ? styles.textSecondary : styles.text, fontStyle];
+    const secondaryButtonStyles = secondary ? styles.buttonSecondary : styles.button;
+    const buttonStyles = [disabled ? styles.buttonDisabled : secondaryButtonStyles, style];
+    const secondaryTextStyles = secondary ? styles.textSecondary : styles.text;
+    const textStyles = [disabled ? styles.textDisabled : secondaryTextStyles, fontStyle];
     if (color) {
       buttonStyles.push({ borderColor: color, backgroundColor: color });
     }
