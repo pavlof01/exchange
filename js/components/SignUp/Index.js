@@ -78,7 +78,13 @@ export default class SignUp extends Component {
         if (isFormHaveError) {
             this.setState({ formError: validationErrors });
         } else {
-            this.props.signUp({ user_name: loginValue, email: emailValue, password: passwordValue, password_confirmation: password2Value });
+            this.props.signUp({
+              user_name: loginValue,
+              email: emailValue,
+              password: passwordValue,
+              password_confirmation: password2Value,
+              is_mobile: true,
+            });
         }
     }
 
