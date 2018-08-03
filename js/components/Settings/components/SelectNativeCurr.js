@@ -13,40 +13,45 @@ import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
 
 const styles = StyleSheet.create({
-  active: {
-    backgroundColor: '#7F63A5',
-    paddingBottom: 20,
-    paddingTop: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
-    flexDirection: 'row',
-  },
   mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
   scrollContainer: {
-    paddingLeft: 25,
-    paddingRight: 25,
     flex: 1,
   },
-  currencyContainer: {
+  settingContainer: {
     paddingBottom: 20,
     paddingTop: 20,
+    paddingStart: 17,
+    paddingEnd: 17,
     borderBottomWidth: 1,
     borderBottomColor: '#d5d5d5',
     flexDirection: 'row',
   },
-  currencyName: {
-    height: 18,
+  settingName: {
+    color: '#111111',
+    height: 20,
     fontSize: 18,
-    fontFamily: fonts.regular.regular,
+    lineHeight: 20,
+    fontFamily: fonts.medium.regular,
     letterSpacing: 0.2,
   },
-  headerStyle: {
-    backgroundColor: 'red',
+  settingNameActive: {
+    color: '#000000',
+    height: 20,
+    fontSize: 18,
+    lineHeight: 20,
+    fontFamily: fonts.bold.regular,
+    letterSpacing: 0.2,
   },
-
+  headerButtonContainer: {
+    padding: 10,
+  },
+  headerButton: {
+    color: '#FFFFFF',
+    fontSize: 18,
+  },
 });
 
 class SelectCountries extends Component {
@@ -115,8 +120,8 @@ class SelectCountries extends Component {
     const active = selectedCurrency === currency.item.name;
     return (
       <Touchable onPress={() => this.setState({ selectedCurrency: currency.item.name })}>
-        <View style={active ? styles.active : styles.currencyContainer}>
-          <Text style={styles.currencyName}>
+        <View style={styles.settingContainer}>
+          <Text style={active ? styles.settingNameActive : styles.settingName}>
             {currency.item.name}
           </Text>
         </View>
