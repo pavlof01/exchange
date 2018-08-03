@@ -41,5 +41,5 @@
   "app.settings.title.selectLanguage": "Select language",
   "app.settings.title.selectCountry": "Select country",
   "app.settings.button.select": "Select",
-  "app.navigation.settings.Logout": "Logout"
+  "app.navigation.settings.Logout": "Sign out"
 }

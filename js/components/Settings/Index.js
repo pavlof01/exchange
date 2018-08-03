@@ -234,7 +234,7 @@ class Settings extends Component {
           <Touchable onPress={this.onLogoutPressed}>
             <View style={styles.signOutContainer}>
               <Text style={styles.signOutText}>
-                SIGN OUT
+                {intl.formatMessage({ id: 'app.navigation.settings.Logout', defaultMessage: 'Sign out' }).toUpperCase()}
               </Text>
             </View>
           </Touchable>
