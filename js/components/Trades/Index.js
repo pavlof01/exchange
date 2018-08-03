@@ -9,6 +9,7 @@ import {
   StyleSheet,
   RefreshControl,
 } from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
 import CenterProgressBar from '../../style/CenterProgressBar';
 import {
   tradePartner,
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
   },
   info: {
     textAlign: 'center',
-    flex: 2,
+    flex: 3,
   },
   empty: {
     flex: 1,
@@ -116,10 +117,10 @@ class Trades extends Component {
                 style={{ width: 10, height: 10, backgroundColor: '#DADADA' }}
               />
             ) : (
-              <View
-                style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
-              />
-            )}
+                <View
+                  style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
+                />
+              )}
           </View>
           <Text style={styles.info}>
             {trade.id}
@@ -129,8 +130,8 @@ class Trades extends Component {
           </Text>
           <Text style={styles.info}>
             {tradeType(trade, this.props.user.id) === tradeTypeBuy
-              ? 'Buy'
-              : 'Sell'}
+              ? this.props.intl.formatMessage({ id: 'app.trades.type.buy', defaultMessage: 'Buy' })
+              : this.props.intl.formatMessage({ id: 'app.trades.type.sell', defaultMessage: 'Sell' })}
           </Text>
           <Text style={styles.info}>
             {trade.ad.crypto_currency_code}
@@ -167,24 +168,25 @@ class Trades extends Component {
     const {
       isFetch,
       trades,
+      intl,
     } = this.props;
     return withCommonStatusBar(
       <View style={styles.container}>
-        <HeaderBar title="TRADES" />
+        <HeaderBar title={intl.formatMessage({ id: 'app.trades.header', defaultMessage: 'Trades' }).toUpperCase()} />
         <View style={styles.rowContainer}>
           <Text style={styles.empty} />
           <Text style={styles.info}>
             {'#'}
           </Text>
           <Text style={{ flex: 5 }}>
-            {'USER'}
+            {intl.formatMessage({ id: 'app.trades.user', defaultMessage: 'User' }).toUpperCase()}
           </Text>
           <Touchable
             style={styles.info}
             onPress={() => this.sortMessages('byType')}
           >
             <Text style={styles.info}>
-              {'TYPE'}
+              {intl.formatMessage({ id: 'app.trades.type', defaultMessage: 'Type' }).toUpperCase()}
             </Text>
           </Touchable>
           <Touchable
@@ -192,35 +194,35 @@ class Trades extends Component {
             onPress={() => this.sortMessages('byCurrency')}
           >
             <Text style={styles.info}>
-              {'CURR'}
+              {intl.formatMessage({ id: 'app.trades.curr', defaultMessage: 'Curr' }).toUpperCase()}
             </Text>
           </Touchable>
         </View>
         {isFetch && trades.length === 0 ? (
           <CenterProgressBar />
         ) : (
-          <FlatList
-            data={trades}
-            refreshControl={(
-              <RefreshControl
-                refreshing={isFetch}
-                onRefresh={this.onRefresh}
-              />
-            )}
-            renderItem={this.renderItem}
-            keyExtractor={i => i.id}
-            ListEmptyComponent={(
-              <Text style={styles.centerMessage}>
-                {'У вас ещё не было сделок'}
-              </Text>
-            )}
-            ListFooterComponent={
-              isFetch && <ActivityIndicator size="large" />
-            }
-            onEndReached={this.loadNext}
-            onEndReachedThreshold={0.3}
-          />
-        )}
+            <FlatList
+              data={trades}
+              refreshControl={(
+                <RefreshControl
+                  refreshing={isFetch}
+                  onRefresh={this.onRefresh}
+                />
+              )}
+              renderItem={this.renderItem}
+              keyExtractor={i => i.id}
+              ListEmptyComponent={(
+                <Text style={styles.centerMessage}>
+                  {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
+                </Text>
+              )}
+              ListFooterComponent={
+                isFetch && <ActivityIndicator size="large" />
+              }
+              onEndReached={this.loadNext}
+              onEndReachedThreshold={0.3}
+            />
+          )}
       </View>,
     );
   }
@@ -235,4 +237,4 @@ Trades.propTypes = {
   isReachEnd: PropTypes.bool,
 };
 
-export default Trades;
+export default injectIntl(Trades);
