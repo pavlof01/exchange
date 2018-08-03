@@ -16,8 +16,7 @@ export function fetchDictionary(dispatch, locale) {
 
 export function setLocale(locale) {
   const newLocale = appLocales.indexOf(locale) > -1 ? locale : DEFAULT_LOCALE;
-  AsyncStorage.setItem('locale', newLocale);
-  return { type: I18N.I18N_SET_LOCALE, newLocale };
+  return { type: I18N.I18N_SET_LOCALE, locale: newLocale };
 }
 
 export function setDictionary(dictionary) {

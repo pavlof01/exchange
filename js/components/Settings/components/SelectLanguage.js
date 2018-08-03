@@ -78,7 +78,6 @@ class SelectLanguage extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.setItem('locale', 'en');
     const {
       navigation,
     } = this.props;
@@ -99,8 +98,11 @@ class SelectLanguage extends Component {
     const {
       selectedLocale,
     } = this.state;
-    setLocale(selectedLocale);
-    navigation.goBack();
+    if (selectedLocale) {
+      setLocale(selectedLocale);
+      AsyncStorage.setItem('locale', selectedLocale);
+      navigation.goBack();
+    }
   };
 
   renderLanguageItem = (lang) => {

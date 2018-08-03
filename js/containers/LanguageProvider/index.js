@@ -5,12 +5,18 @@ import PropTypes from 'prop-types';
 import 'intl'; // intl полифил для работы react-intl в react-native.
 import { IntlProvider } from 'react-intl';
 import { setLocale as setLocaleAction } from '../../actions/i18n';
+import {
+  appLocales,
+  DEFAULT_LOCALE,
+} from '../../utils/i18n';
 
 class LanguageProvider extends React.PureComponent {
   componentDidMount() {
     const { setLocale } = this.props;
     AsyncStorage.getItem('locale', (locale) => {
-      setLocale(locale);
+      if (locale) {
+        setLocale(locale);
+      }
     });
   }
 
@@ -20,7 +26,7 @@ class LanguageProvider extends React.PureComponent {
       children,
       messages,
     } = this.props;
-    const locale = selectedLocale;
+    const locale = appLocales.indexOf(selectedLocale) > -1 ? selectedLocale : DEFAULT_LOCALE;
     return (
       <IntlProvider
         locale={locale}
