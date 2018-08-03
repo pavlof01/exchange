@@ -39,6 +39,7 @@
   "app.settings.title.account": "Account",
   "app.settings.title.security": "Security",
   "app.settings.title.selectLanguage": "Select language",
+  "app.settings.title.selectCountry": "Select country",
   "app.settings.button.select": "Select",
   "app.navigation.settings.Logout": "Logout"
 }

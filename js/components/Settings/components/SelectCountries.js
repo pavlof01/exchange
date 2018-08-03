@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 class SelectCountries extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: (
-      <FormattedMessage id="app.settings.title.selectLanguage" />
+      <FormattedMessage id="app.settings.title.selectCountry" />
     ),
     headerRight: (
       <Touchable
