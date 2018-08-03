@@ -46,7 +46,6 @@
   "app.settings.title.phoneNumber": "Номер телефона",
   "app.settings.title.identityDocs": "Документы",
   "app.settings.button.select": "Выбрать",
-<<<<<<< HEAD
   "app.trade.feedback.via": "через",
   "app.trade.feedback.cryptocurrency": "криптовалюту",
   "app.trade.feedback.trader": "трейдер",
@@ -57,7 +56,6 @@
   "app.trade.feedback.time": "Время",
   "app.trade.feedback.chat": "Чат",
   "app.trade.feedback.addMsg": "Написать",
-=======
   "app.trades.header": "Сделки",
   "app.trades.noTrades": "Нет сделок",
   "app.trades.user": "Имя",
@@ -90,6 +88,5 @@
   "app.wallet.dialog.to": "Кому",
   "app.wallet.dialog.password": "Пароль",
   "app.wallet.dialog.password.placeholder": "Введите пароль",
->>>>>>> 4043e5f8e3828646640db25f06b4f3396ece03b3
   "app.navigation.settings.Logout": "Выйти"
 }

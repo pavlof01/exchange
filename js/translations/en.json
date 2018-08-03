@@ -46,7 +46,6 @@
   "app.settings.title.phoneNumber": "Phone number",
   "app.settings.title.identityDocs": "Identity documents",
   "app.settings.button.select": "Select",
-<<<<<<< HEAD
   "app.trade.feedback.via": "via",
   "app.trade.feedback.cryptocurrency": "Cryptocurrency",
   "app.trade.feedback.trader": "Trader",
@@ -57,7 +56,6 @@
   "app.trade.feedback.time": "Time",
   "app.trade.feedback.chat": "Chat",
   "app.trade.feedback.addMsg": "Add message",
-=======
   "app.trades.header": "Trades",
   "app.trades.noTrades": "no trades",
   "app.trades.user": "User",
@@ -90,6 +88,5 @@
   "app.wallet.dialog.to": "To",
   "app.wallet.dialog.password": "Password",
   "app.wallet.dialog.password.placeholder": "Login password",
->>>>>>> 4043e5f8e3828646640db25f06b4f3396ece03b3
   "app.navigation.settings.Logout": "Sign out"
 }
