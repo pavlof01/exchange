@@ -45,5 +45,15 @@
   "app.settings.title.phoneNumber": "Номер телефона",
   "app.settings.title.identityDocs": "Документы",
   "app.settings.button.select": "Выбрать",
+  "app.trade.feedback.via": "через",
+  "app.trade.feedback.cryptocurrency": "криптовалюту",
+  "app.trade.feedback.trader": "трейдер",
+  "app.trade.feedback.transaction": "Транзацкия",
+  "app.trade.feedback.received": "Получено",
+  "app.trade.feedback.send": "Потрачено",
+  "app.trade.feedback.date": "Дата",
+  "app.trade.feedback.time": "Время",
+  "app.trade.feedback.chat": "Чат",
+  "app.trade.feedback.addMsg": "Написать",
   "app.navigation.settings.Logout": "Выйти"
 }

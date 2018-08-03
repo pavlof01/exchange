@@ -6,6 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { fonts } from '../../style/resourceHelpers';
+import { injectIntl, intlShape } from 'react-intl';
 
 const styles = StyleSheet.create({
   transactionDetailsBox: {
@@ -38,23 +39,24 @@ class TransactionDetails extends Component {
       send,
       date,
       time,
+      intl,
     } = this.props;
     return (
       <View style={styles.transactionDetailsBox}>
         <Text style={styles.transactionNumber}>
-          {`Transaction: №${transactionId}`}
+          {`${intl.formatMessage({ id: 'app.trade.feedback.transaction', defaultMessage: 'Transaction' })}: №${transactionId}`}
         </Text>
         <Text style={styles.transactionRow}>
-          {`Received: ${received}`}
+          {`${intl.formatMessage({ id: 'app.trade.feedback.received', defaultMessage: 'Received' })}: ${received}`}
         </Text>
         <Text style={styles.transactionRow}>
-          {`Send: ${send}`}
+          {`${intl.formatMessage({ id: 'app.trade.feedback.send', defaultMessage: 'Send' })}: ${send}`}
         </Text>
         <Text style={styles.transactionRow}>
-          {`Date: ${date}`}
+          {`${intl.formatMessage({ id: 'app.trade.feedback.date', defaultMessage: 'Date' })}: ${date}`}
         </Text>
         <Text style={styles.transactionRow}>
-          {`Time: ${time}`}
+          {`${intl.formatMessage({ id: 'app.trade.feedback.time', defaultMessage: 'Time' })}: ${time}`}
         </Text>
       </View>
     );
@@ -69,4 +71,4 @@ TransactionDetails.propTypes = {
   time: PropTypes.string,
 };
 
-export default TransactionDetails;
+export default injectIntl(TransactionDetails);
