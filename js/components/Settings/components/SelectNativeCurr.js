@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class SelectCountries extends Component {
+class SelectNativeCurr extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: (
       <FormattedMessage id="app.settings.title.selectCurrency" />
@@ -113,16 +113,21 @@ class SelectCountries extends Component {
     navigation.goBack();
   };
 
+  static getCurrencyName(currency) {
+    return currency.name || currency.code;
+  }
+
   renderCurrencyItem = (currency) => {
     const {
       selectedCurrency,
     } = this.state;
-    const active = selectedCurrency === currency.item.name;
+    const { item } = currency;
+    const active = selectedCurrency === item.code;
     return (
-      <Touchable onPress={() => this.setState({ selectedCurrency: currency.item.name })}>
+      <Touchable onPress={() => this.setState({ selectedCurrency: item.code })}>
         <View style={styles.settingContainer}>
           <Text style={active ? styles.settingNameActive : styles.settingName}>
-            {currency.item.name}
+            {SelectNativeCurr.getCurrencyName(item)}
           </Text>
         </View>
       </Touchable>
@@ -151,9 +156,9 @@ class SelectCountries extends Component {
   }
 }
 
-SelectCountries.propTypes = {
+SelectNativeCurr.propTypes = {
   navigation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   currencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
 
-export default SelectCountries;
+export default SelectNativeCurr;
