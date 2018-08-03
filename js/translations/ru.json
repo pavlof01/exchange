@@ -38,5 +38,7 @@
   "app.settings.title.profile": "Профиль",
   "app.settings.title.account": "Аккаунт",
   "app.settings.title.security": "Безопасность",
+  "app.settings.title.selectLanguage": "Выберете язык",
+  "app.settings.button.select": "Выбрать",
   "app.navigation.settings.Logout": "Выйти"
 }

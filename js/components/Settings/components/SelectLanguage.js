@@ -7,8 +7,8 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
-  Button,
 } from 'react-native';
+import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
 import {
@@ -59,7 +59,9 @@ const styles = StyleSheet.create({
 
 class SelectLanguage extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'SELECT LANGUAGE',
+    title: (
+      <FormattedMessage id="app.settings.title.selectLanguage" />
+    ),
     headerRight: (
       <Touchable
         onPress={() => {
@@ -70,9 +72,13 @@ class SelectLanguage extends Component {
         }}
       >
         <View style={styles.headerButtonContainer}>
-          <Text style={styles.headerButton}>
-            {'Select'}
-          </Text>
+          <FormattedMessage id="app.settings.button.select">
+            {text => (
+              <Text style={styles.headerButton}>
+                {text}
+              </Text>
+            )}
+          </FormattedMessage>
         </View>
       </Touchable>
     ),
@@ -92,7 +98,17 @@ class SelectLanguage extends Component {
     const {
       navigation,
     } = this.props;
-    navigation.setParams({ handleSave: this.updateLang });
+    navigation.setParams({
+      handleSave: this.updateLang,
+      title: 'Boba',
+    });
+    this._navListener = navigation.addListener('didFocus', () => {
+      navigation.setParams({ title: 'Set' });
+    });
+  }
+
+  componentWillUnmount() {
+    this._navListener.remove();
   }
 
   languageKeyExtractor = lang => lang;
