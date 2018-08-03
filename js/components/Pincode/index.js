@@ -170,7 +170,12 @@ class Pincode extends Component {
           title={this.state.textModal.toUpperCase()}
           isOpen={this.state.openModal}
           noCancel
-          onPositivePress={() => this.setState({ openModal: false }, () => this.props.navigation.goBack())}
+          onPositivePress={
+            () => this.setState(
+              { openModal: false },
+              () => this.props.navigation.goBack(),
+            )
+          }
         />
         <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
         <Text style={styles.pincode}>
