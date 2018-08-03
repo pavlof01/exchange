@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -11,68 +12,6 @@ import {
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
 
-export default class SelectCountries extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'SELECT CURRENCY',
-      headerRight: (
-        <Button
-          onPress={navigation.getParam('selectCurrency')}
-          title="Select"
-          color="#fff"
-        />
-      ),
-      headerStyle: { backgroundColor: '#2B2B82' },
-      headerTitleStyle: { color: 'white' },
-      headerTintColor: 'white',
-    }
-
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedCurrency: '',
-    };
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ selectCurrency: this.selectCurrency });
-  }
-
-  countryKeyExtractor = currency => currency.code;
-
-  selectCurrency = () => {
-    AsyncStorage.setItem('selectedCurrency', this.state.selectedCurrency);
-    this.props.navigation.goBack();
-  }
-
-  renderCurrencyItem = (currency) => {
-    const active = this.state.selectedCurrency == currency.item.name;
-    return (
-      <Touchable onPress={() => this.setState({ selectedCurrency: currency.item.name })}>
-        <View style={active ? styles.active : styles.currencyContainer}>
-          <Text style={styles.currencyName}>{currency.item.name}</Text>
-        </View>
-      </Touchable>
-    );
-  }
-
-  render() {
-    return (
-      <View style={styles.mainContainer}>
-        <ScrollView style={styles.scrollContainer}>
-          <FlatList
-            data={this.props.currencies}
-            extraData={this.state.selectedCurrency}
-            keyExtractor={this.countryKeyExtractor}
-            renderItem={this.renderCurrencyItem}
-          />
-        </ScrollView>
-      </View>
-    );
-  }
-}
 
 const styles = StyleSheet.create({
   active: {
@@ -110,3 +49,74 @@ const styles = StyleSheet.create({
   },
 
 });
+
+class SelectCountries extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'SELECT CURRENCY',
+    headerRight: (
+      <Button
+        onPress={navigation.getParam('selectCurrency')}
+        title="Select"
+        color="#fff"
+      />
+    ),
+    headerStyle: { backgroundColor: '#2B2B82' },
+    headerTitleStyle: { color: 'white' },
+    headerTintColor: 'white',
+  });
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedCurrency: '',
+    };
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ selectCurrency: this.selectCurrency });
+  }
+
+  countryKeyExtractor = currency => currency.code;
+
+  selectCurrency = () => {
+    AsyncStorage.setItem('selectedCurrency', this.state.selectedCurrency);
+    this.props.navigation.goBack();
+  };
+
+  renderCurrencyItem = (currency) => {
+    const active = this.state.selectedCurrency == currency.item.name;
+    return (
+      <Touchable onPress={() => this.setState({ selectedCurrency: currency.item.name })}>
+        <View style={active ? styles.active : styles.currencyContainer}>
+          <Text style={styles.currencyName}>
+            {currency.item.name}
+          </Text>
+        </View>
+      </Touchable>
+    );
+  };
+
+  render() {
+    const {
+      currencies,
+    } = this.props;
+    return (
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.scrollContainer}>
+          <FlatList
+            data={currencies}
+            extraData={this.state.selectedCurrency}
+            keyExtractor={this.countryKeyExtractor}
+            renderItem={this.renderCurrencyItem}
+          />
+        </ScrollView>
+      </View>
+    );
+  }
+}
+
+SelectCountries.propTypes = {
+  currencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+};
+
+export default SelectCountries;
