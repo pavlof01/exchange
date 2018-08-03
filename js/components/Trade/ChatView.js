@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import { fonts } from '../../style/resourceHelpers';
+import { injectIntl, intlShape } from 'react-intl';
 
 const styles = StyleSheet.create({
   container: {
@@ -202,17 +203,18 @@ class ChatView extends Component {
     const {
       messages,
       messageValue,
+      intl,
     } = this.props;
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
-          {'CHAT'}
+          {intl.formatMessage({ id: 'app.trade.feedback.chat', defaultMessage: 'Chat' })}
         </Text>
         <TouchableOpacity onPress={this.handleToggleChat}>
           <View style={styles.toggleChatBox}>
             <Image source={require('../../img/ic_add_message.png')} style={styles.addIcon} />
             <Text style={styles.toggleChatBoxText}>
-              {'Add message'}
+              {intl.formatMessage({ id: 'app.trade.feedback.addMsg', defaultMessage: 'Add message' })}
             </Text>
             <Image source={require('../../img/ic_picker.png')} style={isOpen ? styles.pickerIconOpen : styles.pickerIcon} />
           </View>
@@ -257,4 +259,4 @@ ChatView.propTypes = {
   messageValue: PropTypes.string,
 };
 
-export default ChatView;
+export default injectIntl(ChatView);
