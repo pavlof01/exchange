@@ -3,43 +3,46 @@ import PropTypes from 'prop-types';
 import {
   ColorPropType,
   StyleSheet,
-  Platform,
   Text,
   View,
   ViewPropTypes,
 } from 'react-native';
 import Touchable from '../Touchable/index';
-import {fonts} from "../resourceHelpers";
+import { fonts } from '../resourceHelpers';
 
 const sharedButtonStyle = {
-    shadowOffset: {
-        width: 0,
-        height: 2
-    },
-    shadowRadius: 4,
-    shadowOpacity: 1.0,
-    elevation: 4,
-    borderWidth: 2,
-    borderRadius: 4,
-    height: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowRadius: 4,
+  shadowOpacity: 1.0,
+  elevation: 4,
+  borderWidth: 2,
+  borderRadius: 4,
+  height: 48,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
 };
 
 const sharedTextStyle = {
-    textAlign: 'center',
-    fontSize: 17,
-    fontWeight: '700',
-    fontFamily: fonts.bold.regular,
+  textAlign: 'center',
+  alignSelf: 'center',
+  paddingTop: 6,
+  fontSize: 17,
+  lineHeight: 17,
+  fontWeight: '700',
+  fontFamily: fonts.bold.regular,
 };
 
 const styles = StyleSheet.create({
   button: {
-      ...sharedButtonStyle,
+    ...sharedButtonStyle,
     backgroundColor: '#6955FF',
     borderColor: '#6955FF',
     shadowColor: '#6955FF',
+    justifyContent: 'center',
   },
   buttonSecondary: {
     ...sharedButtonStyle,
@@ -47,20 +50,20 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   buttonDisabled: {
-      ...sharedButtonStyle,
-      backgroundColor: '#DDD',
-      borderColor: '#DDD',
+    ...sharedButtonStyle,
+    backgroundColor: '#DDD',
+    borderColor: '#DDD',
   },
   text: {
-      ...sharedTextStyle,
-      color: '#fff',
+    ...sharedTextStyle,
+    color: '#fff',
   },
   textSecondary: {
-      ...sharedTextStyle,
-      color: '#471287',
+    ...sharedTextStyle,
+    color: '#471287',
   },
   textDisabled: {
-      ...sharedTextStyle,
+    ...sharedTextStyle,
     color: '#c0c0c0',
   },
 });
@@ -69,7 +72,6 @@ const styles = StyleSheet.create({
  * A primary button component.
  */
 class PrimaryButton extends Component {
-
   static propTypes = {
     /**
      * Text to display inside the button.
@@ -106,7 +108,7 @@ class PrimaryButton extends Component {
     /**
      * Children.
      */
-    children: PropTypes.any,
+    children: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     /**
      * Children.
      */
@@ -120,8 +122,11 @@ class PrimaryButton extends Component {
   }
 
   onPress(event) {
-    if (typeof this.props.onPress === 'function') {
-      this.props.onPress(event);
+    const {
+      onPress,
+    } = this.props;
+    if (typeof onPress === 'function') {
+      onPress(event);
     }
   }
 
@@ -137,26 +142,33 @@ class PrimaryButton extends Component {
       style,
       fontStyle,
     } = this.props;
-    const buttonStyles = [disabled ? styles.buttonDisabled : secondary ? styles.buttonSecondary : styles.button, style];
-    const textStyles = [disabled ? styles.textDisabled : secondary ? styles.textSecondary : styles.text, fontStyle];
+    const secondaryButtonStyles = secondary ? styles.buttonSecondary : styles.button;
+    const buttonStyles = [disabled ? styles.buttonDisabled : secondaryButtonStyles, style];
+    const secondaryTextStyles = secondary ? styles.textSecondary : styles.text;
+    const textStyles = [disabled ? styles.textDisabled : secondaryTextStyles, fontStyle];
     if (color) {
       buttonStyles.push({ borderColor: color, backgroundColor: color });
     }
 
-    const content = children || <Text style={textStyles}>{title}</Text>;
-    return (<View style={{flex: style ? style.flex : 1}}>
-              <Touchable
-                accessibilityComponentType="button"
-                accessibilityLabel={accessibilityLabel}
-                testID={testID}
-                disabled={disabled}
-                onPress={this.onPress}
-              >
-                <View style={buttonStyles}>
-                  {content}
-                </View>
-              </Touchable>
-        </View>
+    const content = children || (
+    <Text style={textStyles}>
+      {title}
+    </Text>
+    );
+    return (
+      <View style={{ flex: style ? style.flex : 1 }}>
+        <Touchable
+          accessibilityComponentType="button"
+          accessibilityLabel={accessibilityLabel}
+          testID={testID}
+          disabled={disabled}
+          onPress={this.onPress}
+        >
+          <View style={buttonStyles}>
+            {content}
+          </View>
+        </Touchable>
+      </View>
     );
   }
 }
