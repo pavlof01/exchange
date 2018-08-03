@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { MenuOption } from 'react-native-popup-menu';
 import TopButton from '../../style/TopButton';
 import Separator from '../../style/Separator';
@@ -22,6 +23,10 @@ import HeaderBar from '../../style/HeaderBar';
 import CardPicker from '../../style/CardPicker';
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: '#2B2B82',
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -480,28 +485,30 @@ class Offers extends React.PureComponent {
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     return (
-      <View style={styles.container}>
-        <HeaderBar title={header} />
-        {
-          this.isFetching()
-            ? <ActivityIndicator size="large" style={{ margin: 16 }} />
-            : (
-              <FlatList
-                data={orders.list}
-                refreshControl={(
-                  <RefreshControl
-                    refreshing={orders.pending}
-                    onRefresh={this.onRefresh}
-                  />
-                )}
-                renderItem={this.renderItem}
-                keyExtractor={i => String(i.id)}
-                ListHeaderComponent={this.renderHeader}
-                refreshing={orders.pending}
-              />
-            )
-        }
-      </View>
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
+          <HeaderBar title={header} />
+          {
+            this.isFetching()
+              ? <ActivityIndicator size="large" style={{ margin: 16 }} />
+              : (
+                <FlatList
+                  data={orders.list}
+                  refreshControl={(
+                    <RefreshControl
+                      refreshing={orders.pending}
+                      onRefresh={this.onRefresh}
+                    />
+                  )}
+                  renderItem={this.renderItem}
+                  keyExtractor={i => String(i.id)}
+                  ListHeaderComponent={this.renderHeader}
+                  refreshing={orders.pending}
+                />
+              )
+          }
+        </View>
+      </SafeAreaView>
     );
   }
 }

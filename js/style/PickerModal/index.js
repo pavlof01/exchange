@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import {
   StyleSheet,
   View,
+  Text,
   Modal,
   PickerIOS,
   Picker,
   Platform,
 } from 'react-native';
+import Touchabe from '../Touchable';
 import BorderlessButton from '../BorderlessButton';
 
 const styles = StyleSheet.create({
@@ -17,6 +19,15 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     flex: 1,
+  },
+  selectorContainer: {
+    flex: 1,
+  },
+  selectorText: {
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingStart: 10,
+    paddingEnd: 10,
   },
 });
 
@@ -77,10 +88,13 @@ class PickerModal extends React.Component {
 
       return (
         <React.Fragment>
-          <BorderlessButton
-            title={selectedName}
-            onPress={this.open}
-          />
+          <Touchabe onPress={this.open} style={styles.pickerContainer}>
+            <View style={styles.selectorContainer}>
+              <Text style={styles.selectorText}>
+                {selectedName}
+              </Text>
+            </View>
+          </Touchabe>
           <Modal
             animationType="slide"
             transparent
@@ -91,7 +105,7 @@ class PickerModal extends React.Component {
               <View style={{ flex: 1 }} />
               <View style={{ backgroundColor: 'white' }}>
                 <BorderlessButton
-                  title="Назад"
+                  title="Back"
                   onPress={this.hide}
                 />
                 <PickerIOS
