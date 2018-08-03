@@ -7,8 +7,8 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
-  Button,
 } from 'react-native';
+import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
 import {
@@ -34,36 +34,53 @@ const styles = StyleSheet.create({
   },
   settingName: {
     color: '#111111',
-    height: 18,
+    height: 20,
     fontSize: 18,
-    lineHeight: 18,
+    lineHeight: 20,
     fontFamily: fonts.medium.regular,
     letterSpacing: 0.2,
   },
   settingNameActive: {
     color: '#000000',
-    height: 18,
+    height: 20,
     fontSize: 18,
-    lineHeight: 18,
+    lineHeight: 20,
     fontFamily: fonts.bold.regular,
     letterSpacing: 0.2,
+  },
+  headerButtonContainer: {
+    padding: 10,
+  },
+  headerButton: {
+    color: '#FFFFFF',
+    fontSize: 18,
   },
 });
 
 class SelectLanguage extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'SELECT LANGUAGE',
+    title: (
+      <FormattedMessage id="app.settings.title.selectLanguage" />
+    ),
     headerRight: (
-      <Button
+      <Touchable
         onPress={() => {
           const handleSave = navigation.getParam('handleSave');
           if (typeof handleSave === 'function') {
             handleSave.call();
           }
         }}
-        title="Select"
-        color="#fff"
-      />
+      >
+        <View style={styles.headerButtonContainer}>
+          <FormattedMessage id="app.settings.button.select">
+            {text => (
+              <Text style={styles.headerButton}>
+                {text}
+              </Text>
+            )}
+          </FormattedMessage>
+        </View>
+      </Touchable>
     ),
     headerStyle: { backgroundColor: '#2B2B82' },
     headerTitleStyle: { color: 'white' },
@@ -81,7 +98,17 @@ class SelectLanguage extends Component {
     const {
       navigation,
     } = this.props;
-    navigation.setParams({ handleSave: this.updateLang });
+    navigation.setParams({
+      handleSave: this.updateLang,
+      title: 'Boba',
+    });
+    this._navListener = navigation.addListener('didFocus', () => {
+      navigation.setParams({ title: 'Set' });
+    });
+  }
+
+  componentWillUnmount() {
+    this._navListener.remove();
   }
 
   languageKeyExtractor = lang => lang;

@@ -38,5 +38,12 @@
   "app.settings.title.profile": "Profile",
   "app.settings.title.account": "Account",
   "app.settings.title.security": "Security",
-  "app.navigation.settings.Logout": "Logout"
+  "app.settings.title.verification": "Verification",
+  "app.settings.title.selectLanguage": "Select language",
+  "app.settings.title.selectCountry": "Select country",
+  "app.settings.title.idInfo": "ID Info",
+  "app.settings.title.phoneNumber": "Phone number",
+  "app.settings.title.identityDocs": "Identity documents",
+  "app.settings.button.select": "Select",
+  "app.navigation.settings.Logout": "Sign out"
 }

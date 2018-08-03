@@ -231,10 +231,23 @@ class Settings extends Component {
             onValueChange={openPincode}
             text="Passcode"
           />
+          <Title text={intl.formatMessage({ id: 'app.settings.title.verification', defaultMessage: 'Verification' }).toUpperCase()} />
+          <SettingsItem
+            onPress={() => {}}
+            text={intl.formatMessage({ id: 'app.settings.title.idInfo', defaultMessage: 'ID info' })}
+          />
+          <SettingsItem
+            onPress={() => {}}
+            text={intl.formatMessage({ id: 'app.settings.title.phoneNumber', defaultMessage: 'Phone number' })}
+          />
+          <SettingsItem
+            onPress={() => {}}
+            text={intl.formatMessage({ id: 'app.settings.title.identityDocs', defaultMessage: 'Identity documents' })}
+          />
           <Touchable onPress={this.onLogoutPressed}>
             <View style={styles.signOutContainer}>
               <Text style={styles.signOutText}>
-                SIGN OUT
+                {intl.formatMessage({ id: 'app.navigation.settings.Logout', defaultMessage: 'Sign out' }).toUpperCase()}
               </Text>
             </View>
           </Touchable>
