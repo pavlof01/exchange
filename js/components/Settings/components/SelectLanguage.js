@@ -100,15 +100,7 @@ class SelectLanguage extends Component {
     } = this.props;
     navigation.setParams({
       handleSave: this.updateLang,
-      title: 'Boba',
     });
-    this._navListener = navigation.addListener('didFocus', () => {
-      navigation.setParams({ title: 'Set' });
-    });
-  }
-
-  componentWillUnmount() {
-    this._navListener.remove();
   }
 
   languageKeyExtractor = lang => lang;
