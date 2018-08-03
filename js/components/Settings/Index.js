@@ -208,7 +208,7 @@ class Settings extends Component {
     } = this.state;
     const displaySelectedLanguage = getLocaleDisplayName(selectedLocale);
     return (
-      <SafeAreaView style={styles.safeContainer} forceInset={{ bottom: 'never' }}>
+      <SafeAreaView style={styles.safeContainer}>
         <View style={styles.mainContainer}>
           <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
           <ScrollView style={styles.scrollContainer}>
