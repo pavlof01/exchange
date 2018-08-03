@@ -28,7 +28,7 @@ export const getLocaleDisplayName = (locale) => {
   }
 };
 
-const DEFAULT_LOCALE = appLocales[0];
+export const DEFAULT_LOCALE = appLocales[0];
 
 const formatTranslationMessages = (locale, messages) => {
   const defaultFormattedMessages = locale !== DEFAULT_LOCALE
