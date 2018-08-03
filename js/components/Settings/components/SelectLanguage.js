@@ -34,19 +34,26 @@ const styles = StyleSheet.create({
   },
   settingName: {
     color: '#111111',
-    height: 18,
+    height: 20,
     fontSize: 18,
-    lineHeight: 18,
+    lineHeight: 20,
     fontFamily: fonts.medium.regular,
     letterSpacing: 0.2,
   },
   settingNameActive: {
     color: '#000000',
-    height: 18,
+    height: 20,
     fontSize: 18,
-    lineHeight: 18,
+    lineHeight: 20,
     fontFamily: fonts.bold.regular,
     letterSpacing: 0.2,
+  },
+  headerButtonContainer: {
+    padding: 10,
+  },
+  headerButton: {
+    color: '#FFFFFF',
+    fontSize: 18,
   },
 });
 
@@ -54,16 +61,20 @@ class SelectLanguage extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'SELECT LANGUAGE',
     headerRight: (
-      <Button
+      <Touchable
         onPress={() => {
           const handleSave = navigation.getParam('handleSave');
           if (typeof handleSave === 'function') {
             handleSave.call();
           }
         }}
-        title="Select"
-        color="#fff"
-      />
+      >
+        <View style={styles.headerButtonContainer}>
+          <Text style={styles.headerButton}>
+            {'Select'}
+          </Text>
+        </View>
+      </Touchable>
     ),
     headerStyle: { backgroundColor: '#2B2B82' },
     headerTitleStyle: { color: 'white' },
