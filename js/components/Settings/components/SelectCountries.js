@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -6,28 +7,83 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
-  Button,
 } from 'react-native';
+import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
 
-export default class SelectCountries extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'SELECT COUNTRY',
-      headerRight: (
-        <Button
-          onPress={navigation.getParam('selectCountry')}
-          title="Select"
-          color="#fff"
-        />
-      ),
-      headerStyle: { backgroundColor: '#2B2B82' },
-      headerTitleStyle: { color: 'white' },
-      headerTintColor: 'white',
-    }
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  settingContainer: {
+    paddingBottom: 20,
+    paddingTop: 20,
+    paddingStart: 17,
+    paddingEnd: 17,
+    borderBottomWidth: 1,
+    borderBottomColor: '#d5d5d5',
+    flexDirection: 'row',
+  },
+  settingName: {
+    color: '#111111',
+    height: 20,
+    fontSize: 18,
+    lineHeight: 20,
+    fontFamily: fonts.medium.regular,
+    letterSpacing: 0.2,
+  },
+  settingNameActive: {
+    color: '#000000',
+    height: 20,
+    fontSize: 18,
+    lineHeight: 20,
+    fontFamily: fonts.bold.regular,
+    letterSpacing: 0.2,
+  },
+  headerButtonContainer: {
+    padding: 10,
+  },
+  headerButton: {
+    color: '#FFFFFF',
+    fontSize: 18,
+  },
 
-  };
+});
+
+class SelectCountries extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: (
+      <FormattedMessage id="app.settings.title.selectLanguage" />
+    ),
+    headerRight: (
+      <Touchable
+        onPress={() => {
+          const handleSave = navigation.getParam('handleSave');
+          if (typeof handleSave === 'function') {
+            handleSave.call();
+          }
+        }}
+      >
+        <View style={styles.headerButtonContainer}>
+          <FormattedMessage id="app.settings.button.select">
+            {text => (
+              <Text style={styles.headerButton}>
+                {text}
+              </Text>
+            )}
+          </FormattedMessage>
+        </View>
+      </Touchable>
+    ),
+    headerStyle: { backgroundColor: '#2B2B82' },
+    headerTitleStyle: { color: 'white' },
+    headerTintColor: 'white',
+  });
 
   constructor(props) {
     super(props);
@@ -37,34 +93,54 @@ export default class SelectCountries extends Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ selectCountry: this.selectCountry });
+    const {
+      navigation,
+    } = this.props;
+    navigation.setParams({ handleSave: this.selectCountry });
   }
 
   countryKeyExtractor = country => country.code;
 
   selectCountry = () => {
-    AsyncStorage.setItem('selectedCountry', this.state.selectedCountry);
-    this.props.navigation.goBack();
-  }
+    const {
+      navigation,
+    } = this.props;
+    const {
+      selectedCountry,
+    } = this.state;
+    AsyncStorage.setItem('selectedCountry', selectedCountry);
+    navigation.goBack();
+  };
 
   renderCountryItem = (country) => {
-    const active = this.state.selectedCountry == country.item.name;
+    const {
+      selectedCountry,
+    } = this.state;
+    const active = selectedCountry === country.item.name;
     return (
       <Touchable onPress={() => this.setState({ selectedCountry: country.item.name })}>
-        <View style={active ? styles.active : styles.countryContainer}>
-          <Text style={styles.countryName}>{country.item.name}</Text>
+        <View style={styles.settingContainer}>
+          <Text style={active ? styles.settingNameActive : styles.settingName}>
+            {country.item.name}
+          </Text>
         </View>
       </Touchable>
     );
-  }
+  };
 
   render() {
+    const {
+      countries,
+    } = this.props;
+    const {
+      selectedCountry,
+    } = this.state;
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContainer}>
           <FlatList
-            data={this.props.countries}
-            extraData={this.state.selectedCountry}
+            data={countries}
+            extraData={selectedCountry}
             keyExtractor={this.countryKeyExtractor}
             renderItem={this.renderCountryItem}
           />
@@ -74,39 +150,9 @@ export default class SelectCountries extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  active: {
-    backgroundColor: '#7F63A5',
-    paddingBottom: 20,
-    paddingTop: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
-    flexDirection: 'row',
-  },
-  mainContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  scrollContainer: {
-    paddingLeft: 25,
-    paddingRight: 25,
-    flex: 1,
-  },
-  countryContainer: {
-    paddingBottom: 20,
-    paddingTop: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d5d5d5',
-    flexDirection: 'row',
-  },
-  countryName: {
-    height: 18,
-    fontSize: 18,
-    fontFamily: fonts.regular.regular,
-    letterSpacing: 0.2,
-  },
-  headerStyle: {
-    backgroundColor: 'red',
-  },
+SelectCountries.propTypes = {
+  navigation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  countries: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+};
 
-});
+export default SelectCountries;
