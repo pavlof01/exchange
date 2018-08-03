@@ -45,5 +45,12 @@
   "app.settings.title.phoneNumber": "Номер телефона",
   "app.settings.title.identityDocs": "Документы",
   "app.settings.button.select": "Выбрать",
+  "app.trades.header": "Сделки",
+  "app.trades.noTrades": "Нет сделок",
+  "app.trades.user": "Имя",
+  "app.trades.type": "Тип",
+  "app.trades.type.sell": "Продажа",
+  "app.trades.type.buy": "Покупка",
+  "app.trades.curr": "Валюта",
   "app.navigation.settings.Logout": "Выйти"
 }
