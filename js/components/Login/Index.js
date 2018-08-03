@@ -8,6 +8,7 @@ import {
   StyleSheet, ActivityIndicator,
   Keyboard,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,9 +20,8 @@ import { withColoredStatusBar } from '../../style/navigation';
 import BorderlessButton from '../../style/BorderlessButton';
 import { fonts } from '../../style/resourceHelpers';
 import { common } from '../../style/common';
-import Logo from '../../../assets/img/logo.png';
-import LogoText from '../../../assets/img/text.png';
 
+const { width, height } = Dimensions.get('window');
 export default class Login extends Component {
   static navigationOptions = { header: props => null };
 
@@ -56,8 +56,10 @@ export default class Login extends Component {
     }
   }
 
-  _keyboardDidShow = () => {
+  _keyboardDidShow = (e) => {
     this.setState({ textInFocus: true });
+    console.warn(e.endCoordinates.height);
+    console.warn(e.endCoordinates.width);
   }
 
   _keyboardDidHide = () => {
@@ -95,24 +97,25 @@ export default class Login extends Component {
 
   render() {
     return (
+
       <LinearGradient
         colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
         style={[styles.paddingScreen]}
       >
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollView} bounces={false}>
           <View style={styles.logoContainer}>
             <Image
               style={this.state.textInFocus ? styles.logoStylesOnKeyboardShow : styles.logo}
-              source={Logo}
+              source={require('../../img/logo.png')}
             />
             <Image
               style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : null}
-              source={LogoText}
+              source={require('../../img/logo_text.png')}
             />
           </View>
-          <View style={{ flex: 2 }}>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-              <View style={{ flex: 1 }}>
+          <View style={{ flex: 1 }}>
+            <KeyboardAvoidingView behavior="padding">
+              <View style={{ paddingLeft: 42, paddingRight: 42 }}>
                 <FormTextInput
                   style={styles.textInputContainer}
                   textStyle={styles.textInput}
@@ -160,36 +163,39 @@ export default class Login extends Component {
                 <Text style={[styles.error]}>
                   {this.state.formError.serverError}
                 </Text>
-                <PrimaryButton
-                  style={styles.signInBtn}
-                  onPress={this.onLoginPressed}
-                  title="SIGN IN"
-                  disabled={this.props.isFetching}
-                >
-                  {this.props.isFetching
-                    ? <ActivityIndicator size="large" />
-                    : undefined}
-                </PrimaryButton>
-                <View style={styles.signUpContainer}>
-                  <Text style={styles.textSignUp}>
-                    Don’t have an accaunt?
-                  </Text>
-                  <Touchable onPress={this.onSignUpPressed}>
-                    <Text style={styles.btnSignUp}>
-                      Sign up
-                    </Text>
-                  </Touchable>
-                </View>
-                <Touchable style={{ marginTop: 50 }}>
-                  <Text style={styles.loginQR}>
-                    LOGIN WITH QR CODE
-                  </Text>
-                </Touchable>
               </View>
             </KeyboardAvoidingView>
           </View>
+          <View style={styles.bottom}>
+            <PrimaryButton
+              style={styles.signInBtn}
+              onPress={this.onLoginPressed}
+              title="SIGN IN"
+              disabled={this.props.isFetching}
+            >
+              {this.props.isFetching
+                ? <ActivityIndicator size="large" />
+                : undefined}
+            </PrimaryButton>
+            <View style={styles.signUpContainer}>
+              <Text style={styles.textSignUp}>
+                Don’t have an accaunt?
+              </Text>
+              <Touchable onPress={this.onSignUpPressed}>
+                <Text style={styles.btnSignUp}>
+                  Sign up
+                </Text>
+              </Touchable>
+            </View>
+            <Touchable style={{ marginTop: 50 }}>
+              <Text style={styles.loginQR}>
+                LOGIN WITH QR CODE
+              </Text>
+            </Touchable>
+          </View>
         </ScrollView>
       </LinearGradient>
+
     );
   }
 }
@@ -197,24 +203,30 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   error: {
     color: '#FFCACA',
-    marginBottom: 4,
-    marginTop: 4,
+    marginBottom: 2,
+    marginTop: 2,
     fontFamily: fonts.regular.regular,
     textAlign: 'center',
   },
   paddingScreen: {
-    padding: 42,
     flexDirection: 'column',
-    flex: 1,
+    /* height,
+    minHeight: height, */
+    height,
+  },
+  scrollView: {
+    height,
+    /* height,
+    minHeight: height, */
+    justifyContent: 'space-between',
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: '15%',
-    marginTop: '15%',
+    marginTop: '10%',
     flex: 1,
   },
   logo: {
-    marginBottom: '10%',
+    marginBottom: 10,
   },
   logoStylesOnKeyboardShow: {
     opacity: 0.5,
@@ -232,8 +244,6 @@ const styles = StyleSheet.create({
   signUpContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: '10%',
-
   },
   textInputContainer: {
     borderColor: '#94B7FF',
@@ -248,6 +258,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'right',
   },
+  bottom: {
+    flex: 1,
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
   signInBtn: {
     width: '50%',
     alignSelf: 'center',
@@ -260,14 +275,16 @@ const styles = StyleSheet.create({
   btnSignUp: {
     color: '#94b7ff',
     fontFamily: fonts.bold.regular,
-    marginLeft: '5%',
+    marginLeft: 2,
   },
   loginQR: {
     fontSize: 15,
     color: '#94b7ff',
     fontFamily: fonts.bold.regular,
-    marginLeft: '5%',
     textAlign: 'center',
+  },
+  KeyboardAvoidingView: {
+    flex: 1,
   },
 
 });
