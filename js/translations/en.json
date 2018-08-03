@@ -40,6 +40,7 @@
   "app.settings.title.security": "Security",
   "app.settings.title.verification": "Verification",
   "app.settings.title.selectLanguage": "Select language",
+  "app.settings.title.selectCurrency": "Select currency",
   "app.settings.title.selectCountry": "Select country",
   "app.settings.title.idInfo": "ID Info",
   "app.settings.title.phoneNumber": "Phone number",

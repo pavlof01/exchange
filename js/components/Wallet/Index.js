@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet, ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
 import TopButton from '../../style/TopButton';
@@ -17,6 +18,10 @@ import { withCommonStatusBar } from '../../style/navigation';
 import ConfirmDialog from './ConfirmDialog';
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: '#2B2B82',
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -67,14 +72,20 @@ class Wallet extends Component {
 
   renderConfirmDialog = () => {
     const {
+      intl,
+    } = this.props;
+    const {
+      form,
+    } = this.state;
+    const {
       amount,
       currency,
       address,
       password,
-    } = this.state.form;
+    } = form;
     return (
       <ConfirmDialog
-        priceLabel={this.props.intl.formatMessage({ id: 'app.wallet.dialog.you_send', defaultMessage: 'You send' }).toUpperCase()}
+        priceLabel={intl.formatMessage({ id: 'app.wallet.dialog.you_send', defaultMessage: 'You send' }).toUpperCase()}
         priceText={`${amount} ${currency}`}
         addressText={address}
         passwordValue={password}
@@ -104,7 +115,8 @@ class Wallet extends Component {
   render() {
     const {
       user: {
-        balance, crypto_amount_buy, crypto_amount_sell, currencyCode,
+        balance,
+        currencyCode,
       },
       exchangeRates,
       withdrawal,
@@ -147,37 +159,43 @@ class Wallet extends Component {
     }
 
     return withCommonStatusBar(
-      <View style={styles.container}>
-        <HeaderBar title={header} />
-        {/* {this.actionName} */}
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
+          <HeaderBar title={header} />
+          {/* {this.actionName} */}
 
-        <View style={styles.rowContainer}>
-          <TopButton
-            title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' }).toUpperCase()}
-            onPress={this.onTransferSelected}
-            selected={this.state.selectedAction === 'transfer'}
-          />
+          <View style={styles.rowContainer}>
+            <TopButton
+              title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' }).toUpperCase()}
+              onPress={this.onTransferSelected}
+              selected={this.state.selectedAction === 'transfer'}
+            />
 
-          <Separator vertical padding={8} />
+            <Separator vertical padding={8} />
 
-          <TopButton
-            title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' }).toUpperCase()}
-            onPress={this.onReceiveSelected}
-            selected={this.state.selectedAction === 'receive'}
-          />
+            <TopButton
+              title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' }).toUpperCase()}
+              onPress={this.onReceiveSelected}
+              selected={this.state.selectedAction === 'receive'}
+            />
+          </View>
+
+          <Separator padding={16} />
+
+          <ScrollView keyboardShouldPersistTaps="always">
+            {content}
+          </ScrollView>
+
+          {this.state.isConfirming ? this.renderConfirmDialog() : null}
+
         </View>
-
-        <Separator padding={16} />
-
-        <ScrollView keyboardShouldPersistTaps="always">
-          {content}
-        </ScrollView>
-
-        {this.state.isConfirming ? this.renderConfirmDialog() : null}
-
-      </View>,
+      </SafeAreaView>,
     );
   }
 }
+
+Wallet.propTypes = {
+  intl: intlShape.isRequired,
+};
 
 export default injectIntl(Wallet);

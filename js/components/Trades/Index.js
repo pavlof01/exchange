@@ -9,6 +9,7 @@ import {
   StyleSheet,
   RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
 import CenterProgressBar from '../../style/CenterProgressBar';
 import {
@@ -23,6 +24,10 @@ import HeaderBar from '../../style/HeaderBar';
 import { withCommonStatusBar } from '../../style/navigation';
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: '#2B2B82',
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -117,10 +122,10 @@ class Trades extends Component {
                 style={{ width: 10, height: 10, backgroundColor: '#DADADA' }}
               />
             ) : (
-                <View
-                  style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
-                />
-              )}
+              <View
+                style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
+              />
+            )}
           </View>
           <Text style={styles.info}>
             {trade.id}
@@ -171,36 +176,37 @@ class Trades extends Component {
       intl,
     } = this.props;
     return withCommonStatusBar(
-      <View style={styles.container}>
-        <HeaderBar title={intl.formatMessage({ id: 'app.trades.header', defaultMessage: 'Trades' }).toUpperCase()} />
-        <View style={styles.rowContainer}>
-          <Text style={styles.empty} />
-          <Text style={styles.info}>
-            {'#'}
-          </Text>
-          <Text style={{ flex: 5 }}>
-            {intl.formatMessage({ id: 'app.trades.user', defaultMessage: 'User' }).toUpperCase()}
-          </Text>
-          <Touchable
-            style={styles.info}
-            onPress={() => this.sortMessages('byType')}
-          >
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
+          <HeaderBar title={intl.formatMessage({ id: 'app.trades.header', defaultMessage: 'Trades' }).toUpperCase()} />
+          <View style={styles.rowContainer}>
+            <Text style={styles.empty} />
             <Text style={styles.info}>
-              {intl.formatMessage({ id: 'app.trades.type', defaultMessage: 'Type' }).toUpperCase()}
+              {'#'}
             </Text>
-          </Touchable>
-          <Touchable
-            style={styles.info}
-            onPress={() => this.sortMessages('byCurrency')}
-          >
-            <Text style={styles.info}>
-              {intl.formatMessage({ id: 'app.trades.curr', defaultMessage: 'Curr' }).toUpperCase()}
+            <Text style={{ flex: 5 }}>
+              {intl.formatMessage({ id: 'app.trades.user', defaultMessage: 'User' }).toUpperCase()}
             </Text>
-          </Touchable>
-        </View>
-        {isFetch && trades.length === 0 ? (
-          <CenterProgressBar />
-        ) : (
+            <Touchable
+              style={styles.info}
+              onPress={() => this.sortMessages('byType')}
+            >
+              <Text style={styles.info}>
+                {intl.formatMessage({ id: 'app.trades.type', defaultMessage: 'Type' }).toUpperCase()}
+              </Text>
+            </Touchable>
+            <Touchable
+              style={styles.info}
+              onPress={() => this.sortMessages('byCurrency')}
+            >
+              <Text style={styles.info}>
+                {intl.formatMessage({ id: 'app.trades.curr', defaultMessage: 'Curr' }).toUpperCase()}
+              </Text>
+            </Touchable>
+          </View>
+          {isFetch && trades.length === 0 ? (
+            <CenterProgressBar />
+          ) : (
             <FlatList
               data={trades}
               refreshControl={(
@@ -208,27 +214,29 @@ class Trades extends Component {
                   refreshing={isFetch}
                   onRefresh={this.onRefresh}
                 />
-              )}
+                )}
               renderItem={this.renderItem}
               keyExtractor={i => i.id}
               ListEmptyComponent={(
                 <Text style={styles.centerMessage}>
                   {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
                 </Text>
-              )}
+                )}
               ListFooterComponent={
-                isFetch && <ActivityIndicator size="large" />
-              }
+                  isFetch && <ActivityIndicator size="large" />
+                }
               onEndReached={this.loadNext}
               onEndReachedThreshold={0.3}
             />
           )}
-      </View>,
+        </View>
+      </SafeAreaView>,
     );
   }
 }
 
 Trades.propTypes = {
+  intl: intlShape.isRequired,
   refreshTrades: PropTypes.func.isRequired,
   fetchTrades: PropTypes.func.isRequired,
   trades: PropTypes.array, // eslint-disable-line react/forbid-prop-types
