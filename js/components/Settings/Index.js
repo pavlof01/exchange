@@ -7,6 +7,7 @@ import {
   View,
   AsyncStorage,
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
 import Touchable from '../../style/Touchable';
 import HeaderBar from '../../style/HeaderBar';
@@ -17,6 +18,10 @@ import { fonts } from '../../style/resourceHelpers';
 import { getLocaleDisplayName } from '../../utils/i18n';
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: '#2B2B82',
+  },
   mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
@@ -203,56 +208,58 @@ class Settings extends Component {
     } = this.state;
     const displaySelectedLanguage = getLocaleDisplayName(selectedLocale);
     return (
-      <View style={styles.mainContainer}>
-        <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
-        <ScrollView style={styles.scrollContainer}>
-          <Title text={intl.formatMessage({ id: 'app.settings.title.profile', defaultMessage: 'Profile' }).toUpperCase()} />
-          <View style={styles.emailContainer}>
-            <Text style={styles.email}>
-              {user.email}
-            </Text>
-          </View>
-          <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
-          <SettingsItem
-            onPress={openSelectCountries}
-            text={selectedCountry || 'Select Country'}
-          />
-          <SettingsItem
-            onPress={openSelectNativeCurrency}
-            text={selectedCurrency || 'Select Currency'}
-          />
-          <SettingsItem
-            onPress={openSelectLanguage}
-            text={displaySelectedLanguage || 'Select Language'}
-          />
-          <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
-          <Switcher
-            value={passcode}
-            onValueChange={openPincode}
-            text="Passcode"
-          />
-          <Title text={intl.formatMessage({ id: 'app.settings.title.verification', defaultMessage: 'Verification' }).toUpperCase()} />
-          <SettingsItem
-            onPress={() => {}}
-            text={intl.formatMessage({ id: 'app.settings.title.idInfo', defaultMessage: 'ID info' })}
-          />
-          <SettingsItem
-            onPress={() => {}}
-            text={intl.formatMessage({ id: 'app.settings.title.phoneNumber', defaultMessage: 'Phone number' })}
-          />
-          <SettingsItem
-            onPress={() => {}}
-            text={intl.formatMessage({ id: 'app.settings.title.identityDocs', defaultMessage: 'Identity documents' })}
-          />
-          <Touchable onPress={this.onLogoutPressed}>
-            <View style={styles.signOutContainer}>
-              <Text style={styles.signOutText}>
-                {intl.formatMessage({ id: 'app.navigation.settings.Logout', defaultMessage: 'Sign out' }).toUpperCase()}
+      <SafeAreaView style={styles.safeContainer} forceInset={{ bottom: 'never' }}>
+        <View style={styles.mainContainer}>
+          <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
+          <ScrollView style={styles.scrollContainer}>
+            <Title text={intl.formatMessage({ id: 'app.settings.title.profile', defaultMessage: 'Profile' }).toUpperCase()} />
+            <View style={styles.emailContainer}>
+              <Text style={styles.email}>
+                {user.email}
               </Text>
             </View>
-          </Touchable>
-        </ScrollView>
-      </View>
+            <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
+            <SettingsItem
+              onPress={openSelectCountries}
+              text={selectedCountry || 'Select Country'}
+            />
+            <SettingsItem
+              onPress={openSelectNativeCurrency}
+              text={selectedCurrency || 'Select Currency'}
+            />
+            <SettingsItem
+              onPress={openSelectLanguage}
+              text={displaySelectedLanguage || 'Select Language'}
+            />
+            <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
+            <Switcher
+              value={passcode}
+              onValueChange={openPincode}
+              text="Passcode"
+            />
+            <Title text={intl.formatMessage({ id: 'app.settings.title.verification', defaultMessage: 'Verification' }).toUpperCase()} />
+            <SettingsItem
+              onPress={() => {}}
+              text={intl.formatMessage({ id: 'app.settings.title.idInfo', defaultMessage: 'ID info' })}
+            />
+            <SettingsItem
+              onPress={() => {}}
+              text={intl.formatMessage({ id: 'app.settings.title.phoneNumber', defaultMessage: 'Phone number' })}
+            />
+            <SettingsItem
+              onPress={() => {}}
+              text={intl.formatMessage({ id: 'app.settings.title.identityDocs', defaultMessage: 'Identity documents' })}
+            />
+            <Touchable onPress={this.onLogoutPressed}>
+              <View style={styles.signOutContainer}>
+                <Text style={styles.signOutText}>
+                  {intl.formatMessage({ id: 'app.navigation.settings.Logout', defaultMessage: 'Sign out' }).toUpperCase()}
+                </Text>
+              </View>
+            </Touchable>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     );
   }
 }
