@@ -4,9 +4,9 @@ export const SIGN_UP_ERROR = 'SIGN_UP_ERROR';
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 
 export function signUpRequest() {
-    return {
-        type: SIGN_UP_REQUEST,
-    };
+  return {
+    type: SIGN_UP_REQUEST,
+  };
 }
 
 export function signUpSuccess(params) {
@@ -24,8 +24,8 @@ export function signUpFailure(error) {
 }
 
 export function signUp(params) {
-    return {
-        type: SIGN_UP,
-        payload: params,
-    };
+  return {
+    type: SIGN_UP,
+    payload: params,
+  };
 }
