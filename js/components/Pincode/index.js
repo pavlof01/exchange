@@ -1,12 +1,90 @@
 import React, { Component } from 'react';
 import {
-  View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalDialog from '../../style/ModalDialog';
 
-export default class Pincode extends Component {
-  static navigationOptions = { header: props => null };
+const styles = StyleSheet.create({
+  paddingScreen: {
+    padding: 42,
+    flexDirection: 'column',
+    flex: 1,
+  },
+  logo: {
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  pincode: {
+    textAlign: 'center',
+    color: '#f2f6f9',
+    fontSize: 18,
+    fontWeight: '400',
+    marginTop: 30,
+  },
+  circleContainer: {
+    flexDirection: 'row',
+    width: 150,
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    marginTop: 30,
+  },
+  circle: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#94b7ff',
+    borderRadius: 10,
+  },
+  circleFill: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+  },
+  numbersContainer: {
+    marginTop: 30,
+    flex: 1,
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  circleNumber: {
+    width: 70,
+    height: 70,
+    backgroundColor: 'rgba(148, 183, 255, 0.15)',
+    borderRadius: 35,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  empty: {
+    width: 70,
+    height: 70,
+    margin: 10,
+  },
+  delete: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  numberText: {
+    color: '#ffffff',
+    fontSize: 36,
+  },
+});
+
+class Pincode extends Component {
+  static navigationOptions = { header: () => null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -172,74 +250,4 @@ export default class Pincode extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  paddingScreen: {
-    padding: 42,
-    flexDirection: 'column',
-    flex: 1,
-  },
-  logo: {
-    alignSelf: 'center',
-    marginTop: 20,
-  },
-  pincode: {
-    textAlign: 'center',
-    color: '#f2f6f9',
-    fontSize: 18,
-    fontWeight: '400',
-    marginTop: 30,
-  },
-  circleContainer: {
-    flexDirection: 'row',
-    width: 150,
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-    marginTop: 30,
-  },
-  circle: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#94b7ff',
-    borderRadius: 10,
-  },
-  circleFill: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-  },
-  numbersContainer: {
-    marginTop: 30,
-    flex: 1,
-    alignItems: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  circleNumber: {
-    width: 70,
-    height: 70,
-    backgroundColor: 'rgba(148, 183, 255, 0.15)',
-    borderRadius: 35,
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  empty: {
-    width: 70,
-    height: 70,
-    margin: 10,
-  },
-  delete: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  numberText: {
-    color: '#ffffff',
-    fontSize: 36,
-  },
-});
+export default Pincode;
