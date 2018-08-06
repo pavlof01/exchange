@@ -7,8 +7,10 @@ import {
   ScrollView,
   Image,
   Keyboard,
+  Dimensions,
 } from 'react-native';
 import moment from 'moment';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Price from '../../values/Price';
 import ChatView from './ChatView';
 import {
@@ -23,6 +25,8 @@ import User from '../../models/User';
 import EscrowTimer from './EscrowTimer';
 import PrimaryButton from '../../style/ActionButton';
 import { fonts } from '../../style/resourceHelpers';
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -117,8 +121,8 @@ class Sell extends Component {
     enableScrollViewScroll: true,
   };
 
-  keyboardWillShow = () => {
-    // this.setState({ showKeyboard: true });
+  keyboardDidShow = (e) => {
+    this.scrollKeyboard.props.scrollToPosition(0, height * 1.2 - e.endCoordinates.height);
   };
 
   keyboardWillHide = () => {
@@ -126,7 +130,7 @@ class Sell extends Component {
   };
 
   componentDidMount() {
-    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
   }
 
@@ -175,10 +179,7 @@ class Sell extends Component {
       console.log(e);
     }
     return (
-      <KeyboardAvoidingWrapView
-        behavior="padding"
-        style={styles.container}
-      >
+      <KeyboardAwareScrollView innerRef={(ref) => { this.scrollKeyboard = ref; }}>
         <View
           onStartShouldSetResponderCapture={() => {
             this.setState({ enableScrollViewScroll: true });
@@ -186,7 +187,8 @@ class Sell extends Component {
           style={styles.container}
         >
           <ScrollView
-            keyboardShouldPersistTaps="always"
+            ref={(scroll) => { this.scroll = scroll; }}
+            keyboardShouldPersistTaps="handled"
             style={{
               backgroundColor: '#fff', flex: 1,
             }}
@@ -234,7 +236,6 @@ class Sell extends Component {
                   </Text>
                 </Text>
               </View>
-
             </View>
             <ChatView
               onStartShouldSetResponderCapture={
@@ -254,18 +255,18 @@ class Sell extends Component {
             <View style={(showKeyboard) ? styles.displayNone : styles.bottomButtons}>
               {[TRADE_STATUS_PAID_CONFIRMED, TRADE_STATUS_EXPIRED_AND_PAID].includes(trade.status)
                 && (
-                <PrimaryButton
-                  onPress={onPaidHandler}
-                  title="Send crypt"
-                  color="#5B6EFF"
-                  style={{ marginTop: 30 }}
-                />
+                  <PrimaryButton
+                    onPress={onPaidHandler}
+                    title="Send crypt"
+                    color="#5B6EFF"
+                    style={{ marginTop: 30 }}
+                  />
                 )
               }
             </View>
           </ScrollView>
         </View>
-      </KeyboardAvoidingWrapView>
+      </KeyboardAwareScrollView>
     );
   }
 }

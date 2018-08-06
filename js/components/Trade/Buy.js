@@ -7,8 +7,10 @@ import {
   Image,
   ScrollView,
   Keyboard,
+  Dimensions,
 } from 'react-native';
 import moment from 'moment';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ChatView from './ChatView';
 import Price from '../../values/Price';
 import User from '../../models/User';
@@ -22,6 +24,8 @@ import {
   getTradeTitle,
   TRADE_STATUS_PAID_CONFIRMED,
 } from '../../helpers';
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -123,8 +127,8 @@ class Buy extends Component {
     enableScrollViewScroll: true,
   };
 
-  keyboardWillShow = () => {
-    // this.setState({ showKeyboard: true });
+  keyboardDidShow = (e) => {
+    this.scrollKeyboard.props.scrollToPosition(0, height * 1.2 - e.endCoordinates.height);
   };
 
   keyboardWillHide = () => {
@@ -132,7 +136,7 @@ class Buy extends Component {
   };
 
   componentDidMount() {
-    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardWillShow);
     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
   }
 
@@ -224,10 +228,7 @@ class Buy extends Component {
       console.log(e);
     }
     return (
-      <KeyboardAvoidingWrapView
-        behavior="padding"
-        style={styles.container}
-      >
+      <KeyboardAwareScrollView innerRef={(ref) => { this.scrollKeyboard = ref; }}>
         <View
           onStartShouldSetResponderCapture={() => {
             this.setState({ enableScrollViewScroll: true });
@@ -285,13 +286,13 @@ class Buy extends Component {
               </View>
               <ChatView
                 onStartShouldSetResponderCapture={
-                () => {
-                  this.setState({ enableScrollViewScroll: false });
-                  if (enableScrollViewScroll === false) {
-                    this.setState({ enableScrollViewScroll: true });
+                  () => {
+                    this.setState({ enableScrollViewScroll: false });
+                    if (enableScrollViewScroll === false) {
+                      this.setState({ enableScrollViewScroll: true });
+                    }
                   }
                 }
-              }
                 messages={messages}
                 userId={user.id}
                 onChangeText={newTextMessage => this.setState({ textMessage: newTextMessage })}
@@ -316,7 +317,7 @@ class Buy extends Component {
             </View>
           </ScrollView>
         </View>
-      </KeyboardAvoidingWrapView>
+      </KeyboardAwareScrollView>
     );
   }
 }
