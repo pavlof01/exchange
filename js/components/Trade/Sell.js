@@ -19,7 +19,6 @@ import {
   TRADE_STATUS_PAID_CONFIRMED,
   TRADE_STATUS_EXPIRED_AND_PAID,
 } from '../../helpers';
-import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import TraderInfo from '../TraderInfo';
 import User from '../../models/User';
 import EscrowTimer from './EscrowTimer';
