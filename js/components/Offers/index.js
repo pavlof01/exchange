@@ -146,25 +146,28 @@ const styles = StyleSheet.create({
   },
   statusCol: {
     width: 18,
-    height: 46,
+    height: 42,
     justifyContent: 'center',
   },
   itemCol: {
     flex: 1,
     height: 46,
     justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden',
   },
   itemLimits: {
     flex: 1.4,
     height: 46,
     justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden',
   },
   itemText: {
     color: '#000000',
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: fonts.bold.regular,
+    textAlign: 'center'
   },
   itemTextLite: {
     color: '#9b9b9b',
@@ -173,7 +176,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     color: '#9b9b9b',
-    fontSize: 15,
+    fontSize: 18,
     fontFamily: fonts.bold.regular,
     letterSpacing: 0.4,
   },
@@ -183,11 +186,11 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
   },
   status: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: 'gray',
-    marginLeft: 6,
+    //marginLeft: 6,
   },
   onlineStatus: {
     backgroundColor: '#14d459',
