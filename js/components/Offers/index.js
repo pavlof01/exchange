@@ -53,11 +53,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   convertColumn: {
-    flex: 1,
+    flex: 4,
     flexDirection: 'column',
   },
   convertCenter: {
-    width: 60,
+    flex: 1,
     paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     fontSize: 10,
     fontFamily: fonts.medium.regular,
+    letterSpacing: 0.5
   },
   pickerShadow: {
     elevation: 4,
@@ -138,41 +139,46 @@ const styles = StyleSheet.create({
     height: 46,
     marginLeft: 8,
     marginRight: 8,
+    justifyContent: 'center'
   },
   alternateBackground: {
     backgroundColor: '#EEEEEE',
   },
   statusCol: {
     width: 18,
-    height: 46,
+    height: 42,
     justifyContent: 'center',
   },
   itemCol: {
     flex: 1,
     height: 46,
     justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden',
   },
   itemLimits: {
     flex: 1.4,
     height: 46,
     justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden',
   },
   itemText: {
     color: '#000000',
-    fontSize: 10,
+    fontSize: 16,
     fontFamily: fonts.bold.regular,
+    textAlign: 'center'
   },
   itemTextLite: {
     color: '#9b9b9b',
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: fonts.medium.regular,
   },
   itemName: {
     color: '#9b9b9b',
-    fontSize: 12,
+    fontSize: 18,
     fontFamily: fonts.bold.regular,
+    letterSpacing: 0.4,
   },
   itemHeadLabel: {
     color: '#9b9b9b',
@@ -180,11 +186,11 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
   },
   status: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: 'gray',
-    marginLeft: 6,
+    //marginLeft: 6,
   },
   onlineStatus: {
     backgroundColor: '#14d459',
@@ -263,9 +269,9 @@ class Offers extends React.PureComponent {
   static itemWithIcon(label, icon) {
     return (
       <View style={styles.pickerRow}>
-        { icon }
+        {icon}
         <Text style={styles.cardText}>
-          { label }
+          {label}
         </Text>
       </View>
     );
@@ -508,6 +514,7 @@ class Offers extends React.PureComponent {
               )
           }
         </View>
+
       </SafeAreaView>
     );
   }
