@@ -53,11 +53,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   convertColumn: {
-    flex: 1,
+    flex: 4,
     flexDirection: 'column',
   },
   convertCenter: {
-    width: 60,
+    flex: 1,
     paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     fontSize: 10,
     fontFamily: fonts.medium.regular,
+    letterSpacing: 0.5
   },
   pickerShadow: {
     elevation: 4,
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
     height: 46,
     marginLeft: 8,
     marginRight: 8,
+    justifyContent: 'center'
   },
   alternateBackground: {
     backgroundColor: '#EEEEEE',
@@ -161,18 +163,19 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: '#000000',
-    fontSize: 10,
+    fontSize: 14,
     fontFamily: fonts.bold.regular,
   },
   itemTextLite: {
     color: '#9b9b9b',
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: fonts.medium.regular,
   },
   itemName: {
     color: '#9b9b9b',
-    fontSize: 12,
+    fontSize: 15,
     fontFamily: fonts.bold.regular,
+    letterSpacing: 0.4,
   },
   itemHeadLabel: {
     color: '#9b9b9b',
@@ -263,9 +266,9 @@ class Offers extends React.PureComponent {
   static itemWithIcon(label, icon) {
     return (
       <View style={styles.pickerRow}>
-        { icon }
+        {icon}
         <Text style={styles.cardText}>
-          { label }
+          {label}
         </Text>
       </View>
     );
@@ -508,6 +511,7 @@ class Offers extends React.PureComponent {
               )
           }
         </View>
+
       </SafeAreaView>
     );
   }
