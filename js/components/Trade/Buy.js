@@ -17,7 +17,6 @@ import User from '../../models/User';
 import EscrowTimer from './EscrowTimer';
 import PrimaryButton from '../../style/ActionButton';
 import { fonts } from '../../style/resourceHelpers';
-import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import TraderInfo from '../TraderInfo';
 import {
   currencyCodeToSymbol,
@@ -136,7 +135,7 @@ class Buy extends Component {
   };
 
   componentDidMount() {
-    this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardWillShow);
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
   }
 
