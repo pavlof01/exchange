@@ -12,19 +12,16 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
+import { injectIntl, intlShape } from 'react-intl';
 import Validator from '../../services/Validator';
 import FormTextInput from '../FormTextInput';
 import Touchable from '../../style/Touchable';
 import PrimaryButton from '../../style/ActionButton';
-import { withColoredStatusBar } from '../../style/navigation';
 import BorderlessButton from '../../style/BorderlessButton';
 import { fonts } from '../../style/resourceHelpers';
-import { common } from '../../style/common';
 
 const { width, height } = Dimensions.get('window');
-export default class Login extends Component {
-  static navigationOptions = { header: props => null };
-
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,8 +55,6 @@ export default class Login extends Component {
 
   _keyboardDidShow = (e) => {
     this.setState({ textInFocus: true });
-    console.warn(e.endCoordinates.height);
-    console.warn(e.endCoordinates.width);
   }
 
   _keyboardDidHide = () => {
@@ -96,8 +91,8 @@ export default class Login extends Component {
   }
 
   render() {
+    const { intl } = this.props;
     return (
-
       <LinearGradient
         colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
         style={[styles.paddingScreen]}
@@ -122,7 +117,7 @@ export default class Login extends Component {
                   key="login"
                   error={!_.isEmpty(this.state.formError.loginError)}
                   ref={ref => (this.loginInput = ref)}
-                  placeholder="Enter username"
+                  placeholder={intl.formatMessage({ id: 'app.login.enter_username', defaultMessage: 'Enter username' })}
                   placeholderTextColor="#B8CFFF"
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -142,7 +137,7 @@ export default class Login extends Component {
                   key="pass"
                   error={!_.isEmpty(this.state.formError.passwordError)}
                   ref={ref => (this.passwordInput = ref)}
-                  placeholder="Enter password"
+                  placeholder={intl.formatMessage({ id: 'app.login.enter_password', defaultMessage: 'Enter password' })}
                   placeholderTextColor="#B8CFFF"
                   secureTextEntry
                   onChangeText={(password) => {
@@ -154,7 +149,7 @@ export default class Login extends Component {
                   <BorderlessButton
                     textStyle={styles.forgetPasswordText}
                     onPress={this.onRecoverRequestPressed}
-                    title="Forgot password?"
+                    title={intl.formatMessage({ id: 'app.login.forgot_password', defaultMessage: 'Forgot password?' })}
                   />
                 </View>
                 <Text style={[styles.error]}>
@@ -170,7 +165,7 @@ export default class Login extends Component {
             <PrimaryButton
               style={styles.signInBtn}
               onPress={this.onLoginPressed}
-              title="SIGN IN"
+              title={intl.formatMessage({ id: 'app.login.btn.sign_in', defaultMessage: 'Sign in' })}
               disabled={this.props.isFetching}
             >
               {this.props.isFetching
@@ -179,17 +174,17 @@ export default class Login extends Component {
             </PrimaryButton>
             <View style={styles.signUpContainer}>
               <Text style={styles.textSignUp}>
-                Don’t have an accaunt?
+                {intl.formatMessage({ id: 'app.login.dont_have_account', defaultMessage: 'Dont\'t have an accaunt? ' })}
               </Text>
               <Touchable onPress={this.onSignUpPressed}>
                 <Text style={styles.btnSignUp}>
-                  Sign up
+                  {intl.formatMessage({ id: 'app.login.btn.sign_up', defaultMessage: 'Sign up' })}
                 </Text>
               </Touchable>
             </View>
             <Touchable style={{ marginTop: 50 }}>
               <Text style={styles.loginQR}>
-                LOGIN WITH QR CODE
+                {intl.formatMessage({ id: 'app.login.btn.login_with_qr_code', defaultMessage: 'Sign up' }).toUpperCase()}
               </Text>
             </Touchable>
           </View>
@@ -297,3 +292,5 @@ Login.propTypes = {
   signUpRequest: PropTypes.func,
   fetchDictionary: PropTypes.func,
 };
+
+export default injectIntl(Login);
