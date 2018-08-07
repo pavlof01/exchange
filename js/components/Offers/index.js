@@ -40,12 +40,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 56,
-    paddingLeft: 8,
-    paddingRight: 8,
   },
   selectorsBox: {
-    paddingStart: 17,
-    paddingEnd: 17,
     flex: 1,
   },
   convertRow: {
@@ -57,18 +53,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   convertCenter: {
-    flex: 1,
-    paddingTop: 20,
+    flex: 1.7,
+    paddingTop: 35,
     justifyContent: 'center',
     alignItems: 'center',
   },
   pickerLabel: {
     color: '#4a4a4a',
     marginTop: 16,
-    marginBottom: 6,
     fontSize: 10,
     fontFamily: fonts.medium.regular,
-    letterSpacing: 0.5
+    letterSpacing: 1,
+    marginBottom: 5,
   },
   pickerShadow: {
     elevation: 4,
@@ -85,98 +81,118 @@ const styles = StyleSheet.create({
   picker: {
     flexDirection: 'row',
   },
+  menuOptionPicker: {
+    paddingBottom: 0,
+    paddingLeft: 25,
+    paddingRight: 25,
+  },
+  containerPicker: {
+    margin: 0,
+  },
   pickerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 8,
+    padding: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e1e1e1',
   },
   pickerIcon: {
-    height: 24,
-    width: 24,
+    height: 17,
+    width: 23,
   },
   cardText: {
     fontSize: 24,
-    color: '#333333',
+    color: '#4a4a4a',
     margin: 8,
     fontWeight: 'bold',
   },
   currencyCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#c3c3c3',
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#9b9b9b',
     alignItems: 'center',
     justifyContent: 'center',
   },
   currencySubcircle: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
     borderRadius: 10,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
   currencySymbol: {
-    fontSize: 16,
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 16,
     fontWeight: 'bold',
-    color: '#c3c3c3',
-    width: 20,
-    height: 20,
+    color: '#9b9b9b',
+    width: 16,
+    height: 16,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
   },
   title: {
     color: '#9b9b9b',
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: fonts.bold.regular,
+    letterSpacing: 0.5,
   },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     height: 46,
-    marginLeft: 8,
-    marginRight: 8,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e1e1e1',
   },
   alternateBackground: {
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#f9f9f9',
   },
   statusCol: {
     width: 18,
     height: 42,
     justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 5,
   },
-  itemCol: {
+  nameContainer: {
     flex: 1,
     height: 46,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    overflow: 'hidden',
+  },
+  valueContainer: {
+    flex: 1,
+    height: 46,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
     overflow: 'hidden',
   },
   itemLimits: {
-    flex: 1.4,
+    flex: 1,
     height: 46,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     overflow: 'hidden',
   },
   itemText: {
     color: '#000000',
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: fonts.bold.regular,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   itemTextLite: {
-    color: '#9b9b9b',
-    fontSize: 12,
+    color: '#868686',
+    fontSize: 10,
     fontFamily: fonts.medium.regular,
   },
   itemName: {
-    color: '#9b9b9b',
-    fontSize: 18,
+    color: '#4a4a4a',
+    fontSize: 14,
     fontFamily: fonts.bold.regular,
     letterSpacing: 0.4,
   },
@@ -186,11 +202,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
   },
   status: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: 'gray',
-    //marginLeft: 6,
   },
   onlineStatus: {
     backgroundColor: '#14d459',
@@ -315,7 +330,7 @@ class Offers extends React.PureComponent {
             title={intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }).toUpperCase()}
             selected={filter.type === FILTER_SELL}
             onPress={this.showOffersToSell}
-            selectedColor="green"
+            selectedColor="#14d459"
           />
           <Separator
             vertical
@@ -325,7 +340,7 @@ class Offers extends React.PureComponent {
             title={intl.formatMessage({ id: 'app.offers.operation.sell', defaultMessage: 'Sell' }).toUpperCase()}
             selected={filter.type === FILTER_BUY}
             onPress={this.showOffersToBuy}
-            selectedColor="red"
+            selectedColor="#d61b38"
           />
         </View>
         <View style={styles.selectorsBox}>
@@ -345,11 +360,12 @@ class Offers extends React.PureComponent {
                 selectedValue={filter.cryptoCurrencyCode}
                 mode="dropdown"
                 renderButton={Offers.cryptItem}
+                containerStyle={styles.containerPicker}
               >
                 {
                   cryptoCurrencies.map(
                     currency => (
-                      <MenuOption key={currency.code} value={currency.code}>
+                      <MenuOption style={styles.menuOptionPicker} key={currency.code} value={currency.code}>
                         {Offers.cryptItem(currency.code)}
                       </MenuOption>
                     ),
@@ -373,11 +389,12 @@ class Offers extends React.PureComponent {
                 selectedValue={filter.currencyCode}
                 mode="dropdown"
                 renderButton={Offers.fiatItem}
+                containerStyle={styles.containerPicker}
               >
                 {
                   currencies.map(
                     currency => (
-                      <MenuOption key={currency.code} value={currency.code}>
+                      <MenuOption style={styles.menuOptionPicker} key={currency.code} value={currency.code}>
                         {Offers.fiatItem(currency.code)}
                       </MenuOption>
                     ),
@@ -408,22 +425,22 @@ class Offers extends React.PureComponent {
               {''}
             </Text>
           </View>
-          <View style={styles.itemCol}>
+          <View style={styles.valueContainer}>
             <Text>
               {''}
             </Text>
           </View>
-          <View style={styles.itemLimits}>
+          <View style={styles.nameContainer}>
             <Text style={styles.itemHeadLabel}>
               {intl.formatMessage({ id: 'app.offers.label.limits', defaultMessage: 'Limits' }).toUpperCase()}
             </Text>
           </View>
-          <View style={styles.itemCol}>
+          <View style={styles.valueContainer}>
             <Text>
               {''}
             </Text>
           </View>
-          <View style={styles.itemCol}>
+          <View style={styles.valueContainer}>
             <Text style={styles.itemHeadLabel}>
               {intl.formatMessage({ id: 'app.offers.label.value', defaultMessage: 'Value' }).toUpperCase()}
             </Text>
@@ -435,7 +452,7 @@ class Offers extends React.PureComponent {
 
   renderItem = ({ item, index }) => {
     const ad = item;
-    const alt = index % 2 === 1;
+    const alt = index % 2 === 0;
     const bankName = ad.payment_method_banks.length > 0
       ? ad.payment_method_banks.map(bank => bank.name)
       : ad.payment_method.name;
@@ -452,7 +469,7 @@ class Offers extends React.PureComponent {
               ]}
             />
           </View>
-          <View style={styles.itemCol}>
+          <View style={styles.nameContainer}>
             <Text style={styles.itemName}>
               {ad.user.user_name}
             </Text>
@@ -465,12 +482,12 @@ class Offers extends React.PureComponent {
               {Price.build(ad.limit_max).viewMain}
             </Text>
           </View>
-          <View style={styles.itemCol}>
+          <View style={styles.valueContainer}>
             <Text style={styles.itemTextLite}>
               {bankName}
             </Text>
           </View>
-          <View style={styles.itemCol}>
+          <View style={styles.valueContainer}>
             <Text style={styles.itemText}>
               {currencyCodeToSymbol(ad.currency_code)}
               {Price.build(ad.price).viewMain}
@@ -499,6 +516,7 @@ class Offers extends React.PureComponent {
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
               : (
                 <FlatList
+                  style={{ paddingLeft: 20, paddingRight: 20 }}
                   data={orders.list}
                   refreshControl={(
                     <RefreshControl

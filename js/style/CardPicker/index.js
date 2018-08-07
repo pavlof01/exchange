@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     elevation: 4,
     borderRadius: 4,
     backgroundColor: 'white',
-    margin: 8,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -29,56 +28,56 @@ const styles = StyleSheet.create({
 });
 
 class CardPicker extends React.Component {
-    static propTypes = {
-      /**
-         * Callback on item selection.
-         */
-      onValueChange: PropTypes.func,
+  static propTypes = {
+    /**
+       * Callback on item selection.
+       */
+    onValueChange: PropTypes.func,
 
-      /**
-         * First selected item
-         */
-      selectedValue: PropTypes.string,
+    /**
+       * First selected item
+       */
+    selectedValue: PropTypes.string,
 
-      renderButton: PropTypes.func,
+    renderButton: PropTypes.func,
 
-      fontSize: PropTypes.number,
+    fontSize: PropTypes.number,
 
-      flat: PropTypes.bool,
-    };
+    flat: PropTypes.bool,
+  };
 
-    state = {
-      selectedValue: this.props.selectedValue,
-    };
+  state = {
+    selectedValue: this.props.selectedValue,
+  };
 
-    handleChange = (newValue) => {
-      this.props.onValueChange(newValue);
-      this.setState({ selectedValue: newValue });
-    };
+  handleChange = (newValue) => {
+    this.props.onValueChange(newValue);
+    this.setState({ selectedValue: newValue });
+  };
 
-    render() {
-      const { fontSize, flat } = this.props;
+  render() {
+    const { fontSize, flat } = this.props;
 
-      let selected;
-      const options = React.Children.map(this.props.children,
-        (child) => {
-          if (child.props.value === this.state.selectedValue) {
-            selected = child;
-          }
-          return React.cloneElement(child, { onSelect: this.handleChange, customStyles: { optionText: [styles.cardText, fontSize ? { fontSize } : undefined] } });
-        });
+    let selected;
+    const options = React.Children.map(this.props.children,
+      (child) => {
+        if (child.props.value === this.state.selectedValue) {
+          selected = child;
+        }
+        return React.cloneElement(child, { onSelect: this.handleChange, customStyles: { optionText: [styles.cardText, fontSize ? { fontSize } : undefined] } });
+      });
 
-      return (
-        <Menu>
-          <MenuTrigger customStyles={!flat ? { triggerOuterWrapper: styles.picker } : undefined}>
-            {this.props.renderButton(this.state.selectedValue, selected && selected.props.text)}
-          </MenuTrigger>
-          <MenuOptions>
-            {options}
-          </MenuOptions>
-        </Menu>
-      );
-    }
+    return (
+      <Menu>
+        <MenuTrigger customStyles={!flat ? { triggerOuterWrapper: styles.picker } : undefined}>
+          {this.props.renderButton(this.state.selectedValue, selected && selected.props.text)}
+        </MenuTrigger>
+        <MenuOptions>
+          {options}
+        </MenuOptions>
+      </Menu>
+    );
+  }
 }
 
 export default CardPicker;
