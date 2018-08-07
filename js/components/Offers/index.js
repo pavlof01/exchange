@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     fontSize: 10,
     fontFamily: fonts.medium.regular,
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
+    marginLeft: 7,
   },
   pickerShadow: {
     elevation: 4,
