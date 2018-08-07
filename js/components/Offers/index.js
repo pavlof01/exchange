@@ -22,6 +22,8 @@ import PickerModal from '../../style/PickerModal';
 import HeaderBar from '../../style/HeaderBar';
 import CardPicker from '../../style/CardPicker';
 
+const SIDE_PADDING = 20;
+
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
@@ -40,9 +42,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 56,
+    marginStart: SIDE_PADDING,
+    marginEnd: SIDE_PADDING,
   },
   selectorsBox: {
     flex: 1,
+    marginStart: SIDE_PADDING,
+    marginEnd: SIDE_PADDING,
   },
   convertRow: {
     flex: 1,
@@ -147,6 +153,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#e1e1e1',
+    marginStart: SIDE_PADDING,
+    marginEnd: SIDE_PADDING,
   },
   alternateBackground: {
     backgroundColor: '#f9f9f9',
@@ -171,6 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
     overflow: 'hidden',
+    paddingRight: 4,
   },
   itemLimits: {
     flex: 1,
@@ -365,7 +374,11 @@ class Offers extends React.PureComponent {
                 {
                   cryptoCurrencies.map(
                     currency => (
-                      <MenuOption style={styles.menuOptionPicker} key={currency.code} value={currency.code}>
+                      <MenuOption
+                        style={styles.menuOptionPicker}
+                        key={currency.code}
+                        value={currency.code}
+                      >
                         {Offers.cryptItem(currency.code)}
                       </MenuOption>
                     ),
@@ -394,7 +407,11 @@ class Offers extends React.PureComponent {
                 {
                   currencies.map(
                     currency => (
-                      <MenuOption style={styles.menuOptionPicker} key={currency.code} value={currency.code}>
+                      <MenuOption
+                        style={styles.menuOptionPicker}
+                        key={currency.code}
+                        value={currency.code}
+                      >
                         {Offers.fiatItem(currency.code)}
                       </MenuOption>
                     ),
@@ -516,7 +533,6 @@ class Offers extends React.PureComponent {
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
               : (
                 <FlatList
-                  style={{ paddingLeft: 20, paddingRight: 20 }}
                   data={orders.list}
                   refreshControl={(
                     <RefreshControl
