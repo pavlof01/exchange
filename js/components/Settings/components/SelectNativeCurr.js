@@ -98,7 +98,14 @@ class SelectNativeCurr extends Component {
     navigation.setParams({
       handleSave: this.selectCurrency,
     });
+    this.props.updateFilter({});
   }
+
+  onFilterChangeFactory = (name) => (value) => {
+    this.props.updateFilter({ [name]: value });
+  };
+
+  onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
 
   countryKeyExtractor = currency => currency.code;
 
@@ -109,6 +116,7 @@ class SelectNativeCurr extends Component {
     const {
       selectedCurrency,
     } = this.state;
+    this.onCurrencyCodeChange(selectedCurrency);
     AsyncStorage.setItem('selectedCurrency', selectedCurrency);
     navigation.goBack();
   };
