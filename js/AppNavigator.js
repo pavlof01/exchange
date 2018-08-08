@@ -20,6 +20,7 @@ import Pincode from './containers/Pincode/Index';
 import SelectCountries from './containers/Settings/SelectCountries';
 import SelectNativeCurrency from './containers/Settings/SelectNativeCurr';
 import SelectLanguage from './containers/Settings/SelectLanguage';
+import PincodeAutorization from './containers/PincodeAutorization';
 
 import {
   bottomBarStyle,
@@ -52,6 +53,7 @@ const AppNavigator = createStackNavigator({
   SelectCountries: { screen: SelectCountries },
   SelectNativeCurrency: { screen: SelectNativeCurrency },
   SelectLanguage: { screen: SelectLanguage },
+  PincodeAutorization: { screen: PincodeAutorization },
 });
 
 export default AppNavigator;
