@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {
-  View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage,
+  View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage, Animated,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import ModalDialog from '../../style/ModalDialog';
 
 export default class PincodeAurorization extends Component {
   static navigationOptions = { header: props => null };
@@ -11,7 +10,8 @@ export default class PincodeAurorization extends Component {
     super(props);
     this.state = {
       pincode: '',
-      wrongPincode: false
+      wrongPincode: false,
+      left: new Animated.Value(0),
     };
   }
 
@@ -21,11 +21,37 @@ export default class PincodeAurorization extends Component {
     if (passcode === this.state.pincode) {
       initialRoute();
     } else {
-      // TODO: ЗАПУСТИТЬ АНИМАЦИЮ ПРИ НЕПРАВИЛЬНОМ ВВОДЕ ПИНКОДА      
+      this.pincodeAnimation();
       this.setState({ wrongPincode: true }, () => setTimeout(() => {
         this.setState({ wrongPincode: false, pincode: '' });
       }, 2000));
     }
+  }
+
+  pincodeAnimation = () => {
+    const { left } = this.state;
+    Animated.sequence([
+      Animated.timing(left, {
+        toValue: 10,
+        duration: 70,
+      }),
+      Animated.timing(left, {
+        toValue: -10,
+        duration: 70
+      }),
+      Animated.timing(left, {
+        toValue: 10,
+        duration: 70,
+      }),
+      Animated.timing(left, {
+        toValue: -10,
+        duration: 70
+      }),
+      Animated.timing(left, {
+        toValue: 0,
+        duration: 70
+      }),
+    ]).start();
   }
 
   setPincode = (num) => {
@@ -58,12 +84,12 @@ export default class PincodeAurorization extends Component {
         <Text style={styles.pincode}>
           PIN CODE
         </Text>
-        <View style={styles.circleContainer}>
+        <Animated.View style={[styles.circleContainer, { left: this.state.left }]}>
           <View style={this.state.pincode.length > 0 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
           <View style={this.state.pincode.length > 1 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
           <View style={this.state.pincode.length > 2 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
           <View style={this.state.pincode.length > 3 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
-        </View>
+        </Animated.View>
         <View style={styles.numbersContainer}>
           <View style={styles.row}>
             <TouchableOpacity onPress={() => this.setPincode('1')} style={styles.circleNumber}>
