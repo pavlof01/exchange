@@ -6,6 +6,7 @@ import {
   setUser, setFailure, logoutSuccess, loginRequest, loginSuccess, isFetchingUser,
 } from '../actions/session';
 import { APP, SESSION } from '../actions';
+import { openPincodeAutorization } from '../actions/navigation';
 
 function userFetch() {
   return Api.get('/me')
@@ -78,6 +79,20 @@ export const dynamicInitialRoute = function* dynamicInitialRoute(action) {
     }
   }
 };
+
+export const checkPincode = function* checkPincode() {
+  const pincode = yield call(AsyncStorage.getItem, 'pincode');
+  if (pincode) {
+    yield put(openPincodeAutorization());
+  } else {
+    yield call(dynamicInitialRoute);
+  }
+};
+
+export const checkPincodeData = function* checkPincodeData() {
+  yield takeLatest(APP.CHECK_PINCODE, checkPincode);
+};
+
 
 export const dynamicInitialRouteData = function* dynamicInitialRouteData() {
   yield takeLatest(APP.DYNAMIC_INITIAL_ROUTE, dynamicInitialRoute);
