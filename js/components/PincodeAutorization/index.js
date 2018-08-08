@@ -11,7 +11,7 @@ export default class PincodeAurorization extends Component {
     super(props);
     this.state = {
       pincode: '',
-      rightPincode: false
+      wrongPincode: false
     };
   }
 
@@ -21,8 +21,10 @@ export default class PincodeAurorization extends Component {
     if (passcode === this.state.pincode) {
       initialRoute();
     } else {
-      // TODO: ЗАПУСТИТЬ АНИМАЦИЮ ПРИ НЕПРАВИЛЬНОМ ВВОДЕ ПИНКОДА
-      console.warn("no");
+      // TODO: ЗАПУСТИТЬ АНИМАЦИЮ ПРИ НЕПРАВИЛЬНОМ ВВОДЕ ПИНКОДА      
+      this.setState({ wrongPincode: true }, () => setTimeout(() => {
+        this.setState({ wrongPincode: false, pincode: '' });
+      }, 2000));
     }
   }
 
@@ -54,13 +56,13 @@ export default class PincodeAurorization extends Component {
       >
         <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
         <Text style={styles.pincode}>
-          {this.state.confirm ? 'CONFIRM PINCODE' : 'PIN CODE'}
+          PIN CODE
         </Text>
         <View style={styles.circleContainer}>
-          <View style={this.state.pincode.length > 0 ? styles.circleFill : this.state.rightPincode ? style.circleRight : styles.circle} />
-          <View style={this.state.pincode.length > 1 ? styles.circleFill : styles.circle} />
-          <View style={this.state.pincode.length > 2 ? styles.circleFill : styles.circle} />
-          <View style={this.state.pincode.length > 3 ? styles.circleFill : styles.circle} />
+          <View style={this.state.pincode.length > 0 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
+          <View style={this.state.pincode.length > 1 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
+          <View style={this.state.pincode.length > 2 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
+          <View style={this.state.pincode.length > 3 && !this.state.wrongPincode ? styles.circleFill : this.state.wrongPincode ? styles.circleWrong : styles.circle} />
         </View>
         <View style={styles.numbersContainer}>
           <View style={styles.row}>
@@ -171,6 +173,12 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     backgroundColor: 'green',
+    borderRadius: 10,
+  },
+  circleWrong: {
+    width: 20,
+    height: 20,
+    backgroundColor: 'red',
     borderRadius: 10,
   },
   numbersContainer: {
