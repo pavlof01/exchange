@@ -122,9 +122,9 @@ class NewTrade extends Component {
     this.state = {
       ad: props.navigation.getParam('ad', { id: 'NO-ID' }),
       form: {
-        amount: undefined,
-        cost: undefined,
-        message: undefined,
+        amount: null,
+        cost: null,
+        message: null,
       },
       pending: false,
       errors: undefined,
@@ -175,7 +175,8 @@ class NewTrade extends Component {
     const {
       ad,
     } = this.state;
-    Api.post(`/pro/${ad.id}/trades`, {
+    console.warn(values);
+    /* Api.post(`/pro/${ad.id}/trades`, {
       trade: values,
       ad: { price: ad.price },
     })
@@ -202,7 +203,7 @@ class NewTrade extends Component {
 
         this.setState(newState);
       });
-    this.setState({ pending: true, errors: undefined });
+    this.setState({ pending: true, errors: undefined }); */
   };
 
   static renderCurrencyInput(
@@ -278,9 +279,9 @@ class NewTrade extends Component {
       ad,
       pending,
       form,
-      msg,
       errors,
     } = this.state;
+    console.warn(`batman ${JSON.stringify(form, null, 2)}`);
     return (
       <KeyboardAvoidingWrapView
         behavior="padding"
@@ -325,9 +326,24 @@ class NewTrade extends Component {
               </Text>
               <TextInput
                 style={styles.amountText}
-                onChangeText={message => this.setState({ msg: message })}
+                // PROBLEM WITH SETSTATE
+                onChangeText={(msg) => {
+                  /* Object.assign(
+                    previousState,
+                    { quantity: state.quantity + 1 },
+                    { quantity: state.quantity + 1 },
+                  ); */
+                  const amount = this.state.amount;
+                  const cost = this.state.cost;
+                  const newForm = {
+                    message: msg,
+                    amount,
+                    cost,
+                  };
+                  this.setState({ form: newForm });
+                }}
                 placeholder={intl.formatMessage({ id: 'app.newTrade.text.leave_message', defaultMessage: 'You may leave a message' })}
-                value={msg}
+                value={form.message}
               />
               <Text style={styles.timeLeft}>
                 {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
