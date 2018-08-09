@@ -196,7 +196,7 @@ class Sell extends Component {
           >
             <View style={showKeyboard ? styles.displayNone : null}>
               <Text style={styles.title}>
-                {getTradeTitle(trade.status, ad.payment_method_code).toUpperCase()}
+                {getTradeTitle(intl, trade.status, ad.payment_method_code).toUpperCase()}
               </Text>
               <TraderInfo
                 isOnline={isOnline}

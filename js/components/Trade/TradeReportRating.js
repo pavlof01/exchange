@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import moment from 'moment';
+import { injectIntl, intlShape } from 'react-intl';
 import { fonts } from '../../style/resourceHelpers';
 import Price from '../../values/Price';
 import {
@@ -16,7 +17,6 @@ import {
 import TransactionDetails from './TransactionDetails';
 import Feedback from './Feedback';
 import ChatView from "./ChatView";
-import { injectIntl, intlShape } from 'react-intl';
 
 const styles = StyleSheet.create({
   container: {
@@ -87,10 +87,9 @@ class TradeReportRating extends Component {
       textMessage,
     } = this.state;
     if (!trade) return null;
-    const operationPrefix = isUserBuying ?
-      (intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }))
-      :
-      (intl.formatMessage({ id: 'app.offers.operation.sell', defaultMessage: 'Sell' }));
+    const operationPrefix = isUserBuying
+      ? (intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }))
+      : (intl.formatMessage({ id: 'app.offers.operation.sell', defaultMessage: 'Sell' }));
     const currencyCode = trade.ad.currency_code || '';
     const cryptoCurrencyCode = trade.ad.crypto_currency_code || '';
     let paymentMethodCode = '...';
@@ -123,7 +122,7 @@ class TradeReportRating extends Component {
           nestedScrollEnabled
         >
           <Text style={styles.title}>
-            {getTradeTitle(trade.status, trade.ad.payment_method_code).toUpperCase()}
+            {getTradeTitle(intl, trade.status, trade.ad.payment_method_code).toUpperCase()}
           </Text>
           <Text style={styles.tradeDescription}>
             {`${operationPrefix} ${intl.formatMessage({ id: 'app.trade.feedback.via', defaultMessage: 'via' })} ${paymentMethodCode} ${intl.formatMessage({ id: 'app.trade.feedback.cryptocurrency', defaultMessage: 'cryptocurrency' })}\n${intl.formatMessage({ id: 'app.trade.feedback.trader', defaultMessage: 'Trader' })} `}
