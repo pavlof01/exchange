@@ -10,8 +10,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import moment from 'moment';
-import { fonts } from '../../style/resourceHelpers';
 import { injectIntl, intlShape } from 'react-intl';
+import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
   container: {
@@ -235,7 +235,7 @@ class ChatView extends Component {
                 ref={(ref) => this.input = ref}
                 style={styles.messageInput}
                 autoCorrect={false}
-                placeholder="You may leave a message"
+                placeholder={intl.formatMessage({ id: 'app.trade.feedback.addMsg', defaultMessage: 'You may leave a message' })}
                 underlineColorAndroid="transparent"
                 onChangeText={this.handleChangeText}
                 value={messageValue}

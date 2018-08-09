@@ -137,7 +137,7 @@ class NewTrade extends Component {
     } = this.state;
     Api.get(`/pro/${ad.id}`)
       .then(response => this.setState({ ad: response.data.ad, pending: false }))
-      .catch(() => {});
+      .catch(() => { });
     this.setState({ pending: true });
   }
 
@@ -170,6 +170,7 @@ class NewTrade extends Component {
   onSubmit = (values) => {
     const {
       openTrade,
+      intl,
     } = this.props;
     const {
       ad,
@@ -192,11 +193,11 @@ class NewTrade extends Component {
         } else if (error.response.status === 410) {
           newState.errors = {
             schedule: [
-              'Трейдер в данный момент не работает, смотрите расписание',
+              intl.formatMessage({ id: 'app.newTrade.label.trader_not_working', defaultMessage: 'The trader is not working at the moment, see the schedule' }),
             ],
           };
         } else if (error.response.status === 405) {
-          newState.errors = { yourself: ['Торговля с собой'] };
+          newState.errors = { error: [intl.formatMessage({ id: 'app.newTrade.label.yourself_error', defaultMessage: 'Trade with yourself' })] };
         }
 
         this.setState(newState);
@@ -287,7 +288,7 @@ class NewTrade extends Component {
       >
         <ScrollView
           style={{ backgroundColor: '#fff' }}
-          // keyboardShouldPersistTaps="always"
+        // keyboardShouldPersistTaps="always"
         >
           <View>
             <Text style={styles.title}>
@@ -325,7 +326,7 @@ class NewTrade extends Component {
               <TextInput
                 style={styles.amountText}
                 onChangeText={message => this.setState({ msg: message })}
-                placeholder="You may leave a message"
+                placeholder={intl.formatMessage({ id: 'app.newTrade.text.leave_message', defaultMessage: 'You may leave a message' })}
                 value={msg}
               />
               <Text style={styles.timeLeft}>

@@ -1,25 +1,25 @@
-export function keysToSnakeCase(object = {}){
-  let newObject = {};
+export function keysToSnakeCase(object = {}) {
+  const newObject = {};
 
   Object.keys(object).forEach((key) => {
-    let newKey = toSnakeCase(key);
-    newObject[newKey] = object[key]
+    const newKey = toSnakeCase(key);
+    newObject[newKey] = object[key];
   });
 
   return newObject;
 }
 
-export function toSnakeCase(string = ''){
-  return string.replace(/([a-z][A-Z])/g, function (g) { return g[0] + '_' + g[1].toLowerCase() });
+export function toSnakeCase(string = '') {
+  return string.replace(/([a-z][A-Z])/g, g => `${g[0]}_${g[1].toLowerCase()}`);
 }
 
-export function keysToCamelCase(object = {}){
-  let newObject = {};
+export function keysToCamelCase(object = {}) {
+  const newObject = {};
 
   objEach(object, (key, value) => {
     // typeof([]) === 'object'. Real object has no length
-    if (value !== null && typeof(value) === 'object' && !value.hasOwnProperty('length')) {
-      value = keysToCamelCase(value)
+    if (value !== null && typeof (value) === 'object' && !value.hasOwnProperty('length')) {
+      value = keysToCamelCase(value);
     }
     // key have no digits. Example: day_1_start, day_1_end. It is hard to back to snake case.
     newObject[/^[a-z_]+$/.test(key) ? toCamelCase(key) : key] = value;
@@ -28,8 +28,8 @@ export function keysToCamelCase(object = {}){
   return newObject;
 }
 
-export function toCamelCase(string = ''){
-  return string.replace(/_([a-z])/g, function (g) { return g[1].toUpperCase(); });
+export function toCamelCase(string = '') {
+  return string.replace(/_([a-z])/g, g => g[1].toUpperCase());
 }
 
 export function objLength(obj) {
@@ -38,12 +38,12 @@ export function objLength(obj) {
 
 export function objMap(obj, callback) {
   obj = obj || {};
-  return Object.keys(obj).map((key, i) => callback(key, obj[key], i))
+  return Object.keys(obj).map((key, i) => callback(key, obj[key], i));
 }
 
 export function objEach(obj, callback) {
   obj = obj || {};
-  Object.keys(obj).forEach(key => callback(key, obj[key]))
+  Object.keys(obj).forEach(key => callback(key, obj[key]));
 }
 
 // https://www.toptal.com/designers/htmlarrows/currency/
@@ -144,25 +144,26 @@ export function isTradeComplete(status) {
 
 /**
  * Возвращает заголовок транзакции по статусу сделки.
+ * @param {object} intl - .
  * @param {string} status - статус сделки.
  * @param {string} paymentMethodCode - название способа оплаты.
  * @return {string} - заголовок транзакции.
  */
-export function getTradeTitle(status, paymentMethodCode) {
+export function getTradeTitle(intl, status, paymentMethodCode) {
   switch (status) {
     case TRADE_STATUS_NEW:
     case TRADE_STATUS_PAID_CONFIRMED:
-      return `Transfer via ${paymentMethodCode}`;
+      return `${intl.formatMessage({ id: 'app.newTrade.title', defaultMessage: 'Transfer via' })} ${paymentMethodCode}`;
     case TRADE_STATUS_COMPLETED_BY_SELLER:
     case TRADE_STATUS_COMPLETED_BY_ADMIN:
-      return 'Transaction complete';
+      return intl.formatMessage({ id: 'app.trade.status.complete', defaultMessage: 'Transaction complete' });
     case TRADE_STATUS_CANCELLED:
     case TRADE_STATUS_CANCELLED_BY_BUYER:
     case TRADE_STATUS_CANCELLED_BY_ADMIN:
-      return 'Transaction cancelled';
+      return intl.formatMessage({ id: 'app.trade.status.cancelled', defaultMessage: 'Transaction cancelled' });
     case TRADE_STATUS_EXPIRED_AND_PAID:
     case TRADE_STATUS_EXPIRED:
-      return 'Transaction expired';
+      return intl.formatMessage({ id: 'app.trade.status.cancelled', defaultMessage: 'Transaction expired' });
     default:
       return '';
   }
@@ -172,29 +173,29 @@ export const tradeTypeBuy = 'buy';
 export const tradeTypeSell = 'sell';
 
 export function tradeType(trade, userId) {
-  return trade.ad.type === 'Ad::Sell' ?
-    trade.ad.user.id === userId ? 'sell' : 'buy' :
-    trade.ad.user.id === userId ? 'buy' : 'sell'
+  return trade.ad.type === 'Ad::Sell'
+    ? trade.ad.user.id === userId ? 'sell' : 'buy'
+    : trade.ad.user.id === userId ? 'buy' : 'sell';
 }
 
 export function tradePartner(trade, userId) {
-  return trade.contractor.id === userId ?
-    trade.ad.user :
-    trade.contractor;
+  return trade.contractor.id === userId
+    ? trade.ad.user
+    : trade.contractor;
 }
 
 export function sortGetNext(currentField, nextField) {
-  switch((currentField || '').indexOf(nextField)) {
-    case  0: return '-' + nextField;
-    case  1: return nextField;
+  switch ((currentField || '').indexOf(nextField)) {
+    case 0: return `-${nextField}`;
+    case 1: return nextField;
     default: return nextField;
   }
 }
 
 export function sortGetState(currentField, nextField, asc, desc, off) {
-  switch((currentField || '').indexOf(nextField)) {
-    case  0: return asc;
-    case  1: return desc;
+  switch ((currentField || '').indexOf(nextField)) {
+    case 0: return asc;
+    case 1: return desc;
     default: return off;
   }
 }

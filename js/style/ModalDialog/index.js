@@ -7,14 +7,15 @@ import {
   Text,
   View,
 } from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
 import { fonts } from '../resourceHelpers';
-import PrimaryButton from '../../style/ActionButton';
+import PrimaryButton from '../ActionButton';
 
 const styles = StyleSheet.create({
   modalShade: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-    position: "absolute",
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
@@ -22,8 +23,8 @@ const styles = StyleSheet.create({
   },
   dialogContainer: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "white",
+    flexDirection: 'column',
+    backgroundColor: 'white',
     padding: 16,
     marginTop: 80,
     marginBottom: 120,
@@ -104,7 +105,9 @@ class ModalDialog extends Component {
     } = this.props;
     if (!title) return null;
     return (
-      <Text style={styles.dialogTitle}>{title}</Text>
+      <Text style={styles.dialogTitle}>
+        {title}
+      </Text>
     );
   };
 
@@ -115,7 +118,9 @@ class ModalDialog extends Component {
     } = this.props;
     if (message) {
       return (
-        <Text style={styles.dialogMessage}>{message}</Text>
+        <Text style={styles.dialogMessage}>
+          {message}
+        </Text>
       );
     }
   };
@@ -123,36 +128,38 @@ class ModalDialog extends Component {
   render() {
     const {
       isOpen,
+      intl,
     } = this.props;
     if (!isOpen) return null;
     return (
       <Modal
-        ref={(ref) => (this.modal = ref)}
-        animationType={'fade'}
-        transparent={true}
+        ref={ref => (this.modal = ref)}
+        animationType="fade"
+        transparent
         onRequestClose={this.onRequestClose}
       >
         <View style={styles.modalShade}>
-          <ScrollView keyboardShouldPersistTaps='always'>
+          <ScrollView keyboardShouldPersistTaps="always">
             <View style={styles.dialogContainer}>
               <View style={styles.headerContainer}>
                 {this.renderHeader()}
               </View>
               {this.renderContent()}
               <View style={styles.buttonGroup}>
-                {this.props.noCancel ?
-                  null
-                  :
-                  (<PrimaryButton
-                    onPress={this.onNegativePress}
-                    title={'CANCEL'}
-                    secondary
-                    style={styles.negativeButton}
-                  />)}
+                {this.props.noCancel
+                  ? null
+                  : (
+                    <PrimaryButton
+                      onPress={this.onNegativePress}
+                      title={intl.formatMessage({ id: 'app.wallet.btn.cancel', defaultMessage: 'Cancel' })}
+                      secondary
+                      style={styles.negativeButton}
+                    />
+                  )}
 
                 <PrimaryButton
                   onPress={this.onPositivePress}
-                  title={'OK'}
+                  title="Ok"
                   style={styles.positiveButton}
                 />
               </View>
@@ -175,4 +182,4 @@ ModalDialog.propTypes = {
   noCancel: PropTypes.boolean,
 };
 
-export default ModalDialog;
+export default injectIntl(ModalDialog);

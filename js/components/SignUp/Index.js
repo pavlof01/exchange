@@ -100,15 +100,15 @@ class SignUp extends Component {
       return withCommonStatusBar(
         <View>
           <Text>
-            Вы успешно зарегистрированы.
+            {intl.formatMessage({ id: 'app.registration.register_success', defaultMessage: 'You are successfully registered.' })}
           </Text>
           <Text>
-            На ваш e-mail отправлено сообщение со ссылкой для подтверждения регистрации
+            {intl.formatMessage({ id: 'app.registration.email_sent', defaultMessage: 'A message has been sent to your e-mail with a link to confirm registration' })}
           </Text>
           <Touchable onPress={this.onLoginPressed}>
             <View>
               <Text>
-                Login
+                {intl.formatMessage({ id: 'app.registration.login', defaultMessage: 'Login' })}
               </Text>
             </View>
           </Touchable>

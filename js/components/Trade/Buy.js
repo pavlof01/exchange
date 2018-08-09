@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { injectIntl, intlShape } from 'react-intl';
 import ChatView from './ChatView';
 import Price from '../../values/Price';
 import User from '../../models/User';
@@ -205,6 +206,7 @@ class Buy extends Component {
       sendMessage,
       onCompleteHandler,
       onCancelHandler,
+      intl,
     } = this.props;
     const {
       enableScrollViewScroll,
@@ -242,7 +244,7 @@ class Buy extends Component {
           >
             <View style={showKeyboard ? styles.displayNone : null}>
               <Text style={styles.title}>
-                {getTradeTitle(trade.status, ad.payment_method_code).toUpperCase()}
+                {getTradeTitle(intl, trade.status, ad.payment_method_code).toUpperCase()}
               </Text>
               <TraderInfo
                 isOnline={isOnline}
@@ -255,11 +257,11 @@ class Buy extends Component {
                   {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
                 </Text>
                 <Text style={this.getTradeDescriptionStyleByStatus(trade.status)}>
-                  {'Your request Trader '}
+                  {intl.formatMessage({ id: 'app.trade.request', defaultMessage: 'Your request Trader' })}
                   <Text style={styles.tradeDescriptionBold}>
                     {partnerName}
                   </Text>
-                  {`\nPURCHASE ONLINE cryptocurrency from\n${date} ${time} `}
+                  {intl.formatMessage({ id: 'app.trade.purchase', defaultMessage: '\nPURCHASE ONLINE cryptocurrency from\n {date} {time}' }, { date, time })}
                 </Text>
                 <View style={styles.swapContainer}>
                   <Text style={styles.swapTextLeft}>
@@ -276,10 +278,12 @@ class Buy extends Component {
                   </Text>
                 </View>
                 <Text style={styles.timeLeftText}>
-                  {'Time left to pay: '}
+                  {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time left to pay: ' })}
+                  {' '}
                   <Text style={styles.timeLeftTimeText}>
                     <EscrowTimer expiredAt={trade.escrow_expired_at} />
-                    {' min'}
+                    {' '}
+                    {intl.formatMessage({ id: 'app.trade.min', defaultMessage: 'min' })}
                   </Text>
                 </Text>
               </View>
@@ -301,13 +305,13 @@ class Buy extends Component {
               <View style={(showKeyboard || trade.status !== 'new') ? styles.displayNone : styles.bottomButtons}>
                 <PrimaryButton
                   onPress={onCompleteHandler}
-                  title="COMPLETE THE TRANSACTION"
+                  title={intl.formatMessage({ id: 'app.trade.complete', defaultMessage: 'Complete the transaction' })}
                   color="#5B6EFF"
                   style={{ marginTop: 30 }}
                 />
                 <PrimaryButton
                   onPress={onCancelHandler}
-                  title="CANCEL THE TRANSACTION"
+                  title={intl.formatMessage({ id: 'app.trade.cancel', defaultMessage: 'Cancel the transaction' })}
                   color="#F5F5F5"
                   style={{ marginTop: 20 }}
                   fontStyle={{ color: '#000000' }}
@@ -332,4 +336,4 @@ Buy.propTypes = {
   onCancelHandler: PropTypes.func,
 };
 
-export default Buy;
+export default injectIntl(Buy);
