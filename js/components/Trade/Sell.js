@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { injectIntl, intlShape } from 'react-intl';
 import Price from '../../values/Price';
 import ChatView from './ChatView';
 import {
@@ -156,6 +157,7 @@ class Sell extends Component {
       messages,
       sendMessage,
       onPaidHandler,
+      intl,
     } = this.props;
     const {
       enableScrollViewScroll,
@@ -207,11 +209,11 @@ class Sell extends Component {
                   {`1 ${ad.crypto_currency_code} / ${Price.build(ad.price).viewMain} ${currencyCodeToSymbol(ad.currency_code)}`}
                 </Text>
                 <Text style={this.getTradeDescriptionStyleByStatus(trade.status)}>
-                  {'Your request Trader '}
+                  {intl.formatMessage({ id: 'app.trade.request', defaultMessage: 'Your request Trader' })}
                   <Text style={styles.tradeDescriptionBold}>
                     {partnerName}
                   </Text>
-                  {`\nSELL ONLINE cryptocurrency from\n${date} ${time} `}
+                  {intl.formatMessage({ id: 'app.trade.sell', defaultMessage: '\nSELL ONLINE cryptocurrency from\n {date} {time}' }, { date, time })}
                 </Text>
                 <View style={styles.swapContainer}>
                   <Text style={styles.swapTextLeft}>
@@ -228,10 +230,12 @@ class Sell extends Component {
                   </Text>
                 </View>
                 <Text style={styles.timeLeftText}>
-                  {'Time left to pay: '}
+                  {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time left to pay: ' })}
+                  {' '}
                   <Text style={styles.timeLeftTimeText}>
                     <EscrowTimer expiredAt={trade.escrow_expired_at} />
-                    {' min'}
+                    {' '}
+                    {intl.formatMessage({ id: 'app.trade.min', defaultMessage: 'min' })}
                   </Text>
                 </Text>
               </View>
@@ -256,7 +260,7 @@ class Sell extends Component {
                 && (
                   <PrimaryButton
                     onPress={onPaidHandler}
-                    title="Send crypt"
+                    title={intl.formatMessage({ id: 'app.trade.send_crypt', defaultMessage: 'Send crypt' })}
                     color="#5B6EFF"
                     style={{ marginTop: 30 }}
                   />
@@ -280,4 +284,4 @@ Sell.propTypes = {
   onPaidHandler: PropTypes.func,
 };
 
-export default Sell;
+export default injectIntl(Sell);

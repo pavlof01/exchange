@@ -261,7 +261,7 @@ class Buy extends Component {
                   <Text style={styles.tradeDescriptionBold}>
                     {partnerName}
                   </Text>
-                  {intl.formatMessage({ id: 'app.trade.purchase', defaultMessage: '\nPURCHASE ONLINE cryptocurrency from\n' }, { date, time })}
+                  {intl.formatMessage({ id: 'app.trade.purchase', defaultMessage: '\nPURCHASE ONLINE cryptocurrency from\n {date} {time}' }, { date, time })}
                 </Text>
                 <View style={styles.swapContainer}>
                   <Text style={styles.swapTextLeft}>
