@@ -64,6 +64,8 @@
   "app.trade.feedback.time": "Time",
   "app.trade.feedback.chat": "Chat",
   "app.trade.feedback.addMsg": "Add message",
+  "app.trade.request": "Your requset Trader",
+  "app.trade.cripto_from": "cryptocurrency from",
   "app.trades.header": "Trades",
   "app.trades.noTrades": "no trades",
   "app.trades.user": "User",
