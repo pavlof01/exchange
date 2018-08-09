@@ -102,7 +102,7 @@ class SelectCountries extends Component {
     this.props.updateFilter({});
   }
 
-  onFilterChangeFactory = (name) => (value) => {
+  onFilterChangeFactory = name => (value) => {
     this.props.updateFilter({ [name]: value });
   };
 
@@ -128,7 +128,7 @@ class SelectCountries extends Component {
     const {
       selectedCountry,
     } = this.state;
-    const active = selectedCountry === country.item.name;;
+    const active = selectedCountry === country.item.name;
     return (
       <Touchable onPress={() => this.setState({ selectedCountry: country.item.name, countryCode: country.item.code })}>
         <View style={styles.settingContainer}>

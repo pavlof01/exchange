@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import {
   View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage,
 } from 'react-native';
+import { injectIntl, intlShape } from 'react-intl';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalDialog from '../../style/ModalDialog';
 
-export default class Pincode extends Component {
-  static navigationOptions = { header: props => null };
+class Pincode extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,49 +59,72 @@ export default class Pincode extends Component {
   }
 
   compareAndSave = async () => {
+    const { intl } = this.props;
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
     if (pincode == confirmPincode) {
-      this.setState({ openModal: true, textModal: 'pincode set' });
+      this.setState({
+        openModal: true,
+        textModal: intl.formatMessage({ id: 'app.settings.pincode_set', defaultMessage: 'pincode set' }).toUpperCase(),
+      });
     } else {
       AsyncStorage.removeItem('pincode');
-      this.setState({ openModal: true, textModal: 'wrong pincode' });
+      this.setState({
+        openModal: true,
+        textModal: intl.formatMessage({ id: 'app.settings.pincode_wrong', defaultMessage: 'wrong pincode' }).toUpperCase(),
+      });
     }
   }
 
   deletePincode = async () => {
+    const { intl } = this.props;
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
-    //console.warn(pincode == confirmPincode);
+    // console.warn(pincode == confirmPincode);
     if (pincode == confirmPincode) {
       AsyncStorage.removeItem('pincode');
-      this.setState({ openModal: true, textModal: 'pincode deleted' });
+      this.setState({
+        openModal: true,
+        textModal: intl.formatMessage({ id: 'app.settings.pincode_deleted', defaultMessage: 'wrong pincode' }).toUpperCase(),
+      });
     } else {
-      this.setState({ openModal: true, textModal: 'wrong pincode' });
+      this.setState({
+        openModal: true,
+        textModal: intl.formatMessage({ id: 'app.settings.pincode_wrong', defaultMessage: 'wrong pincode' }).toUpperCase(),
+      });
     }
   }
 
   render() {
+    const {
+      textModal,
+      openModal,
+      confirm,
+      pincode,
+    } = this.state;
+    const { navigation, intl } = this.props;
     return (
       <LinearGradient
         colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
         style={[styles.paddingScreen]}
       >
         <ModalDialog
-          title={this.state.textModal.toUpperCase()}
-          isOpen={this.state.openModal}
+          title={textModal.toUpperCase()}
+          isOpen={openModal}
           noCancel
-          onPositivePress={() => this.setState({ openModal: false }, () => this.props.navigation.goBack())}
+          onPositivePress={() => this.setState({ openModal: false }, () => navigation.goBack())}
         />
         <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
         <Text style={styles.pincode}>
-          {this.state.confirm ? 'CONFIRM PINCODE' : 'PIN CODE'}
+          {confirm
+            ? intl.formatMessage({ id: 'app.settings.pincode_confirm', defaultMessage: 'Confrim pincode' }).toUpperCase()
+            : intl.formatMessage({ id: 'app.settings.pincode.title', defaultMessage: 'Pin code' }).toUpperCase()}
         </Text>
         <View style={styles.circleContainer}>
-          <View style={this.state.pincode.length > 0 ? styles.circleFill : styles.circle} />
-          <View style={this.state.pincode.length > 1 ? styles.circleFill : styles.circle} />
-          <View style={this.state.pincode.length > 2 ? styles.circleFill : styles.circle} />
-          <View style={this.state.pincode.length > 3 ? styles.circleFill : styles.circle} />
+          <View style={pincode.length > 0 ? styles.circleFill : styles.circle} />
+          <View style={pincode.length > 1 ? styles.circleFill : styles.circle} />
+          <View style={pincode.length > 2 ? styles.circleFill : styles.circle} />
+          <View style={pincode.length > 3 ? styles.circleFill : styles.circle} />
         </View>
         <View style={styles.numbersContainer}>
           <View style={styles.row}>
@@ -243,3 +266,5 @@ const styles = StyleSheet.create({
     fontSize: 36,
   },
 });
+
+export default injectIntl(Pincode);
