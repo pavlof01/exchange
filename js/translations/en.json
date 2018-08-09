@@ -72,6 +72,7 @@
   "app.trade.complete": "Complete the transaction",
   "app.trade.cancel": "Cancel the transaction",
   "app.trade.send_crypt": "Send crypt",
+  "app.trade.sure": "Are you sure?",
   "app.trades.header": "Trades",
   "app.trades.noTrades": "no trades",
   "app.trades.user": "User",
