@@ -6,10 +6,13 @@ import {
   ScrollView,
   Text,
   View,
+  Dimensions,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
 import { fonts } from '../resourceHelpers';
 import PrimaryButton from '../ActionButton';
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   modalShade: {
@@ -22,17 +25,17 @@ const styles = StyleSheet.create({
     right: 0,
   },
   dialogContainer: {
-    flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-    padding: 16,
-    marginTop: 80,
-    marginBottom: 120,
+    width: width - 50,
+    height: 150,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: height / 2 - 75,
   },
   headerContainer: {
   },
   dialogTitle: {
-    flex: 1,
     color: '#9b9b9b',
     textAlign: 'center',
     fontSize: 16,
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
   },
   dialogMessage: {
-    flex: 1,
+    // flex: 1,
     color: '#444444',
     textAlign: 'center',
     fontSize: 20,
@@ -50,20 +53,20 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
   },
   buttonGroup: {
+    width: width - 50,
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   positiveButton: {
-    margin: 16,
-    marginRight: 0,
+    width: width / 2 - 50,
+    marginRight: 8,
     marginLeft: 8,
-    flex: 1,
   },
   negativeButton: {
-    margin: 16,
-    marginLeft: 0,
+    width: width / 2 - 50,
     marginRight: 8,
-    flex: 1,
+    marginLeft: 8,
   },
 });
 
@@ -139,32 +142,29 @@ class ModalDialog extends Component {
         onRequestClose={this.onRequestClose}
       >
         <View style={styles.modalShade}>
-          <ScrollView keyboardShouldPersistTaps="always">
-            <View style={styles.dialogContainer}>
-              <View style={styles.headerContainer}>
-                {this.renderHeader()}
-              </View>
-              {this.renderContent()}
-              <View style={styles.buttonGroup}>
-                {this.props.noCancel
-                  ? null
-                  : (
-                    <PrimaryButton
-                      onPress={this.onNegativePress}
-                      title={intl.formatMessage({ id: 'app.wallet.btn.cancel', defaultMessage: 'Cancel' })}
-                      secondary
-                      style={styles.negativeButton}
-                    />
-                  )}
-
-                <PrimaryButton
-                  onPress={this.onPositivePress}
-                  title="Ok"
-                  style={styles.positiveButton}
-                />
-              </View>
+          <View style={styles.dialogContainer}>
+            <View style={styles.headerContainer}>
+              {this.renderHeader()}
             </View>
-          </ScrollView>
+            {this.renderContent()}
+            <View style={styles.buttonGroup}>
+              {this.props.noCancel
+                ? null
+                : (
+                  <PrimaryButton
+                    onPress={this.onNegativePress}
+                    title={intl.formatMessage({ id: 'app.wallet.btn.cancel', defaultMessage: 'Cancel' })}
+                    secondary
+                    style={styles.negativeButton}
+                  />
+                )}
+              <PrimaryButton
+                onPress={this.onPositivePress}
+                title="Ok"
+                style={styles.positiveButton}
+              />
+            </View>
+          </View>
         </View>
       </Modal>
     );
