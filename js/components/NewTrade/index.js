@@ -122,9 +122,9 @@ class NewTrade extends Component {
     this.state = {
       ad: props.navigation.getParam('ad', { id: 'NO-ID' }),
       form: {
-        amount: undefined,
-        cost: undefined,
-        message: undefined,
+        amount: null,
+        cost: null,
+        message: null,
       },
       pending: false,
       errors: undefined,
@@ -278,7 +278,6 @@ class NewTrade extends Component {
       ad,
       pending,
       form,
-      msg,
       errors,
     } = this.state;
     return (
@@ -325,9 +324,9 @@ class NewTrade extends Component {
               </Text>
               <TextInput
                 style={styles.amountText}
-                onChangeText={message => this.setState({ msg: message })}
+                onChangeText={this.onMessageChange}
                 placeholder={intl.formatMessage({ id: 'app.newTrade.text.leave_message', defaultMessage: 'You may leave a message' })}
-                value={msg}
+                value={form.message}
               />
               <Text style={styles.timeLeft}>
                 {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
