@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import {
-  View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage, Animated,
+  View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage, Animated, Dimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+const { width, height } = Dimensions.get('window');
+
 export default class PincodeAurorization extends Component {
   static navigationOptions = { header: props => null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -37,7 +40,7 @@ export default class PincodeAurorization extends Component {
       }),
       Animated.timing(left, {
         toValue: -10,
-        duration: 70
+        duration: 70,
       }),
       Animated.timing(left, {
         toValue: 10,
@@ -45,11 +48,11 @@ export default class PincodeAurorization extends Component {
       }),
       Animated.timing(left, {
         toValue: -10,
-        duration: 70
+        duration: 70,
       }),
       Animated.timing(left, {
         toValue: 0,
-        duration: 70
+        duration: 70,
       }),
     ]).start();
   }
@@ -161,27 +164,29 @@ export default class PincodeAurorization extends Component {
 
 const styles = StyleSheet.create({
   paddingScreen: {
-    padding: 42,
+    padding: height / 10,
     flexDirection: 'column',
-    flex: 1,
+    width,
+    height,
+    flexShrink: 1,
   },
   logo: {
     alignSelf: 'center',
-    marginTop: 20,
   },
   pincode: {
     textAlign: 'center',
     color: '#f2f6f9',
     fontSize: 18,
     fontWeight: '400',
-    marginTop: 30,
+    marginBottom: height / 30,
+    marginTop: height / 30,
   },
   circleContainer: {
     flexDirection: 'row',
     width: 150,
     justifyContent: 'space-between',
     alignSelf: 'center',
-    marginTop: 30,
+    marginBottom: height / 30,
   },
   circle: {
     width: 20,
@@ -208,7 +213,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   numbersContainer: {
-    marginTop: 30,
     flex: 1,
     alignItems: 'center',
   },
@@ -216,10 +220,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   circleNumber: {
-    width: 70,
-    height: 70,
+    width: height / 9,
+    height: height / 9,
     backgroundColor: 'rgba(148, 183, 255, 0.15)',
-    borderRadius: 35,
+    borderRadius: height / 18,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
