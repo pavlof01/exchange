@@ -5,7 +5,9 @@ import {
   Text,
   View,
   ScrollView,
-  StyleSheet, Modal,
+  StyleSheet,
+  Modal,
+  Dimensions,
 } from 'react-native';
 
 import { injectIntl, intlShape } from 'react-intl';
@@ -13,6 +15,8 @@ import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { Hint } from '../../../style/common';
 import { fonts } from '../../../style/resourceHelpers';
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -25,23 +29,25 @@ const styles = StyleSheet.create({
     right: 0,
   },
   dialogContainer: {
-    flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-    padding: 16,
-    marginTop: 80,
-    marginBottom: 120,
+    width: width - 50,
+    height: 280,
+    alignSelf: 'center',
+    marginTop: height / 2 - 140,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   dialogTitle: {
-    flex: 1,
     color: '#AAAAAA',
     textAlign: 'center',
     fontSize: 16,
-    marginBottom: 10,
+    marginTop: 16,
+    marginBottom: 16,
     fontFamily: fonts.bold.regular,
   },
   dialogPrice: {
-    flex: 1,
+    // flex: 1,
     color: '#444444',
     fontSize: 20,
     fontWeight: 'bold',
@@ -49,7 +55,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   dialogAddress: {
-    flex: 1,
+    // flex: 1,
     color: '#444444',
     fontSize: 16,
     fontWeight: 'bold',
@@ -59,12 +65,23 @@ const styles = StyleSheet.create({
   buttonGroup: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  positiveButton: {
+    width: width / 2 - 50,
+    marginRight: 8,
+    marginLeft: 8,
+  },
+  negativeButton: {
+    width: width / 2 - 50,
+    marginRight: 8,
+    marginLeft: 8,
   },
   inputStyle: {
-    flex: 1,
+    // flex: 1,
   },
   dialogErrorLabel: {
-    flex: 1,
+    // flex: 1,
     color: '#d61b38',
   },
 });
@@ -137,16 +154,12 @@ class ConfirmDialog extends Component {
                   onPress={onCancelPress}
                   title={intl.formatMessage({ id: 'app.wallet.btn.cancel', defaultMessage: 'Cancel' }).toUpperCase()}
                   secondary
-                  style={{
-                    margin: 16, marginLeft: 0, marginRight: 8, flex: 1,
-                  }}
+                  style={styles.negativeButton}
                 />
                 <PrimaryButton
                   onPress={onConfirmPress}
                   title={intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()}
-                  style={{
-                    margin: 16, marginRight: 0, marginLeft: 8, flex: 1,
-                  }}
+                  style={styles.positiveButton}
                 />
               </View>
             </View>
