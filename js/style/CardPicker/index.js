@@ -50,6 +50,14 @@ class CardPicker extends React.Component {
     selectedValue: this.props.selectedValue,
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props != nextProps) {
+      this.setState({
+        selectedValue: nextProps.selectedValue,
+      });
+    }
+  }
+
   handleChange = (newValue) => {
     this.props.onValueChange(newValue);
     this.setState({ selectedValue: newValue });

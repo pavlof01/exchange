@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
+  AsyncStorage,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { MenuOption } from 'react-native-popup-menu';
@@ -226,7 +227,6 @@ const styles = StyleSheet.create({
 
 const FILTER_SELL = 'sell';
 const FILTER_BUY = 'buy';
-
 class Offers extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -235,7 +235,7 @@ class Offers extends React.PureComponent {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       fetchCurrencies,
       fetchPaymentMethods,
@@ -246,6 +246,10 @@ class Offers extends React.PureComponent {
     fetchPaymentMethods();
     fetchCountries();
     updateFilter({});
+    const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
+    const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
+    this.onCurrencyCodeChange(selectedCurrency);
+    this.onCountryCodeChange(selectedCountry);
   }
 
   showOffersToSell = () => {
@@ -281,6 +285,8 @@ class Offers extends React.PureComponent {
   onCryptoCurrencyCodeChange = this.onFilterChangeFactory('cryptoCurrencyCode');
 
   onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
+
+  onCountryCodeChange = this.onFilterChangeFactory('countryCode');
 
   onRefresh = () => {
     const {
@@ -332,6 +338,7 @@ class Offers extends React.PureComponent {
       cryptoCurrencies,
       currencies,
     } = this.props;
+    console.warn(filter);
     return (
       <View style={styles.header}>
         <View style={styles.rowContainer}>

@@ -121,6 +121,7 @@ class SelectCountries extends Component {
 
     this.onCountryCodeChange(countryCode);
     AsyncStorage.setItem('selectedCountry', selectedCountry);
+    AsyncStorage.setItem('selectedCountryCode', countryCode);
     navigation.goBack();
   };
 
