@@ -221,15 +221,15 @@ class Settings extends Component {
             <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
             <SettingsItem
               onPress={openSelectCountries}
-              text={selectedCountry || 'Select Country'}
+              text={selectedCountry || intl.formatMessage({ id: 'app.settings.title.selectCurrency', defaultMessage: 'Select currency' })}
             />
             <SettingsItem
               onPress={openSelectNativeCurrency}
-              text={selectedCurrency || 'Select Currency'}
+              text={selectedCurrency || intl.formatMessage({ id: 'app.settings.title.selectCountry', defaultMessage: 'Select country' })}
             />
             <SettingsItem
               onPress={openSelectLanguage}
-              text={displaySelectedLanguage || 'Select Language'}
+              text={displaySelectedLanguage || intl.formatMessage({ id: 'app.settings.title.selectLanguage', defaultMessage: 'Select language' })}
             />
             <Title text={intl.formatMessage({ id: 'app.settings.title.security', defaultMessage: 'Security' }).toUpperCase()} />
             <Switcher
@@ -239,15 +239,15 @@ class Settings extends Component {
             />
             <Title text={intl.formatMessage({ id: 'app.settings.title.verification', defaultMessage: 'Verification' }).toUpperCase()} />
             <SettingsItem
-              onPress={() => {}}
+              onPress={() => { }}
               text={intl.formatMessage({ id: 'app.settings.title.idInfo', defaultMessage: 'ID info' })}
             />
             <SettingsItem
-              onPress={() => {}}
+              onPress={() => { }}
               text={intl.formatMessage({ id: 'app.settings.title.phoneNumber', defaultMessage: 'Phone number' })}
             />
             <SettingsItem
-              onPress={() => {}}
+              onPress={() => { }}
               text={intl.formatMessage({ id: 'app.settings.title.identityDocs', defaultMessage: 'Identity documents' })}
             />
             <Touchable onPress={this.onLogoutPressed}>
