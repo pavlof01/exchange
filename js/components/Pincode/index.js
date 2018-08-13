@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   AsyncStorage,
 } from 'react-native';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalDialog from '../../style/ModalDialog';
 import PinCodeNumberButton from './PinCodeNumberButton';
@@ -107,7 +107,7 @@ class Pincode extends Component {
     if (passcode) {
       this.setState({ deletePincode: true });
     }
-  }
+  };
 
   setPincode = (num) => {
     if (this.state.pincode.length < 4) {
@@ -123,7 +123,7 @@ class Pincode extends Component {
         }
       });
     }
-  }
+  };
 
   delete = () => {
     if (this.state.pincode.length > 0 < 4) {
@@ -131,18 +131,18 @@ class Pincode extends Component {
       const newPin = pincode.slice(0, -1);
       this.setState({ pincode: newPin });
     }
-  }
+  };
 
   savePincode = async () => {
     await AsyncStorage.setItem('pincode', this.state.pincode);
     this.setState({ pincode: '', confirm: true });
-  }
+  };
 
   compareAndSave = async () => {
     const { intl } = this.props;
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
-    if (pincode == confirmPincode) {
+    if (pincode === confirmPincode) {
       this.setState({
         openModal: true,
         textModal: intl.formatMessage({ id: 'app.settings.pincode_set', defaultMessage: 'pincode set' }).toUpperCase(),
@@ -154,14 +154,13 @@ class Pincode extends Component {
         textModal: intl.formatMessage({ id: 'app.settings.pincode_wrong', defaultMessage: 'wrong pincode' }).toUpperCase(),
       });
     }
-  }
+  };
 
   deletePincode = async () => {
     const { intl } = this.props;
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
-    // console.warn(pincode == confirmPincode);
-    if (pincode == confirmPincode) {
+    if (pincode === confirmPincode) {
       AsyncStorage.removeItem('pincode');
       this.setState({
         openModal: true,
@@ -173,7 +172,7 @@ class Pincode extends Component {
         textModal: intl.formatMessage({ id: 'app.settings.pincode_wrong', defaultMessage: 'wrong pincode' }).toUpperCase(),
       });
     }
-  }
+  };
 
   render() {
     const {
@@ -239,7 +238,5 @@ class Pincode extends Component {
     );
   }
 }
-
-export default Pincode;
 
 export default injectIntl(Pincode);
