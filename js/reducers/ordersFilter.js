@@ -21,11 +21,11 @@ export default (state = initial, action) => {
       action.values.countryCode && User.setFavoriteCountryCode(action.values.countryCode);
       return { ...state, ...action.values };
 
-    /* case POSITION.GET_POSITION_RESULT: return {
+    case POSITION.GET_POSITION_RESULT: return {
       ...state,
       currencyCode: action.location.currencyCode,
       countryCode: action.location.countryCode,
-    }; */
+    };
 
     case SESSION.SESSION_SET_USER:
       return {
