@@ -1,12 +1,12 @@
-import {ORDERS_FILTER, POSITION, SESSION} from '../actions'
-import User from '../models/User'
+import { ORDERS_FILTER, POSITION, SESSION } from '../actions';
+import User from '../models/User';
 
 const initial = {
   type: 'buy',
   sort: '-price',
   currencyCode: 'USD',
   cryptoCurrencyCode: 'BTC',
-  countryCode: null,
+  countryCode: 'US',
   withCorrectLimits: true,
   paymentMethodCode: null,
   smsRequired: null,
@@ -19,12 +19,12 @@ export default (state = initial, action) => {
     case ORDERS_FILTER.UPDATE_ORDERS_FILTER:
       action.values.currencyCode && User.setFavoriteCurrencyCode(action.values.currencyCode);
       action.values.countryCode && User.setFavoriteCountryCode(action.values.countryCode);
-      return {...state, ...action.values};
+      return { ...state, ...action.values };
 
     case POSITION.GET_POSITION_RESULT: return {
       ...state,
       currencyCode: action.location.currencyCode,
-      countryCode: action.location.countryCode
+      countryCode: action.location.countryCode,
     };
 
     case SESSION.SESSION_SET_USER:

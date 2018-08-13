@@ -1,11 +1,12 @@
-import { POSITION } from '../actions'
-import Api from '../services/Api'
-import User from '../models/User'
+import { AsyncStorage } from 'react-native';
+import { POSITION } from '../actions';
+import Api from '../services/Api';
+import User from '../models/User';
 
-export default function(user, dispatch) {
+export default function (user, dispatch) {
   getByGeo(user, dispatch);
 
-  return { type: POSITION.GET_POSITION_STARTED }
+  return { type: POSITION.GET_POSITION_STARTED };
 }
 
 function getByIp(user, dispatch) {
@@ -22,38 +23,41 @@ function getByIp(user, dispatch) {
 
 function getByGeo(user, dispatch) {
   if (user.placeId) {
-    getByIp(user, dispatch)
+    getByIp(user, dispatch);
   } else if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      (position) =>{
-        let coords = {
+      (position) => {
+        const coords = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
 
         Api.post('/locations/geocode', coords)
-          .then((response) => dispatch(getSucceed({
-              countryCode: response.data.location.country.code,
-              currencyCode: response.data.location.country.currency_code,
-              placeId: response.data.location.place_id
-            }))
-          ).catch(() => getByIp(user, dispatch))
+          .then(response => dispatch(getSucceed({
+            countryCode: response.data.location.country.code,
+            currencyCode: response.data.location.country.currency_code,
+            placeId: response.data.location.place_id,
+          }))).catch(() => getByIp(user, dispatch));
       },
       () => {
-        getByIp(user, dispatch)
-      }
+        getByIp(user, dispatch);
+      },
     );
   } else {
-    getByIp(user, dispatch)
+    getByIp(user, dispatch);
   }
 }
 
-function getSucceed(location) {
+async function getSucceed(location) {
+  const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
+  const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
+  if (selectedCountry && selectedCurrency) {
+    return { type: POSITION.GET_POSITION_RESULT, location };
+  }
   User.setCountryCode(location.countryCode);
   User.setCurrencyCode(location.currencyCode);
   User.setPlaceId(location.placeId);
-
-  return { type: POSITION.GET_POSITION_RESULT, location: location }
+  return { type: POSITION.GET_POSITION_RESULT, location };
 }
 
 function getFailure() {
@@ -67,6 +71,6 @@ function getFailure() {
       countryCode: 'US',
       currencyCode: 'USD',
       placeId: null,
-    }
-  }
+    },
+  };
 }
