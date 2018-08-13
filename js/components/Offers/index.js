@@ -338,7 +338,6 @@ class Offers extends React.PureComponent {
       cryptoCurrencies,
       currencies,
     } = this.props;
-    console.warn(filter);
     return (
       <View style={styles.header}>
         <View style={styles.rowContainer}>
