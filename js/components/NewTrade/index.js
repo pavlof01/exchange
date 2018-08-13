@@ -122,9 +122,9 @@ class NewTrade extends Component {
     this.state = {
       ad: props.navigation.getParam('ad', { id: 'NO-ID' }),
       form: {
-        amount: undefined,
-        cost: undefined,
-        message: undefined,
+        amount: null,
+        cost: null,
+        message: null,
       },
       pending: false,
       errors: undefined,
@@ -137,7 +137,7 @@ class NewTrade extends Component {
     } = this.state;
     Api.get(`/pro/${ad.id}`)
       .then(response => this.setState({ ad: response.data.ad, pending: false }))
-      .catch(() => {});
+      .catch(() => { });
     this.setState({ pending: true });
   }
 
@@ -170,6 +170,7 @@ class NewTrade extends Component {
   onSubmit = (values) => {
     const {
       openTrade,
+      intl,
     } = this.props;
     const {
       ad,
@@ -192,11 +193,11 @@ class NewTrade extends Component {
         } else if (error.response.status === 410) {
           newState.errors = {
             schedule: [
-              'Трейдер в данный момент не работает, смотрите расписание',
+              intl.formatMessage({ id: 'app.newTrade.label.trader_not_working', defaultMessage: 'The trader is not working at the moment, see the schedule' }),
             ],
           };
         } else if (error.response.status === 405) {
-          newState.errors = { yourself: ['Торговля с собой'] };
+          newState.errors = { error: [intl.formatMessage({ id: 'app.newTrade.label.yourself_error', defaultMessage: 'Trade with yourself' })] };
         }
 
         this.setState(newState);
@@ -277,7 +278,6 @@ class NewTrade extends Component {
       ad,
       pending,
       form,
-      msg,
       errors,
     } = this.state;
     return (
@@ -287,7 +287,7 @@ class NewTrade extends Component {
       >
         <ScrollView
           style={{ backgroundColor: '#fff' }}
-          // keyboardShouldPersistTaps="always"
+        // keyboardShouldPersistTaps="always"
         >
           <View>
             <Text style={styles.title}>
@@ -324,9 +324,9 @@ class NewTrade extends Component {
               </Text>
               <TextInput
                 style={styles.amountText}
-                onChangeText={message => this.setState({ msg: message })}
-                placeholder="You may leave a message"
-                value={msg}
+                onChangeText={this.onMessageChange}
+                placeholder={intl.formatMessage({ id: 'app.newTrade.text.leave_message', defaultMessage: 'You may leave a message' })}
+                value={form.message}
               />
               <Text style={styles.timeLeft}>
                 {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}

@@ -21,6 +21,7 @@ import {
   SELECT_COUNTRIES,
   SELECT_NATIVE_CURRENCY,
   SELECT_LANGUAGE,
+  OPEN_PINCODE_AUTORIZATION,
 } from '../actions/navigation';
 
 const firstAction = AppNavigator.router.getActionForPathAndParams('SplashScreen');
@@ -123,6 +124,12 @@ export default function navigationReducer(state = initialState, action) {
     case SELECT_LANGUAGE:
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'SelectLanguage' }),
+        state,
+      );
+      break;
+    case OPEN_PINCODE_AUTORIZATION:
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'PincodeAutorization' }),
         state,
       );
       break;

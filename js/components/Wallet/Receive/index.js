@@ -87,7 +87,7 @@ class Receive extends Component {
       address = transactionTokens.data[0].address;
     }
     if (transactionTokens && transactionTokens.generation_pending) {
-      address = 'address is being generated...';
+      address = this.props.intl.formatMessage({ id: 'app.wallet.receive.address_generated', defaultMessage: 'address is being generated...' });
     }
     return address;
   };
@@ -103,10 +103,8 @@ class Receive extends Component {
       cryptoCurrencies,
       intl,
     } = this.props;
-
     return (
       <View style={styles.content}>
-
         <View style={styles.centerContent}>
           <CurrencySelector
             cryptoCurrencies={cryptoCurrencies}
@@ -123,7 +121,7 @@ class Receive extends Component {
           <QRCode transactionTokens={transactionTokens} />
         </View>
         <Hint>
-          {intl.formatMessage({ id: 'app.wallet.receive.address_to_receive', defaultMessage: 'ADDRESS TO RECEIVE BITCOINS' }).toUpperCase()}
+          {intl.formatMessage({ id: 'app.wallet.receive.address_to_receive', defaultMessage: 'Address to receive bitcoins' }, { value: this.state.cryptoCurrencyCode }).toUpperCase()}
         </Hint>
         <Text
           style={styles.address}

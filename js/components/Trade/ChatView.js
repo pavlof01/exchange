@@ -10,6 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import moment from 'moment';
+import { injectIntl, intlShape } from 'react-intl';
 import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
@@ -202,17 +203,18 @@ class ChatView extends Component {
     const {
       messages,
       messageValue,
+      intl,
     } = this.props;
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
-          {'CHAT'}
+          {intl.formatMessage({ id: 'app.trade.feedback.chat', defaultMessage: 'Chat' })}
         </Text>
         <TouchableOpacity onPress={this.handleToggleChat}>
           <View style={styles.toggleChatBox}>
             <Image source={require('../../img/ic_add_message.png')} style={styles.addIcon} />
             <Text style={styles.toggleChatBoxText}>
-              {'Add message'}
+              {intl.formatMessage({ id: 'app.trade.feedback.addMsg', defaultMessage: 'Add message' })}
             </Text>
             <Image source={require('../../img/ic_picker.png')} style={isOpen ? styles.pickerIconOpen : styles.pickerIcon} />
           </View>
@@ -233,7 +235,7 @@ class ChatView extends Component {
                 ref={(ref) => this.input = ref}
                 style={styles.messageInput}
                 autoCorrect={false}
-                placeholder="You may leave a message"
+                placeholder={intl.formatMessage({ id: 'app.trade.feedback.addMsg', defaultMessage: 'You may leave a message' })}
                 underlineColorAndroid="transparent"
                 onChangeText={this.handleChangeText}
                 value={messageValue}
@@ -257,4 +259,4 @@ ChatView.propTypes = {
   messageValue: PropTypes.string,
 };
 
-export default ChatView;
+export default injectIntl(ChatView);

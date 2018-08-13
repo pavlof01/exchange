@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import moment from 'moment';
+import { injectIntl, intlShape } from 'react-intl';
 import { fonts } from '../../style/resourceHelpers';
 import Price from '../../values/Price';
 import {
@@ -79,13 +80,16 @@ class TradeReportRating extends Component {
       user,
       messages,
       sendMessage,
+      intl,
     } = this.props;
     const {
       enableScrollViewScroll,
       textMessage,
     } = this.state;
     if (!trade) return null;
-    const operationPrefix = isUserBuying ? 'Buy' : 'Sell';
+    const operationPrefix = isUserBuying
+      ? (intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }))
+      : (intl.formatMessage({ id: 'app.offers.operation.sell', defaultMessage: 'Sell' }));
     const currencyCode = trade.ad.currency_code || '';
     const cryptoCurrencyCode = trade.ad.crypto_currency_code || '';
     let paymentMethodCode = '...';
@@ -118,10 +122,10 @@ class TradeReportRating extends Component {
           nestedScrollEnabled
         >
           <Text style={styles.title}>
-            {getTradeTitle(trade.status, trade.ad.payment_method_code).toUpperCase()}
+            {getTradeTitle(intl, trade.status, trade.ad.payment_method_code).toUpperCase()}
           </Text>
           <Text style={styles.tradeDescription}>
-            {`${operationPrefix} via ${paymentMethodCode} cryptocurrency\ntrader `}
+            {`${operationPrefix} ${intl.formatMessage({ id: 'app.trade.feedback.via', defaultMessage: 'via' })} ${paymentMethodCode} ${intl.formatMessage({ id: 'app.trade.feedback.cryptocurrency', defaultMessage: 'cryptocurrency' })}\n${intl.formatMessage({ id: 'app.trade.feedback.trader', defaultMessage: 'Trader' })} `}
             <Text style={styles.tradeDescriptionBold}>
               {partnerName}
             </Text>
@@ -131,7 +135,7 @@ class TradeReportRating extends Component {
               {received}
             </Text>
             <Text>
-              {' for '}
+              {` ${intl.formatMessage({ id: 'app.offers.pickerLabel.for', defaultMessage: 'for' })} `}
             </Text>
             <Text style={styles.tradeSummaryPrice}>
               {send}
@@ -186,4 +190,4 @@ TradeReportRating.propTypes = {
   sendMessage: PropTypes.string,
 };
 
-export default TradeReportRating;
+export default injectIntl(TradeReportRating);

@@ -89,15 +89,24 @@ class SelectCountries extends Component {
     super(props);
     this.state = {
       selectedCountry: '',
+      countryCode: '',
     };
   }
 
   componentDidMount() {
     const {
       navigation,
+      updateFilter,
     } = this.props;
     navigation.setParams({ handleSave: this.selectCountry });
+    this.props.updateFilter({});
   }
+
+  onFilterChangeFactory = name => (value) => {
+    this.props.updateFilter({ [name]: value });
+  };
+
+  onCountryCodeChange = this.onFilterChangeFactory('countryCode');
 
   countryKeyExtractor = country => country.code;
 
@@ -107,7 +116,10 @@ class SelectCountries extends Component {
     } = this.props;
     const {
       selectedCountry,
+      countryCode,
     } = this.state;
+
+    this.onCountryCodeChange(countryCode);
     AsyncStorage.setItem('selectedCountry', selectedCountry);
     navigation.goBack();
   };
@@ -118,7 +130,7 @@ class SelectCountries extends Component {
     } = this.state;
     const active = selectedCountry === country.item.name;
     return (
-      <Touchable onPress={() => this.setState({ selectedCountry: country.item.name })}>
+      <Touchable onPress={() => this.setState({ selectedCountry: country.item.name, countryCode: country.item.code })}>
         <View style={styles.settingContainer}>
           <Text style={active ? styles.settingNameActive : styles.settingName}>
             {country.item.name}

@@ -51,7 +51,7 @@ class App extends Component {
     if (Platform.OS === 'android') {
       this.backButtonListener = BackHandler.addEventListener('hardwareBackPress', () => {
         if (nav.routes.length === 1 && (nav.routes[0].routeName === 'Main'
-                    || nav.routes[0].routeName === 'Home')) {
+          || nav.routes[0].routeName === 'Home')) {
           return false;
         }
         dispatch(NavigationActions.back());
@@ -63,40 +63,42 @@ class App extends Component {
     OneSignal.getPermissionSubscriptionState((status) => {
       const { userId } = status;
       dispatch(setPushToken(userId));
-      Api.post('/one_signal_players', { token: userId });
+      if (Api.instance) {
+        Api.post('/one_signal_players', { token: userId });
+      }
     });
   }
 
-    onReceived = (notification) => {
-      console.warn('Notification received: ', notification);
-    };
+  onReceived = (notification) => {
+    console.warn('Notification received: ', notification);
+  };
 
-    onOpened = (openResult) => {
-      console.log('Message: ', openResult.notification.payload.body);
-      console.log('Data: ', openResult.notification.payload.additionalData);
-      console.log('isActive: ', openResult.notification.isAppInFocus);
-      console.log('openResult: ', openResult);
-    };
+  onOpened = (openResult) => {
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  };
 
-    onIds = (device) => {
-      console.warn(JSON.stringify(device, null, 2));
-    };
+  onIds = (device) => {
+    console.warn(JSON.stringify(device, null, 2));
+  };
 
-    render() {
-      const { dispatch, nav } = this.props;
-      const navigation = navigationPropConstructor(
-        dispatch,
-        nav,
-        addListener,
-      );
-      return (
-        <LanguageProvider messages={translationMessages}>
-          <AppNavigator
-            navigation={navigation}
-          />
-        </LanguageProvider>
-      );
-    }
+  render() {
+    const { dispatch, nav } = this.props;
+    const navigation = navigationPropConstructor(
+      dispatch,
+      nav,
+      addListener,
+    );
+    return (
+      <LanguageProvider messages={translationMessages}>
+        <AppNavigator
+          navigation={navigation}
+        />
+      </LanguageProvider>
+    );
+  }
 }
 
 const mapStateToProps = state => ({

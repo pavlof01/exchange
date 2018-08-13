@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
+import { FormattedMessage } from 'react-intl';
 import Api from '../../services/Api';
 
 import {
@@ -30,7 +31,7 @@ class Trade extends Component {
   };
 
   componentDidMount() {
-    this.props.updatePartnerActivity({[this.partner.id]: this.partner.online});
+    this.props.updatePartnerActivity({ [this.partner.id]: this.partner.online });
     this.socket = new WebSocket('ws://91.228.155.81/cable');
     this.socket.onopen = this.onConnect;
     this.socket.onmessage = this.onMessage;
@@ -66,7 +67,7 @@ class Trade extends Component {
   };
 
   onMessage = (event) => {
-    let data = JSON.parse(event.data);
+    const data = JSON.parse(event.data);
     switch (data.type) {
       case 'welcome':
       case 'ping':
@@ -75,11 +76,11 @@ class Trade extends Component {
         console.log('Subscription confirmed (Api::V1::ChatChannel)');
         break;
       default:
-        let message = data.message;
+        const message = data.message;
         if (message.messages) {
-          this.setState({messages: message.messages.map(message => keysToCamelCase(message))});
+          this.setState({ messages: message.messages.map(message => keysToCamelCase(message)) });
         } else if (message.error) {
-          this.setState({error: message.error})
+          this.setState({ error: message.error });
         }
         break;
     }
@@ -118,7 +119,7 @@ class Trade extends Component {
         command: 'subscribe',
         identifier: JSON.stringify({
           channel: 'Api::V1::ChatChannel',
-          conversation_id: conversationId
+          conversation_id: conversationId,
         }),
       }),
     );
@@ -129,7 +130,7 @@ class Trade extends Component {
     this.sendMessage({ body: msg });
   };
 
-  tradeActionHandlerFactory = (endpoint) => () => {
+  tradeActionHandlerFactory = endpoint => () => {
     this.setState({
       isConfirming: true,
       tradeEndpoint: endpoint,
@@ -140,12 +141,12 @@ class Trade extends Component {
     const endpoint = this.state.tradeEndpoint;
     if (endpoint) {
       Api.post(`/trades/${this.props.trade.id}${endpoint}`)
-        .then(response => {
+        .then((response) => {
           this.props.update(response.data.trade);
-          this.setState({pending: false});
+          this.setState({ pending: false });
         })
-        .catch(error => {
-          const newState = {pending: false};
+        .catch((error) => {
+          const newState = { pending: false };
           if (error.response.status === 405) {
             newState.errors = error.response.data.errors;
           }
@@ -169,15 +170,15 @@ class Trade extends Component {
   onCompleteHandler = this.tradeActionHandlerFactory('/confirm');
 
   get createdAt() {
-      let date = new Date(this.props.trade.created_at);
+    const date = new Date(this.props.trade.created_at);
 
-      let day = ("0" + date.getDate()).slice(-2);
-      let month = ("0" + (date.getMonth() + 1)).slice(-2);
-      let year = date.getFullYear();
+    const day = (`0${date.getDate()}`).slice(-2);
+    const month = (`0${date.getMonth() + 1}`).slice(-2);
+    const year = date.getFullYear();
 
-      let hours = ("0" + date.getHours()).slice(-2);
-      let minutes = ("0" + date.getMinutes()).slice(-2);
-      return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
+    const hours = (`0${date.getHours()}`).slice(-2);
+    const minutes = (`0${date.getMinutes()}`).slice(-2);
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
   }
 
   renderBuyActionBlock() {
@@ -246,7 +247,7 @@ class Trade extends Component {
     }
 
     if (this.state.pending) {
-      return <ActivityIndicator size="large" />
+      return <ActivityIndicator size="large" />;
     }
     const { status } = this.props.trade;
 
@@ -290,24 +291,26 @@ class Trade extends Component {
     return this.isTradeLoaded() ? tradePartner(trade, user.id) : '';
   }
 
-  renderProgress = () => {
-    return (
-      <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  };
+  renderProgress = () => (
+    <View style={{
+      flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center',
+    }}
+    >
+      <ActivityIndicator size="large" />
+    </View>
+  );
 
   render() {
     const {
       isConfirming,
     } = this.state;
+    const { intl } = this.props;
     if (!this.isTradeLoaded()) return this.renderProgress();
     return (
       <View style={{ flex: 1 }}>
-        { this.renderActionBlock() }
+        {this.renderActionBlock()}
         <ModalDialog
-          title={'Are you sure?'.toUpperCase()}
+          title={<FormattedMessage id="app.trade.sure" />}
           isOpen={isConfirming}
           onClose={this.closeModal}
           onNegativePress={this.closeModal}

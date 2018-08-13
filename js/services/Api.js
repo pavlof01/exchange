@@ -8,6 +8,13 @@ import store from '../store';
 export default class Api {
   static tokenName = 'nekotIpa';
 
+  static getInstance = () => {
+    if (!Api.instance) {
+      Api.createApiWithToken(Api.currentToken);
+    }
+    return Api.instance;
+  }
+
   static createApiWithToken(value) {
     Api.currentToken = value;
     Api.instance = axios.create({
@@ -24,10 +31,10 @@ export default class Api {
       (response) => response,
       (onError) => {
         const request = onError.config;
-        if ( onError.response.status === 401 ) {
+        if (onError.response.status === 401) {
           return AsyncStorage.getItem(Api.tokenName)
             .then(token => {
-              return axios.post(`${API_BASE_URL}/auths/renew_api_token`, {api_token: token})
+              return axios.post(`${API_BASE_URL}/auths/renew_api_token`, { api_token: token })
             }).then((tokenResponse) => {
               const newToken = tokenResponse.data.api_token;
               return AsyncStorage.setItem(Api.tokenName, newToken)
@@ -49,18 +56,18 @@ export default class Api {
   }
 
   static get(uri, params = {}) {
-    return Api.instance.get(uri, { params });
+    return Api.getInstance().get(uri, { params });
   }
 
   static post(uri, params = {}) {
-    return Api.instance.post(uri, params);
+    return Api.getInstance().post(uri, params);
   }
 
   static patch(uri, params = {}) {
-    return Api.instance.patch(uri, params);
+    return Api.getInstance().patch(uri, params);
   }
 
   static delete(uri) {
-    return Api.instance.delete(uri);
+    return Api.getInstance().delete(uri);
   }
 }

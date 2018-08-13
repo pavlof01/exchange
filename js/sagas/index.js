@@ -3,6 +3,7 @@ import {
   dynamicInitialRouteData,
   loginData,
   logoutData,
+  checkPincodeData,
 } from './authorization';
 import {
   signUpData,
@@ -18,6 +19,7 @@ import {
 
 const rootSagas = function* root() {
   yield all([
+    fork(checkPincodeData),
     fork(dynamicInitialRouteData),
     fork(loginData),
     fork(logoutData),
