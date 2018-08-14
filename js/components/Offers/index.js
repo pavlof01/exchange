@@ -10,6 +10,9 @@ import {
   Text,
   View,
   AsyncStorage,
+  Dimensions,
+  Animated,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { MenuOption } from 'react-native-popup-menu';
@@ -24,6 +27,7 @@ import HeaderBar from '../../style/HeaderBar';
 import CardPicker from '../../style/CardPicker';
 
 const SIDE_PADDING = 20;
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -223,15 +227,76 @@ const styles = StyleSheet.create({
   offlineStatus: {
     backgroundColor: 'red',
   },
+  androidContainer: {
+    backgroundColor: '#2B2B82',
+    color: 'white',
+    height: 112,
+    fontWeight: 'bold',
+    fontFamily: fonts.bold.regular,
+    elevation: 8,
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+  },
+  iosContainer: {
+    backgroundColor: '#2B2B82',
+    color: 'white',
+    height: 112,
+    fontWeight: 'bold',
+    fontFamily: fonts.bold.regular,
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  titleText: {
+    color: 'white',
+    height: 56,
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: fonts.bold.regular,
+    padding: 24,
+    textAlign: 'center',
+  },
+  btcCostContainer: {
+    width,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  btcCostText: {
+    fontFamily: fonts.bold.regular,
+    fontSize: 10,
+    color: 'rgb(168,190,235)',
+  },
+  btcCost: {
+    fontFamily: fonts.regular.regular,
+    fontSize: 34,
+    color: 'rgb(168,190,235)',
+    textAlign: 'center',
+  },
+  btcChangePercent: {
+    fontFamily: fonts.bold.regular,
+    fontSize: 10,
+    color: '#14d459',
+  },
 });
 
 const FILTER_SELL = 'sell';
 const FILTER_BUY = 'buy';
+const isAndroid = Platform.OS === 'android';
 class Offers extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
+      heightTitleContainer: new Animated.Value(112),
+      titleOpacity: new Animated.Value(1),
+      btcCostContainerOpacity: new Animated.Value(1),
+      showTitle: 'flex',
     };
   }
 
@@ -521,6 +586,56 @@ class Offers extends React.PureComponent {
     );
   };
 
+  handleScroll = (event) => {
+    if (event.nativeEvent.contentOffset.y < 10) {
+      this.pullUp();
+    } else if (event.nativeEvent.contentOffset.y >= 50) {
+      this.pullDown();
+    }
+  }
+
+  pullUp = () => {
+    const {
+      heightTitleContainer,
+      titleOpacity,
+      btcCostContainerOpacity,
+      showTitle,
+    } = this.state;
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(heightTitleContainer, {
+          toValue: 112,
+          duration: 200,
+        }),
+        Animated.timing(titleOpacity, {
+          toValue: 1,
+          duration: 200,
+        }),
+      ]),
+    ]).start(() => this.setState({ showTitle: 'flex' }));
+  }
+
+  pullDown = () => {
+    const {
+      heightTitleContainer,
+      titleOpacity,
+      btcCostContainerOpacity,
+      showTitle,
+    } = this.state;
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(heightTitleContainer, {
+          toValue: 56,
+          duration: 200,
+        }),
+        Animated.timing(titleOpacity, {
+          toValue: 0,
+          duration: 200,
+        }),
+      ]),
+    ]).start(() => this.setState({ showTitle: 'none' }));
+  }
+
   render() {
     const {
       intl,
@@ -533,12 +648,33 @@ class Offers extends React.PureComponent {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
-          <HeaderBar title={header} />
+          <Animated.View
+            style={[styles.iosContainer, { height: this.state.heightTitleContainer }]}
+          >
+            <Animated.View style={[styles.titleContainer, { display: this.state.showTitle, opacity: this.state.titleOpacity }]}>
+              <Text style={styles.titleText}>
+                {header}
+              </Text>
+            </Animated.View>
+            <View style={styles.btcCostContainer}>
+              <Text style={styles.btcCostText}>
+                BTC COST
+              </Text>
+              <Text style={styles.btcCost}>
+                483672
+              </Text>
+              <Text style={styles.btcChangePercent}>
+                +0.12%
+              </Text>
+            </View>
+          </Animated.View>
           {
             this.isFetching()
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
               : (
                 <FlatList
+                  bounces={false}
+                  onScroll={this.handleScroll}
                   data={orders.list}
                   refreshControl={(
                     <RefreshControl
