@@ -5,6 +5,7 @@
     "react-native"
   ],
   "rules": {
+    "react/destructuring-assignment": "never",
     "react/require-default-props": 0,
     "react/jsx-filename-extension": 0,
     "react/prefer-stateless-function": 0,
@@ -16,7 +17,11 @@
     "react-native/no-unused-styles": 1,
     "new-cap": [
       "error",
-      { "capIsNewExceptions": ["Record"] }
+      {
+        "capIsNewExceptions": [
+          "Record"
+        ]
+      }
     ],
     "global-require": 0
   }
