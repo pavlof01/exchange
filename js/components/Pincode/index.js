@@ -6,35 +6,41 @@ import {
   Image,
   TouchableOpacity,
   AsyncStorage,
+  Dimensions,
 } from 'react-native';
 import { injectIntl } from 'react-intl';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalDialog from '../../style/ModalDialog';
 import PinCodeNumberButton from './PinCodeNumberButton';
 
+const PINCODE_LENTH = 4;
+const { width, height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   paddingScreen: {
-    padding: 42,
+    padding: height / 10,
     flexDirection: 'column',
-    flex: 1,
+    width,
+    height,
+    flexShrink: 1,
   },
   logo: {
     alignSelf: 'center',
-    marginTop: 20,
   },
   pincode: {
     textAlign: 'center',
     color: '#f2f6f9',
     fontSize: 18,
     fontWeight: '400',
-    marginTop: 30,
+    marginBottom: height / 30,
+    marginTop: height / 30,
   },
   circleContainer: {
     flexDirection: 'row',
     width: 150,
     justifyContent: 'space-between',
     alignSelf: 'center',
-    marginTop: 30,
+    marginBottom: height / 30,
   },
   circle: {
     width: 20,
@@ -49,7 +55,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   numbersContainer: {
-    marginTop: 30,
     flex: 1,
     alignItems: 'center',
   },
@@ -57,10 +62,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   circleNumber: {
-    width: 70,
-    height: 70,
+    width: height / 9,
+    height: height / 9,
     backgroundColor: 'rgba(148, 183, 255, 0.15)',
-    borderRadius: 35,
+    borderRadius: height / 18,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -77,10 +82,6 @@ const styles = StyleSheet.create({
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  numberText: {
-    color: '#ffffff',
-    fontSize: 36,
   },
 });
 
@@ -110,15 +111,15 @@ class Pincode extends Component {
   };
 
   setPincode = (num) => {
-    if (this.state.pincode.length < 4) {
+    if (this.state.pincode.length < PINCODE_LENTH) {
       let pincode = this.state.pincode;
       pincode += num;
       this.setState({ pincode }, () => {
-        if (this.state.pincode.length >= 4 && this.state.deletePincode) {
+        if (this.state.pincode.length >= PINCODE_LENTH && this.state.deletePincode) {
           this.deletePincode();
-        } else if (this.state.pincode.length >= 4 && !this.state.confirm) {
+        } else if (this.state.pincode.length >= PINCODE_LENTH && !this.state.confirm) {
           this.savePincode();
-        } else if (this.state.pincode.length >= 4 && this.state.confirm) {
+        } else if (this.state.pincode.length >= PINCODE_LENTH && this.state.confirm) {
           this.compareAndSave();
         }
       });
@@ -126,7 +127,7 @@ class Pincode extends Component {
   };
 
   delete = () => {
-    if (this.state.pincode.length > 0 < 4) {
+    if (this.state.pincode.length > 0 < PINCODE_LENTH) {
       const pincode = String(this.state.pincode);
       const newPin = pincode.slice(0, -1);
       this.setState({ pincode: newPin });
@@ -194,7 +195,7 @@ class Pincode extends Component {
           onPositivePress={
             () => this.setState(
               { openModal: false },
-              () => this.props.navigation.goBack(),
+              () => navigation.goBack(),
             )
           }
         />
@@ -212,23 +213,23 @@ class Pincode extends Component {
         </View>
         <View style={styles.numbersContainer}>
           <View style={styles.row}>
-            <PinCodeNumberButton onPress={() => this.setPincode('1')} value="1" />
-            <PinCodeNumberButton onPress={() => this.setPincode('2')} value="2" />
-            <PinCodeNumberButton onPress={() => this.setPincode('3')} value="3" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('1')} value="1" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('2')} value="2" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('3')} value="3" />
           </View>
           <View style={styles.row}>
-            <PinCodeNumberButton onPress={() => this.setPincode('4')} value="4" />
-            <PinCodeNumberButton onPress={() => this.setPincode('5')} value="5" />
-            <PinCodeNumberButton onPress={() => this.setPincode('6')} value="6" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('4')} value="4" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('5')} value="5" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('6')} value="6" />
           </View>
           <View style={styles.row}>
-            <PinCodeNumberButton onPress={() => this.setPincode('7')} value="7" />
-            <PinCodeNumberButton onPress={() => this.setPincode('8')} value="8" />
-            <PinCodeNumberButton onPress={() => this.setPincode('9')} value="9" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('7')} value="7" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('8')} value="8" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('9')} value="9" />
           </View>
           <View style={styles.row}>
             <View style={styles.empty} />
-            <PinCodeNumberButton onPress={() => this.setPincode('0')} value="0" />
+            <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('0')} value="0" />
             <TouchableOpacity onPress={this.delete} style={styles.delete}>
               <Image source={require('../../img/delete.png')} />
             </TouchableOpacity>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import {
   Text,
   View,
@@ -287,7 +286,6 @@ class NewTrade extends Component {
       >
         <ScrollView
           style={{ backgroundColor: '#fff' }}
-        // keyboardShouldPersistTaps="always"
         >
           <View>
             <Text style={styles.title}>
