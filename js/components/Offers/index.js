@@ -10,6 +10,8 @@ import {
   Text,
   View,
   AsyncStorage,
+  Dimensions,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { MenuOption } from 'react-native-popup-menu';
@@ -24,6 +26,7 @@ import HeaderBar from '../../style/HeaderBar';
 import CardPicker from '../../style/CardPicker';
 
 const SIDE_PADDING = 20;
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -232,6 +235,7 @@ class Offers extends React.PureComponent {
     super(props);
 
     this.state = {
+      heightGraph: new Animated.Value(100),
     };
   }
 
@@ -330,6 +334,30 @@ class Offers extends React.PureComponent {
     return (filter.pending && (!paymentMethods || paymentMethods.length === 0));
   };
 
+  handleScroll = (event) => {
+    if (event.nativeEvent.contentOffset.y < -10) {
+      this.graphExpand();
+    } else if (event.nativeEvent.contentOffset.y > 50) {
+      this.graphHide();
+    }
+  }
+
+  graphExpand = () => {
+    const { heightGraph } = this.state;
+    Animated.timing(heightGraph, {
+      toValue: 200,
+      duration: 200,
+    }).start();
+  }
+
+  graphHide = () => {
+    const { heightGraph } = this.state;
+    Animated.timing(heightGraph, {
+      toValue: 100,
+      duration: 100,
+    }).start();
+  }
+
   renderHeader = () => {
     const {
       intl,
@@ -340,6 +368,7 @@ class Offers extends React.PureComponent {
     } = this.props;
     return (
       <View style={styles.header}>
+        <Animated.View style={{ width, height: this.state.heightGraph, backgroundColor: 'blue' }} />
         <View style={styles.rowContainer}>
           <TopButton
             title={intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }).toUpperCase()}
@@ -539,13 +568,15 @@ class Offers extends React.PureComponent {
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
               : (
                 <FlatList
+                  onScroll={this.handleScroll}
+                  scrollEventThrottle={16}
                   data={orders.list}
-                  refreshControl={(
+                  /* refreshControl={(
                     <RefreshControl
                       refreshing={orders.pending}
                       onRefresh={this.onRefresh}
                     />
-                  )}
+                  )} */
                   renderItem={this.renderItem}
                   keyExtractor={i => String(i.id)}
                   ListHeaderComponent={this.renderHeader}
