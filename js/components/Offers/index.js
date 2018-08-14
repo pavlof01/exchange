@@ -23,7 +23,6 @@ import Touchable from '../../style/Touchable';
 import { currencyCodeToSymbol } from '../../helpers';
 import Price from '../../values/Price';
 import PickerModal from '../../style/PickerModal';
-import HeaderBar from '../../style/HeaderBar';
 import CardPicker from '../../style/CardPicker';
 
 const SIDE_PADDING = 20;
@@ -256,9 +255,10 @@ const styles = StyleSheet.create({
     color: 'white',
     height: 56,
     fontSize: 16,
+    lineHeight: 18,
     fontWeight: 'bold',
     fontFamily: fonts.bold.regular,
-    padding: 24,
+    paddingTop: 24,
     textAlign: 'center',
   },
   btcCostContainer: {
@@ -651,7 +651,14 @@ class Offers extends React.PureComponent {
           <Animated.View
             style={[styles.iosContainer, { height: this.state.heightTitleContainer }]}
           >
-            <Animated.View style={[styles.titleContainer, { display: this.state.showTitle, opacity: this.state.titleOpacity }]}>
+            <Animated.View
+              style={
+                [
+                  styles.titleContainer,
+                  { display: this.state.showTitle, opacity: this.state.titleOpacity },
+                ]
+              }
+            >
               <Text style={styles.titleText}>
                 {header}
               </Text>
