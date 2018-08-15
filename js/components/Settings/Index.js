@@ -221,11 +221,11 @@ class Settings extends Component {
             <Title text={intl.formatMessage({ id: 'app.settings.title.account', defaultMessage: 'Account' }).toUpperCase()} />
             <SettingsItem
               onPress={openSelectCountries}
-              text={selectedCountry || intl.formatMessage({ id: 'app.settings.title.selectCurrency', defaultMessage: 'Select currency' })}
+              text={selectedCountry || intl.formatMessage({ id: 'app.settings.title.selectCountry', defaultMessage: 'Select country' })}
             />
             <SettingsItem
               onPress={openSelectNativeCurrency}
-              text={selectedCurrency || intl.formatMessage({ id: 'app.settings.title.selectCountry', defaultMessage: 'Select country' })}
+              text={selectedCurrency || intl.formatMessage({ id: 'app.settings.title.selectCurrency', defaultMessage: 'Select currency' })}
             />
             <SettingsItem
               onPress={openSelectLanguage}
