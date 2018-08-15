@@ -7,6 +7,7 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
+  TextInput,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
@@ -52,6 +53,19 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
   },
+  searchContainer: {
+    height: 45,
+    backgroundColor: '#9b9b9b',
+    padding: 7,
+  },
+  searchTextInput: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    paddingLeft: 15,
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+  }
 
 });
 
@@ -90,6 +104,8 @@ class SelectCountries extends Component {
     this.state = {
       selectedCountry: '',
       countryCode: '',
+      text: '',
+      countries: this.props.countries
     };
   }
 
@@ -125,6 +141,21 @@ class SelectCountries extends Component {
     navigation.goBack();
   };
 
+  filterCountry = (value) => {
+    const text = value.toLowerCase();
+    const countriesList = this.state.countries;
+    const filteredCountriesList = countriesList.filter(
+      country => country.name.toLowerCase().match(text),
+    );
+    if (!value || value === '') {
+      this.setState({ countries: this.props.countries });
+    } else {
+      this.setState({
+        countries: filteredCountriesList,
+      });
+    }
+  }
+
   renderCountryItem = (country) => {
     const {
       selectedCountry,
@@ -139,23 +170,30 @@ class SelectCountries extends Component {
         </View>
       </Touchable>
     );
-  };
+  }
+
+  renderSearchCountry = () => {
+    return (
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchTextInput}
+          onChangeText={text => this.filterCountry(text)}
+        />
+      </View>
+    );
+  }
 
   render() {
-    const {
-      countries,
-    } = this.props;
-    const {
-      selectedCountry,
-    } = this.state;
+    const { countries } = this.state;
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContainer}>
           <FlatList
             data={countries}
-            extraData={selectedCountry}
+            extraData={this.state}
             keyExtractor={this.countryKeyExtractor}
             renderItem={this.renderCountryItem}
+            ListHeaderComponent={this.renderSearchCountry}
           />
         </ScrollView>
       </View>
