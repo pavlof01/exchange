@@ -7,11 +7,11 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
-  TextInput,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
+import SearchCountryInput from './SearchCountryInput';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -53,20 +53,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
   },
-  searchContainer: {
-    height: 45,
-    backgroundColor: '#9b9b9b',
-    padding: 7,
-  },
-  searchTextInput: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    paddingLeft: 15,
-    fontSize: 16,
-    fontFamily: fonts.bold.regular,
-  }
-
 });
 
 class SelectCountries extends Component {
@@ -172,18 +158,6 @@ class SelectCountries extends Component {
     );
   }
 
-  renderSearchCountry = () => {
-    return (
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchTextInput}
-          onChangeText={text => this.filterCountry(text)}
-          placeholder="Enter country"
-        />
-      </View>
-    );
-  }
-
   render() {
     const { countries } = this.state;
     return (
@@ -194,7 +168,7 @@ class SelectCountries extends Component {
             extraData={this.state}
             keyExtractor={this.countryKeyExtractor}
             renderItem={this.renderCountryItem}
-            ListHeaderComponent={this.renderSearchCountry}
+            ListHeaderComponent={<SearchCountryInput filterCountry={text => this.filterCountry(text)} />}
           />
         </ScrollView>
       </View>
