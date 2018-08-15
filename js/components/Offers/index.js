@@ -296,6 +296,7 @@ class Offers extends React.PureComponent {
       heightTitleContainer: new Animated.Value(112),
       titleOpacity: new Animated.Value(1),
       btcCostContainerOpacity: new Animated.Value(1),
+      translateTitleY: new Animated.Value(0),
       showTitle: 'flex',
     };
   }
@@ -587,10 +588,13 @@ class Offers extends React.PureComponent {
   };
 
   handleScroll = (event) => {
-    if (event.nativeEvent.contentOffset.y < 10) {
-      this.pullUp();
+    console.warn(event.nativeEvent.contentOffset.y);
+    if (event.nativeEvent.contentOffset.y < -40) {
+      console.warn("REFRESH");
     } else if (event.nativeEvent.contentOffset.y >= 50) {
       this.pullDown();
+    } else if (-40 < event.nativeEvent.contentOffset.y < 10) {
+      this.pullUp();
     }
   }
 
@@ -637,6 +641,10 @@ class Offers extends React.PureComponent {
   }
 
   render() {
+    /*const onScrollEvent = event => {
+      console.warn(event.nativeEvent.contentOffset.y);
+      this.state.scrollY.setValue(event.nativeEvent.contentOffset.y);
+    };*/
     const {
       intl,
       orders,
@@ -673,19 +681,20 @@ class Offers extends React.PureComponent {
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
               : (
                 <FlatList
-                  bounces={false}
+                  //bounces={false}
                   onScroll={this.handleScroll}
+                  //onScroll={onScrollEvent}
                   data={orders.list}
-                  refreshControl={(
+                  /*refreshControl={(
                     <RefreshControl
                       refreshing={orders.pending}
                       onRefresh={this.onRefresh}
                     />
-                  )}
+                  )}*/
                   renderItem={this.renderItem}
                   keyExtractor={i => String(i.id)}
                   ListHeaderComponent={this.renderHeader}
-                  refreshing={orders.pending}
+                //refreshing={orders.pending}
                 />
               )
           }
