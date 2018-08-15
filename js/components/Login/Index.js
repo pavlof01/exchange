@@ -20,7 +20,7 @@ import PrimaryButton from '../../style/ActionButton';
 import BorderlessButton from '../../style/BorderlessButton';
 import { fonts } from '../../style/resourceHelpers';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +53,7 @@ class Login extends Component {
     }
   }
 
-  _keyboardDidShow = (e) => {
+  _keyboardDidShow = () => {
     this.setState({ textInFocus: true });
   }
 
@@ -110,13 +110,13 @@ class Login extends Component {
           </View>
           <View style={{ flex: 1 }}>
             <KeyboardAvoidingView behavior="padding">
-              <View style={{ paddingLeft: 42, paddingRight: 42 }}>
+              <View style={styles.formContainer}>
                 <FormTextInput
                   style={styles.textInputContainer}
                   textStyle={styles.textInput}
                   key="login"
                   error={!_.isEmpty(this.state.formError.loginError)}
-                  ref={ref => (this.loginInput = ref)}
+                  ref={(ref) => { this.loginInput = ref; }}
                   placeholder={intl.formatMessage({ id: 'app.login.enter_username', defaultMessage: 'Enter username' })}
                   placeholderTextColor="#B8CFFF"
                   keyboardType="email-address"
@@ -136,7 +136,7 @@ class Login extends Component {
                   textStyle={styles.textInput}
                   key="pass"
                   error={!_.isEmpty(this.state.formError.passwordError)}
-                  ref={ref => (this.passwordInput = ref)}
+                  ref={(ref) => { this.passwordInput = ref; }}
                   placeholder={intl.formatMessage({ id: 'app.login.enter_password', defaultMessage: 'Enter password' })}
                   placeholderTextColor="#B8CFFF"
                   secureTextEntry
@@ -205,14 +205,10 @@ const styles = StyleSheet.create({
   },
   paddingScreen: {
     flexDirection: 'column',
-    /* height,
-    minHeight: height, */
     height,
   },
   scrollView: {
     height,
-    /* height,
-    minHeight: height, */
     justifyContent: 'space-between',
   },
   logoContainer: {
@@ -247,6 +243,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
+  formContainer: {
+    paddingLeft: 42,
+    paddingRight: 42,
+  },
   forgetPasswordText: {
     fontWeight: '400',
     color: '#B8CFFF',
@@ -278,10 +278,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
     textAlign: 'center',
   },
-  KeyboardAvoidingView: {
-    flex: 1,
-  },
-
 });
 
 Login.propTypes = {
@@ -291,6 +287,7 @@ Login.propTypes = {
   recoverPasswordRequest: PropTypes.func,
   signUpRequest: PropTypes.func,
   fetchDictionary: PropTypes.func,
+  intl: intlShape,
 };
 
 export default injectIntl(Login);

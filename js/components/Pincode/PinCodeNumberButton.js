@@ -7,15 +7,6 @@ import {
 } from 'react-native';
 
 const styles = StyleSheet.create({
-  circleNumber: {
-    width: 70,
-    height: 70,
-    backgroundColor: 'rgba(148, 183, 255, 0.15)',
-    borderRadius: 35,
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   numberText: {
     color: '#ffffff',
     fontSize: 36,
@@ -45,7 +36,7 @@ class PinCodeNumberButton extends React.PureComponent {
     return (
       <TouchableOpacity
         onPress={this.handlePress}
-        style={styles.circleNumber}
+        style={this.props.style}
       >
         <Text style={styles.numberText}>
           {value}
