@@ -11,6 +11,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
 import Touchable from '../../../style/Touchable';
+import SearchCountryInput from './SearchCountryInput';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -52,7 +53,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
   },
-
 });
 
 class SelectCountries extends Component {
@@ -90,6 +90,8 @@ class SelectCountries extends Component {
     this.state = {
       selectedCountry: '',
       countryCode: '',
+      text: '',
+      countries: this.props.countries
     };
   }
 
@@ -125,6 +127,21 @@ class SelectCountries extends Component {
     navigation.goBack();
   };
 
+  filterCountry = (value) => {
+    const text = value.toLowerCase();
+    const countriesList = this.state.countries;
+    const filteredCountriesList = countriesList.filter(
+      country => country.name.toLowerCase().match(text),
+    );
+    if (!value || value === '') {
+      this.setState({ countries: this.props.countries });
+    } else {
+      this.setState({
+        countries: filteredCountriesList,
+      });
+    }
+  }
+
   renderCountryItem = (country) => {
     const {
       selectedCountry,
@@ -139,23 +156,19 @@ class SelectCountries extends Component {
         </View>
       </Touchable>
     );
-  };
+  }
 
   render() {
-    const {
-      countries,
-    } = this.props;
-    const {
-      selectedCountry,
-    } = this.state;
+    const { countries } = this.state;
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContainer}>
           <FlatList
             data={countries}
-            extraData={selectedCountry}
+            extraData={this.state}
             keyExtractor={this.countryKeyExtractor}
             renderItem={this.renderCountryItem}
+            ListHeaderComponent={<SearchCountryInput filterCountry={text => this.filterCountry(text)} />}
           />
         </ScrollView>
       </View>
