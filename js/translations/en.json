@@ -45,6 +45,7 @@
   "app.settings.title.selectLanguage": "Select language",
   "app.settings.title.selectCurrency": "Select currency",
   "app.settings.title.selectCountry": "Select country",
+  "app.settings.selectCountry.placeholder": "Enter country",
   "app.settings.title.idInfo": "ID Info",
   "app.settings.title.phoneNumber": "Phone number",
   "app.settings.title.identityDocs": "Identity documents",

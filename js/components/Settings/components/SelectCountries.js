@@ -178,6 +178,7 @@ class SelectCountries extends Component {
         <TextInput
           style={styles.searchTextInput}
           onChangeText={text => this.filterCountry(text)}
+          placeholder="Enter country"
         />
       </View>
     );
