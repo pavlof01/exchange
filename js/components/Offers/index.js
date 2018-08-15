@@ -283,6 +283,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#14d459',
   },
+  text: {
+    color: '#9b9b9b',
+    marginEnd: 17,
+    marginStart: 17,
+    marginTop: 16,
+    paddingBottom: 3,
+    marginBottom: 3,
+    fontSize: 16,
+    fontFamily: fonts.bold.regular,
+    borderBottomColor: '#D5D5D5',
+    borderBottomWidth: 1,
+  },
 });
 
 const FILTER_SELL = 'sell';
@@ -298,6 +310,7 @@ class Offers extends React.PureComponent {
       btcCostContainerOpacity: new Animated.Value(1),
       translateTitleY: new Animated.Value(0),
       showTitle: 'flex',
+      animating: new Animated.Value(0),
     };
   }
 
@@ -588,17 +601,21 @@ class Offers extends React.PureComponent {
   };
 
   handleScroll = (event) => {
-    console.warn(event.nativeEvent.contentOffset.y);
-    if (event.nativeEvent.contentOffset.y < -40) {
-      console.warn("REFRESH");
+    //СДЕЛАТЬ КОНСТАНТЫ!!!!!
+    //console.warn(event.nativeEvent.contentOffset.y);
+    if (event.nativeEvent.contentOffset.y < -60) {
+      this.refreshAnimation();
     } else if (event.nativeEvent.contentOffset.y >= 50) {
-      this.pullDown();
+      this.pullDownAnimation();
     } else if (-40 < event.nativeEvent.contentOffset.y < 10) {
-      this.pullUp();
+      this.pullUpAnimation();
     }
   }
 
-  pullUp = () => {
+  pullUpAnimation = () => {
+    if (this.state.animating) {
+      return;
+    }
     const {
       heightTitleContainer,
       titleOpacity,
@@ -619,7 +636,10 @@ class Offers extends React.PureComponent {
     ]).start(() => this.setState({ showTitle: 'flex' }));
   }
 
-  pullDown = () => {
+  pullDownAnimation = () => {
+    if (this.state.animating) {
+      return;
+    }
     const {
       heightTitleContainer,
       titleOpacity,
@@ -640,11 +660,37 @@ class Offers extends React.PureComponent {
     ]).start(() => this.setState({ showTitle: 'none' }));
   }
 
+  refreshAnimation = () => {
+    const { translateTitleY, titleOpacity, animating } = this.state;
+    Animated.sequence([
+      Animated.timing(animating, {
+        toValue: 1,
+      }),
+      Animated.parallel([
+        Animated.timing(translateTitleY, {
+          toValue: 35,
+          duration: 800,
+        }),
+        Animated.timing(titleOpacity, {
+          toValue: 0,
+          duration: 600,
+        }),
+      ]),
+      Animated.timing(translateTitleY, {
+        toValue: 0,
+      }),
+      Animated.timing(titleOpacity, {
+        delay: 1000,
+        toValue: 1,
+        duration: 600,
+      }),
+      Animated.timing(animating, {
+        toValue: 0,
+      }),
+    ]).start();
+  }
+
   render() {
-    /*const onScrollEvent = event => {
-      console.warn(event.nativeEvent.contentOffset.y);
-      this.state.scrollY.setValue(event.nativeEvent.contentOffset.y);
-    };*/
     const {
       intl,
       orders,
@@ -663,7 +709,13 @@ class Offers extends React.PureComponent {
               style={
                 [
                   styles.titleContainer,
-                  { display: this.state.showTitle, opacity: this.state.titleOpacity },
+                  {
+                    display: this.state.showTitle,
+                    opacity: this.state.titleOpacity,
+                    transform: [{
+                      translateY: this.state.translateTitleY,
+                    }],
+                  },
                 ]
               }
             >
@@ -683,6 +735,9 @@ class Offers extends React.PureComponent {
               </Text>
             </View>
           </Animated.View>
+          <Text style={[styles.text]}>
+            {header}
+          </Text>
           {
             this.isFetching()
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
