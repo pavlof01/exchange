@@ -27,6 +27,7 @@ import CardPicker from '../../style/CardPicker';
 
 const SIDE_PADDING = 20;
 const { width, height } = Dimensions.get('window');
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -240,7 +241,6 @@ const styles = StyleSheet.create({
   iosContainer: {
     backgroundColor: '#2B2B82',
     color: 'white',
-    height: 112,
     fontWeight: 'bold',
     fontFamily: fonts.bold.regular,
     alignItems: 'center',
@@ -285,15 +285,13 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#9b9b9b',
-    marginEnd: 17,
-    marginStart: 17,
-    marginTop: 16,
-    paddingBottom: 3,
-    marginBottom: 3,
+    marginTop: 20,
+    marginBottom: 20,
     fontSize: 16,
     fontFamily: fonts.bold.regular,
-    borderBottomColor: '#D5D5D5',
+    borderBottomColor: 'red',
     borderBottomWidth: 1,
+    marginLeft: 20,
   },
 });
 
@@ -309,8 +307,14 @@ class Offers extends React.PureComponent {
       titleOpacity: new Animated.Value(1),
       btcCostContainerOpacity: new Animated.Value(1),
       translateTitleY: new Animated.Value(0),
+      translateSubTitleY: new Animated.Value(0),
+      translateHeaderY: new Animated.Value(0),
       showTitle: 'flex',
+      showSubTitle: 'none',
       animating: new Animated.Value(0),
+      animatedValue: new Animated.Value(0),
+      readyToRefresh: false,
+      refreshing: false,
     };
   }
 
@@ -329,6 +333,42 @@ class Offers extends React.PureComponent {
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
+    this.state.animatedValue.addListener(value => this.handleScroll(value));
+  }
+
+  scrolltoTop = position => {
+    if (this.flatListRef) {
+      this.flatListRef.getNode().scrollToOffset({ offset: position, animated: false });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.orders.pending !== this.props.orders.pending && !nextProps.orders.pending) {
+      this.scrolltoTop(55);
+    }
+  }
+
+  componentWillUnmount() {
+    this.state.animatedValue.removeAllListeners();
+  }
+
+  handleScroll = (pullDownDistance) => {
+    if (pullDownDistance.value <= -60) {
+      return this.setState({ readyToRefresh: true });
+    }
+  }
+
+  handleRelease() {
+    if (this.state.readyToRefresh) {
+      // console.warn(this.flatListRef);
+      // this.flatListRef.scrollToItem({ item: 1 });      c
+      this.setState({ refreshing: true });
+      setTimeout(() => {
+        // this.flatListRef.scrollToItem({ item: 0 });        
+        this.setState({ refreshing: false });
+      }, 2000);
+    }
+    return this.setState({ readyToRefresh: false });
   }
 
   showOffersToSell = () => {
@@ -346,10 +386,11 @@ class Offers extends React.PureComponent {
   };
 
   openNewTrade = (ad) => {
+    this.scrolltoTop(55);
     const {
       newTrade,
     } = this.props;
-    newTrade(ad);
+    //newTrade(ad);
   };
 
   onFilterChangeFactory = name => (value) => {
@@ -417,8 +458,23 @@ class Offers extends React.PureComponent {
       cryptoCurrencies,
       currencies,
     } = this.props;
+    const header = filter.type === FILTER_SELL
+      ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
+      : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     return (
-      <View style={styles.header}>
+      <Animated.View style={[styles.header,
+      {
+        transform: [{
+          translateY: this.state.translateHeaderY,
+        }],
+      }]}
+      >
+        <Animated.View style={{ position: 'absolute', top: -40 }}>
+          <Text style={[styles.text]}>
+            {header}
+          </Text>
+        </Animated.View>
+        <Separator padding={20} />
         <View style={styles.rowContainer}>
           <TopButton
             title={intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }).toUpperCase()}
@@ -548,7 +604,7 @@ class Offers extends React.PureComponent {
             </Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -600,120 +656,61 @@ class Offers extends React.PureComponent {
     );
   };
 
-  handleScroll = (event) => {
-    //СДЕЛАТЬ КОНСТАНТЫ!!!!!
-    //console.warn(event.nativeEvent.contentOffset.y);
-    if (event.nativeEvent.contentOffset.y < -60) {
-      this.refreshAnimation();
-    } else if (event.nativeEvent.contentOffset.y >= 50) {
-      this.pullDownAnimation();
-    } else if (-40 < event.nativeEvent.contentOffset.y < 10) {
-      this.pullUpAnimation();
-    }
-  }
-
-  pullUpAnimation = () => {
-    if (this.state.animating) {
-      return;
-    }
-    const {
-      heightTitleContainer,
-      titleOpacity,
-      btcCostContainerOpacity,
-      showTitle,
-    } = this.state;
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(heightTitleContainer, {
-          toValue: 112,
-          duration: 200,
-        }),
-        Animated.timing(titleOpacity, {
-          toValue: 1,
-          duration: 200,
-        }),
-      ]),
-    ]).start(() => this.setState({ showTitle: 'flex' }));
-  }
-
-  pullDownAnimation = () => {
-    if (this.state.animating) {
-      return;
-    }
-    const {
-      heightTitleContainer,
-      titleOpacity,
-      btcCostContainerOpacity,
-      showTitle,
-    } = this.state;
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(heightTitleContainer, {
-          toValue: 56,
-          duration: 200,
-        }),
-        Animated.timing(titleOpacity, {
-          toValue: 0,
-          duration: 200,
-        }),
-      ]),
-    ]).start(() => this.setState({ showTitle: 'none' }));
-  }
-
-  refreshAnimation = () => {
-    const { translateTitleY, titleOpacity, animating } = this.state;
-    Animated.sequence([
-      Animated.timing(animating, {
-        toValue: 1,
-      }),
-      Animated.parallel([
-        Animated.timing(translateTitleY, {
-          toValue: 35,
-          duration: 800,
-        }),
-        Animated.timing(titleOpacity, {
-          toValue: 0,
-          duration: 600,
-        }),
-      ]),
-      Animated.timing(translateTitleY, {
-        toValue: 0,
-      }),
-      Animated.timing(titleOpacity, {
-        delay: 1000,
-        toValue: 1,
-        duration: 600,
-      }),
-      Animated.timing(animating, {
-        toValue: 0,
-      }),
-    ]).start();
-  }
 
   render() {
+    const event = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: {
+            y: this.state.animatedValue,
+          },
+        },
+      },
+    ]);
     const {
       intl,
       orders,
       filter,
     } = this.props;
+    const SAFE_REFRESH_VIEW_HEIGHT = 55;
     const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
+    const translateY = this.state.animatedValue.interpolate({
+      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      outputRange: [0, 0, 0, -100],
+      extrapolate: 'clamp',
+    });
+    const opacity = this.state.animatedValue.interpolate({
+      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, SAFE_REFRESH_VIEW_HEIGHT + 10],
+      outputRange: [0, 0, 1, 0],
+      extrapolate: 'clamp',
+    });
+    const height = this.state.animatedValue.interpolate({
+      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      outputRange: [0, 0, 0, -50],
+      extrapolate: 'clamp',
+    });
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <Animated.View
-            style={[styles.iosContainer, { height: this.state.heightTitleContainer }]}
+            style={[styles.iosContainer, {
+              position: 'absolute',
+              zIndex: 2,
+              transform: [{
+                translateY: height,
+              }],
+            }]}
           >
             <Animated.View
               style={
                 [
                   styles.titleContainer,
                   {
-                    display: this.state.showTitle,
-                    opacity: this.state.titleOpacity,
+                    opacity,
                     transform: [{
-                      translateY: this.state.translateTitleY,
+                      translateY,
                     }],
                   },
                 ]
@@ -735,28 +732,25 @@ class Offers extends React.PureComponent {
               </Text>
             </View>
           </Animated.View>
-          <Text style={[styles.text]}>
-            {header}
-          </Text>
           {
             this.isFetching()
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
               : (
-                <FlatList
-                  //bounces={false}
-                  onScroll={this.handleScroll}
-                  //onScroll={onScrollEvent}
+                <AnimatedFlatList
+                  bounces={false}
+                  onScroll={event}
                   data={orders.list}
-                  /*refreshControl={(
-                    <RefreshControl
-                      refreshing={orders.pending}
-                      onRefresh={this.onRefresh}
-                    />
-                  )}*/
                   renderItem={this.renderItem}
                   keyExtractor={i => String(i.id)}
                   ListHeaderComponent={this.renderHeader}
-                //refreshing={orders.pending}
+                  scrollEventThrottle={16}
+                  style={{ flex: 1, zIndex: 1 }}
+                  contentContainerStyle={{ paddingTop: 150, minHeight: 2000, }}
+                  // refreshing={orders.pending}
+                  onResponderRelease={this.handleRelease.bind(this)}
+                  ref={(ref) => {
+                    this.flatListRef = ref;
+                  }}
                 />
               )
           }
