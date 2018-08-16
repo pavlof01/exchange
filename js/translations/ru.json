@@ -45,6 +45,7 @@
   "app.settings.title.selectLanguage": "Выберете язык",
   "app.settings.title.selectCurrency": "Выберете валюту",
   "app.settings.title.selectCountry": "Выберете страну",
+  "app.settings.selectCountry.placeholder": "Введите название страны",
   "app.settings.title.idInfo": "ID Info",
   "app.settings.title.phoneNumber": "Номер телефона",
   "app.settings.title.identityDocs": "Документы",
