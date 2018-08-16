@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
-  RefreshControl,
   StyleSheet,
   Text,
   View,
@@ -26,6 +25,7 @@ import PickerModal from '../../style/PickerModal';
 import CardPicker from '../../style/CardPicker';
 
 const SIDE_PADDING = 20;
+const SAFE_REFRESH_VIEW_HEIGHT = 55;
 const { width, height } = Dimensions.get('window');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -336,15 +336,15 @@ class Offers extends React.PureComponent {
     this.state.animatedValue.addListener(value => this.handleScroll(value));
   }
 
-  scrolltoTop = position => {
+  scrollToTop = (animated) => {
     if (this.flatListRef) {
-      this.flatListRef.getNode().scrollToOffset({ offset: position, animated: false });
+      this.flatListRef.getNode().scrollToOffset({ offset: SAFE_REFRESH_VIEW_HEIGHT, animated });
     }
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.orders.pending !== this.props.orders.pending && !nextProps.orders.pending) {
-      this.scrolltoTop(55);
+      this.scrollToTop(true);
     }
   }
 
@@ -356,9 +356,10 @@ class Offers extends React.PureComponent {
     if (pullDownDistance.value <= -60) {
       return this.setState({ readyToRefresh: true });
     }
-  }
+    return true;
+  };
 
-  handleRelease() {
+  handleRelease = () => {
     if (this.state.readyToRefresh) {
       // console.warn(this.flatListRef);
       // this.flatListRef.scrollToItem({ item: 1 });      c
@@ -369,7 +370,7 @@ class Offers extends React.PureComponent {
       }, 2000);
     }
     return this.setState({ readyToRefresh: false });
-  }
+  };
 
   showOffersToSell = () => {
     const {
@@ -671,7 +672,6 @@ class Offers extends React.PureComponent {
       orders,
       filter,
     } = this.props;
-    const SAFE_REFRESH_VIEW_HEIGHT = 55;
     const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
@@ -685,7 +685,7 @@ class Offers extends React.PureComponent {
       outputRange: [0, 0, 1, 0],
       extrapolate: 'clamp',
     });
-    const height = this.state.animatedValue.interpolate({
+    const toolbarHeight = this.state.animatedValue.interpolate({
       inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
       outputRange: [0, 0, 0, -50],
       extrapolate: 'clamp',
@@ -698,7 +698,7 @@ class Offers extends React.PureComponent {
               position: 'absolute',
               zIndex: 2,
               transform: [{
-                translateY: height,
+                translateY: toolbarHeight,
               }],
             }]}
           >
@@ -744,9 +744,9 @@ class Offers extends React.PureComponent {
                   ListHeaderComponent={this.renderHeader}
                   scrollEventThrottle={16}
                   style={{ flex: 1, zIndex: 1 }}
-                  contentContainerStyle={{ paddingTop: 150, minHeight: 2000, }}
-                  // refreshing={orders.pending}
-                  onResponderRelease={this.handleRelease.bind(this)}
+                  contentContainerStyle={{ paddingTop: 150, minHeight: height }}
+                  refreshing={orders.pending}
+                  onResponderRelease={this.handleRelease}
                   ref={(ref) => {
                     this.flatListRef = ref;
                   }}
