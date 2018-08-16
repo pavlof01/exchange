@@ -2,7 +2,7 @@ import { ORDERS_FILTER, POSITION, SESSION } from '../actions';
 import User from '../models/User';
 
 const initial = {
-  type: 'buy',
+  type: 'sell',
   sort: '-price',
   currencyCode: 'USD',
   cryptoCurrencyCode: 'BTC',

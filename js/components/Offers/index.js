@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
-  RefreshControl,
   StyleSheet,
   Text,
   View,
@@ -26,7 +25,11 @@ import PickerModal from '../../style/PickerModal';
 import CardPicker from '../../style/CardPicker';
 
 const SIDE_PADDING = 20;
+const REFRESH_OFFSET_HEIGHT = 25;
+const SAFE_REFRESH_VIEW_HEIGHT = 55;
+const MAX_TOOLBAR_HEIGHT = 112;
 const { width, height } = Dimensions.get('window');
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -240,7 +243,6 @@ const styles = StyleSheet.create({
   iosContainer: {
     backgroundColor: '#2B2B82',
     color: 'white',
-    height: 112,
     fontWeight: 'bold',
     fontFamily: fonts.bold.regular,
     alignItems: 'center',
@@ -283,6 +285,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#14d459',
   },
+  text: {
+    color: '#9b9b9b',
+    marginTop: 20,
+    marginBottom: 20,
+    fontSize: 16,
+    lineHeight: 16,
+    fontFamily: fonts.bold.regular,
+    marginLeft: 20,
+  },
 });
 
 const FILTER_SELL = 'sell';
@@ -296,8 +307,17 @@ class Offers extends React.PureComponent {
       heightTitleContainer: new Animated.Value(112),
       titleOpacity: new Animated.Value(1),
       btcCostContainerOpacity: new Animated.Value(1),
+      translateTitleY: new Animated.Value(0),
+      translateSubTitleY: new Animated.Value(0),
+      translateHeaderY: new Animated.Value(0),
       showTitle: 'flex',
+      showSubTitle: 'none',
+      animating: new Animated.Value(0),
+      animatedValue: new Animated.Value(0),
+      refreshing: false,
     };
+
+    this.scrollValue = 0;
   }
 
   async componentDidMount() {
@@ -315,7 +335,42 @@ class Offers extends React.PureComponent {
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
+    this.state.animatedValue.addListener(value => this.handleScroll(value));
   }
+
+  scrollToTop = (animated) => {
+    if (this.flatListRef) {
+      this.flatListRef.getNode().scrollToOffset({ offset: SAFE_REFRESH_VIEW_HEIGHT, animated });
+    }
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.orders.pending !== this.props.orders.pending
+      && !nextProps.orders.pending
+      && this.scrollValue <= SAFE_REFRESH_VIEW_HEIGHT
+    ) {
+      this.scrollToTop(true);
+    }
+  }
+
+  componentWillUnmount() {
+    this.state.animatedValue.removeAllListeners();
+  }
+
+  handleScroll = (pullDownDistance) => {
+    this.scrollValue = pullDownDistance.value;
+    return true;
+  };
+
+  handleRelease = () => {
+    if (this.scrollValue <= REFRESH_OFFSET_HEIGHT) {
+      this.onRefresh();
+    } else if (this.scrollValue <= SAFE_REFRESH_VIEW_HEIGHT
+      && this.scrollValue > REFRESH_OFFSET_HEIGHT
+    ) {
+      this.scrollToTop(true);
+    }
+  };
 
   showOffersToSell = () => {
     const {
@@ -403,8 +458,26 @@ class Offers extends React.PureComponent {
       cryptoCurrencies,
       currencies,
     } = this.props;
+    const header = filter.type === FILTER_SELL
+      ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
+      : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     return (
-      <View style={styles.header}>
+      <Animated.View style={
+        [
+          styles.header,
+          {
+            transform: [{
+              translateY: this.state.translateHeaderY,
+            }],
+          },
+        ]}
+      >
+        <View>
+          <Text style={[styles.text]}>
+            {header}
+          </Text>
+        </View>
+        <Separator padding={20} />
         <View style={styles.rowContainer}>
           <TopButton
             title={intl.formatMessage({ id: 'app.offers.operation.buy', defaultMessage: 'Buy' }).toUpperCase()}
@@ -534,7 +607,7 @@ class Offers extends React.PureComponent {
             </Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -586,57 +659,17 @@ class Offers extends React.PureComponent {
     );
   };
 
-  handleScroll = (event) => {
-    if (event.nativeEvent.contentOffset.y < 10) {
-      this.pullUp();
-    } else if (event.nativeEvent.contentOffset.y >= 50) {
-      this.pullDown();
-    }
-  }
-
-  pullUp = () => {
-    const {
-      heightTitleContainer,
-      titleOpacity,
-      btcCostContainerOpacity,
-      showTitle,
-    } = this.state;
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(heightTitleContainer, {
-          toValue: 112,
-          duration: 200,
-        }),
-        Animated.timing(titleOpacity, {
-          toValue: 1,
-          duration: 200,
-        }),
-      ]),
-    ]).start(() => this.setState({ showTitle: 'flex' }));
-  }
-
-  pullDown = () => {
-    const {
-      heightTitleContainer,
-      titleOpacity,
-      btcCostContainerOpacity,
-      showTitle,
-    } = this.state;
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(heightTitleContainer, {
-          toValue: 56,
-          duration: 200,
-        }),
-        Animated.timing(titleOpacity, {
-          toValue: 0,
-          duration: 200,
-        }),
-      ]),
-    ]).start(() => this.setState({ showTitle: 'none' }));
-  }
 
   render() {
+    const event = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: {
+            y: this.state.animatedValue,
+          },
+        },
+      },
+    ]);
     const {
       intl,
       orders,
@@ -645,17 +678,43 @@ class Offers extends React.PureComponent {
     const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
+    const translateY = this.state.animatedValue.interpolate({
+      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      outputRange: [0, 0, 0, -100],
+      extrapolate: 'clamp',
+    });
+    const opacity = this.state.animatedValue.interpolate({
+      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, SAFE_REFRESH_VIEW_HEIGHT + 10],
+      outputRange: [0, 0, 1, 0],
+      extrapolate: 'clamp',
+    });
+    const toolbarHeight = this.state.animatedValue.interpolate({
+      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      outputRange: [0, 0, 0, -50],
+      extrapolate: 'clamp',
+    });
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <Animated.View
-            style={[styles.iosContainer, { height: this.state.heightTitleContainer }]}
+            style={[styles.iosContainer, {
+              position: 'absolute',
+              zIndex: 2,
+              transform: [{
+                translateY: toolbarHeight,
+              }],
+            }]}
           >
             <Animated.View
               style={
                 [
                   styles.titleContainer,
-                  { display: this.state.showTitle, opacity: this.state.titleOpacity },
+                  {
+                    opacity,
+                    transform: [{
+                      translateY,
+                    }],
+                  },
                 ]
               }
             >
@@ -679,20 +738,26 @@ class Offers extends React.PureComponent {
             this.isFetching()
               ? <ActivityIndicator size="large" style={{ margin: 16 }} />
               : (
-                <FlatList
+                <AnimatedFlatList
                   bounces={false}
-                  onScroll={this.handleScroll}
+                  onScroll={event}
                   data={orders.list}
-                  refreshControl={(
-                    <RefreshControl
-                      refreshing={orders.pending}
-                      onRefresh={this.onRefresh}
-                    />
-                  )}
                   renderItem={this.renderItem}
                   keyExtractor={i => String(i.id)}
                   ListHeaderComponent={this.renderHeader}
+                  scrollEventThrottle={16}
+                  style={{ flex: 1, zIndex: 1 }}
+                  contentContainerStyle={{
+                    paddingTop: 96,
+                    minHeight: height + MAX_TOOLBAR_HEIGHT,
+                  }}
                   refreshing={orders.pending}
+                  onScrollEndDrag={this.handleRelease}
+                  onMomentumScrollEnd={this.handleRelease}
+                  onResponderRelease={this.handleRelease}
+                  ref={(ref) => {
+                    this.flatListRef = ref;
+                  }}
                 />
               )
           }
