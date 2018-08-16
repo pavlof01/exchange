@@ -25,7 +25,9 @@ import PickerModal from '../../style/PickerModal';
 import CardPicker from '../../style/CardPicker';
 
 const SIDE_PADDING = 20;
+const REFRESH_OFFSET_HEIGHT = 25;
 const SAFE_REFRESH_VIEW_HEIGHT = 55;
+const MAX_TOOLBAR_HEIGHT = 112;
 const { width, height } = Dimensions.get('window');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -313,9 +315,10 @@ class Offers extends React.PureComponent {
       showSubTitle: 'none',
       animating: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
-      readyToRefresh: false,
       refreshing: false,
     };
+
+    this.scrollValue = 0;
   }
 
   async componentDidMount() {
@@ -343,7 +346,10 @@ class Offers extends React.PureComponent {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.orders.pending !== this.props.orders.pending && !nextProps.orders.pending) {
+    if (nextProps.orders.pending !== this.props.orders.pending
+      && !nextProps.orders.pending
+      && this.scrollValue <= SAFE_REFRESH_VIEW_HEIGHT
+    ) {
       this.scrollToTop(true);
     }
   }
@@ -353,23 +359,18 @@ class Offers extends React.PureComponent {
   }
 
   handleScroll = (pullDownDistance) => {
-    if (pullDownDistance.value <= -60) {
-      return this.setState({ readyToRefresh: true });
-    }
+    this.scrollValue = pullDownDistance.value;
     return true;
   };
 
   handleRelease = () => {
-    if (this.state.readyToRefresh) {
-      // console.warn(this.flatListRef);
-      // this.flatListRef.scrollToItem({ item: 1 });      c
-      this.setState({ refreshing: true });
-      setTimeout(() => {
-        // this.flatListRef.scrollToItem({ item: 0 });
-        this.setState({ refreshing: false });
-      }, 2000);
+    if (this.scrollValue <= REFRESH_OFFSET_HEIGHT) {
+      this.onRefresh();
+    } else if (this.scrollValue <= SAFE_REFRESH_VIEW_HEIGHT
+      && this.scrollValue > REFRESH_OFFSET_HEIGHT
+    ) {
+      this.scrollToTop(true);
     }
-    return this.setState({ readyToRefresh: false });
   };
 
   showOffersToSell = () => {
@@ -462,12 +463,15 @@ class Offers extends React.PureComponent {
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     return (
-      <Animated.View style={[styles.header,
-      {
-        transform: [{
-          translateY: this.state.translateHeaderY,
-        }],
-      }]}
+      <Animated.View style={
+        [
+          styles.header,
+          {
+            transform: [{
+              translateY: this.state.translateHeaderY,
+            }],
+          },
+        ]}
       >
         <Animated.View style={{ position: 'absolute', top: -40 }}>
           <Text style={[styles.text]}>
@@ -744,7 +748,10 @@ class Offers extends React.PureComponent {
                   ListHeaderComponent={this.renderHeader}
                   scrollEventThrottle={16}
                   style={{ flex: 1, zIndex: 1 }}
-                  contentContainerStyle={{ paddingTop: 150, minHeight: height }}
+                  contentContainerStyle={{
+                    paddingTop: 150,
+                    minHeight: height + MAX_TOOLBAR_HEIGHT,
+                  }}
                   refreshing={orders.pending}
                   onResponderRelease={this.handleRelease}
                   ref={(ref) => {
