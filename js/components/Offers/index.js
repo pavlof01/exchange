@@ -290,9 +290,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     fontSize: 16,
+    lineHeight: 16,
     fontFamily: fonts.bold.regular,
-    borderBottomColor: 'red',
-    borderBottomWidth: 1,
     marginLeft: 20,
   },
 });
@@ -473,11 +472,11 @@ class Offers extends React.PureComponent {
           },
         ]}
       >
-        <Animated.View style={{ position: 'absolute', top: -40 }}>
+        <View>
           <Text style={[styles.text]}>
             {header}
           </Text>
-        </Animated.View>
+        </View>
         <Separator padding={20} />
         <View style={styles.rowContainer}>
           <TopButton
@@ -749,10 +748,12 @@ class Offers extends React.PureComponent {
                   scrollEventThrottle={16}
                   style={{ flex: 1, zIndex: 1 }}
                   contentContainerStyle={{
-                    paddingTop: 150,
+                    paddingTop: 96,
                     minHeight: height + MAX_TOOLBAR_HEIGHT,
                   }}
                   refreshing={orders.pending}
+                  onScrollEndDrag={this.handleRelease}
+                  onMomentumScrollEnd={this.handleRelease}
                   onResponderRelease={this.handleRelease}
                   ref={(ref) => {
                     this.flatListRef = ref;
