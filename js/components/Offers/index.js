@@ -364,7 +364,7 @@ class Offers extends React.PureComponent {
       // this.flatListRef.scrollToItem({ item: 1 });      c
       this.setState({ refreshing: true });
       setTimeout(() => {
-        // this.flatListRef.scrollToItem({ item: 0 });        
+        // this.flatListRef.scrollToItem({ item: 0 });
         this.setState({ refreshing: false });
       }, 2000);
     }
@@ -386,11 +386,10 @@ class Offers extends React.PureComponent {
   };
 
   openNewTrade = (ad) => {
-    this.scrolltoTop(55);
     const {
       newTrade,
     } = this.props;
-    //newTrade(ad);
+    newTrade(ad);
   };
 
   onFilterChangeFactory = name => (value) => {
