@@ -551,7 +551,7 @@ class Offers extends React.PureComponent {
               <CardPicker
                 style={styles.picker}
                 onValueChange={this.onCurrencyCodeChange}
-                selectedValue={filter.currencyCode}
+                selectedValue={filter.currencyCode || 'USD'}
                 mode="dropdown"
                 renderButton={Offers.fiatItem}
                 containerStyle={styles.containerPicker}
