@@ -8,6 +8,7 @@ import {
   Image,
   ActivityIndicator,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
 import FormTextInput from '../FormTextInput';
@@ -22,6 +23,8 @@ import User from '../../models/User';
 import TraderInfo from '../TraderInfo';
 import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import { fonts } from '../../style/resourceHelpers';
+
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -106,12 +109,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingBottom: 10,
   },
-  sendButton: {
+  sendButtonContainer: {
     marginStart: 60,
     marginEnd: 60,
     marginTop: 30,
     marginBottom: 30,
   },
+  sendButtonText: {
+    fontSize: width / 25,
+  }
 });
 
 class NewTrade extends Component {
@@ -335,7 +341,8 @@ class NewTrade extends Component {
               </Text>
             </View>
             <PrimaryButton
-              style={styles.sendButton}
+              style={styles.sendButtonContainer}
+              fontStyle={styles.sendButtonText}
               onPress={() => this.onSubmit(form)}
               title={intl.formatMessage({ id: 'app.newTrade.button.sendRequestToTrader', defaultMessage: 'Send a request to trader' }).toUpperCase()}
               disabled={pending}

@@ -266,9 +266,10 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   signInBtn: {
+    marginTop: 10,
     width: '50%',
     alignSelf: 'center',
     backgroundColor: '#5b6eff',

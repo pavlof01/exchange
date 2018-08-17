@@ -4,6 +4,7 @@ import {
   Text,
   View,
   StyleSheet, Image, Platform,
+  Dimensions,
 } from 'react-native';
 import { MenuOption } from 'react-native-popup-menu';
 import { default as ProgressCircle } from 'react-native-progress-circle';
@@ -15,6 +16,8 @@ import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';
 import { CenterHalf } from '../../../style/CenterHalf';
+
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -87,6 +90,9 @@ const styles = StyleSheet.create({
   errorRow: {
     flex: 1,
     flexDirection: 'row',
+  },
+  sendButtonText: {
+    fontSize: width / 23,
   },
 });
 
@@ -290,8 +296,8 @@ class Transfer extends Component {
           <FormTextInput
             placeholder={
               `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
-                simpleCurrencyName[code]} ${
-                intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
+              simpleCurrencyName[code]} ${
+              intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
             onChangeText={this.onAddressChange}
             value={this.state.form.address}
             style={styles.formStyle}
@@ -332,7 +338,7 @@ class Transfer extends Component {
           {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
 
           <CenterHalf>
-            <PrimaryButton onPress={this.onSubmitHandler} title={submitButtonText} style={{ flex: 1 }} />
+            <PrimaryButton fontStyle={styles.sendButtonText} onPress={this.onSubmitHandler} title={submitButtonText} style={{ flex: 1 }} />
           </CenterHalf>
 
           {this.state.error.isEmpty ? this.renderPasswordError() : null}
