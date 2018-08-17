@@ -104,7 +104,7 @@ class Login extends Component {
               source={require('../../img/logo.png')}
             />
             <Image
-              style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : null}
+              style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : styles.logoText}
               source={require('../../img/logo_text.png')}
             />
           </View>
@@ -213,19 +213,29 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: '10%',
+    marginTop: height / 15,
     flex: 1,
   },
   logo: {
-    marginBottom: 10,
+    marginBottom: height / 40,
+    resizeMode: 'contain',
+    width: '100%',
+    height: height / 7,
+  },
+  logoText: {
+    resizeMode: 'contain',
+    width: '100%',
+    height: height / 20,
   },
   logoStylesOnKeyboardShow: {
+    resizeMode: 'contain',
     opacity: 0.5,
     transform: [
       { scale: 0.5 },
     ],
   },
   textLogoStylesOnKeyboardShow: {
+    resizeMode: 'contain',
     opacity: 0.5,
     transform: [
       { scale: 0.5 },
