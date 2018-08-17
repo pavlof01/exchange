@@ -188,8 +188,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingRight: 4,
   },
+  bankNameContainer: {
+    flex: 0.8,
+    height: 46,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    overflow: 'hidden',
+    paddingRight: 4,
+  },
   itemLimits: {
-    flex: 1,
+    flex: 2,
     height: 46,
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -631,7 +639,7 @@ class Offers extends React.PureComponent {
             />
           </View>
           <View style={styles.nameContainer}>
-            <Text style={styles.itemName}>
+            <Text numberOfLines={1} style={styles.itemName}>
               {ad.user.user_name}
             </Text>
           </View>
@@ -643,7 +651,7 @@ class Offers extends React.PureComponent {
               {Price.build(ad.limit_max).viewMain}
             </Text>
           </View>
-          <View style={styles.valueContainer}>
+          <View style={styles.bankNameContainer}>
             <Text style={styles.itemTextLite}>
               {bankName}
             </Text>
