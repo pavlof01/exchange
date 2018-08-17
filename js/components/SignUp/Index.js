@@ -18,8 +18,6 @@ import Touchable from '../../style/Touchable';
 import PrimaryButton from '../../style/ActionButton';
 import { createBasicNavigationOptions, withCommonStatusBar } from '../../style/navigation';
 import { common } from '../../style/common';
-import Logo from '../../img/bitpapa.png';
-import LogoText from '../../../assets/img/text.png';
 import { fonts } from '../../style/resourceHelpers';
 
 const { width, height } = Dimensions.get('window');
@@ -124,7 +122,7 @@ class SignUp extends Component {
         <ScrollView contentContainerStyle={styles.main}>
           <View>
             <View style={styles.logoContainer}>
-              <Image source={Logo} />
+              <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
             </View>
             <View>
               <Text style={styles.title}>
@@ -281,9 +279,14 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: height / 9,
     marginTop: 30,
     flex: 1,
+  },
+  logo: {
+    alignSelf: 'center',
+    height: height / 12,
+    resizeMode: 'contain',
   },
   textInputContainer: {
     borderColor: '#94B7FF',

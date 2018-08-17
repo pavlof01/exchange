@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: height / 12,
     resizeMode: 'contain',
-
   },
   pincode: {
     textAlign: 'center',
