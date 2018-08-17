@@ -7,6 +7,7 @@ import {
   Text,
   View,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 
 import { MenuOption } from 'react-native-popup-menu';
@@ -17,6 +18,8 @@ import PrimaryButton from '../../../style/ActionButton';
 import CurrencySelector from '../CurrencySelector';
 import { Hint } from '../../../style/common';
 import { fonts } from '../../../style/resourceHelpers';
+
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   content: {
@@ -38,6 +41,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
     marginBottom: 8,
   },
+  copyButtonText: {
+    fontSize: width / 23,
+  },
+  refreshButtonText: {
+    fontSize: width / 23,
+  }
 });
 
 class Receive extends Component {
@@ -137,6 +146,7 @@ class Receive extends Component {
               ? intl.formatMessage({ id: 'app.wallet.receive.btn.update', defaultMessage: 'UPDATE' }).toUpperCase()
               : intl.formatMessage({ id: 'app.wallet.receive.btn.copy', defaultMessage: 'COPY' }).toUpperCase()}
             style={{ flex: 1, margin: 16 }}
+            fontStyle={styles.refreshButtonText}
             secondary
             disabled={transactionTokens.generation_pending}
           >
@@ -146,6 +156,7 @@ class Receive extends Component {
             onPress={this.copyAddress}
             title={intl.formatMessage({ id: 'app.wallet.receive.btn.copy', defaultMessage: 'COPY' }).toUpperCase()}
             style={{ flex: 1, margin: 16 }}
+            fontStyle={styles.copyButtonText}
             secondary
             disabled={transactionTokens.generation_pending}
           />
