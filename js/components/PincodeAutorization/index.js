@@ -172,6 +172,9 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignSelf: 'center',
+    height: height / 12,
+    resizeMode: 'contain',
+
   },
   pincode: {
     textAlign: 'center',
