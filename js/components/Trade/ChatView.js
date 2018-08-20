@@ -259,6 +259,7 @@ ChatView.propTypes = {
   onStartShouldSetResponderCapture: PropTypes.func,
   messageValue: PropTypes.string,
   _scrollToInput: PropTypes.func,
+  intl: intlShape,
 };
 
 export default injectIntl(ChatView);
