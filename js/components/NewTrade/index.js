@@ -9,8 +9,6 @@ import ReactNative, {
   ActivityIndicator,
   TextInput,
   Dimensions,
-  Keyboard,
-  KeyboardAvoidingView,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -24,7 +22,6 @@ import PrimaryButton from '../../style/ActionButton';
 import Api from '../../services/Api';
 import User from '../../models/User';
 import TraderInfo from '../TraderInfo';
-import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import { fonts } from '../../style/resourceHelpers';
 
 const { width } = Dimensions.get('window');
