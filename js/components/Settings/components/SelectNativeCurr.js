@@ -7,6 +7,7 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
+  Image,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#d5d5d5',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   settingName: {
     color: '#111111',
@@ -45,6 +47,11 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
     letterSpacing: 0.2,
   },
+  checkMark: {
+    transform: [
+      { rotateY: '60deg' },
+    ],
+  },
   headerButtonContainer: {
     padding: 10,
   },
@@ -59,26 +66,6 @@ class SelectNativeCurr extends Component {
     title: (
       <FormattedMessage id="app.settings.title.selectCurrency" />
     ),
-    headerRight: (
-      <Touchable
-        onPress={() => {
-          const handleSave = navigation.getParam('handleSave');
-          if (typeof handleSave === 'function') {
-            handleSave.call();
-          }
-        }}
-      >
-        <View style={styles.headerButtonContainer}>
-          <FormattedMessage id="app.settings.button.select">
-            {text => (
-              <Text style={styles.headerButton}>
-                {text}
-              </Text>
-            )}
-          </FormattedMessage>
-        </View>
-      </Touchable>
-    ),
     headerStyle: { backgroundColor: '#2B2B82' },
     headerTitleStyle: { color: 'white' },
     headerTintColor: 'white',
@@ -92,13 +79,12 @@ class SelectNativeCurr extends Component {
   }
 
   componentDidMount() {
-    const {
-      navigation,
-    } = this.props;
-    navigation.setParams({
-      handleSave: this.selectCurrency,
-    });
     this.props.updateFilter({});
+  }
+
+  async componentWillMount() {
+    const selectedCurrency = await AsyncStorage.getItem('selectedCurrency') || '';
+    this.setState({ selectedCurrency });
   }
 
   onFilterChangeFactory = (name) => (value) => {
@@ -109,15 +95,12 @@ class SelectNativeCurr extends Component {
 
   countryKeyExtractor = currency => currency.code;
 
-  selectCurrency = () => {
+  selectCurrency = (currency) => {
     const {
       navigation,
     } = this.props;
-    const {
-      selectedCurrency,
-    } = this.state;
-    this.onCurrencyCodeChange(selectedCurrency);
-    AsyncStorage.setItem('selectedCurrency', selectedCurrency);
+    this.onCurrencyCodeChange(currency);
+    AsyncStorage.setItem('selectedCurrency', currency);
     navigation.goBack();
   };
 
@@ -131,12 +114,14 @@ class SelectNativeCurr extends Component {
     } = this.state;
     const { item } = currency;
     const active = selectedCurrency === item.code;
+    const checked = this.state.selectedCurrency === item.code;
     return (
-      <Touchable onPress={() => this.setState({ selectedCurrency: item.code })}>
+      <Touchable onPress={() => this.selectCurrency(item.code)}>
         <View style={styles.settingContainer}>
-          <Text style={active ? styles.settingNameActive : styles.settingName}>
+          <Text style={active || checked ? styles.settingNameActive : styles.settingName}>
             {SelectNativeCurr.getCurrencyName(item)}
           </Text>
+          {active || checked ? <Image /*style={styles.checkMark}*/ source={require('../../../img/ic_picker.png')} /> : null}
         </View>
       </Touchable>
     );

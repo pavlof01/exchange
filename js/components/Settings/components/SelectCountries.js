@@ -77,9 +77,6 @@ class SelectCountries extends Component {
   }
 
   componentDidMount() {
-    const {
-      updateFilter,
-    } = this.props;
     this.props.updateFilter({});
   }
 
