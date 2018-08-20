@@ -7,6 +7,7 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
+  Image,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
@@ -29,6 +30,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#d5d5d5',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   settingName: {
     color: '#111111',
@@ -60,26 +62,6 @@ class SelectCountries extends Component {
     title: (
       <FormattedMessage id="app.settings.title.selectCountry" />
     ),
-    headerRight: (
-      <Touchable
-        onPress={() => {
-          const handleSave = navigation.getParam('handleSave');
-          if (typeof handleSave === 'function') {
-            handleSave.call();
-          }
-        }}
-      >
-        <View style={styles.headerButtonContainer}>
-          <FormattedMessage id="app.settings.button.select">
-            {text => (
-              <Text style={styles.headerButton}>
-                {text}
-              </Text>
-            )}
-          </FormattedMessage>
-        </View>
-      </Touchable>
-    ),
     headerStyle: { backgroundColor: '#2B2B82' },
     headerTitleStyle: { color: 'white' },
     headerTintColor: 'white',
@@ -90,18 +72,20 @@ class SelectCountries extends Component {
     this.state = {
       selectedCountry: '',
       countryCode: '',
-      text: '',
-      countries: this.props.countries
+      countries: this.props.countries,
     };
   }
 
   componentDidMount() {
     const {
-      navigation,
       updateFilter,
     } = this.props;
-    navigation.setParams({ handleSave: this.selectCountry });
     this.props.updateFilter({});
+  }
+
+  async componentWillMount() {
+    const countryCode = await AsyncStorage.getItem('selectedCountryCode') || '';
+    this.setState({ countryCode });
   }
 
   onFilterChangeFactory = name => (value) => {
@@ -112,17 +96,12 @@ class SelectCountries extends Component {
 
   countryKeyExtractor = country => country.code;
 
-  selectCountry = () => {
+  selectCountry = (countryName, countryCode) => {
     const {
       navigation,
     } = this.props;
-    const {
-      selectedCountry,
-      countryCode,
-    } = this.state;
-
     this.onCountryCodeChange(countryCode);
-    AsyncStorage.setItem('selectedCountry', selectedCountry);
+    AsyncStorage.setItem('selectedCountry', countryName);
     AsyncStorage.setItem('selectedCountryCode', countryCode);
     navigation.goBack();
   };
@@ -147,12 +126,14 @@ class SelectCountries extends Component {
       selectedCountry,
     } = this.state;
     const active = selectedCountry === country.item.name;
+    const checked = this.state.countryCode === country.item.code;
     return (
-      <Touchable onPress={() => this.setState({ selectedCountry: country.item.name, countryCode: country.item.code })}>
+      <Touchable onPress={() => this.selectCountry(country.item.name, country.item.code)}>
         <View style={styles.settingContainer}>
-          <Text style={active ? styles.settingNameActive : styles.settingName}>
+          <Text style={active || checked ? styles.settingNameActive : styles.settingName}>
             {country.item.name}
           </Text>
+          {active || checked ? <Image source={require('../../../img/ic_picker.png')} /> : null}
         </View>
       </Touchable>
     );
