@@ -4,6 +4,7 @@ import {
   Text,
   View,
   StyleSheet, Image, Platform,
+  ScrollView,
   Dimensions,
 } from 'react-native';
 import { MenuOption } from 'react-native-popup-menu';
@@ -153,6 +154,7 @@ class Transfer extends Component {
   }
 
   onCostChange = (value) => {
+    value = value.replace(/,/, '.');
     const rate = this.props.exchangeRates[`${this.props.currencyCode}_${this.state.cryptoCurrencyCode}`];
 
     value = value || 0.0;
@@ -161,6 +163,7 @@ class Transfer extends Component {
   };
 
   onAmountChange = (value) => {
+    value = value.replace(/,/, '.');
     const rate = this.props.exchangeRates[`${this.props.currencyCode}_${this.state.cryptoCurrencyCode}`];
 
     value = value || 0.0;
@@ -257,7 +260,7 @@ class Transfer extends Component {
         : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Hint>
           {intl.formatMessage({ id: 'app.wallet.title.balance', defaultMessage: 'Balance' }).toUpperCase()}
         </Hint>
@@ -347,7 +350,7 @@ class Transfer extends Component {
 
         </View>
 
-      </View>
+      </ScrollView>
     );
   }
 }
