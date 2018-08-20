@@ -175,7 +175,6 @@ class Buy extends Component {
   };
 
   _scrollToInput = (reactNode) => {
-    // Add a 'scroll' ref to your ScrollView
     this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
   }
 
