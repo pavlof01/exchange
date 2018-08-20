@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {
+import ReactNative, {
   Text,
   View,
   StyleSheet, Image, Platform,
@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { MenuOption } from 'react-native-popup-menu';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { default as ProgressCircle } from 'react-native-progress-circle';
 import { injectIntl, intlShape } from 'react-intl';
 import CardPicker from '../../../style/CardPicker';
@@ -245,6 +246,10 @@ class Transfer extends Component {
     </View>
   );
 
+  _scrollToInput = (reactNode) => {
+    this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
+  }
+
   render() {
     const code = this.state.cryptoCurrencyCode;
     const {
@@ -260,97 +265,105 @@ class Transfer extends Component {
         : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
 
     return (
-      <ScrollView style={styles.container}>
-        <Hint>
-          {intl.formatMessage({ id: 'app.wallet.title.balance', defaultMessage: 'Balance' }).toUpperCase()}
-        </Hint>
-        <View style={styles.centerContent}>
-          <ProgressCircle
-            percent={15}
-            radius={128}
-            borderWidth={12}
-            shadowColor="#25367E"
-            color="#B6AFD0"
-            bgColor="#fff"
-          >
-            <CardPicker
-              style={styles.picker}
-              onValueChange={this.onCryptoCurrencyCodeChange}
-              selectedValue={code}
-              renderButton={this.CryptHeader}
-              flat
+      <KeyboardAwareScrollView
+        behavior="padding"
+        style={{ flex: 1 }}
+        innerRef={(ref) => { this.scrollKeyboard = ref; }}
+      >
+        <ScrollView style={styles.container}>
+          <Hint>
+            {intl.formatMessage({ id: 'app.wallet.title.balance', defaultMessage: 'Balance' }).toUpperCase()}
+          </Hint>
+          <View style={styles.centerContent}>
+            <ProgressCircle
+              percent={15}
+              radius={128}
+              borderWidth={12}
+              shadowColor="#25367E"
+              color="#B6AFD0"
+              bgColor="#fff"
             >
-              {this.props.cryptoCurrencies.map(
-                currency => (
-                  <MenuOption key={currency.code} value={currency.code}>
-                    {this.CryptItem(currency.code)}
-                  </MenuOption>
-                ),
-              )}
-            </CardPicker>
-          </ProgressCircle>
-        </View>
-
-        <View style={styles.formStyle}>
-
-          <Hint>
-            {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
-          </Hint>
-          <FormTextInput
-            placeholder={
-              `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
-              simpleCurrencyName[code]} ${
-              intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
-            onChangeText={this.onAddressChange}
-            value={this.state.form.address}
-            style={styles.formStyle}
-          />
-
-          <Hint>
-            {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
-          </Hint>
-          <View style={styles.formRow}>
-            <FormTextInput
-              placeholder={intl.formatMessage({ id: 'app.wallet.form.label.amount.placeholder', defaultMessage: 'BTC' })}
-              onChangeText={this.onAmountChange}
-              keyboardType="numeric"
-              value={this.state.form.amount}
-              style={styles.formStyle}
-            />
-            <Text style={styles.header}>
-              {code}
-            </Text>
+              <CardPicker
+                style={styles.picker}
+                onValueChange={this.onCryptoCurrencyCodeChange}
+                selectedValue={code}
+                renderButton={this.CryptHeader}
+                flat
+              >
+                {this.props.cryptoCurrencies.map(
+                  currency => (
+                    <MenuOption key={currency.code} value={currency.code}>
+                      {this.CryptItem(currency.code)}
+                    </MenuOption>
+                  ),
+                )}
+              </CardPicker>
+            </ProgressCircle>
           </View>
 
-          <Hint>
-            {intl.formatMessage({ id: 'app.wallet.form.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
-          </Hint>
-          <View style={styles.formRow}>
+          <View style={styles.formStyle}>
+
+            <Hint>
+              {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
+            </Hint>
             <FormTextInput
-              placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
-              onChangeText={this.onCostChange}
-              keyboardType="numeric"
-              value={this.state.form.cost}
+              placeholder={
+                `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
+                simpleCurrencyName[code]} ${
+                intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
+              onChangeText={this.onAddressChange}
+              value={this.state.form.address}
               style={styles.formStyle}
+              onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
             />
-            <Text style={styles.header}>
-              {currencyCode}
-            </Text>
+
+            <Hint>
+              {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
+            </Hint>
+            <View style={styles.formRow}>
+              <FormTextInput
+                placeholder={intl.formatMessage({ id: 'app.wallet.form.label.amount.placeholder', defaultMessage: 'BTC' })}
+                onChangeText={this.onAmountChange}
+                keyboardType="numeric"
+                value={this.state.form.amount}
+                style={styles.formStyle}
+                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+              />
+              <Text style={styles.header}>
+                {code}
+              </Text>
+            </View>
+
+            <Hint>
+              {intl.formatMessage({ id: 'app.wallet.form.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
+            </Hint>
+            <View style={styles.formRow}>
+              <FormTextInput
+                placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
+                onChangeText={this.onCostChange}
+                keyboardType="numeric"
+                value={this.state.form.cost}
+                style={styles.formStyle}
+                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+              />
+              <Text style={styles.header}>
+                {currencyCode}
+              </Text>
+            </View>
+
+            {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
+
+            <CenterHalf>
+              <PrimaryButton fontStyle={styles.sendButtonText} onPress={this.onSubmitHandler} title={submitButtonText} style={{ flex: 1 }} />
+            </CenterHalf>
+
+            {this.state.error.isEmpty ? this.renderPasswordError() : null}
+
+            {this.state.error.isSucceed ? this.renderSucessText() : null}
+
           </View>
-
-          {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
-
-          <CenterHalf>
-            <PrimaryButton fontStyle={styles.sendButtonText} onPress={this.onSubmitHandler} title={submitButtonText} style={{ flex: 1 }} />
-          </CenterHalf>
-
-          {this.state.error.isEmpty ? this.renderPasswordError() : null}
-
-          {this.state.error.isSucceed ? this.renderSucessText() : null}
-
-        </View>
-
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAwareScrollView>
     );
   }
 }

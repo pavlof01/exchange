@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import {
+import ReactNative, {
   View,
   Text,
   ScrollView,
@@ -12,6 +12,7 @@ import {
 import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
 import { injectIntl, intlShape } from 'react-intl';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Validator from '../../services/Validator';
 import FormTextInput from '../FormTextInput';
 import Touchable from '../../style/Touchable';
@@ -92,6 +93,10 @@ class SignUp extends Component {
     this.props.loginRequest();
   }
 
+  _scrollToInput = (reactNode) => {
+    this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
+  }
+
   render() {
     const { intl } = this.props;
     if (this.props.formState.isSuccess) {
@@ -119,142 +124,152 @@ class SignUp extends Component {
         colors={['#3F579E', '#426CA6', '#426CA6', '#384D8C', '#203057']}
         style={[styles.gradient]}
       >
-        <ScrollView contentContainerStyle={styles.main}>
-          <View>
-            <View style={styles.logoContainer}>
-              <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
+        <KeyboardAwareScrollView
+          behavior="padding"
+          style={{ flex: 1 }}
+          innerRef={(ref) => { this.scrollKeyboard = ref; }}
+        >
+          <ScrollView contentContainerStyle={styles.main}>
+            <View>
+              <View style={styles.logoContainer}>
+                <Image style={styles.logo} source={require('../../img/bitpapa.png')} />
+              </View>
+              <View>
+                <Text style={styles.title}>
+                  {intl.formatMessage({ id: 'app.registration', defaultMessage: 'Registration' }).toUpperCase()}
+                </Text>
+                <View style={{ marginTop: '10%' }}>
+                  <FormTextInput
+                    style={styles.textInputContainer}
+                    textStyle={styles.textInput}
+                    placeholderTextColor="#B8CFFF"
+                    error={!_.isEmpty(this.state.formError.loginError)}
+                    ref={ref => (this.loginInput = ref)}
+                    placeholder={intl.formatMessage({ id: 'app.registration.username', defaultMessage: 'Username' })}
+                    keyboardType="email-address"
+                    value={this.state.loginValue}
+                    onChangeText={(login) => {
+                      this.setState({ loginValue: login });
+                    }}
+                    onSubmitEditing={() => {
+                      this.emailInput.focus();
+                    }}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <View>
+                    <Text style={[styles.error]}>
+                      {this.state.formError.loginError}
+                    </Text>
+                  </View>
+                  <FormTextInput
+                    style={styles.textInputContainer}
+                    textStyle={styles.textInput}
+                    placeholderTextColor="#B8CFFF"
+                    error={!_.isEmpty(this.state.formError.passwordError)}
+                    ref={ref => (this.passwordInput = ref)}
+                    placeholder={intl.formatMessage({ id: 'app.registration.password', defaultMessage: 'Password' })}
+                    autoCapitalize="none"
+                    secureTextEntry
+                    value={this.state.passwordValue}
+                    onChangeText={(password) => {
+                      this.setState({ passwordValue: password });
+                    }}
+                    onSubmitEditing={() => {
+                      this.password2Input.focus();
+                    }}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <View>
+                    <Text style={[styles.error]}>
+                      {this.state.formError.passwordError}
+                    </Text>
+                  </View>
+                  <FormTextInput
+                    style={styles.textInputContainer}
+                    textStyle={styles.textInput}
+                    placeholderTextColor="#B8CFFF"
+                    error={!_.isEmpty(this.state.formError.password2Error)}
+                    ref={ref => (this.password2Input = ref)}
+                    placeholder={intl.formatMessage({ id: 'app.registration.confirm_password', defaultMessage: 'Confirm password' })}
+                    autoCapitalize="none"
+                    secureTextEntry
+                    value={this.state.password2Value}
+                    onChangeText={(password) => {
+                      this.setState({ password2Value: password });
+                    }}
+                    onSubmitEditing={this.onSignUpPressed}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <View>
+                    <Text style={[styles.error]}>
+                      {this.state.formError.emailError}
+                    </Text>
+                  </View>
+                  <FormTextInput
+                    style={styles.textInputContainer}
+                    textStyle={styles.textInput}
+                    placeholderTextColor="#B8CFFF"
+                    error={!_.isEmpty(this.state.formError.emailError)}
+                    ref={ref => (this.emailInput = ref)}
+                    placeholder="E-mail"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={this.state.emailValue}
+                    onChangeText={(login) => {
+                      this.setState({ emailValue: login });
+                    }}
+                    onSubmitEditing={() => {
+                      this.passwordInput.focus();
+                    }}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <View>
+                    <Text style={[styles.error]}>
+                      {this.state.formError.password2Error}
+                    </Text>
+                    <Text style={[styles.error]}>
+                      {this.state.formError.serverError}
+                    </Text>
+                  </View>
+                  <PrimaryButton
+                    style={styles.registerBtn}
+                    onPress={this.onSignUpPressed}
+                    title={intl.formatMessage({ id: 'app.login.btn.sign_up', defaultMessage: 'Sign up' }).toUpperCase()}
+                  />
+                </View>
+                <View style={styles.backToLoginContainer}>
+                  <Text style={styles.back}>
+                    {intl.formatMessage({ id: 'app.registration.back_to', defaultMessage: 'Or back to' })}
+                  </Text>
+                  <Touchable onPress={this.onLoginPressed}>
+                    <Text style={styles.backBtn}>
+                      {intl.formatMessage({ id: 'app.login.btn.sign_in', defaultMessage: 'Sign in' })}
+                    </Text>
+                  </Touchable>
+                </View>
+
+
+              </View>
             </View>
             <View>
-              <Text style={styles.title}>
-                {intl.formatMessage({ id: 'app.registration', defaultMessage: 'Registration' }).toUpperCase()}
-              </Text>
-              <View style={{ marginTop: '10%' }}>
-                <FormTextInput
-                  style={styles.textInputContainer}
-                  textStyle={styles.textInput}
-                  placeholderTextColor="#B8CFFF"
-                  error={!_.isEmpty(this.state.formError.loginError)}
-                  ref={ref => (this.loginInput = ref)}
-                  placeholder={intl.formatMessage({ id: 'app.registration.username', defaultMessage: 'Username' })}
-                  keyboardType="email-address"
-                  value={this.state.loginValue}
-                  onChangeText={(login) => {
-                    this.setState({ loginValue: login });
-                  }}
-                  onSubmitEditing={() => {
-                    this.emailInput.focus();
-                  }}
-                />
-                <View>
-                  <Text style={[styles.error]}>
-                    {this.state.formError.loginError}
+              <View style={styles.termsContainer}>
+                <Text style={styles.termsText}>
+                  {intl.formatMessage({ id: 'app.registration.by_continuing_you_accept_our', defaultMessage: 'By continuing, you accept our' })}
+                  <Text style={styles.boldRegular}>
+                    {' '}
+                    {intl.formatMessage({ id: 'app.registration.terms_and_сonditions', defaultMessage: 'Terms and Conditions' })}
+                    {' '}
                   </Text>
-                </View>
-                <FormTextInput
-                  style={styles.textInputContainer}
-                  textStyle={styles.textInput}
-                  placeholderTextColor="#B8CFFF"
-                  error={!_.isEmpty(this.state.formError.passwordError)}
-                  ref={ref => (this.passwordInput = ref)}
-                  placeholder={intl.formatMessage({ id: 'app.registration.password', defaultMessage: 'Password' })}
-                  autoCapitalize="none"
-                  secureTextEntry
-                  value={this.state.passwordValue}
-                  onChangeText={(password) => {
-                    this.setState({ passwordValue: password });
-                  }}
-                  onSubmitEditing={() => {
-                    this.password2Input.focus();
-                  }}
-                />
-                <View>
-                  <Text style={[styles.error]}>
-                    {this.state.formError.passwordError}
+                  {intl.formatMessage({ id: 'app.registration.and', defaultMessage: 'and' })}
+                  <Text style={styles.boldRegular}>
+                    {' '}
+                    {intl.formatMessage({ id: 'app.registration.privacy_policy', defaultMessage: 'Privacy Policy' })}
                   </Text>
-                </View>
-                <FormTextInput
-                  style={styles.textInputContainer}
-                  textStyle={styles.textInput}
-                  placeholderTextColor="#B8CFFF"
-                  error={!_.isEmpty(this.state.formError.password2Error)}
-                  ref={ref => (this.password2Input = ref)}
-                  placeholder={intl.formatMessage({ id: 'app.registration.confirm_password', defaultMessage: 'Confirm password' })}
-                  autoCapitalize="none"
-                  secureTextEntry
-                  value={this.state.password2Value}
-                  onChangeText={(password) => {
-                    this.setState({ password2Value: password });
-                  }}
-                  onSubmitEditing={this.onSignUpPressed}
-                />
-                <View>
-                  <Text style={[styles.error]}>
-                    {this.state.formError.emailError}
-                  </Text>
-                </View>
-                <FormTextInput
-                  style={styles.textInputContainer}
-                  textStyle={styles.textInput}
-                  placeholderTextColor="#B8CFFF"
-                  error={!_.isEmpty(this.state.formError.emailError)}
-                  ref={ref => (this.emailInput = ref)}
-                  placeholder="E-mail"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={this.state.emailValue}
-                  onChangeText={(login) => {
-                    this.setState({ emailValue: login });
-                  }}
-                  onSubmitEditing={() => {
-                    this.passwordInput.focus();
-                  }}
-                />
-                <View>
-                  <Text style={[styles.error]}>
-                    {this.state.formError.password2Error}
-                  </Text>
-                  <Text style={[styles.error]}>
-                    {this.state.formError.serverError}
-                  </Text>
-                </View>
-                <PrimaryButton
-                  style={styles.registerBtn}
-                  onPress={this.onSignUpPressed}
-                  title={intl.formatMessage({ id: 'app.login.btn.sign_up', defaultMessage: 'Sign up' }).toUpperCase()}
-                />
+                </Text>
               </View>
-              <View style={styles.backToLoginContainer}>
-                <Text style={styles.back}>
-                  {intl.formatMessage({ id: 'app.registration.back_to', defaultMessage: 'Or back to' })}
-                </Text>
-                <Touchable onPress={this.onLoginPressed}>
-                  <Text style={styles.backBtn}>
-                    {intl.formatMessage({ id: 'app.login.btn.sign_in', defaultMessage: 'Sign in' })}
-                  </Text>
-                </Touchable>
-              </View>
-
-
             </View>
-          </View>
-          <View>
-            <View style={styles.termsContainer}>
-              <Text style={styles.termsText}>
-                {intl.formatMessage({ id: 'app.registration.by_continuing_you_accept_our', defaultMessage: 'By continuing, you accept our' })}
-                <Text style={styles.boldRegular}>
-                  {' '}
-                  {intl.formatMessage({ id: 'app.registration.terms_and_сonditions', defaultMessage: 'Terms and Conditions' })}
-                  {' '}
-                </Text>
-                {intl.formatMessage({ id: 'app.registration.and', defaultMessage: 'and' })}
-                <Text style={styles.boldRegular}>
-                  {' '}
-                  {intl.formatMessage({ id: 'app.registration.privacy_policy', defaultMessage: 'Privacy Policy' })}
-                </Text>
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAwareScrollView>
       </LinearGradient>);
   }
 }
