@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
+import ReactNative, {
   View,
   Text,
   Image,
@@ -240,6 +240,7 @@ class ChatView extends Component {
                 onChangeText={this.handleChangeText}
                 value={messageValue}
                 onSubmitEditing={this.handleSubmitEditing}
+                onFocus={event => this.props._scrollToInput(ReactNative.findNodeHandle(event.target))}
               />
             </View>
           )
@@ -257,6 +258,8 @@ ChatView.propTypes = {
   onSubmitEditing: PropTypes.func,
   onStartShouldSetResponderCapture: PropTypes.func,
   messageValue: PropTypes.string,
+  _scrollToInput: PropTypes.func,
+  intl: intlShape,
 };
 
 export default injectIntl(ChatView);

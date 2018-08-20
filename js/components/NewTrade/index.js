@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
+import ReactNative, {
   Text,
   View,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormTextInput from '../FormTextInput';
 import Price from '../../values/Price';
 import {
@@ -21,7 +22,6 @@ import PrimaryButton from '../../style/ActionButton';
 import Api from '../../services/Api';
 import User from '../../models/User';
 import TraderInfo from '../TraderInfo';
-import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
 import { fonts } from '../../style/resourceHelpers';
 
 const { width } = Dimensions.get('window');
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: width / 25,
-  }
+  },
 });
 
 class NewTrade extends Component {
@@ -275,6 +275,10 @@ class NewTrade extends Component {
     );
   }
 
+  _scrollToInput = (reactNode) => {
+    this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
+  }
+
   render() {
     const {
       intl,
@@ -286,9 +290,10 @@ class NewTrade extends Component {
       errors,
     } = this.state;
     return (
-      <KeyboardAvoidingWrapView
+      <KeyboardAwareScrollView
         behavior="padding"
         style={styles.container}
+        innerRef={(ref) => { this.scrollKeyboard = ref; }}
       >
         <ScrollView
           style={{ backgroundColor: '#fff' }}
@@ -331,6 +336,8 @@ class NewTrade extends Component {
                 onChangeText={this.onMessageChange}
                 placeholder={intl.formatMessage({ id: 'app.newTrade.text.leave_message', defaultMessage: 'You may leave a message' })}
                 value={form.message}
+                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                ref={(ref) => { this.textInput = ref; }}
               />
               <Text style={styles.timeLeft}>
                 {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
@@ -358,7 +365,7 @@ class NewTrade extends Component {
             ))}
           </View>
         </ScrollView>
-      </KeyboardAvoidingWrapView>
+      </KeyboardAwareScrollView>
     );
   }
 }

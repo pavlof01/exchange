@@ -6,8 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   Image,
-  Keyboard,
-  Dimensions,
 } from 'react-native';
 import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -25,8 +23,6 @@ import User from '../../models/User';
 import EscrowTimer from './EscrowTimer';
 import PrimaryButton from '../../style/ActionButton';
 import { fonts } from '../../style/resourceHelpers';
-
-const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -121,24 +117,6 @@ class Sell extends Component {
     enableScrollViewScroll: true,
   };
 
-  keyboardDidShow = (e) => {
-    this.scrollKeyboard.props.scrollToPosition(0, height * 1.2 - e.endCoordinates.height);
-  };
-
-  keyboardWillHide = () => {
-    this.setState({ showKeyboard: false });
-  };
-
-  componentDidMount() {
-    this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
-    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
-  }
-
-  componentWillUnmount() {
-    this.keyboardWillShowSub.remove();
-    this.keyboardWillHideSub.remove();
-  }
-
   getTradeDescriptionStyleByStatus = (status) => {
     switch (status) {
       case TRADE_STATUS_PAID_CONFIRMED:
@@ -147,6 +125,10 @@ class Sell extends Component {
         return styles.tradeDescription;
     }
   };
+
+  _scrollToInput = (reactNode) => {
+    this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
+  }
 
   render() {
     const {
@@ -241,6 +223,7 @@ class Sell extends Component {
               </View>
             </View>
             <ChatView
+              _scrollToInput={this._scrollToInput}
               onStartShouldSetResponderCapture={
                 () => {
                   this.setState({ enableScrollViewScroll: false });
@@ -282,6 +265,7 @@ Sell.propTypes = {
   messages: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   sendMessage: PropTypes.string,
   onPaidHandler: PropTypes.func,
+  intl: intlShape,
 };
 
 export default injectIntl(Sell);
