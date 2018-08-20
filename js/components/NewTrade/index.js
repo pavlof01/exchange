@@ -10,9 +10,10 @@ import ReactNative, {
   TextInput,
   Dimensions,
   Keyboard,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormTextInput from '../FormTextInput';
 import Price from '../../values/Price';
 import {
@@ -24,7 +25,6 @@ import Api from '../../services/Api';
 import User from '../../models/User';
 import TraderInfo from '../TraderInfo';
 import KeyboardAvoidingWrapView from '../KeyboardAvoidingWrapView';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { fonts } from '../../style/resourceHelpers';
 
 const { width } = Dimensions.get('window');
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: width / 25,
-  }
+  },
 });
 
 class NewTrade extends Component {
@@ -147,8 +147,6 @@ class NewTrade extends Component {
       .then(response => this.setState({ ad: response.data.ad, pending: false }))
       .catch(() => { });
     this.setState({ pending: true });
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
   onCostChange = (value) => {
@@ -281,28 +279,7 @@ class NewTrade extends Component {
   }
 
   _scrollToInput = (reactNode) => {
-    // Add a 'scroll' ref to your ScrollView
-    for (p in this.scroll) {
-      console.warn(p);
-    }
-    this.scroll.props.scrollToPosition({ x: 123 });
-
-  }
-
-  _keyboardDidShow = (e) => {
-    let keyboardHeight = e.endCoordinates.height;
-    //this.scrollView.scrollTo({ x: 0, y: keyboardHeight, animated: true });
-    this.scrollView.scrollTo({ y: keyboardHeight, animated: true });
-    //console.warn(keyboardHeight);
-    for (p in this.scrollView) {
-      console.warn(p);
-    }
-  }
-
-  _keyboardDidHide = () => {
-    /*for (p in this.scrollView) {
-      console.warn(p);
-    }*/
+    this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
   }
 
   render() {
@@ -316,16 +293,13 @@ class NewTrade extends Component {
       errors,
     } = this.state;
     return (
-      <KeyboardAvoidingView
+      <KeyboardAwareScrollView
         behavior="padding"
         style={styles.container}
-        ref={ref => { this.keyboardAvoidingView = ref }}
+        innerRef={(ref) => { this.scrollKeyboard = ref; }}
       >
         <ScrollView
           style={{ backgroundColor: '#fff' }}
-          ref={(ref) => {
-            this.scrollView = ref;
-          }}
         >
           <View>
             <Text style={styles.title}>
@@ -365,7 +339,8 @@ class NewTrade extends Component {
                 onChangeText={this.onMessageChange}
                 placeholder={intl.formatMessage({ id: 'app.newTrade.text.leave_message', defaultMessage: 'You may leave a message' })}
                 value={form.message}
-              //onFocus={() => console.warn("dsf")}
+                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                ref={(ref) => { this.textInput = ref; }}
               />
               <Text style={styles.timeLeft}>
                 {intl.formatMessage({ id: 'app.newTrade.text.timeLeft', defaultMessage: 'Time limit for payment of seller\'s invoice:' })}
@@ -393,7 +368,7 @@ class NewTrade extends Component {
             ))}
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     );
   }
 }

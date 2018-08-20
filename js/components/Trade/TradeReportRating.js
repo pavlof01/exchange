@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import moment from 'moment';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { injectIntl, intlShape } from 'react-intl';
 import { fonts } from '../../style/resourceHelpers';
 import Price from '../../values/Price';
@@ -16,7 +17,7 @@ import {
 } from '../../helpers';
 import TransactionDetails from './TransactionDetails';
 import Feedback from './Feedback';
-import ChatView from "./ChatView";
+import ChatView from './ChatView';
 
 const styles = StyleSheet.create({
   container: {
@@ -72,6 +73,10 @@ class TradeReportRating extends Component {
     enableScrollViewScroll: true,
   };
 
+  _scrollToInput = (reactNode) => {
+    this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
+  }
+
   render() {
     const {
       trade,
@@ -114,69 +119,72 @@ class TradeReportRating extends Component {
       console.log(e);
     }
     return (
-      <View style={styles.container}>
-        <ScrollView
-          scrollEnabled={enableScrollViewScroll}
-          style={{ backgroundColor: '#fff', flex: 1 }}
-          keyBoardShouldPersistTaps="never"
-          nestedScrollEnabled
-        >
-          <Text style={styles.title}>
-            {getTradeTitle(intl, trade.status, trade.ad.payment_method_code).toUpperCase()}
-          </Text>
-          <Text style={styles.tradeDescription}>
-            {`${operationPrefix} ${intl.formatMessage({ id: 'app.trade.feedback.via', defaultMessage: 'via' })} ${paymentMethodCode} ${intl.formatMessage({ id: 'app.trade.feedback.cryptocurrency', defaultMessage: 'cryptocurrency' })}\n${intl.formatMessage({ id: 'app.trade.feedback.trader', defaultMessage: 'Trader' })} `}
-            <Text style={styles.tradeDescriptionBold}>
-              {partnerName}
+      <KeyboardAwareScrollView innerRef={(ref) => { this.scrollKeyboard = ref; }}>
+        <View style={styles.container}>
+          <ScrollView
+            scrollEnabled={enableScrollViewScroll}
+            style={{ backgroundColor: '#fff', flex: 1 }}
+            keyBoardShouldPersistTaps="never"
+            nestedScrollEnabled
+          >
+            <Text style={styles.title}>
+              {getTradeTitle(intl, trade.status, trade.ad.payment_method_code).toUpperCase()}
             </Text>
-          </Text>
-          <Text style={styles.tradeSummary}>
-            <Text style={styles.tradeSummaryPrice}>
-              {received}
+            <Text style={styles.tradeDescription}>
+              {`${operationPrefix} ${intl.formatMessage({ id: 'app.trade.feedback.via', defaultMessage: 'via' })} ${paymentMethodCode} ${intl.formatMessage({ id: 'app.trade.feedback.cryptocurrency', defaultMessage: 'cryptocurrency' })}\n${intl.formatMessage({ id: 'app.trade.feedback.trader', defaultMessage: 'Trader' })} `}
+              <Text style={styles.tradeDescriptionBold}>
+                {partnerName}
+              </Text>
             </Text>
-            <Text>
-              {` ${intl.formatMessage({ id: 'app.offers.pickerLabel.for', defaultMessage: 'for' })} `}
+            <Text style={styles.tradeSummary}>
+              <Text style={styles.tradeSummaryPrice}>
+                {received}
+              </Text>
+              <Text>
+                {` ${intl.formatMessage({ id: 'app.offers.pickerLabel.for', defaultMessage: 'for' })} `}
+              </Text>
+              <Text style={styles.tradeSummaryPrice}>
+                {send}
+              </Text>
             </Text>
-            <Text style={styles.tradeSummaryPrice}>
-              {send}
-            </Text>
-          </Text>
-          {
-            isTradeComplete(trade.status) && (
-              <TransactionDetails
-                transactionId={transactionId}
-                received={received}
-                send={send}
-                date={date}
-                time={time}
-              />
-            )
-          }
-          <ChatView
-            onStartShouldSetResponderCapture={
-              () => {
-                this.setState({ enableScrollViewScroll: false });
-                if (enableScrollViewScroll === false) {
-                  this.setState({ enableScrollViewScroll: true });
+            {
+              isTradeComplete(trade.status) && (
+                <TransactionDetails
+                  transactionId={transactionId}
+                  received={received}
+                  send={send}
+                  date={date}
+                  time={time}
+                />
+              )
+            }
+            <ChatView
+              _scrollToInput={this._scrollToInput}
+              onStartShouldSetResponderCapture={
+                () => {
+                  this.setState({ enableScrollViewScroll: false });
+                  if (enableScrollViewScroll === false) {
+                    this.setState({ enableScrollViewScroll: true });
+                  }
                 }
               }
+              messages={messages}
+              userId={user.id}
+              onChangeText={newTextMessage => this.setState({ textMessage: newTextMessage })}
+              onSubmitEditing={() => sendMessage(textMessage, () => this.setState({ textMessage: '' }))}
+              messageValue={textMessage}
+            />
+            {
+              trade.feedback_allowed && (
+                <Feedback
+                  feedback={trade.feedbacks[user.id]}
+                  trade={trade}
+                />
+              )
             }
-            messages={messages}
-            userId={user.id}
-            onChangeText={newTextMessage => this.setState({ textMessage: newTextMessage })}
-            onSubmitEditing={() => sendMessage(textMessage, () => this.setState({ textMessage: '' }))}
-            messageValue={textMessage}
-          />
-          {
-            trade.feedback_allowed && (
-              <Feedback
-                feedback={trade.feedbacks[user.id]}
-                trade={trade}
-              />
-            )
-          }
-        </ScrollView>
-      </View>
+          </ScrollView>
+        </View>
+      </KeyboardAwareScrollView>
     );
   }
 }

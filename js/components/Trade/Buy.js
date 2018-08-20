@@ -128,11 +128,11 @@ class Buy extends Component {
   };
 
   keyboardDidShow = (e) => {
-    this.scrollKeyboard.props.scrollToPosition(0, height * 1.2 - e.endCoordinates.height);
+    // this.scrollKeyboard.props.scrollToPosition(0, height * 1.2 - e.endCoordinates.height);
   };
 
   keyboardWillHide = () => {
-    this.setState({ showKeyboard: false });
+    // this.setState({ showKeyboard: false });
   };
 
   componentDidMount() {
@@ -195,6 +195,11 @@ class Buy extends Component {
       </View>
     );
   };
+
+  _scrollToInput = (reactNode) => {
+    // Add a 'scroll' ref to your ScrollView
+    this.scrollKeyboard.props.scrollToFocusedInput(reactNode);
+  }
 
   render() {
     const {
@@ -288,6 +293,7 @@ class Buy extends Component {
                 </Text>
               </View>
               <ChatView
+                _scrollToInput={this._scrollToInput}
                 onStartShouldSetResponderCapture={
                   () => {
                     this.setState({ enableScrollViewScroll: false });
