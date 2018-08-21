@@ -72,11 +72,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  empty: {
-    width: 70,
-    height: 70,
-    margin: 10,
-  },
   delete: {
     width: 70,
     height: 70,
@@ -84,6 +79,18 @@ const styles = StyleSheet.create({
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  goBackContainer: {
+    width: height / 9,
+    height: height / 9,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(148, 183, 255, 0.15)',
+    borderRadius: height / 18,
+  },
+  goBackText: {
+    fontSize: 14,
   },
 });
 
@@ -230,7 +237,7 @@ class Pincode extends Component {
             <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('9')} value="9" />
           </View>
           <View style={styles.row}>
-            <View style={styles.empty} />
+            <PinCodeNumberButton fontStyle={styles.goBackText} style={styles.goBackContainer} onPress={() => this.props.navigation.goBack()} value="Отмена" />
             <PinCodeNumberButton style={styles.circleNumber} onPress={() => this.setPincode('0')} value="0" />
             <TouchableOpacity onPress={this.delete} style={styles.delete}>
               <Image source={require('../../img/delete.png')} />
