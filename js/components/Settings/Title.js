@@ -8,7 +8,7 @@ import { fonts } from '../../style/resourceHelpers';
 
 const styles = StyleSheet.create({
   text: {
-    color: '#9b9b9b',
+    color: '#666666',
     marginEnd: 17,
     marginStart: 17,
     marginTop: 16,
