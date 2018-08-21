@@ -50,6 +50,7 @@
   "app.settings.title.phoneNumber": "Phone number",
   "app.settings.title.identityDocs": "Identity documents",
   "app.settings.button.select": "Select",
+  "app.settings.pincode": "Passcode",
   "app.settings.pincode_set": "pincode set",
   "app.settings.pincode_wrong": "wrong pincode",
   "app.settings.pincode_deleted": "pincode deleted",

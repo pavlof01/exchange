@@ -235,7 +235,7 @@ class Settings extends Component {
             <Switcher
               value={passcode}
               onValueChange={openPincode}
-              text="Passcode"
+              text={intl.formatMessage({ id: 'app.settings.pincode', defaultMessage: 'Passcode' })}
             />
             <Title text={intl.formatMessage({ id: 'app.settings.title.verification', defaultMessage: 'Verification' }).toUpperCase()} />
             <SettingsItem
