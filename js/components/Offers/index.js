@@ -581,6 +581,7 @@ class Offers extends React.PureComponent {
               onValueChange={this.onPaymentMethodCodeChange}
               defaultValueLabel={intl.formatMessage({ id: 'app.offers.selector.paymentMethodAny', defaultMessage: 'Any' })}
               selectedValue={filter.paymentMethodCode}
+              title={intl.formatMessage({ id: 'app.offers.pickerLabel.selectPaymentMethod', defaultMessage: 'Select payment method' }).toUpperCase()}
             />
           </View>
           <Separator style={{ marginTop: 20, marginBottom: 16 }} />
