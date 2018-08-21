@@ -239,6 +239,8 @@ class ChatView extends Component {
                 underlineColorAndroid="transparent"
                 onChangeText={this.handleChangeText}
                 value={messageValue}
+                blurOnSubmit={false}
+                returnKeyType="send"
                 onSubmitEditing={this.handleSubmitEditing}
                 onFocus={event => this.props._scrollToInput(ReactNative.findNodeHandle(event.target))}
               />
