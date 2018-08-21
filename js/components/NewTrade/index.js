@@ -347,6 +347,13 @@ class NewTrade extends Component {
                 </Text>
               </Text>
             </View>
+            {objMap(errors, (key, value) => (
+              <Text style={styles.warning} key={key}>
+                {key}
+                {':'}
+                {value.join('. ')}
+              </Text>
+            ))}
             <PrimaryButton
               style={styles.sendButtonContainer}
               fontStyle={styles.sendButtonText}
@@ -356,13 +363,6 @@ class NewTrade extends Component {
             >
               {pending ? <ActivityIndicator size="large" /> : undefined}
             </PrimaryButton>
-            {objMap(errors, (key, value) => (
-              <Text style={styles.warning} key={key}>
-                {key}
-                {':'}
-                {value.join('. ')}
-              </Text>
-            ))}
           </View>
         </ScrollView>
       </KeyboardAwareScrollView>
