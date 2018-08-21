@@ -5,19 +5,29 @@ import {
   View,
   Text,
   Modal,
-  PickerIOS,
+  TouchableOpacity,
+  ScrollView,
   Picker,
   Platform,
+  Dimensions,
 } from 'react-native';
 import Touchabe from '../Touchable';
 import BorderlessButton from '../BorderlessButton';
 import { fonts } from '../resourceHelpers';
 
+const { width, height } = Dimensions.get('window');
+
+const MODAL_DIALOG_SAFE_MARGIN = 24;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#00000080',
+    flexGrow: 1,
+    flexShrink: 1,
+    flexDirection: 'column',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   pickerContainer: {
     flex: 1,
@@ -34,6 +44,66 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
   },
+  modalShade: {
+    position: 'absolute',
+    width,
+    height,
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexWrap: 'wrap',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
+  modalShadeWrapper: {
+    position: 'absolute',
+    width,
+    height,
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    zIndex: 1000,
+  },
+  centerContainer: {
+    position: 'absolute',
+    maxHeight: height - MODAL_DIALOG_SAFE_MARGIN * 2,
+    zIndex: 1001,
+    margin: MODAL_DIALOG_SAFE_MARGIN,
+  },
+  itemContainer: {
+    paddingTop: MODAL_DIALOG_SAFE_MARGIN,
+    overflow: 'scroll',
+    zIndex: 1005,
+  },
+  bankLabelText: {
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  bankContainer: {
+    padding: 10,
+  },
+  title: {
+    color: '#4a4a4a',
+    marginTop: 16,
+    fontSize: 12,
+    fontFamily: fonts.medium.regular,
+    letterSpacing: 1,
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+  titleContainer: {
+    padding: 5,
+    borderBottomColor: '#e1e1e1',
+    borderBottomWidth: 1,
+  },
+  scrollView: {
+    height: height / 1.5,
+    width: width / 1.3,
+    backgroundColor: '#fff'
+  },
+  activeBank: {
+    fontFamily: fonts.bold.regular,
+  }
 });
 
 const isAndroid = Platform.OS === 'android';
@@ -46,6 +116,27 @@ class PickerModal extends React.Component {
   open = () => this.setState({ shouldPick: true });
 
   hide = () => this.setState({ shouldPick: false });
+
+  bank = (item) => {
+    const active = item.value === this.props.selectedValue;
+    return (
+      <TouchableOpacity
+        key={item.value}
+        value={item.value}
+        onPress={() => this.selectPaymentMethod(item.value)}
+        style={styles.bankContainer}
+      >
+        <Text style={[styles.bankLabelText, active ? styles.activeBank : null]}>
+          {item.label}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  selectPaymentMethod = (type) => {
+    this.props.onValueChange(type);
+    this.hide();
+  }
 
   render() {
     const {
@@ -101,33 +192,39 @@ class PickerModal extends React.Component {
           </View>
         </Touchabe>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent
           visible={shouldPick}
           onRequestClose={this.hide}
         >
           <View style={styles.container}>
-            <View style={{ flex: 1 }} />
-            <View style={{ backgroundColor: 'white' }}>
-              <BorderlessButton
-                title="Back"
-                onPress={this.hide}
-              />
-              <PickerIOS
-                selectedValue={selectedValue || 'ANY'}
-                onValueChange={onValueChange}
-              >
-                <PickerIOS.Item value="ANY" label={defaultValueLabel || 'none selected'} />
-                {items.map(
-                  item => (
-                    <PickerIOS.Item
-                      key={item.value}
-                      value={item.value}
-                      label={item.label}
-                    />
-                  ),
-                )}
-              </PickerIOS>
+            <View style={styles.modalShadeWrapper}>
+              <TouchableOpacity activeOpacity={1} onPress={this.hide}>
+                <View style={styles.modalShade} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.centerContainer}>
+              <View style={styles.itemContainer}>
+                <ScrollView bounces={false} style={styles.scrollView}>
+                  <View style={styles.titleContainer}>
+                    <Text style={styles.title}>
+                      {this.props.title}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    key='any'
+                    onPress={() => this.selectPaymentMethod('ANY')}
+                    style={styles.bankContainer}
+                  >
+                    <Text style={styles.bankLabelText}>
+                      ANY
+                    </Text>
+                  </TouchableOpacity>
+                  {
+                    items.map(item => this.bank(item))
+                  }
+                </ScrollView>
+              </View>
             </View>
           </View>
         </Modal>
