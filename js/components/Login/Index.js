@@ -28,7 +28,6 @@ class Login extends Component {
       loginValue: '',
       passwordValue: '',
       formError: {},
-      textInFocus: false,
     };
 
     this.onLoginPressed = this.onLoginPressed.bind(this);
@@ -36,29 +35,10 @@ class Login extends Component {
     this.onRecoverRequestPressed = this.onRecoverRequestPressed.bind(this);
   }
 
-  componentDidMount() {
-    this.props.fetchDictionary();
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-  }
-
   componentWillReceiveProps(nextProps) {
     if (this.props.formError !== nextProps.formError) {
       this.setState({ formError: { serverError: nextProps.formError } });
     }
-  }
-
-  _keyboardDidShow = () => {
-    this.setState({ textInFocus: true });
-  }
-
-  _keyboardDidHide = () => {
-    this.setState({ textInFocus: false });
   }
 
   onLoginPressed() {
@@ -100,11 +80,11 @@ class Login extends Component {
         <ScrollView contentContainerStyle={styles.scrollView} bounces={false}>
           <View style={styles.logoContainer}>
             <Image
-              style={this.state.textInFocus ? styles.logoStylesOnKeyboardShow : styles.logo}
+              style={styles.logo}
               source={require('../../img/logo.png')}
             />
             <Image
-              style={this.state.textInFocus ? styles.textLogoStylesOnKeyboardShow : styles.logoText}
+              style={styles.logoText}
               source={require('../../img/logo_text.png')}
             />
           </View>

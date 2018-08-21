@@ -32,13 +32,15 @@ class PinCodeNumberButton extends React.PureComponent {
   render() {
     const {
       value,
+      style,
+      fontStyle
     } = this.props;
     return (
       <TouchableOpacity
         onPress={this.handlePress}
-        style={this.props.style}
+        style={style}
       >
-        <Text style={styles.numberText}>
+        <Text style={[styles.numberText, fontStyle]}>
           {value}
         </Text>
       </TouchableOpacity>
