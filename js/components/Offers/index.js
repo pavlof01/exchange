@@ -177,16 +177,13 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 46,
     justifyContent: 'center',
-    alignItems: 'flex-start',
     overflow: 'hidden',
   },
   valueContainer: {
     flex: 1,
     height: 46,
     justifyContent: 'center',
-    alignItems: 'flex-end',
     overflow: 'hidden',
-    paddingRight: 4,
   },
   bankNameContainer: {
     flex: 0.8,
@@ -199,14 +196,13 @@ const styles = StyleSheet.create({
     flex: 2,
     height: 46,
     justifyContent: 'center',
-    alignItems: 'flex-start',
     overflow: 'hidden',
   },
   itemText: {
     color: '#000000',
     fontSize: 14,
     fontFamily: fonts.bold.regular,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   itemTextLite: {
     color: '#868686',
@@ -594,17 +590,17 @@ class Offers extends React.PureComponent {
               {''}
             </Text>
           </View>
-          <View style={styles.valueContainer}>
+          <View style={styles.nameContainer}>
             <Text>
               {''}
             </Text>
           </View>
-          <View style={styles.nameContainer}>
+          <View style={styles.itemLimits}>
             <Text style={styles.itemHeadLabel}>
               {intl.formatMessage({ id: 'app.offers.label.limits', defaultMessage: 'Limits' }).toUpperCase()}
             </Text>
           </View>
-          <View style={styles.valueContainer}>
+          <View style={styles.bankNameContainer}>
             <Text>
               {''}
             </Text>
