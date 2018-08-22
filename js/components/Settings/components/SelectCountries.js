@@ -130,7 +130,7 @@ class SelectCountries extends Component {
           <Text style={active || checked ? styles.settingNameActive : styles.settingName}>
             {country.item.name}
           </Text>
-          {active || checked ? <Image source={require('../../../img/ic_picker.png')} /> : null}
+          {active || checked ? <Text>✓</Text> : null}
         </View>
       </Touchable>
     );

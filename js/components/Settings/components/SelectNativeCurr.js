@@ -121,7 +121,7 @@ class SelectNativeCurr extends Component {
           <Text style={active || checked ? styles.settingNameActive : styles.settingName}>
             {SelectNativeCurr.getCurrencyName(item)}
           </Text>
-          {active || checked ? <Image /*style={styles.checkMark}*/ source={require('../../../img/ic_picker.png')} /> : null}
+          {active || checked ? <Text>✓</Text> : null}
         </View>
       </Touchable>
     );
