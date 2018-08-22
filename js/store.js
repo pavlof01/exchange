@@ -1,19 +1,18 @@
-import { createStore } from 'redux'
-import reducers from './reducers';
+import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import reducers from './reducers';
 import rootSagas from './sagas';
-import orders from './middlewares/orders'
-import position from './middlewares/position'
-import { applyMiddleware } from 'redux'
+import orders from './middlewares/orders';
+import position from './middlewares/position';
 
-import { navMiddleware } from './App'
+import { navMiddleware } from './App';
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [
-    orders,
-    position,
-    sagaMiddleware,
-    navMiddleware,
+  orders,
+  position,
+  sagaMiddleware,
+  navMiddleware,
 ];
 const store = createStore(
   reducers,
