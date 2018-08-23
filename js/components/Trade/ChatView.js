@@ -242,6 +242,7 @@ class ChatView extends Component {
                 blurOnSubmit={false}
                 returnKeyType="send"
                 onSubmitEditing={this.handleSubmitEditing}
+                // eslint-disable-next-line max-len
                 onFocus={event => this.props._scrollToInput(ReactNative.findNodeHandle(event.target))}
               />
             </View>
