@@ -19,10 +19,11 @@ function userLoginViaApi(values) {
 }
 
 function saveToken(token) {
-  token
-    ? AsyncStorage.setItem(Api.tokenName, token)
-    : AsyncStorage.removeItem(Api.tokenName);
-
+  if (token) {
+    AsyncStorage.setItem(Api.tokenName, token);
+  } else {
+    AsyncStorage.removeItem(Api.tokenName);
+  }
   if (Api.currentToken !== token) {
     Api.createApiWithToken(token);
   }
@@ -30,7 +31,8 @@ function saveToken(token) {
 
 export const login = function* login(action) {
   try {
-    const user = yield call(userLoginViaApi, { login: action.payload.login, password: action.payload.password });
+    const user = yield call(userLoginViaApi,
+      { login: action.payload.login, password: action.payload.password });
 
     saveToken(user.api_token);
     yield put(setUser(user));
@@ -57,7 +59,7 @@ export const logoutData = function* logoutData() {
   yield takeLatest(SESSION.LOGOUT, logout);
 };
 
-export const dynamicInitialRoute = function* dynamicInitialRoute(action) {
+export const dynamicInitialRoute = function* dynamicInitialRoute() {
   try {
     const token = yield call(AsyncStorage.getItem, Api.tokenName);
     Api.createApiWithToken(token);
