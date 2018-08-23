@@ -1,48 +1,34 @@
 import React from 'react';
 import {
-    StyleSheet, Text,
-    View,
+  StyleSheet, Text,
+  View,
 } from 'react-native';
 
 const styles = StyleSheet.create({
-    header: {
-        color: '#222222',
-        fontWeight: 'bold',
-        fontSize: 20,
-        marginBottom: 8,
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-    },
-    info: {
-        backgroundColor: 'white',
-        margin: 8,
-        padding: 8,
-        borderRadius: 4,
-    },
-    infoText: {
-        margin: 2,
-        fontSize: 16,
-    },
-    bold: {
-        margin: 2,
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
+  info: {
+    backgroundColor: 'white',
+    margin: 8,
+    padding: 8,
+    borderRadius: 4,
+  },
 });
 
 class TradeTrivia extends React.Component {
+  render() {
+    /* eslint-disable  */
+    const { ad } = this.props;
 
-    render() {
-        const {ad} = this.props;
-
-        return ad.conditions ? <View style={styles.info}>
-            <Text>Условия сделки:</Text>
-            <Text>{ad.conditions}</Text>
-        </View> : null;
-    }
+    return ad.conditions ?
+      <View style={styles.info}>
+        <Text>
+          Условия сделки:
+          </Text>
+        <Text>
+          {ad.conditions}
+        </Text>
+      </View> : null;
+    /* eslint-enable  */
+  }
 }
 
 export default TradeTrivia;
