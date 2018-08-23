@@ -17,8 +17,10 @@ const initial = {
 export default (state = initial, action) => {
   switch (action.type) {
     case ORDERS_FILTER.UPDATE_ORDERS_FILTER:
+      /* eslint-disable */
       action.values.currencyCode && User.setFavoriteCurrencyCode(action.values.currencyCode);
       action.values.countryCode && User.setFavoriteCountryCode(action.values.countryCode);
+      /* eslint-enable */
       return { ...state, ...action.values };
 
     case POSITION.GET_POSITION_RESULT: return {

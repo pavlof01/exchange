@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import {
   View,
@@ -6,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { fonts } from '../../style/resourceHelpers';
-import { injectIntl, intlShape } from 'react-intl';
+
 
 const styles = StyleSheet.create({
   transactionDetailsBox: {
@@ -69,6 +70,7 @@ TransactionDetails.propTypes = {
   send: PropTypes.string,
   date: PropTypes.string,
   time: PropTypes.string,
+  intl: intlShape,
 };
 
 export default injectIntl(TransactionDetails);

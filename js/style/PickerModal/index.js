@@ -12,7 +12,6 @@ import {
   Dimensions,
 } from 'react-native';
 import Touchabe from '../Touchable';
-import BorderlessButton from '../BorderlessButton';
 import { fonts } from '../resourceHelpers';
 
 const { width, height } = Dimensions.get('window');
@@ -99,11 +98,11 @@ const styles = StyleSheet.create({
   scrollView: {
     height: height / 1.5,
     width: width / 1.3,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   activeBank: {
     fontFamily: fonts.bold.regular,
-  }
+  },
 });
 
 const isAndroid = Platform.OS === 'android';
@@ -212,7 +211,7 @@ class PickerModal extends React.Component {
                     </Text>
                   </View>
                   <TouchableOpacity
-                    key='any'
+                    key="any"
                     onPress={() => this.selectPaymentMethod('ANY')}
                     style={styles.bankContainer}
                   >
@@ -238,6 +237,7 @@ PickerModal.propTypes = {
   selectedValue: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   onValueChange: PropTypes.func.isRequired,
   items: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  title: PropTypes.string,
 };
 
 export default PickerModal;

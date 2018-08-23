@@ -24,9 +24,11 @@ export const userSignUp = function* userSignUp(action) {
   } catch (err) {
     if (err.response.status === 422) {
       const errors = [];
+      /* eslint-disable */
       for (const prop in err.response.data.errors) {
         errors.push(`${prop}: ${err.response.data.errors[prop]}`);
       }
+      /* eslint-enable */
       yield put(signUpFailure({ error: errors.join('; ') }));
     } else {
       yield put(signUpFailure({ error: 'Что-то пошло не так, повторите позже' }));

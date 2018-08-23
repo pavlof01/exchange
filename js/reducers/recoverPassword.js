@@ -1,8 +1,8 @@
 import { Record } from 'immutable';
 import {
-    RECOVER_PASSWORD_SUCCESS,
-    RECOVER_PASSWORD_ERROR,
-    RECOVER_PASSWORD_REQUEST
+  RECOVER_PASSWORD_SUCCESS,
+  RECOVER_PASSWORD_ERROR,
+  RECOVER_PASSWORD_REQUEST,
 } from '../actions/recoverPassword';
 
 const Form = Record({
@@ -22,7 +22,6 @@ const initialState = new InitialState();
 
 export default function recoverPassword(state = initialState, action) {
   switch (action.type) {
-
     case RECOVER_PASSWORD_SUCCESS: {
       return state
         .setIn(['form', 'isSent'], true);

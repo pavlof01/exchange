@@ -51,7 +51,7 @@ class CardPicker extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (this.props != nextProps) {
+    if (this.props !== nextProps) {
       this.setState({
         selectedValue: nextProps.selectedValue,
       });
@@ -72,7 +72,15 @@ class CardPicker extends React.Component {
         if (child.props.value === this.state.selectedValue) {
           selected = child;
         }
-        return React.cloneElement(child, { onSelect: this.handleChange, customStyles: { optionText: [styles.cardText, fontSize ? { fontSize } : undefined] } });
+        return React.cloneElement(child,
+          {
+            onSelect: this.handleChange,
+            customStyles:
+            {
+              optionText: [styles.cardText, fontSize
+                ? { fontSize } : undefined],
+            },
+          });
       });
 
     return (
@@ -87,5 +95,9 @@ class CardPicker extends React.Component {
     );
   }
 }
+
+CardPicker.propTypes = {
+  children: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+};
 
 export default CardPicker;

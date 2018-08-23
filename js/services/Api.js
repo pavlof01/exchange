@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
-import { dispatch } from 'redux';
 import { API_BASE_URL } from '../config.json';
 import { logout } from '../actions/session';
 import store from '../store';
@@ -28,14 +27,12 @@ export default class Api {
     });
 
     Api.instance.interceptors.response.use(
-      (response) => response,
+      response => response,
       (onError) => {
         const request = onError.config;
         if (onError.response.status === 401) {
           return AsyncStorage.getItem(Api.tokenName)
-            .then(token => {
-              return axios.post(`${API_BASE_URL}/auths/renew_api_token`, { api_token: token })
-            }).then((tokenResponse) => {
+            .then(token => axios.post(`${API_BASE_URL}/auths/renew_api_token`, { api_token: token })).then((tokenResponse) => {
               const newToken = tokenResponse.data.api_token;
               return AsyncStorage.setItem(Api.tokenName, newToken)
                 .then(() => {

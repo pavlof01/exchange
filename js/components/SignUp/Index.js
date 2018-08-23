@@ -17,8 +17,7 @@ import Validator from '../../services/Validator';
 import FormTextInput from '../FormTextInput';
 import Touchable from '../../style/Touchable';
 import PrimaryButton from '../../style/ActionButton';
-import { createBasicNavigationOptions, withCommonStatusBar } from '../../style/navigation';
-import { common } from '../../style/common';
+import { withCommonStatusBar } from '../../style/navigation';
 import { fonts } from '../../style/resourceHelpers';
 
 const { width, height } = Dimensions.get('window');
@@ -31,7 +30,6 @@ class SignUp extends Component {
       passwordValue: '',
       password2Value: '',
       emailValue: '',
-      formState: this.props.formState,
       formError: {},
     };
 
@@ -144,6 +142,7 @@ class SignUp extends Component {
                     textStyle={styles.textInput}
                     placeholderTextColor="#B8CFFF"
                     error={!_.isEmpty(this.state.formError.loginError)}
+                    // eslint-disable-next-line no-return-assign
                     ref={ref => (this.loginInput = ref)}
                     placeholder={intl.formatMessage({ id: 'app.registration.username', defaultMessage: 'Username' })}
                     keyboardType="email-address"
@@ -166,6 +165,7 @@ class SignUp extends Component {
                     textStyle={styles.textInput}
                     placeholderTextColor="#B8CFFF"
                     error={!_.isEmpty(this.state.formError.passwordError)}
+                    // eslint-disable-next-line no-return-assign
                     ref={ref => (this.passwordInput = ref)}
                     placeholder={intl.formatMessage({ id: 'app.registration.password', defaultMessage: 'Password' })}
                     autoCapitalize="none"
@@ -189,6 +189,7 @@ class SignUp extends Component {
                     textStyle={styles.textInput}
                     placeholderTextColor="#B8CFFF"
                     error={!_.isEmpty(this.state.formError.password2Error)}
+                    // eslint-disable-next-line no-return-assign
                     ref={ref => (this.password2Input = ref)}
                     placeholder={intl.formatMessage({ id: 'app.registration.confirm_password', defaultMessage: 'Confirm password' })}
                     autoCapitalize="none"
@@ -210,6 +211,7 @@ class SignUp extends Component {
                     textStyle={styles.textInput}
                     placeholderTextColor="#B8CFFF"
                     error={!_.isEmpty(this.state.formError.emailError)}
+                    // eslint-disable-next-line no-return-assign
                     ref={ref => (this.emailInput = ref)}
                     placeholder="E-mail"
                     keyboardType="email-address"
@@ -356,6 +358,7 @@ SignUp.propTypes = {
   signUp: PropTypes.func,
   loginRequest: PropTypes.func,
   fetchDictionary: PropTypes.func,
+  intl: intlShape,
 };
 
 export default injectIntl(SignUp);

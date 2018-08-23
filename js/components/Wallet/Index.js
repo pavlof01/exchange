@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Text,
   View,
   StyleSheet, ScrollView,
 } from 'react-native';
@@ -13,7 +12,6 @@ import TopButton from '../../style/TopButton';
 import Separator from '../../style/Separator';
 import Transfer from './Transfer';
 import Receive from './Receive';
-import exchangeRates from '../../reducers/exchangeRates';
 import { withCommonStatusBar } from '../../style/navigation';
 import ConfirmDialog from './ConfirmDialog';
 
@@ -25,12 +23,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  centerContent: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -105,6 +97,7 @@ class Wallet extends Component {
 
   onChangePassword = (value) => {
     const form = {
+      // eslint-disable-next-line react/no-access-state-in-setstate
       ...this.state.form,
       password: value,
     };
@@ -126,7 +119,6 @@ class Wallet extends Component {
       generateTransactionToken,
       intl,
     } = this.props;
-
     let content; let
       header;
     if (this.state.selectedAction === 'transfer') {
@@ -196,6 +188,19 @@ class Wallet extends Component {
 
 Wallet.propTypes = {
   intl: intlShape.isRequired,
+  /* eslint-disable react/forbid-prop-types */
+  exchangeRates: PropTypes.any,
+  withdrawal: PropTypes.any,
+  sendCryptoCurrency: PropTypes.any,
+  transactionTokens: PropTypes.any,
+  getTransactionTokens: PropTypes.any,
+  generateTransactionToken: PropTypes.any,
+  user: PropTypes.any,
+  cryptoCurrencies: PropTypes.any,
+  updateRates: PropTypes.any,
+  updateEstimatedFee: PropTypes.any,
+  updateCurrencies: PropTypes.any,
+  /* eslint-enable react/forbid-prop-types */
 };
 
 export default injectIntl(Wallet);

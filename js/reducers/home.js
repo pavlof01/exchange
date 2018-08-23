@@ -1,4 +1,4 @@
-import { HOME } from '../actions'
+import { HOME } from '../actions';
 
 const initial = {
   appLifetime: 0,
@@ -13,19 +13,19 @@ const initial = {
 };
 
 export default (state = initial, action) => {
-  let {type, ...home} = action;
+  const { type, ...home } = action;
 
   switch (type) {
     case HOME.FETCH_HOME_STARTED: return {
-      ...state, pending: true
+      ...state, pending: true,
     };
 
     case HOME.FETCH_HOME_SUCCEED: return {
-      ...state, ...home, pending: false
+      ...state, ...home, pending: false,
     };
 
     case HOME.FETCH_HOME_FAILURE: return {
-      ...state, pending: false
+      ...state, pending: false,
     };
 
     default: return state;

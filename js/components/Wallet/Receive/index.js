@@ -10,9 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { MenuOption } from 'react-native-popup-menu';
 import { injectIntl, intlShape } from 'react-intl';
-import CardPicker from '../../../style/CardPicker';
 import QRCode from '../QRCode';
 import PrimaryButton from '../../../style/ActionButton';
 import CurrencySelector from '../CurrencySelector';
@@ -46,16 +44,17 @@ const styles = StyleSheet.create({
   },
   refreshButtonText: {
     fontSize: width / 23,
-  }
+  },
 });
 
 class Receive extends Component {
   static propTypes = {
-    cryptoCurrencies: PropTypes.array,
+    cryptoCurrencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     currency: PropTypes.string,
-    transactionTokens: PropTypes.any,
+    transactionTokens: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     getTransactionTokens: PropTypes.func,
     generateTransactionToken: PropTypes.func,
+    intl: intlShape,
   };
 
   state = {
@@ -79,7 +78,9 @@ class Receive extends Component {
       const {
         transactionTokens,
       } = this.props;
-      Clipboard.setString(transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address);
+      Clipboard.setString(transactionTokens.data
+        && transactionTokens.data.length > 0
+        && transactionTokens.data[0].address);
     }
   };
 
@@ -87,12 +88,14 @@ class Receive extends Component {
     const {
       transactionTokens,
     } = this.props;
-    return (transactionTokens.data && transactionTokens.data.length > 0 && transactionTokens.data[0].address);
+    return (transactionTokens.data && transactionTokens.data.length
+      > 0 && transactionTokens.data[0].address);
   };
 
   getAddressFromTokens = (transactionTokens) => {
     let address = ' ';
     if (this.isAddressLoaded()) {
+      // eslint-disable-next-line prefer-destructuring
       address = transactionTokens.data[0].address;
     }
     if (transactionTokens && transactionTokens.generation_pending) {

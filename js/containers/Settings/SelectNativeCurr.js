@@ -6,10 +6,8 @@ const mapDispatchToProps = dispatch => ({
   updateFilter: values => dispatch(updateFilter(values)),
 });
 
-const mapStateToProps = state => {
-  return {
-    currencies: state.currencies.list,
-  }
-};
+const mapStateToProps = state => ({
+  currencies: state.currencies.list,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectNativeCurr);

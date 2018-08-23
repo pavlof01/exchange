@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  View, ActivityIndicator, StyleSheet, Text
+  View, ActivityIndicator, StyleSheet, Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withCommonStatusBar } from "../../style/navigation";
-import { checkPincode } from "../../actions/app";
+import { withCommonStatusBar } from '../../style/navigation';
+import { checkPincode } from '../../actions/app';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   isFetching: state.session.pending,
   error: state.session.error,
 });
@@ -48,26 +48,32 @@ class SplashScreen extends React.Component {
     let str;
 
     try {
-      const req = err["error"]["request"];
-      str = `${req["_method"]} ${req["_url"]}\n${JSON.stringify(req["_headers"])}\n\n${req["status"]}`;
+      const req = err.error.request;
+      str = `${req._method} ${req._url}\n${JSON.stringify(req._headers)}\n\n${req.status}`;
     } catch (e) {
-      str = "Unknown error"
+      str = 'Unknown error';
     }
-    return (<Text style={styles.errorText}>{str}</Text>);
+    return (
+      <Text style={styles.errorText}>
+        {str}
+      </Text>
+    );
   }
 
   render() {
-    return withCommonStatusBar(<View style={styles.centerContent}>
-      {this.props.isFetching ? <ActivityIndicator size="large" /> : undefined}
-      {SplashScreen.displayError(this.props.error)}
-    </View>)
+    return withCommonStatusBar(
+      <View style={styles.centerContent}>
+        {this.props.isFetching ? <ActivityIndicator size="large" /> : undefined}
+        {SplashScreen.displayError(this.props.error)}
+      </View>,
+    );
   }
 }
 
 SplashScreen.propTypes = {
   route: PropTypes.func.isRequired,
   isFetching: PropTypes.bool,
-  error: PropTypes.object,
+  error: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);

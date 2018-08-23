@@ -1,6 +1,6 @@
 export default class Price {
   static build(value) {
-    return new Price(value)
+    return new Price(value);
   }
 
   constructor(value) {
@@ -9,7 +9,7 @@ export default class Price {
 
   // 234234.783443 -> 234234,78
   get viewFiat() {
-    return this.value.toFixed(2).replace('.', ',')
+    return this.value.toFixed(2).replace('.', ',');
   }
 
   // 0.89548934768994678 -> 0.89548935
@@ -20,6 +20,6 @@ export default class Price {
 
   // 1000000 -> 1 000 000
   get viewMain() {
-    return Math.round(this.value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return Math.round(this.value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 }

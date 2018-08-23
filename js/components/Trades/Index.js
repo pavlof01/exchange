@@ -121,11 +121,7 @@ class Trades extends Component {
               <View
                 style={{ width: 10, height: 10, backgroundColor: '#DADADA' }}
               />
-            ) : (
-              <View
-                style={{ width: 10, height: 10, backgroundColor: '#14D459' }}
-              />
-            )}
+            ) : (<View style={{ width: 10, height: 10, backgroundColor: '#14D459' }} />)}
           </View>
           <Text style={styles.info}>
             {trade.id}
@@ -147,11 +143,13 @@ class Trades extends Component {
   };
 
   sortByTypeSell = () => {
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const sortedTrades = this.state.trades.sort(trade => (trade.ad.type === 'Ad::Sell' ? 1 : -1));
     this.setState({ trades: sortedTrades });
   };
 
   sortByCurrency = () => {
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const sortedTrades = this.state.trades.sort(trade => (trade.ad.crypto_currency_code === 'ETH' ? -1 : 1));
     this.setState({ trades: sortedTrades });
   };
@@ -204,31 +202,30 @@ class Trades extends Component {
               </Text>
             </Touchable>
           </View>
-          {isFetch && trades.length === 0 ? (
-            <CenterProgressBar />
-          ) : (
-            <FlatList
-              data={trades}
-              refreshControl={(
-                <RefreshControl
-                  refreshing={isFetch}
-                  onRefresh={this.onRefresh}
-                />
+          {isFetch && trades.length === 0 ? (<CenterProgressBar />) :
+            (
+              <FlatList
+                data={trades}
+                refreshControl={(
+                  <RefreshControl
+                    refreshing={isFetch}
+                    onRefresh={this.onRefresh}
+                  />
                 )}
-              renderItem={this.renderItem}
-              keyExtractor={i => i.id}
-              ListEmptyComponent={(
-                <Text style={styles.centerMessage}>
-                  {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
-                </Text>
+                renderItem={this.renderItem}
+                keyExtractor={i => i.id}
+                ListEmptyComponent={(
+                  <Text style={styles.centerMessage}>
+                    {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
+                  </Text>
                 )}
-              ListFooterComponent={
+                ListFooterComponent={
                   isFetch && <ActivityIndicator size="large" />
                 }
-              onEndReached={this.loadNext}
-              onEndReachedThreshold={0.3}
-            />
-          )}
+                onEndReached={this.loadNext}
+                onEndReachedThreshold={0.3}
+              />
+            )}
         </View>
       </SafeAreaView>,
     );
@@ -243,6 +240,8 @@ Trades.propTypes = {
   lastLoadedPage: PropTypes.number,
   isFetch: PropTypes.bool,
   isReachEnd: PropTypes.bool,
+  openTrade: PropTypes.func,
+  user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default injectIntl(Trades);

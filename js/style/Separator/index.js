@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  ViewPropTypes,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -31,11 +32,17 @@ class Separator extends React.Component {
      * Padding between the line and the container
      */
     padding: PropTypes.number,
+    /**
+     * Styles
+     */
+    style: ViewPropTypes.style,
   };
 
   render() {
-    const style = [this.props.vertical ? styles.verticalSeparator : styles.separator,
-      this.props.vertical ? { marginVertical: this.props.padding } : { marginHorizontal: this.props.padding }];
+    const style = [this.props.vertical ? styles.verticalSeparator
+      : styles.separator, this.props.vertical
+      ? { marginVertical: this.props.padding }
+      : { marginHorizontal: this.props.padding }];
 
     if (this.props.color) {
       style.push({ backgroundColor: this.props.color });

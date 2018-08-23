@@ -35,6 +35,10 @@ class Login extends Component {
     this.onRecoverRequestPressed = this.onRecoverRequestPressed.bind(this);
   }
 
+  componentDidMount() {
+    this.props.fetchDictionary();
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.formError !== nextProps.formError) {
       this.setState({ formError: { serverError: nextProps.formError } });

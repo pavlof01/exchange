@@ -1,4 +1,4 @@
-import { HOME_FILTER, POSITION, SESSION } from '../actions'
+import { HOME_FILTER, POSITION, SESSION } from '../actions';
 
 const initial = {
   currencyCode: 'RUB',
@@ -6,21 +6,21 @@ const initial = {
 };
 
 export default (state = initial, action) => {
-  let {type, ...values} = action;
+  const { type, ...values } = action;
 
   switch (type) {
     case HOME_FILTER.UPDATE_HOME_FILTER: return {
-      ...state, ...values
+      ...state, ...values,
     };
 
     case POSITION.GET_POSITION_RESULT: return {
-      ...state, currencyCode: action.location.currencyCode
+      ...state, currencyCode: action.location.currencyCode,
     };
 
     case SESSION.SESSION_SET_USER:
-      return action.user.currencyCode ?
-        {...state, currencyCode: action.user.currencyCode} :
-        state;
+      return action.user.currencyCode
+        ? { ...state, currencyCode: action.user.currencyCode }
+        : state;
 
     default: return state;
   }

@@ -1,4 +1,4 @@
-import { ORDERS } from '../actions'
+import { ORDERS } from '../actions';
 
 const initial = {
   list: [],
@@ -11,7 +11,7 @@ const initial = {
 export default (state = initial, action) => {
   switch (action.type) {
     case ORDERS.FETCH_ORDERS_STARTED: return {
-      ...state, pending: true
+      ...state, pending: true,
     };
 
     case ORDERS.FETCH_ORDERS_SUCCEED: return {
@@ -24,7 +24,7 @@ export default (state = initial, action) => {
     };
 
     case ORDERS.FETCH_ORDERS_FAILURE: return {
-      ...state, pending: false
+      ...state, pending: false,
     };
 
     default: return state;

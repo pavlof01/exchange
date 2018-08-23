@@ -196,6 +196,7 @@ TradeReportRating.propTypes = {
   user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   messages: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   sendMessage: PropTypes.string,
+  intl: intlShape,
 };
 
 export default injectIntl(TradeReportRating);

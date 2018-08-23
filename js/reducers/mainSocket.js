@@ -1,12 +1,11 @@
-import { SESSION } from '../actions'
+import { SESSION } from '../actions';
 import store from '../store';
-import MainSocket from '../services/MainSocket'
-import {update as updateUser} from '../actions/session'
-import {update as updateCurrentTrade} from '../actions/currentTrade'
-import {default as updatePartnerActivity} from '../actions/partnerActivity'
+import MainSocket from '../services/MainSocket';
+import { update as updateCurrentTrade } from '../actions/currentTrade';
 
-const handler = message => {
-  // TODO: необходимо поправить логику дейстрия updateUser() - т.к. данные перевели на имутабельные структуры.
+const handler = (message) => {
+  // TODO: необходимо поправить логику дейстрия updateUser() -
+  // т.к. данные перевели на имутабельные структуры.
   switch (message.event) {
     case 'notice_count':
       // store.dispatch(updateUser({
@@ -37,26 +36,21 @@ const initial = {
 
 export default (state = initial, action) => {
   if (action.type === SESSION.SESSION_SET_USER) {
-
     clearInterval(state.interval);
 
     if (action.user.isLogged) {
-
-      let instance = new MainSocket(handler);
+      const instance = new MainSocket(handler);
       instance.open(action.user.id);
 
       return {
-        instance: instance,
-        interval: setInterval(() => instance.sendMessage('online'), 5 * 1000)
+        instance,
+        interval: setInterval(() => instance.sendMessage('online'), 5 * 1000),
       };
-    } else if (state.instance) {
+    } if (state.instance) {
       state.instance.close();
       return initial;
-    } else {
-      return state;
     }
-
-  } else {
     return state;
   }
+  return state;
 };

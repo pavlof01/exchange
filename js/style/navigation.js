@@ -38,7 +38,7 @@ export const bottomBarStyle = {
 
 export function createBottomBarOptions(labelMessageId, src) {
   return ({
-    tabBarLabel: ({ tintColor, focused }) => (
+    tabBarLabel: ({ tintColor }) => (
       <FormattedMessage
         id={labelMessageId}
       >
@@ -49,7 +49,7 @@ export function createBottomBarOptions(labelMessageId, src) {
         )}
       </FormattedMessage>
     ),
-    tabBarIcon: ({ tintColor, focused }) => (
+    tabBarIcon: ({ tintColor }) => (
       <Image
         source={src}
         style={styles.bottomBarIcon}
@@ -59,21 +59,23 @@ export function createBottomBarOptions(labelMessageId, src) {
   });
 }
 
-export const withCommonStatusBar = (container) => {
-    return <React.Fragment>
-            <StatusBar
-                backgroundColor="#2A2A72"
-                barStyle="light-content"/>
-            {container}
-        </React.Fragment>;
-};
+export const withCommonStatusBar = container => (
+  <React.Fragment>
+    <StatusBar
+      backgroundColor="#2A2A72"
+      barStyle="light-content"
+    />
+    {container}
+  </React.Fragment>
+);
 
 
-export const withColoredStatusBar = (color, container) => {
-    return <React.Fragment>
-            <StatusBar
-                backgroundColor={color}
-                barStyle="light-content"/>
-            {container}
-        </React.Fragment>;
-};
+export const withColoredStatusBar = (color, container) => (
+  <React.Fragment>
+    <StatusBar
+      backgroundColor={color}
+      barStyle="light-content"
+    />
+    {container}
+  </React.Fragment>
+);

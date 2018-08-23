@@ -18,7 +18,7 @@ export default class I18n {
       store.getState().i18n.locale,
       store.getState().i18n.dictionary,
       key,
-      params
+      params,
     );
   }
 }

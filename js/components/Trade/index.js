@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import Api from '../../services/Api';
 
@@ -24,7 +25,6 @@ class Trade extends Component {
 
   state = {
     pending: false,
-    errors: undefined,
     messages: [],
     isConfirming: false,
     tradeEndpoint: null,
@@ -78,23 +78,22 @@ class Trade extends Component {
       default:
         const message = data.message;
         if (message.messages) {
-          this.setState({ messages: message.messages.map(message => keysToCamelCase(message)) });
-        } else if (message.error) {
-          this.setState({ error: message.error });
+          this.setState({ messages: message.messages.map(msg => keysToCamelCase(msg)) });
         }
         break;
     }
   };
 
+  /* eslint-disable  */
   onDisconnect = (event) => {
     console.warn('chat disconnect');
     event.wasClean
       ? console.log('Disconnect was clean (Api::V1::ChatChannel)')
       : console.log('Disconnect (Api::V1::ChatChannel):', event);
   };
+  /* eslint-enable  */
 
   sendMessage = (params = {}) => {
-    this.setState({ error: null });
     this.send({
       command: 'message',
       data: JSON.stringify({ ...params, action: 'create' }),
@@ -304,7 +303,6 @@ class Trade extends Component {
     const {
       isConfirming,
     } = this.state;
-    const { intl } = this.props;
     if (!this.isTradeLoaded()) return this.renderProgress();
     return (
       <View style={{ flex: 1 }}>
@@ -320,5 +318,13 @@ class Trade extends Component {
     );
   }
 }
+
+Trade.propTypes = {
+  trade: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  user: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  partnerActivityStatuses: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  update: PropTypes.func,
+  updatePartnerActivity: PropTypes.func,
+};
 
 export default Trade;
