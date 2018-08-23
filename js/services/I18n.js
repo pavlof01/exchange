@@ -1,15 +1,16 @@
-import store from '../store';
-import { objEach } from '../helpers';
+import store from '../store'
+import { objEach } from '../helpers'
 
 export default class I18n {
   static availableLocales = ['en', 'ru'];
 
   static translate(locale, dictionary, key, params = {}) {
-    const dictionaryItem = dictionary[key];
+    let dictionaryItem = dictionary[key];
     // if (!dictionaryItem) return 'translation missing: ' + key;
     if (!dictionaryItem) return;
-    let sentence = dictionaryItem[locale] || dictionaryItem.en;
-    objEach(params, (objKey, value) => { sentence = sentence.replace(`%{${objKey}}`, value); });
+    let sentence = dictionaryItem[locale] || dictionaryItem['en'];
+    objEach(params, (key, value) => sentence = sentence.replace(`%{${key}}`, value));
+    return sentence;
   }
 
   static t(key, params) {
