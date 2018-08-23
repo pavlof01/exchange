@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   TextInput,
   View,
+  ViewPropTypes,
 } from 'react-native';
 
 import _ from 'lodash';
-import {fonts} from "../style/resourceHelpers";
+import { fonts } from '../style/resourceHelpers';
 
 const errorRed = '#FF8799';
 
@@ -15,14 +16,13 @@ const errorRed = '#FF8799';
  * A text input component for login scene.
  */
 class FormTextInput extends Component {
-
   focus() {
     this.textInput.focus();
   }
 
   render() {
     const {
-      error, style, textStyle
+      error, style, textStyle,
     } = this.props;
     const inputProps = _.omit(this.props, error);
     const containerStyles = [styles.container];
@@ -33,9 +33,9 @@ class FormTextInput extends Component {
     if (error) {
       containerStyles.push({ borderColor: errorRed });
     }
-    /*if (error) {
+    /* if (error) {
       textStyles.push({ color: errorRed });
-    }*/
+    } */
     return (
       <View style={containerStyles}>
         <TextInput
@@ -49,14 +49,13 @@ class FormTextInput extends Component {
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
     borderColor: 'rgba(48, 48, 48, 0.35)',
-    borderStyle: 'solid'
+    borderStyle: 'solid',
   },
   text: {
     color: '#000',
@@ -69,12 +68,14 @@ const styles = StyleSheet.create({
 });
 
 FormTextInput.propTypes = {
-    error: PropTypes.bool,
-    placeholder: PropTypes.string,
-    keyboardType: PropTypes.string,
-    value: PropTypes.string,
-    onChangeText: PropTypes.func,
-    onSubmitEditing: PropTypes.func,
+  error: PropTypes.bool,
+  placeholder: PropTypes.string,
+  keyboardType: PropTypes.string,
+  value: PropTypes.string,
+  onChangeText: PropTypes.func,
+  onSubmitEditing: PropTypes.func,
+  style: ViewPropTypes.style,
+  textStyle: ViewPropTypes.style,
 };
 
 export default FormTextInput;
