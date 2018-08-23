@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import Touchable from '../Touchable/index';
-import {fonts} from "../resourceHelpers";
+import { fonts } from '../resourceHelpers';
 
 const defaultBlue = '#4f88b5';
 
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
  * A basic button component.
  */
 class BorderlessButton extends Component {
-
   static propTypes = {
     /**
      * Text to display inside the button.
@@ -88,7 +87,7 @@ class BorderlessButton extends Component {
       style,
       textStyle,
     } = this.props;
-    const buttonStyles = [ styles.button, style];
+    const buttonStyles = [styles.button, style];
     const textStyles = [styles.text];
     if (color) {
       textStyles.push({ color });
@@ -106,12 +105,13 @@ class BorderlessButton extends Component {
         onPress={this.onPress}
       >
         <View style={buttonStyles}>
-          <Text style={textStyles}>{title}</Text>
+          <Text style={textStyles}>
+            {title}
+          </Text>
         </View>
       </Touchable>
     );
   }
-
 }
 
 export default BorderlessButton;
