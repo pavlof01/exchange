@@ -1,6 +1,7 @@
 import User from '../User';
 
 export default class LoginUser extends User {
+  /* eslint-disable class-methods-use-this */
   get isLogged() {
     return true;
   }
@@ -17,3 +18,4 @@ export default class LoginUser extends User {
     return this.place_id;
   }
 }
+/* eslint-enable class-methods-use-this */
