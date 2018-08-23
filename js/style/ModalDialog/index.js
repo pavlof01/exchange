@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Modal,
   StyleSheet,
-  ScrollView,
   Text,
   View,
   Dimensions,
@@ -73,11 +72,6 @@ const styles = StyleSheet.create({
 class ModalDialog extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isOpen: props.isOpen,
-    };
-
     this.modal = null;
   }
 
@@ -116,7 +110,6 @@ class ModalDialog extends Component {
 
   renderContent = () => {
     const {
-      children,
       message,
     } = this.props;
     if (message) {
@@ -126,6 +119,7 @@ class ModalDialog extends Component {
         </Text>
       );
     }
+    return null;
   };
 
   render() {
@@ -136,7 +130,7 @@ class ModalDialog extends Component {
     if (!isOpen) return null;
     return (
       <Modal
-        ref={ref => (this.modal = ref)}
+        ref={(ref) => { this.modal = ref; }}
         animationType="fade"
         transparent
         onRequestClose={this.onRequestClose}
@@ -172,14 +166,14 @@ class ModalDialog extends Component {
 }
 
 ModalDialog.propTypes = {
-  children: PropTypes.element,
   title: PropTypes.string,
   message: PropTypes.string,
   onPositivePress: PropTypes.func,
   onNegativePress: PropTypes.func,
   onClose: PropTypes.func,
-  isOpen: PropTypes.boolean,
-  noCancel: PropTypes.boolean,
+  isOpen: PropTypes.bool,
+  noCancel: PropTypes.bool,
+  intl: intlShape,
 };
 
 export default injectIntl(ModalDialog);
