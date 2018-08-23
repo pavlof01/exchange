@@ -1,27 +1,27 @@
-import { CURRENCIES } from '../actions'
+import { CURRENCIES } from '../actions';
 
 const initial = {
   list: [],
-  selected: 'BTC'
+  selected: 'BTC',
 };
 
 export default (state = initial, action) => {
   switch (action.type) {
     case CURRENCIES.FETCH_CURRENCIES_STARTED: return {
-      ...state, pending: true
+      ...state, pending: true,
     };
 
     case CURRENCIES.FETCH_CURRENCIES_SUCCEED: return {
-      ...state, pending: false, list: action.cryptoCurrencies
+      ...state, pending: false, list: action.cryptoCurrencies,
     };
 
     case CURRENCIES.FETCH_CURRENCIES_FAILURE: return {
-      ...state, pending: false
+      ...state, pending: false,
     };
 
-      case CURRENCIES.SET_SELECTED_CURRENCY: return {
-          ...state, selected: action.selectedCurrency
-      };
+    case CURRENCIES.SET_SELECTED_CURRENCY: return {
+      ...state, selected: action.selectedCurrency,
+    };
 
     default: return state;
   }
