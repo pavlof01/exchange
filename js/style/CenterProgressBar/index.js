@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
 });
 
 class CenterProgressBar extends React.Component {
-
   render() {
     return (
       <View style={styles.centerContent}>
