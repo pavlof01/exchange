@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import ReactNative, {
   Text,
   View,
@@ -17,7 +17,7 @@ import { cryptoIcons, fonts, IC_PICKER } from '../../../style/resourceHelpers';
 import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';
-import { CenterHalf } from '../../../style/CenterHalf';
+import CenterHalf from '../../../style/CenterHalf';
 
 const { width } = Dimensions.get('window');
 
@@ -32,20 +32,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  amount: {
-    color: '#111111',
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
-    textAlign: 'center',
-    flex: 1,
-  },
-  limitsAmount: {
-    color: '#111111',
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
-    textAlign: 'center',
-    flex: 2,
   },
   pickerRow: {
     flexDirection: 'row',
@@ -155,24 +141,27 @@ class Transfer extends Component {
   }
 
   onCostChange = (value) => {
+    // eslint-disable-next-line no-param-reassign
     value = value.replace(/,/, '.');
     const rate = this.props.exchangeRates[`${this.props.currencyCode}_${this.state.cryptoCurrencyCode}`];
-
+    // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
     const amount = value * rate;
     this.setState({ form: { ...this.state.form, cost: value, amount: amount.toFixed(8) } });
   };
 
   onAmountChange = (value) => {
+    // eslint-disable-next-line no-param-reassign
     value = value.replace(/,/, '.');
     const rate = this.props.exchangeRates[`${this.props.currencyCode}_${this.state.cryptoCurrencyCode}`];
-
+    // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
     const cost = value / rate;
     this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) } });
   };
 
   clearedErrorList = (name) => {
+    // eslint-disable-next-line prefer-destructuring
     const error = this.state.error;
     delete error[name];
     delete error.isEmpty;
@@ -181,7 +170,7 @@ class Transfer extends Component {
     return error;
   };
 
-  static ItemWithIcons(label, iconLeft, iconRight) {
+  static itemWithIcons(label, iconLeft, iconRight) {
     return (
       <View style={styles.pickerRow}>
         {iconLeft}
@@ -193,25 +182,27 @@ class Transfer extends Component {
     );
   }
 
-  CryptItemFactory = header => (code) => {
+  cryptItemFactory = header => (code) => {
+    // eslint-disable-next-line prefer-destructuring
     const value = this.props.balance[code].value;
     return (
       <View style={styles.pickerColumn}>
         <Text style={styles.cardText}>
           {value}
         </Text>
-        {Transfer.ItemWithIcons(code, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode="contain" />,
+        {Transfer.itemWithIcons(code, <Image source={cryptoIcons[code]} style={styles.pickerIcon} resizeMode="contain" />,
           header ? <Image source={IC_PICKER} style={styles.pickerIcon} resizeMode="contain" /> : undefined)}
       </View>
     );
   };
 
-  CryptItem = this.CryptItemFactory(false);
+  cryptItem = this.cryptItemFactory(false);
 
-  CryptHeader = this.CryptItemFactory(true);
+  CryptHeader = this.cryptItemFactory(true);
 
   onCryptoCurrencyCodeChange = (value) => {
     const form = {
+      // eslint-disable-next-line react/no-access-state-in-setstate
       ...this.state.form,
       currency: value,
     };
@@ -220,6 +211,7 @@ class Transfer extends Component {
 
   onAddressChange = (value) => {
     const form = {
+      // eslint-disable-next-line react/no-access-state-in-setstate
       ...this.state.form,
       address: value,
     };
@@ -257,13 +249,13 @@ class Transfer extends Component {
       withdrawal: { pending },
       intl,
     } = this.props;
-
+    /* eslint-disable no-nested-ternary */
     const submitButtonText = pending
       ? intl.formatMessage({ id: 'app.wallet.btn.wait', defaultMessage: 'Wait' }).toUpperCase()
       : this.state.isConfirming
         ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()
         : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
-
+    /* eslint-enable no-nested-ternary */
     return (
       <KeyboardAwareScrollView
         behavior="padding"
@@ -293,7 +285,7 @@ class Transfer extends Component {
                 {this.props.cryptoCurrencies.map(
                   currency => (
                     <MenuOption key={currency.code} value={currency.code}>
-                      {this.CryptItem(currency.code)}
+                      {this.cryptItem(currency.code)}
                     </MenuOption>
                   ),
                 )}
@@ -354,7 +346,12 @@ class Transfer extends Component {
             {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
 
             <CenterHalf>
-              <PrimaryButton fontStyle={styles.sendButtonText} onPress={this.onSubmitHandler} title={submitButtonText} style={{ flex: 1 }} />
+              <PrimaryButton
+                fontStyle={styles.sendButtonText}
+                onPress={this.onSubmitHandler}
+                title={submitButtonText}
+                style={{ flex: 1 }}
+              />
             </CenterHalf>
 
             {this.state.error.isEmpty ? this.renderPasswordError() : null}
@@ -367,5 +364,18 @@ class Transfer extends Component {
     );
   }
 }
+
+Transfer.propTypes = {
+  intl: intlShape.isRequired,
+  cryptoCurrencies: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  onWalletOperationStart: PropTypes.func,
+  balance: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  withdrawal: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  updateRates: PropTypes.func,
+  updateCurrencies: PropTypes.func,
+  updateEstimatedFee: PropTypes.func,
+  exchangeRates: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  currencyCode: PropTypes.string,
+};
 
 export default injectIntl(Transfer);
