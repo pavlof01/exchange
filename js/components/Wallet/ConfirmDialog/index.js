@@ -96,6 +96,7 @@ class ConfirmDialog extends Component {
     errorText: PropTypes.string,
     onCancelPress: PropTypes.func,
     onConfirmPress: PropTypes.func,
+    intl: intlShape.isRequired,
   };
 
   render() {
