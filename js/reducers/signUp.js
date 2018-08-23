@@ -1,10 +1,10 @@
 import { Record } from 'immutable';
 import {
-    SIGN_UP,
-    SIGN_UP_SUCCESS,
-    SIGN_UP_ERROR,
+  SIGN_UP,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_ERROR,
 } from '../actions/signUp';
-import LogoutUser from '../models/User/Logout'
+import LogoutUser from '../models/User/Logout';
 
 const Form = Record({
   error: null,
@@ -29,7 +29,6 @@ const initialState = new InitialState();
 
 export default function signUp(state = initialState, action) {
   switch (action.type) {
-
     case SIGN_UP: {
       return state
         .setIn(['form', 'isFetching'], true)
@@ -39,7 +38,7 @@ export default function signUp(state = initialState, action) {
 
     case SIGN_UP_SUCCESS: {
       return state.setIn(['form', 'isFetching'], false)
-          .setIn(['form', 'isSuccess'], true);
+        .setIn(['form', 'isSuccess'], true);
     }
 
     case SIGN_UP_ERROR: {
