@@ -428,8 +428,10 @@ class Offers extends React.PureComponent {
     const {
       filter,
       updateFilter,
+      fetchExchangeRates,
     } = this.props;
     updateFilter(filter);
+    fetchExchangeRates();
   };
 
   static itemWithIcon(label, icon) {
