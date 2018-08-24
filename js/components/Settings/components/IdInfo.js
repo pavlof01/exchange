@@ -78,10 +78,9 @@ export default class IdInfo extends Component {
             style={styles.saveBtn}
             title="SAVE'"
           >
-            {this.props.isFetching ?
-              <ActivityIndicator size="large" />
-              :
-              undefined}
+            {this.props.isFetching
+              ? <ActivityIndicator size="large" />
+              : undefined}
           </PrimaryButton>
         </ScrollView>
       </View>
@@ -117,5 +116,5 @@ const styles = StyleSheet.create({
     marginTop: 30,
     width: '50%',
     alignSelf: 'center',
-  };
+  },
 });
