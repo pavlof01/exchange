@@ -223,12 +223,13 @@ class Transfer extends Component {
 
   onSubmitHandler = () => {
     const { address, amount, cost } = this.state.form;
+    const { intl } = this.props;
     if (!address) {
-      this.setState({ errorTextInput: 'no address' });
+      this.setState({ errorTextInput: intl.formatMessage({ id: 'app.wallet.form.label.adress.error', defaultMessage: 'Enter address' }) });
     } else if (!amount) {
-      this.setState({ errorTextInput: 'no amount' });
+      this.setState({ errorTextInput: intl.formatMessage({ id: 'app.wallet.form.label.amount.error', defaultMessage: 'Enter amount' }) });
     } else if (!cost) {
-      this.setState({ errorTextInput: 'no cost' });
+      this.setState({ errorTextInput: intl.formatMessage({ id: 'app.wallet.form.label.cost.error', defaultMessage: 'Enter cost' }) });
     } else {
       this.setState({ errorTextInput: '' }, () => this.props.onWalletOperationStart({ ...this.state.form }));
     }
