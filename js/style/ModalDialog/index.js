@@ -38,17 +38,13 @@ const styles = StyleSheet.create({
     color: '#9b9b9b',
     textAlign: 'center',
     fontSize: 16,
-    marginTop: 16,
-    marginBottom: 16,
+    paddingTop: 16,
     fontFamily: fonts.bold.regular,
   },
   dialogMessage: {
-    // flex: 1,
     color: '#444444',
     textAlign: 'center',
     fontSize: 20,
-    marginTop: 16,
-    marginBottom: 16,
     fontFamily: fonts.bold.regular,
   },
   buttonGroup: {
@@ -56,6 +52,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 16,
   },
   positiveButton: {
     width: width / 2 - 50,
