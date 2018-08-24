@@ -86,65 +86,66 @@ class SelectNativeCurr extends Component {
     this.setState({ selectedCurrency });
   }
 
-  onFilterChangeFactory = (name) => (value) => this.props.updateFilter({ [name]: value });
-};
+  onFilterChangeFactory = (name) => (value) => {
+    this.props.updateFilter({ [name]: value });
+  };
 
-onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
+  onCurrencyCodeChange = this.onFilterChangeFactory('currencyCode');
 
-countryKeyExtractor = currency => currency.code;
+  countryKeyExtractor = currency => currency.code;
 
-selectCurrency = (currency) => {
-  const {
-    navigation,
-  } = this.props;
-  this.onCurrencyCodeChange(currency);
-  AsyncStorage.setItem('selectedCurrency', currency);
-  navigation.goBack();
-};
+  selectCurrency = (currency) => {
+    const {
+      navigation,
+    } = this.props;
+    this.onCurrencyCodeChange(currency);
+    AsyncStorage.setItem('selectedCurrency', currency);
+    navigation.goBack();
+  };
 
   static getCurrencyName(currency) {
-  return currency.name || currency.code;
-}
+    return currency.name || currency.code;
+  }
 
-renderCurrencyItem = (currency) => {
-  const {
-    selectedCurrency,
-  } = this.state;
-  const { item } = currency;
-  const active = selectedCurrency === item.code;
-  const checked = this.state.selectedCurrency === item.code;
-  return (
-    <Touchable onPress={() => this.selectCurrency(item.code)}>
-      <View style={styles.settingContainer}>
-        <Text style={active || checked ? styles.settingNameActive : styles.settingName}>
-          {SelectNativeCurr.getCurrencyName(item)}
-        </Text>
-        {active || checked ? <Text>✓</Text> : null}
+  renderCurrencyItem = (currency) => {
+    const {
+      selectedCurrency,
+    } = this.state;
+    const { item } = currency;
+    const active = selectedCurrency === item.code;
+    const checked = this.state.selectedCurrency === item.code;
+    return (
+      <Touchable onPress={() => this.selectCurrency(item.code)}>
+        <View style={styles.settingContainer}>
+          <Text style={active || checked ? styles.settingNameActive : styles.settingName}>
+            {SelectNativeCurr.getCurrencyName(item)}
+          </Text>
+          {active || checked ? <Text>✓</Text> : null}
+        </View>
+      </Touchable>
+    );
+  };
+
+  render() {
+    const {
+      currencies,
+    } = this.props;
+    const {
+      selectedCurrency,
+    } = this.state;
+    return (
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.scrollContainer}>
+          <FlatList
+            data={currencies}
+            extraData={selectedCurrency}
+            keyExtractor={this.countryKeyExtractor}
+            renderItem={this.renderCurrencyItem}
+          />
+        </ScrollView>
       </View>
-    </Touchable>
-  );
-};
-
-render(){
-  const {
-    currencies,
-  } = this.props;
-  const {
-    selectedCurrency,
-  } = this.state;
-  return (
-    <View style={styles.mainContainer}>
-      <ScrollView style={styles.scrollContainer}>
-        <FlatList
-          data={currencies}
-          extraData={selectedCurrency}
-          keyExtractor={this.countryKeyExtractor}
-          renderItem={this.renderCurrencyItem}
-        />
-      </ScrollView>
-    </View>
-  );
-};
+    );
+  }
 }
 
 SelectNativeCurr.propTypes = {
