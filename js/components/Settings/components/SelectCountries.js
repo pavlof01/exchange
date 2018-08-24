@@ -7,7 +7,6 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
-  Image,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
 });
 
 class SelectCountries extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     title: (
       <FormattedMessage id="app.settings.title.selectCountry" />
     ),
@@ -77,6 +76,7 @@ class SelectCountries extends Component {
   }
 
   componentDidMount() {
+    // eslint-disable-next-line react/prop-types
     this.props.updateFilter({});
   }
 

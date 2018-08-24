@@ -7,7 +7,6 @@ import {
   StyleSheet,
   FlatList,
   AsyncStorage,
-  Image,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { fonts } from '../../../style/resourceHelpers';
@@ -62,7 +61,7 @@ const styles = StyleSheet.create({
 });
 
 class SelectNativeCurr extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     title: (
       <FormattedMessage id="app.settings.title.selectCurrency" />
     ),

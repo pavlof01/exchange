@@ -7,17 +7,16 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import Validator from '../../services/Validator';
 import FormTextInput from '../FormTextInput';
 import Touchable from '../../style/Touchable';
 import PrimaryButton from '../../style/ActionButton';
-import { createBasicNavigationOptions, withCommonStatusBar } from '../../style/navigation';
 import { common } from '../../style/common';
 
 class RecoverPassword extends Component {
   // static navigationOptions = createBasicNavigationOptions('Восстановление');
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     title: (
       <FormattedMessage id="app.login.recovery_password.title" />
     ),
@@ -60,6 +59,7 @@ class RecoverPassword extends Component {
     const emailError = new Validator({ presence: true, email: true }).validate(emailValue);
 
     const validationErrors = [];
+    // eslint-disable-next-line no-unused-expressions
     emailError && validationErrors.push(emailError);
 
     if (validationErrors.length) {
@@ -101,7 +101,8 @@ class RecoverPassword extends Component {
           <View style={{ marginBottom: 8 }}>
             <FormTextInput
               error={this.state.formError !== null}
-              ref={ref => (this.emailInput = ref)}
+              // eslint-disable-next-line arrow-parens
+              ref={ref => { this.emailInput = ref; }}
               placeholder="E-mail"
               value={this.state.emailValue}
               onChangeText={(email) => {
