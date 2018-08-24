@@ -105,6 +105,7 @@ class Transfer extends Component {
     price: '',
     isConfirming: false,
     error: { isEmpty: false, isSucceed: false },
+    errorTextInput: '',
   };
 
   componentWillMount() {
@@ -219,7 +220,16 @@ class Transfer extends Component {
   };
 
   onSubmitHandler = () => {
-    this.props.onWalletOperationStart({ ...this.state.form });
+    const { address, amount, cost } = this.state.form;
+    if (!address) {
+      this.setState({ errorTextInput: 'no address' });
+    } else if (!amount) {
+      this.setState({ errorTextInput: 'no amount' });
+    } else if (!cost) {
+      this.setState({ errorTextInput: 'no cost' });
+    } else {
+      this.setState({ errorTextInput: '' }, () => this.props.onWalletOperationStart({ ...this.state.form }));
+    }
   };
 
   renderPasswordError = () => (
@@ -344,7 +354,10 @@ class Transfer extends Component {
             </View>
 
             {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
-
+            {this.state.errorTextInput ? (
+              <Text>
+                {this.state.errorTextInput}
+              </Text>) : null}
             <CenterHalf>
               <PrimaryButton
                 fontStyle={styles.sendButtonText}
