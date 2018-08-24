@@ -216,7 +216,7 @@ class PickerModal extends React.Component {
                     style={styles.bankContainer}
                   >
                     <Text style={styles.bankLabelText}>
-                      ANY
+                      {this.props.defaultValueLabel}
                     </Text>
                   </TouchableOpacity>
                   {
