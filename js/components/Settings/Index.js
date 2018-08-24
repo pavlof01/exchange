@@ -28,12 +28,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
   },
-  header: {
-    color: '#222222',
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginBottom: 8,
-  },
   emailContainer: {
     paddingBottom: 20,
     paddingTop: 20,
@@ -47,42 +41,6 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     color: '#14d459',
     fontFamily: fonts.regular.regular,
-  },
-  bold: {
-    margin: 2,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  wideRowItem: {
-    flex: 2,
-  },
-  row: {
-    flexDirection: 'row',
-    padding: 4,
-    alignItems: 'center',
-  },
-  row2: {
-    flexDirection: 'row',
-    padding: 8,
-  },
-  info: {
-    backgroundColor: 'white',
-    margin: 8,
-    padding: 8,
-    borderRadius: 4,
-  },
-  infoText: {
-    margin: 2,
-    fontSize: 16,
-  },
-  warning: {
-    color: '#8b572a',
-    backgroundColor: '#fbf5eb',
-    borderColor: '#f5a623',
-    borderRadius: 4,
-    borderWidth: 1,
-    padding: 8,
-    margin: 8,
   },
   signOutContainer: {
     paddingBottom: 20,
@@ -98,27 +56,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const Header = props => (
-  <Text style={styles.header}>
-    {props.children}
-  </Text>
-);
-const Bold = props => (
-  <Text style={styles.bold}>
-    {props.children}
-  </Text>
-);
-
 class Settings extends Component {
   state = {
-    pending: false,
     introduction: this.props.user.introduction,
     ad_sell_enabled: this.props.user.ad_buy_enabled,
     ad_buy_enabled: this.props.user.ad_sell_enabled,
     passcode: false,
     selectedCountry: undefined,
     selectedCurrency: undefined,
-    selectedLanguage: undefined,
   };
 
   componentWillMount() {
@@ -126,6 +71,7 @@ class Settings extends Component {
     this.selectedCurr();
     this.checkPasscode();
     this.selectedLang();
+    // eslint-disable-next-line react/prop-types
     this.props.navigation.addListener(
       'willFocus',
       () => {
@@ -137,10 +83,11 @@ class Settings extends Component {
     );
   }
 
+  /* eslint-disable react/prop-types, camelcase, max-len */
+
   componentWillReceiveProps({ user }) {
     const { user: { introduction, ad_buy_enabled, ad_sell_enabled } } = this.props;
     this.setState({
-      pending: false,
       ...(introduction !== user.introduction ? { introduction: user.introduction } : {}),
       ...(ad_buy_enabled !== user.ad_buy_enabled ? { ad_buy_enabled: user.ad_buy_enabled } : {}),
       ...(ad_sell_enabled !== user.ad_sell_enabled ? { ad_sell_enabled: user.ad_sell_enabled } : {}),
@@ -160,12 +107,15 @@ class Settings extends Component {
 
     // this.setState({pending:true});
   };
+  /* eslint-enable react/prop-types */
 
   checkPasscode = async () => {
     const passcode = await AsyncStorage.getItem('pincode');
-    passcode
-      ? this.setState({ passcode: true })
-      : this.setState({ passcode: false });
+    if (passcode) {
+      this.setState({ passcode: true });
+    } else {
+      this.setState({ passcode: false });
+    }
   }
 
   selectedCountry = async () => {
@@ -176,11 +126,6 @@ class Settings extends Component {
   selectedCurr = async () => {
     const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
     this.setState({ selectedCurrency });
-  }
-
-  selectedLang = async () => {
-    const selectedLanguage = await AsyncStorage.getItem('selectedLanguage');
-    this.setState({ selectedLanguage });
   }
 
   onLogoutPressed = () => this.props.logout();
