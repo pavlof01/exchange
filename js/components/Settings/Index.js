@@ -70,7 +70,6 @@ class Settings extends Component {
     this.selectedCountry();
     this.selectedCurr();
     this.checkPasscode();
-    this.selectedLang();
     // eslint-disable-next-line react/prop-types
     this.props.navigation.addListener(
       'willFocus',
@@ -78,7 +77,6 @@ class Settings extends Component {
         this.checkPasscode();
         this.selectedCountry();
         this.selectedCurr();
-        this.selectedLang();
       },
     );
   }
