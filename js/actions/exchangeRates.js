@@ -2,7 +2,7 @@ import { EXCHANGE_RATES } from '../actions'
 import Api from '../services/Api'
 
 export function fetch(dispatch, params) {
-  Api.get('/exchange_rates', params)
+  Api.get('/exchange_rates?BTC=USD,USD&retrospective=true', params)
     .then(response => dispatch(fetchSucceed(response.data.rates)))
     .catch(response => dispatch(fetchFailure('Ошибка /exchange_rates')));
 

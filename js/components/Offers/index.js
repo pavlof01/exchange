@@ -318,6 +318,7 @@ class Offers extends React.PureComponent {
       animating: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
       refreshing: false,
+      exchangeRates: '',
     };
 
     this.scrollValue = 0;
@@ -329,16 +330,25 @@ class Offers extends React.PureComponent {
       fetchPaymentMethods,
       fetchCountries,
       updateFilter,
+      fetchExchangeRates,
     } = this.props;
     fetchCurrencies();
     fetchPaymentMethods();
     fetchCountries();
+    fetchExchangeRates();
     updateFilter({});
     const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
     this.state.animatedValue.addListener(value => this.handleScroll(value));
+    this.setState({ exchangeRates: this.props.exchangeRates.BTC_USD });
+  }
+
+  componentWillMount() {
+    const { fetchExchangeRates } = this.props;
+    fetchExchangeRates();
+    this.setState({ exchangeRates: this.props.exchangeRates.BTC_USD });
   }
 
   scrollToTop = (animated) => {
@@ -353,6 +363,9 @@ class Offers extends React.PureComponent {
       && this.scrollValue <= SAFE_REFRESH_VIEW_HEIGHT
     ) {
       this.scrollToTop(true);
+    }
+    if (nextProps.exchangeRates.BTC_USD !== this.props.exchangeRates.BTC_USD) {
+      this.setState({ exchangeRates: nextProps.exchangeRates.BTC_USD });
     }
   }
 
@@ -415,8 +428,10 @@ class Offers extends React.PureComponent {
     const {
       filter,
       updateFilter,
+      fetchExchangeRates,
     } = this.props;
     updateFilter(filter);
+    fetchExchangeRates();
   };
 
   static itemWithIcon(label, icon) {
@@ -663,6 +678,12 @@ class Offers extends React.PureComponent {
     );
   };
 
+  getBitcionChangeRatesdByTime = (hours, time = 'h') => {
+    if (this.state.exchangeRates) {
+      return this.state.exchangeRates[`change_${hours}${time}`].toFixed(2) + '%';
+    }
+  }
+
 
   render() {
     const event = Animated.event([
@@ -734,7 +755,7 @@ class Offers extends React.PureComponent {
                 483672
               </Text>
               <Text style={styles.btcChangePercent}>
-                +0.12%
+                {this.getBitcionChangeRatesdByTime('4', 'h')}
               </Text>
             </View>
           </Animated.View>
@@ -792,6 +813,8 @@ Offers.propTypes = {
   paymentMethods: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   cryptoCurrencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   currencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  exchangeRates: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  fetchExchangeRates: PropTypes.func,
 };
 
 export default injectIntl(Offers);
