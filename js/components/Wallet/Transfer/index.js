@@ -75,9 +75,11 @@ const styles = StyleSheet.create({
     margin: 8,
     fontFamily: fonts.bold.regular,
   },
-  errorRow: {
-    flex: 1,
-    flexDirection: 'row',
+  error: {
+    color: 'red',
+    marginTop: 5,
+    fontFamily: fonts.regular.regular,
+    textAlign: 'center',
   },
   sendButtonText: {
     fontSize: width / 23,
@@ -355,7 +357,7 @@ class Transfer extends Component {
 
             {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
             {this.state.errorTextInput ? (
-              <Text>
+              <Text style={styles.error}>
                 {this.state.errorTextInput}
               </Text>) : null}
             <CenterHalf>
