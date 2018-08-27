@@ -73,9 +73,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   delete: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: height / 9,
+    height: height / 9,
+    borderRadius: height / 18,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
