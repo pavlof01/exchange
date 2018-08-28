@@ -317,11 +317,16 @@ class Offers extends React.PureComponent {
       showSubTitle: 'none',
       animating: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
+      animatedToolbarPosition: new Animated.Value(0),
       refreshing: false,
       exchangeRates: '',
     };
 
+    this.downToolBarAnimation = null;
+    this.upToolBarAnimation = null;
+
     this.scrollValue = 0;
+    this.oldScrollPosition = 0;
   }
 
   async componentDidMount() {
@@ -680,21 +685,58 @@ class Offers extends React.PureComponent {
 
   getBitcionChangeRatesdByTime = (hours, time = 'h') => {
     if (this.state.exchangeRates) {
-      return this.state.exchangeRates[`change_${hours}${time}`].toFixed(2) + '%';
+      return `${this.state.exchangeRates[`change_${hours}${time}`].toFixed(2)}%`;
     }
   }
 
+  downToolBar = () => {
+    if (!this.downToolBarAnimation) {
+      this.downToolBarAnimation = Animated.timing(
+        this.state.animatedToolbarPosition,
+        {
+          toValue: 100,
+          duration: 1500,
+        },
+      );
+    }
+    this.downToolBarAnimation.start();
+  }
 
-  render() {
-    const event = Animated.event([
+  upToolBar = () => {
+    if (!this.upToolBarAnimation) {
+      this.upToolBarAnimation = Animated.timing(
+        this.state.animatedToolbarPosition,
+        {
+          toValue: 55,
+          duration: 1500,
+        },
+      );
+    }
+    this.upToolBarAnimation.start();
+  }
+
+  onScroll = (e) => {
+    const { y } = e.nativeEvent.contentOffset;
+    // console.warn(y);
+    if (y > this.oldScrollPosition && y > SAFE_REFRESH_VIEW_HEIGHT) {
+      this.downToolBar();
+    }
+    if (y < this.oldScrollPosition) {
+      this.upToolBar();
+    }
+    this.oldScrollPosition = y;
+    Animated.event([
       {
         nativeEvent: {
           contentOffset: {
-            y: this.state.animatedValue,
+            y: this.state.animatedToolbarPosition,
           },
         },
       },
     ]);
+  }
+
+  render() {
     const {
       intl,
       orders,
@@ -703,17 +745,17 @@ class Offers extends React.PureComponent {
     const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
-    const translateY = this.state.animatedValue.interpolate({
+    const translateY = this.state.animatedToolbarPosition.interpolate({
       inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
       outputRange: [0, 0, 0, -100],
       extrapolate: 'clamp',
     });
-    const opacity = this.state.animatedValue.interpolate({
+    const opacity = this.state.animatedToolbarPosition.interpolate({
       inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, SAFE_REFRESH_VIEW_HEIGHT + 10],
-      outputRange: [0, 0, 1, 0],
+      outputRange: [0, 1, 1, 1],
       extrapolate: 'clamp',
     });
-    const toolbarHeight = this.state.animatedValue.interpolate({
+    const toolbarHeight = this.state.animatedToolbarPosition.interpolate({
       inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
       outputRange: [0, 0, 0, -50],
       extrapolate: 'clamp',
@@ -765,7 +807,7 @@ class Offers extends React.PureComponent {
               : (
                 <AnimatedFlatList
                   bounces={false}
-                  onScroll={event}
+                  onScroll={this.onScroll}
                   data={orders.list}
                   renderItem={this.renderItem}
                   keyExtractor={i => String(i.id)}
