@@ -9,6 +9,7 @@ import {
 import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { injectIntl, intlShape } from 'react-intl';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 import { fonts } from '../../style/resourceHelpers';
 import Price from '../../values/Price';
 import {
@@ -119,7 +120,11 @@ class TradeReportRating extends Component {
       console.log(e);
     }
     return (
-      <KeyboardAwareScrollView innerRef={(ref) => { this.scrollKeyboard = ref; }}>
+      <KeyboardAwareScrollView
+        extraHeight={isIphoneX() ? 86 : null}
+        viewIsInsideTabBar
+        innerRef={(ref) => { this.scrollKeyboard = ref; }}
+      >
         <View style={styles.container}>
           <ScrollView
             scrollEnabled={enableScrollViewScroll}
