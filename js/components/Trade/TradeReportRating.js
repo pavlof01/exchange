@@ -20,6 +20,9 @@ import TransactionDetails from './TransactionDetails';
 import Feedback from './Feedback';
 import ChatView from './ChatView';
 
+const EXTRA_PADDING_FOR_IPHONEX = 86;
+const EXTRA_PADDING_FOR_OTHER_IOS = 66;
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
@@ -121,8 +124,7 @@ class TradeReportRating extends Component {
     }
     return (
       <KeyboardAwareScrollView
-        extraHeight={isIphoneX() ? 86 : null}
-        viewIsInsideTabBar
+        extraHeight={isIphoneX() ? EXTRA_PADDING_FOR_IPHONEX : EXTRA_PADDING_FOR_OTHER_IOS}
         innerRef={(ref) => { this.scrollKeyboard = ref; }}
       >
         <View style={styles.container}>
