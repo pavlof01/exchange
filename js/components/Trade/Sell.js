@@ -6,10 +6,12 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Platform,
 } from 'react-native';
 import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { injectIntl, intlShape } from 'react-intl';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 import Price from '../../values/Price';
 import ChatView from './ChatView';
 import {
@@ -23,6 +25,9 @@ import User from '../../models/User';
 import EscrowTimer from './EscrowTimer';
 import PrimaryButton from '../../style/ActionButton';
 import { fonts } from '../../style/resourceHelpers';
+
+const EXTRA_PADDING_FOR_IPHONEX_AND_ANDROID = 86;
+const EXTRA_PADDING_FOR_OTHER_IOS = 66;
 
 const styles = StyleSheet.create({
   container: {
@@ -162,7 +167,11 @@ class Sell extends Component {
       console.log(e);
     }
     return (
-      <KeyboardAwareScrollView innerRef={(ref) => { this.scrollKeyboard = ref; }}>
+      <KeyboardAwareScrollView
+        extraHeight={isIphoneX() || Platform.OS === 'android'
+          ? EXTRA_PADDING_FOR_IPHONEX_AND_ANDROID : EXTRA_PADDING_FOR_OTHER_IOS}
+        innerRef={(ref) => { this.scrollKeyboard = ref; }}
+      >
         <View
           onStartShouldSetResponderCapture={() => {
             this.setState({ enableScrollViewScroll: true });

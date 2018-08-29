@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -20,7 +21,7 @@ import TransactionDetails from './TransactionDetails';
 import Feedback from './Feedback';
 import ChatView from './ChatView';
 
-const EXTRA_PADDING_FOR_IPHONEX = 86;
+const EXTRA_PADDING_FOR_IPHONEX_AND_ANDROID = 86;
 const EXTRA_PADDING_FOR_OTHER_IOS = 66;
 
 const styles = StyleSheet.create({
@@ -124,7 +125,8 @@ class TradeReportRating extends Component {
     }
     return (
       <KeyboardAwareScrollView
-        extraHeight={isIphoneX() ? EXTRA_PADDING_FOR_IPHONEX : EXTRA_PADDING_FOR_OTHER_IOS}
+        extraHeight={isIphoneX() || Platform.OS === 'android'
+          ? EXTRA_PADDING_FOR_IPHONEX_AND_ANDROID : EXTRA_PADDING_FOR_OTHER_IOS}
         innerRef={(ref) => { this.scrollKeyboard = ref; }}
       >
         <View style={styles.container}>
