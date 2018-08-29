@@ -317,13 +317,15 @@ class Offers extends React.PureComponent {
       showSubTitle: 'none',
       animating: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
-      animatedToolbarPosition: new Animated.Value(0),
+      animatedToolbarPosition: new Animated.Value(55),
       refreshing: false,
       exchangeRates: '',
     };
 
     this.downToolBarAnimation = null;
     this.upToolBarAnimation = null;
+    this.refreshToolBarAnimation = null;
+    this.animatedBack = null;
 
     this.scrollValue = 0;
     this.oldScrollPosition = 0;
@@ -695,7 +697,7 @@ class Offers extends React.PureComponent {
         this.state.animatedToolbarPosition,
         {
           toValue: 100,
-          duration: 1500,
+          duration: 350,
         },
       );
     }
@@ -707,17 +709,33 @@ class Offers extends React.PureComponent {
       this.upToolBarAnimation = Animated.timing(
         this.state.animatedToolbarPosition,
         {
-          toValue: 55,
-          duration: 1500,
+          toValue: SAFE_REFRESH_VIEW_HEIGHT,
+          duration: 350,
         },
       );
     }
     this.upToolBarAnimation.start();
   }
 
+  refreshToolBar = () => {
+    if (!this.refreshToolBarAnimation) {
+      this.refreshToolBarAnimation = Animated.timing(
+        this.state.animatedToolbarPosition,
+        {
+          toValue: 0,
+          duration: 350,
+        },
+      );
+    }
+    this.refreshToolBarAnimation.start();
+  }
+
   onScroll = (e) => {
     const { y } = e.nativeEvent.contentOffset;
-    // console.warn(y);
+    //console.warn(y);
+    if (y < SAFE_REFRESH_VIEW_HEIGHT) {
+      this.refreshToolBar();
+    }
     if (y > this.oldScrollPosition && y > SAFE_REFRESH_VIEW_HEIGHT) {
       this.downToolBar();
     }
@@ -725,15 +743,6 @@ class Offers extends React.PureComponent {
       this.upToolBar();
     }
     this.oldScrollPosition = y;
-    Animated.event([
-      {
-        nativeEvent: {
-          contentOffset: {
-            y: this.state.animatedToolbarPosition,
-          },
-        },
-      },
-    ]);
   }
 
   render() {
@@ -745,19 +754,19 @@ class Offers extends React.PureComponent {
     const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
-    const translateY = this.state.animatedToolbarPosition.interpolate({
-      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
-      outputRange: [0, 0, 0, -100],
+    const translateTitleY = this.state.animatedToolbarPosition.interpolate({
+      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      outputRange: [0, 40, -100],
       extrapolate: 'clamp',
     });
-    const opacity = this.state.animatedToolbarPosition.interpolate({
-      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, SAFE_REFRESH_VIEW_HEIGHT + 10],
-      outputRange: [0, 1, 1, 1],
+    const opacityTitle = this.state.animatedToolbarPosition.interpolate({
+      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      outputRange: [1, 0, 1],
       extrapolate: 'clamp',
     });
-    const toolbarHeight = this.state.animatedToolbarPosition.interpolate({
-      inputRange: [-30, 0, SAFE_REFRESH_VIEW_HEIGHT, 100],
-      outputRange: [0, 0, 0, -50],
+    const translateToolbarY = this.state.animatedToolbarPosition.interpolate({
+      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      outputRange: [0, 0, -50],
       extrapolate: 'clamp',
     });
     return (
@@ -768,7 +777,7 @@ class Offers extends React.PureComponent {
               position: 'absolute',
               zIndex: 2,
               transform: [{
-                translateY: toolbarHeight,
+                translateY: translateToolbarY,
               }],
             }]}
           >
@@ -777,9 +786,9 @@ class Offers extends React.PureComponent {
                 [
                   styles.titleContainer,
                   {
-                    opacity,
+                    opacity: opacityTitle,
                     transform: [{
-                      translateY,
+                      translateY: translateTitleY,
                     }],
                   },
                 ]
