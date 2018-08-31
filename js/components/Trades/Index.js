@@ -8,6 +8,8 @@ import {
   View,
   StyleSheet,
   RefreshControl,
+  Image,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
@@ -22,15 +24,23 @@ import {
 import Touchable from '../../style/Touchable';
 import HeaderBar from '../../style/HeaderBar';
 import { withCommonStatusBar } from '../../style/navigation';
+import { fonts } from '../../style/resourceHelpers';
+
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
   },
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#e9e9e9',
+  },
+  header: {
+    height: 96,
+    position: 'absolute',
+    width,
   },
   centerMessage: {
     flex: 1,
@@ -45,18 +55,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 20,
-    paddingTop: 20,
+    paddingBottom: 10,
+    paddingTop: 10,
+    backgroundColor: '#ffffff',
+    marginBottom: 10,
   },
-  alternate_background: {
-    backgroundColor: '#EEEEEE',
+  tradeNumber: {
+    flex: 3,
+    color: '#b0b0b0',
   },
-  info: {
+  tradeType: {
     textAlign: 'center',
     flex: 3,
+    fontFamily: fonts.semibold.regular,
   },
-  empty: {
+  currencyType: {
+    flex: 3,
+    alignItems: 'center',
+  },
+  imageCurrencyType: {
+    width: 22,
+    height: 22,
+  },
+  statusContainer: {
     flex: 1,
+  },
+  statusActive: {
+    width: 4,
+    height: 40,
+    backgroundColor: '#DADADA',
+    left: -2,
+  },
+  statusNoneActive: {
+    width: 4,
+    height: 40,
+    backgroundColor: '#2a3b89',
+    left: -2,
+  },
+  username: {
+    flex: 5,
+    fontFamily: fonts.semibold.regular,
+  },
+  flatListContainer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginTop: 76,
   },
 });
 
@@ -104,39 +147,38 @@ class Trades extends Component {
 
   isActiveTrade = status => status === TRADE_STATUS_NEW || status === TRADE_STATUS_PAID_CONFIRMED;
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     const trade = item;
     const partner = tradePartner(trade, this.props.user.id);
-    const alt = index % 2 === 0;
+    // const alt = index % 2 === 0;
     return (
       <Touchable onPress={() => this.props.openTrade(trade.id)}>
         <View
-          style={[
-            styles.rowContainer,
-            alt ? styles.alternate_background : undefined,
-          ]}
+          style={[styles.rowContainer]}
         >
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            {!this.isActiveTrade(trade.status) ? (
-              <View
-                style={{ width: 10, height: 10, backgroundColor: '#DADADA' }}
-              />
-            ) : (<View style={{ width: 10, height: 10, backgroundColor: '#14D459' }} />)}
+          <View style={styles.statusContainer}>
+            {!this.isActiveTrade(trade.status)
+              ? (<View style={styles.statusActive} />) : (<View style={styles.statusNoneActive} />)}
           </View>
-          <Text style={styles.info}>
+          <Text style={styles.tradeNumber}>
+            #
             {trade.id}
           </Text>
-          <Text style={{ flex: 5 }}>
+          <Text style={styles.username}>
             {partner.user_name}
           </Text>
-          <Text style={styles.info}>
+          <Text style={styles.tradeType}>
             {tradeType(trade, this.props.user.id) === tradeTypeBuy
-              ? this.props.intl.formatMessage({ id: 'app.trades.type.buy', defaultMessage: 'Buy' })
-              : this.props.intl.formatMessage({ id: 'app.trades.type.sell', defaultMessage: 'Sell' })}
+              ? this.props.intl.formatMessage({ id: 'app.trades.type.buy', defaultMessage: 'Buy' }).toUpperCase()
+              : this.props.intl.formatMessage({ id: 'app.trades.type.sell', defaultMessage: 'Sell' }).toUpperCase()}
           </Text>
-          <Text style={styles.info}>
-            {trade.ad.crypto_currency_code}
-          </Text>
+          <View style={styles.currencyType}>
+            {trade.ad.crypto_currency_code === 'BTC' ? (
+              <Image style={styles.imageCurrencyType} source={require('../../img/ic_btc.png')} />
+            ) : (
+                <Image style={styles.imageCurrencyType} source={require('../../img/ic_eth.png')} />
+              )}
+          </View>
         </View>
       </Touchable>
     );
@@ -176,35 +218,14 @@ class Trades extends Component {
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
-          <HeaderBar title={intl.formatMessage({ id: 'app.trades.header', defaultMessage: 'Trades' }).toUpperCase()} />
-          <View style={styles.rowContainer}>
-            <Text style={styles.empty} />
-            <Text style={styles.info}>
-              {'#'}
-            </Text>
-            <Text style={{ flex: 5 }}>
-              {intl.formatMessage({ id: 'app.trades.user', defaultMessage: 'User' }).toUpperCase()}
-            </Text>
-            <Touchable
-              style={styles.info}
-              onPress={() => this.sortMessages('byType')}
-            >
-              <Text style={styles.info}>
-                {intl.formatMessage({ id: 'app.trades.type', defaultMessage: 'Type' }).toUpperCase()}
-              </Text>
-            </Touchable>
-            <Touchable
-              style={styles.info}
-              onPress={() => this.sortMessages('byCurrency')}
-            >
-              <Text style={styles.info}>
-                {intl.formatMessage({ id: 'app.trades.curr', defaultMessage: 'Curr' }).toUpperCase()}
-              </Text>
-            </Touchable>
-          </View>
-          {isFetch && trades.length === 0 ? (<CenterProgressBar />) :
-            (
+          <HeaderBar
+            style={styles.header}
+            title={intl.formatMessage({ id: 'app.trades.header', defaultMessage: 'Trades' }).toUpperCase()}
+          />
+          {isFetch && trades.length === 0 ? (<CenterProgressBar />)
+            : (
               <FlatList
+                style={styles.flatListContainer}
                 data={trades}
                 refreshControl={(
                   <RefreshControl
