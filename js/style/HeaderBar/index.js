@@ -8,26 +8,24 @@ import { fonts } from '../resourceHelpers';
 
 const styles = StyleSheet.create({
   androidContainer: {
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
     color: 'white',
     height: 56,
     padding: 14,
     fontSize: 22,
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
+    fontFamily: fonts.semibold.regular,
     elevation: 8,
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
   },
   iosContainer: {
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
     color: 'white',
     height: 56,
     padding: 24,
     fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
+    fontFamily: fonts.semibold.regular,
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
@@ -47,7 +45,7 @@ class HeaderBar extends React.Component {
 
   render() {
     return (
-      <Text style={isAndroid ? styles.androidContainer : styles.iosContainer}>
+      <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
         {this.props.title}
       </Text>
     );
