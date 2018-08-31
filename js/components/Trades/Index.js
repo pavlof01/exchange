@@ -26,7 +26,7 @@ import HeaderBar from '../../style/HeaderBar';
 import { withCommonStatusBar } from '../../style/navigation';
 import { fonts } from '../../style/resourceHelpers';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     height: 96,
     position: 'absolute',
     width,
+    zIndex: 1,
   },
   centerMessage: {
     flex: 1,
@@ -97,9 +98,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold.regular,
   },
   flatListContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
     marginTop: 76,
+    zIndex: 3,
+    alignSelf: 'center',
+    position: 'absolute',
+    width: width / 1.1,
+    height,
   },
 });
 
@@ -215,6 +219,7 @@ class Trades extends Component {
       trades,
       intl,
     } = this.props;
+
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -222,32 +227,32 @@ class Trades extends Component {
             style={styles.header}
             title={intl.formatMessage({ id: 'app.trades.header', defaultMessage: 'Trades' }).toUpperCase()}
           />
-          {isFetch && trades.length === 0 ? (<CenterProgressBar />)
-            : (
-              <FlatList
-                style={styles.flatListContainer}
-                data={trades}
-                refreshControl={(
-                  <RefreshControl
-                    refreshing={isFetch}
-                    onRefresh={this.onRefresh}
-                  />
-                )}
-                renderItem={this.renderItem}
-                keyExtractor={i => i.id}
-                ListEmptyComponent={(
-                  <Text style={styles.centerMessage}>
-                    {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
-                  </Text>
-                )}
-                ListFooterComponent={
-                  isFetch && <ActivityIndicator size="large" />
-                }
-                onEndReached={this.loadNext}
-                onEndReachedThreshold={0.3}
-              />
-            )}
         </View>
+        {isFetch && trades.length === 0 ? (<CenterProgressBar />)
+          : (
+            <FlatList
+              style={styles.flatListContainer}
+              data={trades}
+              refreshControl={(
+                <RefreshControl
+                  refreshing={isFetch}
+                  onRefresh={this.onRefresh}
+                />
+              )}
+              renderItem={this.renderItem}
+              keyExtractor={i => i.id}
+              ListEmptyComponent={(
+                <Text style={styles.centerMessage}>
+                  {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
+                </Text>
+              )}
+              ListFooterComponent={
+                isFetch && <ActivityIndicator size="large" />
+              }
+              onEndReached={this.loadNext}
+              onEndReachedThreshold={0.3}
+            />
+          )}
       </SafeAreaView>,
     );
   }
