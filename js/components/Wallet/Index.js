@@ -18,7 +18,7 @@ import ConfirmDialog from './ConfirmDialog';
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
   },
   container: {
     flex: 1,
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     height: 56,
     paddingLeft: 8,
     paddingRight: 8,
+    backgroundColor: '#243682',
   },
 });
 
@@ -154,25 +155,19 @@ class Wallet extends Component {
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <HeaderBar title={header} />
-          {/* {this.actionName} */}
-
           <View style={styles.rowContainer}>
             <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' }).toUpperCase()}
+              title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' })}
               onPress={this.onTransferSelected}
               selected={this.state.selectedAction === 'transfer'}
             />
 
-            <Separator vertical padding={8} />
-
             <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' }).toUpperCase()}
+              title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' })}
               onPress={this.onReceiveSelected}
               selected={this.state.selectedAction === 'receive'}
             />
           </View>
-
-          <Separator padding={16} />
 
           <ScrollView keyboardShouldPersistTaps="always">
             {content}
