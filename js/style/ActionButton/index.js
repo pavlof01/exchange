@@ -11,7 +11,7 @@ import Touchable from '../Touchable/index';
 import { fonts } from '../resourceHelpers';
 
 const sharedButtonStyle = {
-  shadowOffset: {
+  /*shadowOffset: {
     width: 0,
     height: 2,
   },
@@ -19,7 +19,7 @@ const sharedButtonStyle = {
   shadowOpacity: 1.0,
   elevation: 4,
   borderWidth: 2,
-  borderRadius: 4,
+  borderRadius: 4,*/
   height: 48,
   flexDirection: 'row',
   alignItems: 'center',
@@ -33,15 +33,13 @@ const sharedTextStyle = {
   fontSize: 17,
   lineHeight: 17,
   fontWeight: '700',
-  fontFamily: fonts.bold.regular,
+  fontFamily: fonts.regular.regular,
 };
 
 const styles = StyleSheet.create({
   button: {
     ...sharedButtonStyle,
-    backgroundColor: '#6955FF',
-    borderColor: '#6955FF',
-    shadowColor: '#6955FF',
+    backgroundColor: '#25367e',
     justifyContent: 'center',
   },
   buttonSecondary: {
@@ -52,7 +50,7 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     ...sharedButtonStyle,
     backgroundColor: '#DDD',
-    borderColor: '#DDD',
+
   },
   text: {
     ...sharedTextStyle,
@@ -151,9 +149,9 @@ class PrimaryButton extends Component {
     }
 
     const content = children || (
-    <Text style={textStyles}>
-      {title}
-    </Text>
+      <Text style={textStyles}>
+        {title}
+      </Text>
     );
     return (
       <View style={{ flex: style ? style.flex : 1 }}>

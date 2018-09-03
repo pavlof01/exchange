@@ -58,16 +58,14 @@ const styles = StyleSheet.create({
   formStyle: {
     flex: 1,
     width: width - 20,
-    height: 500,
     position: 'absolute',
     marginTop: 180,
     backgroundColor: '#fff',
     alignSelf: 'center',
     padding: 15,
-    paddingTop: 34,
   },
   formRow: {
-    flex: 1,
+    marginTop: 15,
   },
   currencyPickerContainer: {
     position: 'absolute',
@@ -373,7 +371,8 @@ class Transfer extends Component {
               </View>
               <View style={styles.formRow}>
                 <Hint>
-                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
+                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()} {' '}
+                  {simpleCurrencyName[code] === 'Bitcoin' ? 'BTC' : 'ETH'}
                 </Hint>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <FormTextInput
@@ -389,40 +388,41 @@ class Transfer extends Component {
                   </Text>
                 </View>
               </View>
-
-              <Hint>
-                {intl.formatMessage({ id: 'app.wallet.form.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
-              </Hint>
-              <View>
-                <FormTextInput
-                  placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
-                  onChangeText={this.onCostChange}
-                  keyboardType="numeric"
-                  value={this.state.form.cost}
-                  style={{ marginRight: 80, }}
-                  onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
-                />
-                <View style={styles.currencyPickerContainer}>
-                  <Menu>
-                    <MenuTrigger>
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5 }}>{currencyCode}</Text>
-                        <Image source={require('../../../img/ic_picker.png')} />
-                      </View>
-                    </MenuTrigger>
-                    <MenuOptions>
-                      <MenuOption key='USD' value='USD'>
-                        <Text>
-                          USD
+              <View style={styles.formRow}>
+                <Hint>
+                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Cost' }).toUpperCase()}
+                </Hint>
+                <View>
+                  <FormTextInput
+                    placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
+                    onChangeText={this.onCostChange}
+                    keyboardType="numeric"
+                    value={this.state.form.cost}
+                    style={{ marginRight: 80, }}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <View style={styles.currencyPickerContainer}>
+                    <Menu>
+                      <MenuTrigger>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <Text style={{ color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5 }}>{currencyCode}</Text>
+                          <Image source={require('../../../img/ic_picker.png')} />
+                        </View>
+                      </MenuTrigger>
+                      <MenuOptions>
+                        <MenuOption key='USD' value='USD'>
+                          <Text>
+                            USD
                         </Text>
-                      </MenuOption>
-                      <MenuOption key='RUR' value='RUR'>
-                        <Text>
-                          RUR
+                        </MenuOption>
+                        <MenuOption key='RUR' value='RUR'>
+                          <Text>
+                            RUR
                         </Text>
-                      </MenuOption>
-                    </MenuOptions>
-                  </Menu>
+                        </MenuOption>
+                      </MenuOptions>
+                    </Menu>
+                  </View>
                 </View>
               </View>
 
@@ -436,7 +436,7 @@ class Transfer extends Component {
                   fontStyle={styles.sendButtonText}
                   onPress={this.onSubmitHandler}
                   title={submitButtonText}
-                  style={{ height: 40 }}
+                  style={{ width: 300, alignSelf: 'center' }}
                 />
               </CenterHalf>
 
