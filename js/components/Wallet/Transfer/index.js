@@ -9,8 +9,15 @@ import ReactNative, {
   Dimensions,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {
+  Menu,
+  MenuOptions,
+  MenuTrigger,
+  MenuOption,
+} from 'react-native-popup-menu';
 import { injectIntl, intlShape } from 'react-intl';
 import { cryptoIcons, fonts, IC_PICKER } from '../../../style/resourceHelpers';
+import CardPicker from '../../../style/CardPicker';
 import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';
@@ -61,6 +68,10 @@ const styles = StyleSheet.create({
   },
   formRow: {
     flex: 1,
+  },
+  currencyPickerContainer: {
+    position: 'absolute',
+    right: 0,
   },
   formTextInput: {
     flex: 1,
@@ -382,18 +393,37 @@ class Transfer extends Component {
               <Hint>
                 {intl.formatMessage({ id: 'app.wallet.form.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
               </Hint>
-              <View style={styles.formRow}>
+              <View>
                 <FormTextInput
                   placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
                   onChangeText={this.onCostChange}
                   keyboardType="numeric"
                   value={this.state.form.cost}
-                  // style={styles.formStyle}
+                  style={{ marginRight: 80, }}
                   onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
                 />
-                <Text style={styles.header}>
-                  {currencyCode}
-                </Text>
+                <View style={styles.currencyPickerContainer}>
+                  <Menu>
+                    <MenuTrigger>
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5 }}>{currencyCode}</Text>
+                        <Image source={require('../../../img/ic_picker.png')} />
+                      </View>
+                    </MenuTrigger>
+                    <MenuOptions>
+                      <MenuOption key='USD' value='USD'>
+                        <Text>
+                          USD
+                        </Text>
+                      </MenuOption>
+                      <MenuOption key='RUR' value='RUR'>
+                        <Text>
+                          RUR
+                        </Text>
+                      </MenuOption>
+                    </MenuOptions>
+                  </Menu>
+                </View>
               </View>
 
               {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
