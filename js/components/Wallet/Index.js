@@ -19,8 +19,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   container: {
-    flex: 1,
     backgroundColor: 'white',
+    position: 'absolute',
+    width: '100%',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -150,7 +151,7 @@ class Wallet extends Component {
     }
 
     return withCommonStatusBar(
-      <ScrollView style={styles.safeContainer}>
+      <ScrollView bounces={false} style={styles.safeContainer}>
         <View style={styles.container}>
           <HeaderBar title={header} />
           <View style={styles.rowContainer}>
@@ -167,12 +168,12 @@ class Wallet extends Component {
             />
           </View>
 
-          <ScrollView keyboardShouldPersistTaps="always">
-            {content}
-          </ScrollView>
 
           {this.state.isConfirming ? this.renderConfirmDialog() : null}
 
+        </View>
+        <View style={{ marginTop: 110 }}>
+          {content}
         </View>
       </ScrollView>,
     );

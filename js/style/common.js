@@ -6,9 +6,12 @@ export const common = StyleSheet.create({
   hintText: {
     marginTop: 4,
     marginLeft: 4,
-    fontSize: 11,
+    marginBottom: 20,
+    fontSize: 10,
     textAlign: 'left',
     fontFamily: fonts.medium.regular,
+    color: '#686868',
+    letterSpacing: 1.5,
   },
 });
 

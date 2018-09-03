@@ -6,7 +6,6 @@ import ReactNative, {
   StyleSheet,
   Image,
   Platform,
-  ScrollView,
   Dimensions,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -18,12 +17,12 @@ import { common, Hint } from '../../../style/common';
 import CenterHalf from '../../../style/CenterHalf';
 import Touchable from '../../../style/Touchable';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'column',
+    height,
   },
   pickerRow: {
     flexDirection: 'row',
@@ -51,17 +50,28 @@ const styles = StyleSheet.create({
   },
   formStyle: {
     flex: 1,
+    width: width - 20,
+    height: 500,
+    position: 'absolute',
+    marginTop: 180,
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+    padding: 15,
+    paddingTop: 34,
   },
   formRow: {
     flex: 1,
-    flexDirection: 'row',
+  },
+  formTextInput: {
+    flex: 1,
   },
   header: {
-    color: '#444444',
-    fontWeight: 'bold',
-    fontSize: 20,
-    margin: 8,
-    fontFamily: fonts.bold.regular,
+    position: 'absolute',
+    right: 0,
+    color: '#cac8c8',
+    fontWeight: '400',
+    fontSize: 18,
+    fontFamily: fonts.regular.regular,
   },
   error: {
     color: 'red',
@@ -313,7 +323,7 @@ class Transfer extends Component {
                     BTC
                   </Text>
                   <Text style={styles.cryptBalanceText}>
-                    {balance['BTC'].value}
+                    {balance.BTC.value}
                   </Text>
                 </View>
               </View>
@@ -326,7 +336,7 @@ class Transfer extends Component {
                     BTC
                   </Text>
                   <Text style={styles.cryptBalanceText}>
-                    {balance["ETH"].value}
+                    {balance.ETH.value}
                   </Text>
                 </View>
               </View>
@@ -334,76 +344,79 @@ class Transfer extends Component {
           </View>
 
           <View style={styles.formStyle}>
+            <View style={{ flex: 1 }}>
+              <View style={styles.formRow}>
+                <Hint>
+                  {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
+                </Hint>
+                <FormTextInput
+                  placeholder={
+                    `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
+                    simpleCurrencyName[code]} ${
+                    intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
+                  onChangeText={this.onAddressChange}
+                  value={this.state.form.address}
+                  //style={styles.formTextInput}
+                  onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                />
+              </View>
+              <View style={styles.formRow}>
+                <Hint>
+                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
+                </Hint>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <FormTextInput
+                    placeholder={intl.formatMessage({ id: 'app.wallet.form.label.amount.placeholder', defaultMessage: 'BTC' })}
+                    onChangeText={this.onAmountChange}
+                    keyboardType="numeric"
+                    value={this.state.form.amount}
+                    style={styles.formTextInput}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <Text style={styles.header}>
+                    {code}
+                  </Text>
+                </View>
+              </View>
 
-            <Hint>
-              {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
-            </Hint>
-            <FormTextInput
-              placeholder={
-                `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
-                simpleCurrencyName[code]} ${
-                intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
-              onChangeText={this.onAddressChange}
-              value={this.state.form.address}
-              style={styles.formStyle}
-              onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
-            />
+              <Hint>
+                {intl.formatMessage({ id: 'app.wallet.form.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
+              </Hint>
+              <View style={styles.formRow}>
+                <FormTextInput
+                  placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
+                  onChangeText={this.onCostChange}
+                  keyboardType="numeric"
+                  value={this.state.form.cost}
+                  // style={styles.formStyle}
+                  onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                />
+                <Text style={styles.header}>
+                  {currencyCode}
+                </Text>
+              </View>
 
-            <Hint>
-              {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
-            </Hint>
-            <View style={styles.formRow}>
-              <FormTextInput
-                placeholder={intl.formatMessage({ id: 'app.wallet.form.label.amount.placeholder', defaultMessage: 'BTC' })}
-                onChangeText={this.onAmountChange}
-                keyboardType="numeric"
-                value={this.state.form.amount}
-                style={styles.formStyle}
-                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
-              />
-              <Text style={styles.header}>
-                {code}
-              </Text>
+              {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
+              {this.state.errorTextInput ? (
+                <Text style={styles.error}>
+                  {this.state.errorTextInput}
+                </Text>) : null}
+              <CenterHalf>
+                <PrimaryButton
+                  fontStyle={styles.sendButtonText}
+                  onPress={this.onSubmitHandler}
+                  title={submitButtonText}
+                  style={{ height: 40 }}
+                />
+              </CenterHalf>
+
+              {this.state.error.isEmpty ? this.renderPasswordError() : null}
+
+              {this.state.error.isSucceed ? this.renderSucessText() : null}
             </View>
-
-            <Hint>
-              {intl.formatMessage({ id: 'app.wallet.form.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
-            </Hint>
-            <View style={styles.formRow}>
-              <FormTextInput
-                placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
-                onChangeText={this.onCostChange}
-                keyboardType="numeric"
-                value={this.state.form.cost}
-                style={styles.formStyle}
-                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
-              />
-              <Text style={styles.header}>
-                {currencyCode}
-              </Text>
-            </View>
-
-            {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
-            {this.state.errorTextInput ? (
-              <Text style={styles.error}>
-                {this.state.errorTextInput}
-              </Text>) : null}
-            <CenterHalf>
-              <PrimaryButton
-                fontStyle={styles.sendButtonText}
-                onPress={this.onSubmitHandler}
-                title={submitButtonText}
-                style={{ flex: 1 }}
-              />
-            </CenterHalf>
-
-            {this.state.error.isEmpty ? this.renderPasswordError() : null}
-
-            {this.state.error.isSucceed ? this.renderSucessText() : null}
-
           </View>
         </View>
-      </KeyboardAwareScrollView >
+      </KeyboardAwareScrollView>
     );
   }
 }
