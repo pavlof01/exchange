@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   Dimensions,
   Animated,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { MenuOption } from 'react-native-popup-menu';
@@ -351,8 +352,8 @@ class Offers extends React.PureComponent {
 
   scrollToTop = (animated) => {
     if (this.flatListRef) {
-      this.flatListRef.getNode().scrollToOffset({ offset: SAFE_REFRESH_VIEW_HEIGHT, animated });
       this.downToolBar();
+      this.flatListRef.getNode().scrollToOffset({ offset: SAFE_REFRESH_VIEW_HEIGHT, animated });
     }
   };
 
@@ -823,7 +824,7 @@ class Offers extends React.PureComponent {
                   }}
                   refreshing={orders.pending}
                   onScrollEndDrag={this.handleRelease}
-                  onMomentumScrollEnd={this.handleRelease}
+                  onMomentumScrollEnd={Platform.OS === 'ios' ? () => {} : this.handleRelease}
                   onResponderRelease={this.handleRelease}
                   ref={(ref) => {
                     this.flatListRef = ref;
