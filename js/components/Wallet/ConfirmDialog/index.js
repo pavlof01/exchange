@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Modal,
   Dimensions,
+  Platform
 } from 'react-native';
 
 import { injectIntl, intlShape } from 'react-intl';
@@ -17,6 +18,8 @@ import { Hint } from '../../../style/common';
 import { fonts } from '../../../style/resourceHelpers';
 
 const { width, height } = Dimensions.get('window');
+const isAndroid = Platform.OS === 'android';
+const MARGIN_FOR_CENTER_MODAL = isAndroid ? 210 : 200;
 
 const styles = StyleSheet.create({
   container: {
@@ -32,40 +35,44 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'white',
     width: width - 50,
-    height: 280,
+    height: 400,
     alignSelf: 'center',
-    marginTop: height / 2 - 140,
-    paddingLeft: 5,
-    paddingRight: 5,
+    marginTop: height / 2 - MARGIN_FOR_CENTER_MODAL,
+    padding: 25,
   },
-  dialogTitle: {
-    color: '#AAAAAA',
+  titleContainer: {
+    flex: 0.6,
+  },
+  dialogTitleText: {
+    color: '#25367e',
     textAlign: 'center',
     fontSize: 16,
-    marginTop: 16,
-    marginBottom: 16,
-    fontFamily: fonts.bold.regular,
+    fontWeight: '600',
+    fontFamily: fonts.regular.regular,
+  },
+  mainInfo: {
+    flex: 1,
   },
   dialogPrice: {
-    // flex: 1,
-    color: '#444444',
-    fontSize: 20,
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
+    color: '#4a4a4a',
+    fontSize: 24,
+    fontWeight: '400',
+    fontFamily: fonts.regular.regular,
     marginBottom: 4,
   },
   dialogAddress: {
     // flex: 1,
-    color: '#444444',
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
+    color: '#4a4a4a',
+    fontSize: 18,
+    fontWeight: '400',
+    fontFamily: fonts.regular.regular,
     marginBottom: 4,
   },
   buttonGroup: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   positiveButton: {
     width: width / 2 - 50,
@@ -76,9 +83,6 @@ const styles = StyleSheet.create({
     width: width / 2 - 50,
     marginRight: 8,
     marginLeft: 8,
-  },
-  inputStyle: {
-    // flex: 1,
   },
   dialogErrorLabel: {
     // flex: 1,
@@ -91,8 +95,6 @@ class ConfirmDialog extends Component {
     priceLabel: PropTypes.string,
     priceText: PropTypes.string,
     addressText: PropTypes.string,
-    passwordValue: PropTypes.string,
-    onChangePassword: PropTypes.func,
     errorText: PropTypes.string,
     onCancelPress: PropTypes.func,
     onConfirmPress: PropTypes.func,
@@ -104,8 +106,6 @@ class ConfirmDialog extends Component {
       priceLabel,
       priceText,
       addressText,
-      passwordValue,
-      onChangePassword,
       errorText,
       onCancelPress,
       onConfirmPress,
@@ -121,45 +121,38 @@ class ConfirmDialog extends Component {
         <View style={styles.container}>
           <ScrollView keyboardShouldPersistTaps="always">
             <View style={styles.dialogContainer}>
-              <Text style={styles.dialogTitle}>
-                {intl.formatMessage({ id: 'app.wallet.dialog.title', defaultMessage: 'Please confirm' }).toUpperCase()}
-              </Text>
-              <Hint>
-                {priceLabel}
-              </Hint>
-              <Text style={styles.dialogPrice}>
-                {priceText}
-              </Text>
-              <Hint>
-                {intl.formatMessage({ id: 'app.wallet.dialog.to', defaultMessage: 'To' }).toUpperCase()}
-              </Hint>
-              <Text style={styles.dialogAddress}>
-                {addressText}
-              </Text>
-              <Hint>
-                {intl.formatMessage({ id: 'app.wallet.dialog.password', defaultMessage: 'Password' }).toUpperCase()}
-              </Hint>
-              <FormTextInput
-                placeholder={intl.formatMessage({ id: 'app.wallet.dialog.password.placeholder', defaultMessage: 'Login password' })}
-                secureTextEntry
-                onChangeText={onChangePassword}
-                value={passwordValue}
-                style={styles.inputStyle}
-                error={(errorText.length > 0)}
-              />
-              <Text style={styles.dialogErrorLabel}>
-                {errorText}
-              </Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.dialogTitleText}>
+                  {intl.formatMessage({ id: 'app.wallet.dialog.title', defaultMessage: 'Please confirm' }).toUpperCase()}
+                </Text>
+              </View>
+              <View style={styles.mainInfo}>
+                <Hint>
+                  {priceLabel}
+                </Hint>
+                <Text style={styles.dialogPrice}>
+                  {priceText}
+                </Text>
+                <Hint>
+                  {intl.formatMessage({ id: 'app.wallet.dialog.to', defaultMessage: 'To' }).toUpperCase()}
+                </Hint>
+                <Text style={styles.dialogAddress}>
+                  {addressText}
+                </Text>
+                <Text style={styles.dialogErrorLabel}>
+                  {errorText}
+                </Text>
+              </View>
               <View style={styles.buttonGroup}>
                 <PrimaryButton
                   onPress={onCancelPress}
-                  title={intl.formatMessage({ id: 'app.wallet.btn.cancel', defaultMessage: 'Cancel' }).toUpperCase()}
+                  title={intl.formatMessage({ id: 'app.wallet.btn.cancel', defaultMessage: 'Cancel' })}
                   secondary
                   style={styles.negativeButton}
                 />
                 <PrimaryButton
                   onPress={onConfirmPress}
-                  title={intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()}
+                  title={intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' })}
                   style={styles.positiveButton}
                 />
               </View>
