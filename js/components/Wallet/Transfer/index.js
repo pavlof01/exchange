@@ -436,7 +436,7 @@ class Transfer extends Component {
                   fontStyle={styles.sendButtonText}
                   onPress={this.onSubmitHandler}
                   title={submitButtonText}
-                  style={{ width: 300, alignSelf: 'center' }}
+                  style={{ width: 300, alignSelf: 'center', marginTop: 30, }}
                 />
               </CenterHalf>
 
