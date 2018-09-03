@@ -10,10 +10,17 @@ import { fonts } from '../resourceHelpers';
 const styles = StyleSheet.create({
   topButton: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     fontWeight: 'bold',
     fontFamily: fonts.bold.regular,
+  },
+  border: {
+    backgroundColor: '#fff',
+    width: 40,
+    height: 3.5,
   },
 });
 
@@ -46,8 +53,8 @@ export default class TopButton extends Component {
   };
 
   render() {
-    const selectedColor = this.props.selectedColor || 'blue';
-    const color = this.props.color || 'black';
+    const selectedColor = this.props.selectedColor || '#fff';
+    const color = this.props.color || '#6873a5';
 
     return (
       <View style={[styles.topButton, this.props.style]}>
@@ -58,6 +65,7 @@ export default class TopButton extends Component {
           color={this.props.selected ? selectedColor : color}
           textStyle={styles.text}
         />
+        {this.props.selected ? (<View style={styles.border} />) : null}
       </View>
     );
   }

@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     padding: 14,
     fontSize: 22,
     fontFamily: fonts.semibold.regular,
-    elevation: 8,
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
@@ -29,6 +28,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
+    letterSpacing: 1,
   },
 });
 

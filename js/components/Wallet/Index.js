@@ -5,11 +5,9 @@ import {
   View,
   StyleSheet, ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
 import TopButton from '../../style/TopButton';
-import Separator from '../../style/Separator';
 import Transfer from './Transfer';
 import Receive from './Receive';
 import { withCommonStatusBar } from '../../style/navigation';
@@ -18,11 +16,12 @@ import ConfirmDialog from './ConfirmDialog';
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#fff',
   },
   container: {
-    flex: 1,
     backgroundColor: 'white',
+    position: 'absolute',
+    width: '100%',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -31,6 +30,7 @@ const styles = StyleSheet.create({
     height: 56,
     paddingLeft: 8,
     paddingRight: 8,
+    backgroundColor: '#243682',
   },
 });
 
@@ -151,37 +151,31 @@ class Wallet extends Component {
     }
 
     return withCommonStatusBar(
-      <SafeAreaView style={styles.safeContainer}>
+      <ScrollView bounces={false} style={styles.safeContainer}>
         <View style={styles.container}>
           <HeaderBar title={header} />
-          {/* {this.actionName} */}
-
           <View style={styles.rowContainer}>
             <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' }).toUpperCase()}
+              title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' })}
               onPress={this.onTransferSelected}
               selected={this.state.selectedAction === 'transfer'}
             />
 
-            <Separator vertical padding={8} />
-
             <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' }).toUpperCase()}
+              title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' })}
               onPress={this.onReceiveSelected}
               selected={this.state.selectedAction === 'receive'}
             />
           </View>
 
-          <Separator padding={16} />
-
-          <ScrollView keyboardShouldPersistTaps="always">
-            {content}
-          </ScrollView>
 
           {this.state.isConfirming ? this.renderConfirmDialog() : null}
 
         </View>
-      </SafeAreaView>,
+        <View style={{ marginTop: 110 }}>
+          {content}
+        </View>
+      </ScrollView>,
     );
   }
 }

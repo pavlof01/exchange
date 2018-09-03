@@ -3,35 +3,33 @@ import PropTypes from 'prop-types';
 import ReactNative, {
   Text,
   View,
-  StyleSheet, Image, Platform,
-  ScrollView,
+  StyleSheet,
+  Image,
+  Platform,
   Dimensions,
 } from 'react-native';
-import { MenuOption } from 'react-native-popup-menu';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { default as ProgressCircle } from 'react-native-progress-circle';
+import {
+  Menu,
+  MenuOptions,
+  MenuTrigger,
+  MenuOption,
+} from 'react-native-popup-menu';
 import { injectIntl, intlShape } from 'react-intl';
-import CardPicker from '../../../style/CardPicker';
 import { cryptoIcons, fonts, IC_PICKER } from '../../../style/resourceHelpers';
-
+import CardPicker from '../../../style/CardPicker';
 import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';
 import CenterHalf from '../../../style/CenterHalf';
+import Touchable from '../../../style/Touchable';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'column',
-    padding: 16,
-  },
-  centerContent: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height,
   },
   pickerRow: {
     flexDirection: 'row',
@@ -51,10 +49,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: Platform.OS === 'android' ? 0 : 8,
   },
-  picker: {
-    height: 50,
-    width: 100,
-  },
   cardText: {
     fontSize: 24,
     color: '#444444',
@@ -63,17 +57,30 @@ const styles = StyleSheet.create({
   },
   formStyle: {
     flex: 1,
+    width: width - 20,
+    position: 'absolute',
+    marginTop: 180,
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+    padding: 15,
   },
   formRow: {
+    marginTop: 15,
+  },
+  currencyPickerContainer: {
+    position: 'absolute',
+    right: 0,
+  },
+  formTextInput: {
     flex: 1,
-    flexDirection: 'row',
   },
   header: {
-    color: '#444444',
-    fontWeight: 'bold',
-    fontSize: 20,
-    margin: 8,
-    fontFamily: fonts.bold.regular,
+    position: 'absolute',
+    right: 0,
+    color: '#cac8c8',
+    fontWeight: '400',
+    fontSize: 18,
+    fontFamily: fonts.regular.regular,
   },
   error: {
     color: 'red',
@@ -83,6 +90,45 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: width / 23,
+  },
+  cryptHeader: {
+    flexDirection: 'row',
+    width,
+    height: 236,
+    backgroundColor: '#25367e',
+    justifyContent: 'space-around',
+    paddingTop: 24,
+  },
+  cryptContainer: {
+    width: 169,
+    height: 136,
+    padding: 12,
+    backgroundColor: '#25367e',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    justifyContent: 'space-between',
+    opacity: 0.2,
+    elevation: 4,
+    borderRadius: 4,
+  },
+  cryptImage: {
+    alignSelf: 'flex-end',
+    width: 37,
+    height: 37,
+  },
+  cryptNameText: {
+    color: '#fff',
+    fontSize: 20,
+  },
+  cryptBalanceText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  active: {
+    opacity: 1,
   },
 });
 
@@ -261,6 +307,7 @@ class Transfer extends Component {
       currencyCode,
       withdrawal: { pending },
       intl,
+      balance,
     } = this.props;
     /* eslint-disable no-nested-ternary */
     const submitButtonText = pending
@@ -275,107 +322,130 @@ class Transfer extends Component {
         style={{ flex: 1 }}
         innerRef={(ref) => { this.scrollKeyboard = ref; }}
       >
-        <ScrollView style={styles.container}>
-          <Hint>
-            {intl.formatMessage({ id: 'app.wallet.title.balance', defaultMessage: 'Balance' }).toUpperCase()}
-          </Hint>
-          <View style={styles.centerContent}>
-            <ProgressCircle
-              percent={15}
-              radius={128}
-              borderWidth={12}
-              shadowColor="#25367E"
-              color="#B6AFD0"
-              bgColor="#fff"
-            >
-              <CardPicker
-                style={styles.picker}
-                onValueChange={this.onCryptoCurrencyCodeChange}
-                selectedValue={code}
-                renderButton={this.CryptHeader}
-                flat
-              >
-                {this.props.cryptoCurrencies.map(
-                  currency => (
-                    <MenuOption key={currency.code} value={currency.code}>
-                      {this.cryptItem(currency.code)}
-                    </MenuOption>
-                  ),
-                )}
-              </CardPicker>
-            </ProgressCircle>
+        <View style={styles.container}>
+          <View style={styles.cryptHeader}>
+            <Touchable onPress={() => this.onCryptoCurrencyCodeChange('BTC')}>
+              <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'BTC' ? styles.active : null]}>
+                <Image style={styles.cryptImage} source={require('../../../img/ic_btc.png')} />
+                <View>
+                  <Text style={styles.cryptNameText}>
+                    BTC
+                  </Text>
+                  <Text style={styles.cryptBalanceText}>
+                    {balance.BTC.value}
+                  </Text>
+                </View>
+              </View>
+            </Touchable>
+            <Touchable onPress={() => this.onCryptoCurrencyCodeChange('ETH')}>
+              <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'ETH' ? styles.active : null]}>
+                <Image style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
+                <View>
+                  <Text style={styles.cryptNameText}>
+                    BTC
+                  </Text>
+                  <Text style={styles.cryptBalanceText}>
+                    {balance.ETH.value}
+                  </Text>
+                </View>
+              </View>
+            </Touchable>
           </View>
 
           <View style={styles.formStyle}>
+            <View style={{ flex: 1 }}>
+              <View style={styles.formRow}>
+                <Hint>
+                  {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
+                </Hint>
+                <FormTextInput
+                  placeholder={
+                    `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
+                    simpleCurrencyName[code]} ${
+                    intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
+                  onChangeText={this.onAddressChange}
+                  value={this.state.form.address}
+                  //style={styles.formTextInput}
+                  onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                />
+              </View>
+              <View style={styles.formRow}>
+                <Hint>
+                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()} {' '}
+                  {simpleCurrencyName[code] === 'Bitcoin' ? 'BTC' : 'ETH'}
+                </Hint>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <FormTextInput
+                    placeholder={intl.formatMessage({ id: 'app.wallet.form.label.amount.placeholder', defaultMessage: 'BTC' })}
+                    onChangeText={this.onAmountChange}
+                    keyboardType="numeric"
+                    value={this.state.form.amount}
+                    style={styles.formTextInput}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <Text style={styles.header}>
+                    {code}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.formRow}>
+                <Hint>
+                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Cost' }).toUpperCase()}
+                </Hint>
+                <View>
+                  <FormTextInput
+                    placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
+                    onChangeText={this.onCostChange}
+                    keyboardType="numeric"
+                    value={this.state.form.cost}
+                    style={{ marginRight: 80, }}
+                    onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  />
+                  <View style={styles.currencyPickerContainer}>
+                    <Menu>
+                      <MenuTrigger>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <Text style={{ color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5 }}>{currencyCode}</Text>
+                          <Image source={require('../../../img/ic_picker.png')} />
+                        </View>
+                      </MenuTrigger>
+                      <MenuOptions>
+                        <MenuOption key='USD' value='USD'>
+                          <Text>
+                            USD
+                        </Text>
+                        </MenuOption>
+                        <MenuOption key='RUR' value='RUR'>
+                          <Text>
+                            RUR
+                        </Text>
+                        </MenuOption>
+                      </MenuOptions>
+                    </Menu>
+                  </View>
+                </View>
+              </View>
 
-            <Hint>
-              {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
-            </Hint>
-            <FormTextInput
-              placeholder={
-                `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
-                simpleCurrencyName[code]} ${
-                intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
-              onChangeText={this.onAddressChange}
-              value={this.state.form.address}
-              style={styles.formStyle}
-              onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
-            />
+              {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
+              {this.state.errorTextInput ? (
+                <Text style={styles.error}>
+                  {this.state.errorTextInput}
+                </Text>) : null}
+              <CenterHalf>
+                <PrimaryButton
+                  fontStyle={styles.sendButtonText}
+                  onPress={this.onSubmitHandler}
+                  title={submitButtonText}
+                  style={{ width: 300, alignSelf: 'center', marginTop: 30, }}
+                />
+              </CenterHalf>
 
-            <Hint>
-              {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
-            </Hint>
-            <View style={styles.formRow}>
-              <FormTextInput
-                placeholder={intl.formatMessage({ id: 'app.wallet.form.label.amount.placeholder', defaultMessage: 'BTC' })}
-                onChangeText={this.onAmountChange}
-                keyboardType="numeric"
-                value={this.state.form.amount}
-                style={styles.formStyle}
-                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
-              />
-              <Text style={styles.header}>
-                {code}
-              </Text>
+              {this.state.error.isEmpty ? this.renderPasswordError() : null}
+
+              {this.state.error.isSucceed ? this.renderSucessText() : null}
             </View>
-
-            <Hint>
-              {intl.formatMessage({ id: 'app.wallet.form.label.cost', defaultMessage: 'Cost' }).toUpperCase()}
-            </Hint>
-            <View style={styles.formRow}>
-              <FormTextInput
-                placeholder={intl.formatMessage({ id: 'app.wallet.form.label.cost.placeholder', defaultMessage: 'USD' })}
-                onChangeText={this.onCostChange}
-                keyboardType="numeric"
-                value={this.state.form.cost}
-                style={styles.formStyle}
-                onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
-              />
-              <Text style={styles.header}>
-                {currencyCode}
-              </Text>
-            </View>
-
-            {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
-            {this.state.errorTextInput ? (
-              <Text style={styles.error}>
-                {this.state.errorTextInput}
-              </Text>) : null}
-            <CenterHalf>
-              <PrimaryButton
-                fontStyle={styles.sendButtonText}
-                onPress={this.onSubmitHandler}
-                title={submitButtonText}
-                style={{ flex: 1 }}
-              />
-            </CenterHalf>
-
-            {this.state.error.isEmpty ? this.renderPasswordError() : null}
-
-            {this.state.error.isSucceed ? this.renderSucessText() : null}
-
           </View>
-        </ScrollView>
+        </View>
       </KeyboardAwareScrollView>
     );
   }
