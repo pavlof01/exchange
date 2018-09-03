@@ -11,7 +11,6 @@ import {
   AsyncStorage,
   Dimensions,
   Animated,
-  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { MenuOption } from 'react-native-popup-menu';
@@ -301,24 +300,15 @@ const styles = StyleSheet.create({
 
 const FILTER_SELL = 'sell';
 const FILTER_BUY = 'buy';
-const isAndroid = Platform.OS === 'android';
+
 class Offers extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      heightTitleContainer: new Animated.Value(112),
-      titleOpacity: new Animated.Value(1),
-      btcCostContainerOpacity: new Animated.Value(1),
-      translateTitleY: new Animated.Value(0),
-      translateSubTitleY: new Animated.Value(0),
       translateHeaderY: new Animated.Value(0),
-      showTitle: 'flex',
-      showSubTitle: 'none',
-      animating: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
       animatedToolbarPosition: new Animated.Value(55),
-      refreshing: false,
       exchangeRates: '',
     };
 
@@ -689,7 +679,8 @@ class Offers extends React.PureComponent {
     if (this.state.exchangeRates) {
       return `${this.state.exchangeRates[`change_${hours}${time}`].toFixed(2)}%`;
     }
-  }
+    return '';
+  };
 
   downToolBar = () => {
     if (!this.downToolBarAnimation) {
@@ -728,11 +719,10 @@ class Offers extends React.PureComponent {
       );
     }
     this.refreshToolBarAnimation.start();
-  }
+  };
 
   onScroll = (e) => {
     const { y } = e.nativeEvent.contentOffset;
-    //console.warn(y);
     if (y < SAFE_REFRESH_VIEW_HEIGHT) {
       this.refreshToolBar();
     }
@@ -743,7 +733,7 @@ class Offers extends React.PureComponent {
       this.upToolBar();
     }
     this.oldScrollPosition = y;
-  }
+  };
 
   render() {
     const {
