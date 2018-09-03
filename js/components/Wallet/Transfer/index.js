@@ -17,7 +17,6 @@ import {
 } from 'react-native-popup-menu';
 import { injectIntl, intlShape } from 'react-intl';
 import { cryptoIcons, fonts, IC_PICKER } from '../../../style/resourceHelpers';
-import CardPicker from '../../../style/CardPicker';
 import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';

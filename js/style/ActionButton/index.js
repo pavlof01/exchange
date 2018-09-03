@@ -30,8 +30,8 @@ const sharedTextStyle = {
   textAlign: 'center',
   alignSelf: 'center',
   paddingTop: 6,
-  fontSize: 17,
-  lineHeight: 17,
+  fontSize: 16,
+  lineHeight: 16,
   fontWeight: '700',
   fontFamily: fonts.regular.regular,
 };
@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
   buttonSecondary: {
     ...sharedButtonStyle,
     backgroundColor: 'white',
-    borderColor: 'white',
+    borderColor: '#25367e',
+    borderWidth: 1,
   },
   buttonDisabled: {
     ...sharedButtonStyle,
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   },
   textSecondary: {
     ...sharedTextStyle,
-    color: '#471287',
+    color: '#25367e',
   },
   textDisabled: {
     ...sharedTextStyle,
