@@ -3,21 +3,20 @@ import PropTypes from 'prop-types';
 import ReactNative, {
   Text,
   View,
-  StyleSheet, Image, Platform,
+  StyleSheet,
+  Image,
+  Platform,
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { MenuOption } from 'react-native-popup-menu';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { default as ProgressCircle } from 'react-native-progress-circle';
 import { injectIntl, intlShape } from 'react-intl';
-import CardPicker from '../../../style/CardPicker';
 import { cryptoIcons, fonts, IC_PICKER } from '../../../style/resourceHelpers';
-
 import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';
 import CenterHalf from '../../../style/CenterHalf';
+import Touchable from '../../../style/Touchable';
 
 const { width } = Dimensions.get('window');
 
@@ -25,13 +24,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    padding: 16,
-  },
-  centerContent: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   pickerRow: {
     flexDirection: 'row',
@@ -50,10 +42,6 @@ const styles = StyleSheet.create({
     width: 24,
     marginHorizontal: 8,
     marginBottom: Platform.OS === 'android' ? 0 : 8,
-  },
-  picker: {
-    height: 50,
-    width: 100,
   },
   cardText: {
     fontSize: 24,
@@ -83,6 +71,45 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: width / 23,
+  },
+  cryptHeader: {
+    flexDirection: 'row',
+    width,
+    height: 236,
+    backgroundColor: '#25367e',
+    justifyContent: 'space-around',
+    paddingTop: 24,
+  },
+  cryptContainer: {
+    width: 169,
+    height: 136,
+    padding: 12,
+    backgroundColor: '#25367e',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    justifyContent: 'space-between',
+    opacity: 0.2,
+    elevation: 4,
+    borderRadius: 4,
+  },
+  cryptImage: {
+    alignSelf: 'flex-end',
+    width: 37,
+    height: 37,
+  },
+  cryptNameText: {
+    color: '#fff',
+    fontSize: 20,
+  },
+  cryptBalanceText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  active: {
+    opacity: 1,
   },
 });
 
@@ -261,6 +288,7 @@ class Transfer extends Component {
       currencyCode,
       withdrawal: { pending },
       intl,
+      balance,
     } = this.props;
     /* eslint-disable no-nested-ternary */
     const submitButtonText = pending
@@ -275,35 +303,34 @@ class Transfer extends Component {
         style={{ flex: 1 }}
         innerRef={(ref) => { this.scrollKeyboard = ref; }}
       >
-        <ScrollView style={styles.container}>
-          <Hint>
-            {intl.formatMessage({ id: 'app.wallet.title.balance', defaultMessage: 'Balance' }).toUpperCase()}
-          </Hint>
-          <View style={styles.centerContent}>
-            <ProgressCircle
-              percent={15}
-              radius={128}
-              borderWidth={12}
-              shadowColor="#25367E"
-              color="#B6AFD0"
-              bgColor="#fff"
-            >
-              <CardPicker
-                style={styles.picker}
-                onValueChange={this.onCryptoCurrencyCodeChange}
-                selectedValue={code}
-                renderButton={this.CryptHeader}
-                flat
-              >
-                {this.props.cryptoCurrencies.map(
-                  currency => (
-                    <MenuOption key={currency.code} value={currency.code}>
-                      {this.cryptItem(currency.code)}
-                    </MenuOption>
-                  ),
-                )}
-              </CardPicker>
-            </ProgressCircle>
+        <View style={styles.container}>
+          <View style={styles.cryptHeader}>
+            <Touchable onPress={() => this.onCryptoCurrencyCodeChange('BTC')}>
+              <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'BTC' ? styles.active : null]}>
+                <Image style={styles.cryptImage} source={require('../../../img/ic_btc.png')} />
+                <View>
+                  <Text style={styles.cryptNameText}>
+                    BTC
+                  </Text>
+                  <Text style={styles.cryptBalanceText}>
+                    {balance['BTC'].value}
+                  </Text>
+                </View>
+              </View>
+            </Touchable>
+            <Touchable onPress={() => this.onCryptoCurrencyCodeChange('ETH')}>
+              <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'ETH' ? styles.active : null]}>
+                <Image style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
+                <View>
+                  <Text style={styles.cryptNameText}>
+                    BTC
+                  </Text>
+                  <Text style={styles.cryptBalanceText}>
+                    {balance["ETH"].value}
+                  </Text>
+                </View>
+              </View>
+            </Touchable>
           </View>
 
           <View style={styles.formStyle}>
@@ -375,8 +402,8 @@ class Transfer extends Component {
             {this.state.error.isSucceed ? this.renderSucessText() : null}
 
           </View>
-        </ScrollView>
-      </KeyboardAwareScrollView>
+        </View>
+      </KeyboardAwareScrollView >
     );
   }
 }

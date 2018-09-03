@@ -5,11 +5,9 @@ import {
   View,
   StyleSheet, ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
 import TopButton from '../../style/TopButton';
-import Separator from '../../style/Separator';
 import Transfer from './Transfer';
 import Receive from './Receive';
 import { withCommonStatusBar } from '../../style/navigation';
@@ -18,7 +16,7 @@ import ConfirmDialog from './ConfirmDialog';
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#243682',
+    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
@@ -152,7 +150,7 @@ class Wallet extends Component {
     }
 
     return withCommonStatusBar(
-      <SafeAreaView style={styles.safeContainer}>
+      <ScrollView style={styles.safeContainer}>
         <View style={styles.container}>
           <HeaderBar title={header} />
           <View style={styles.rowContainer}>
@@ -176,7 +174,7 @@ class Wallet extends Component {
           {this.state.isConfirming ? this.renderConfirmDialog() : null}
 
         </View>
-      </SafeAreaView>,
+      </ScrollView>,
     );
   }
 }
