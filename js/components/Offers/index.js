@@ -27,6 +27,7 @@ import CardPicker from '../../style/CardPicker';
 const SIDE_PADDING = 20;
 const REFRESH_OFFSET_HEIGHT = 25;
 const SAFE_REFRESH_VIEW_HEIGHT = 55;
+const MAX_TOOLBAR_VIEW_HEIGHT = 100;
 const MAX_TOOLBAR_HEIGHT = 112;
 const { width, height } = Dimensions.get('window');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -301,24 +302,15 @@ const styles = StyleSheet.create({
 
 const FILTER_SELL = 'sell';
 const FILTER_BUY = 'buy';
-const isAndroid = Platform.OS === 'android';
+
 class Offers extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      heightTitleContainer: new Animated.Value(112),
-      titleOpacity: new Animated.Value(1),
-      btcCostContainerOpacity: new Animated.Value(1),
-      translateTitleY: new Animated.Value(0),
-      translateSubTitleY: new Animated.Value(0),
       translateHeaderY: new Animated.Value(0),
-      showTitle: 'flex',
-      showSubTitle: 'none',
-      animating: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
-      animatedToolbarPosition: new Animated.Value(55),
-      refreshing: false,
+      animatedToolbarPosition: new Animated.Value(SAFE_REFRESH_VIEW_HEIGHT),
       exchangeRates: '',
     };
 
@@ -360,6 +352,7 @@ class Offers extends React.PureComponent {
 
   scrollToTop = (animated) => {
     if (this.flatListRef) {
+      this.downToolBar();
       this.flatListRef.getNode().scrollToOffset({ offset: SAFE_REFRESH_VIEW_HEIGHT, animated });
     }
   };
@@ -689,22 +682,23 @@ class Offers extends React.PureComponent {
     if (this.state.exchangeRates) {
       return `${this.state.exchangeRates[`change_${hours}${time}`].toFixed(2)}%`;
     }
-  }
+    return '';
+  };
 
-  downToolBar = () => {
+  upToolBar = () => {
     if (!this.downToolBarAnimation) {
       this.downToolBarAnimation = Animated.timing(
         this.state.animatedToolbarPosition,
         {
-          toValue: 100,
+          toValue: MAX_TOOLBAR_VIEW_HEIGHT,
           duration: 350,
         },
       );
     }
     this.downToolBarAnimation.start();
-  }
+  };
 
-  upToolBar = () => {
+  downToolBar = () => {
     if (!this.upToolBarAnimation) {
       this.upToolBarAnimation = Animated.timing(
         this.state.animatedToolbarPosition,
@@ -715,7 +709,7 @@ class Offers extends React.PureComponent {
       );
     }
     this.upToolBarAnimation.start();
-  }
+  };
 
   refreshToolBar = () => {
     if (!this.refreshToolBarAnimation) {
@@ -728,22 +722,23 @@ class Offers extends React.PureComponent {
       );
     }
     this.refreshToolBarAnimation.start();
-  }
+  };
 
   onScroll = (e) => {
     const { y } = e.nativeEvent.contentOffset;
-    //console.warn(y);
-    if (y < SAFE_REFRESH_VIEW_HEIGHT) {
+    this.scrollValue = y;
+    if (y > this.oldScrollPosition && y > SAFE_REFRESH_VIEW_HEIGHT) {
+      this.upToolBar();
+    } else if (y < this.oldScrollPosition
+      && y > SAFE_REFRESH_VIEW_HEIGHT
+      && y <= MAX_TOOLBAR_VIEW_HEIGHT) {
+      this.downToolBar();
+    } else if (y < this.oldScrollPosition
+      && y <= SAFE_REFRESH_VIEW_HEIGHT) {
       this.refreshToolBar();
     }
-    if (y > this.oldScrollPosition && y > SAFE_REFRESH_VIEW_HEIGHT) {
-      this.downToolBar();
-    }
-    if (y < this.oldScrollPosition) {
-      this.upToolBar();
-    }
     this.oldScrollPosition = y;
-  }
+  };
 
   render() {
     const {
@@ -755,17 +750,17 @@ class Offers extends React.PureComponent {
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     const translateTitleY = this.state.animatedToolbarPosition.interpolate({
-      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, 100],
-      outputRange: [0, 40, -100],
+      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, MAX_TOOLBAR_VIEW_HEIGHT],
+      outputRange: [40, 0, -100],
       extrapolate: 'clamp',
     });
     const opacityTitle = this.state.animatedToolbarPosition.interpolate({
-      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, 100],
-      outputRange: [1, 0, 1],
+      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, MAX_TOOLBAR_VIEW_HEIGHT],
+      outputRange: [0, 1, 0],
       extrapolate: 'clamp',
     });
     const translateToolbarY = this.state.animatedToolbarPosition.interpolate({
-      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, 100],
+      inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, MAX_TOOLBAR_VIEW_HEIGHT],
       outputRange: [0, 0, -50],
       extrapolate: 'clamp',
     });
@@ -829,7 +824,7 @@ class Offers extends React.PureComponent {
                   }}
                   refreshing={orders.pending}
                   onScrollEndDrag={this.handleRelease}
-                  onMomentumScrollEnd={this.handleRelease}
+                  onMomentumScrollEnd={Platform.OS === 'ios' ? () => {} : this.handleRelease}
                   onResponderRelease={this.handleRelease}
                   ref={(ref) => {
                     this.flatListRef = ref;
