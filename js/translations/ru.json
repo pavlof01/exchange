@@ -105,6 +105,7 @@
   "app.wallet.btn.confirm": "Подтвердить",
   "app.wallet.btn.cancel": "Отмена",
   "app.wallet.receive.btn.update": "Обновить",
+  "app.wallet.receive.btn.share": "Поделиться",
   "app.wallet.receive.code": "Код",
   "app.wallet.receive.btn.copy": "Скопировать",
   "app.wallet.receive.address_to_receive": "Адрес для получения {value}",
