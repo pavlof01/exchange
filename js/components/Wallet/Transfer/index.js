@@ -22,6 +22,7 @@ import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';
 import CenterHalf from '../../../style/CenterHalf';
 import Touchable from '../../../style/Touchable';
+import CurrencySelector from '../CurrencySelector';
 
 const { width, height } = Dimensions.get('window');
 
@@ -89,45 +90,6 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: width / 23,
-  },
-  cryptHeader: {
-    flexDirection: 'row',
-    width,
-    height: 236,
-    backgroundColor: '#25367e',
-    justifyContent: 'space-around',
-    paddingTop: 24,
-  },
-  cryptContainer: {
-    width: 169,
-    height: 136,
-    padding: 12,
-    backgroundColor: '#25367e',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    justifyContent: 'space-between',
-    opacity: 0.2,
-    elevation: 4,
-    borderRadius: 4,
-  },
-  cryptImage: {
-    alignSelf: 'flex-end',
-    width: 37,
-    height: 37,
-  },
-  cryptNameText: {
-    color: '#fff',
-    fontSize: 20,
-  },
-  cryptBalanceText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  active: {
-    opacity: 1,
   },
 });
 
@@ -327,35 +289,11 @@ class Transfer extends Component {
         innerRef={(ref) => { this.scrollKeyboard = ref; }}
       >
         <View style={styles.container}>
-          <View style={styles.cryptHeader}>
-            <Touchable onPress={() => this.onCryptoCurrencyCodeChange('BTC')}>
-              <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'BTC' ? styles.active : null]}>
-                <Image style={styles.cryptImage} source={require('../../../img/ic_btc.png')} />
-                <View>
-                  <Text style={styles.cryptNameText}>
-                    BTC
-                  </Text>
-                  <Text style={styles.cryptBalanceText}>
-                    {balance.BTC.value}
-                  </Text>
-                </View>
-              </View>
-            </Touchable>
-            <Touchable onPress={() => this.onCryptoCurrencyCodeChange('ETH')}>
-              <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'ETH' ? styles.active : null]}>
-                <Image style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
-                <View>
-                  <Text style={styles.cryptNameText}>
-                    ETH
-                  </Text>
-                  <Text style={styles.cryptBalanceText}>
-                    {balance.ETH.value}
-                  </Text>
-                </View>
-              </View>
-            </Touchable>
-          </View>
-
+          <CurrencySelector
+            onValueChange={this.onCryptoCurrencyCodeChange}
+            selectedValue={this.state.cryptoCurrencyCode}
+            balance={balance}
+          />
           <View style={styles.formStyle}>
             <View style={{ flex: 1 }}>
               <View style={styles.formRow}>

@@ -114,6 +114,7 @@ class Receive extends Component {
       transactionTokens,
       cryptoCurrencies,
       intl,
+      balance,
     } = this.props;
     return (
       <View style={styles.content}>
@@ -122,6 +123,7 @@ class Receive extends Component {
             cryptoCurrencies={cryptoCurrencies}
             onValueChange={this.onCurrencyChange}
             selectedValue={this.state.cryptoCurrencyCode}
+            balance={balance}
           />
         </View>
         <Hint>

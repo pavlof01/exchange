@@ -145,6 +145,7 @@ class Wallet extends Component {
       content = (
         <Receive
           currency="BTC"
+          balance={balance}
           cryptoCurrencies={this.props.cryptoCurrencies}
           transactionTokens={transactionTokens}
           getTransactionTokens={getTransactionTokens}
