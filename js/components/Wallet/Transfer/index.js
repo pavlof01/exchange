@@ -160,6 +160,7 @@ class Transfer extends Component {
 
     this.props.updateRates({ [currencyCode]: this.state.cryptoCurrencyCode });
     this.props.updateCurrencies();
+    this.props.updateCryptValue();
     this.props.updateEstimatedFee({ currency: this.props.currencyCode });
   }
 
@@ -364,13 +365,15 @@ class Transfer extends Component {
                     intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
                   onChangeText={this.onAddressChange}
                   value={this.state.form.address}
-                  //style={styles.formTextInput}
+                  // style={styles.formTextInput}
                   onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
                 />
               </View>
               <View style={styles.formRow}>
                 <Hint>
-                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()} {' '}
+                  {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
+                  {' '}
+                  {' '}
                   {simpleCurrencyName[code] === 'Bitcoin' ? 'BTC' : 'ETH'}
                 </Hint>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -397,27 +400,32 @@ class Transfer extends Component {
                     onChangeText={this.onCostChange}
                     keyboardType="numeric"
                     value={this.state.form.cost}
-                    style={{ marginRight: 80, }}
+                    style={{ marginRight: 80 }}
                     onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
                   />
                   <View style={styles.currencyPickerContainer}>
                     <Menu>
                       <MenuTrigger>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                          <Text style={{ color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5 }}>{currencyCode}</Text>
+                          <Text style={{
+                            color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5,
+                          }}
+                          >
+                            {currencyCode}
+                          </Text>
                           <Image source={require('../../../img/ic_picker.png')} />
                         </View>
                       </MenuTrigger>
                       <MenuOptions>
-                        <MenuOption key='USD' value='USD'>
+                        <MenuOption key="USD" value="USD">
                           <Text>
                             USD
-                        </Text>
+                          </Text>
                         </MenuOption>
-                        <MenuOption key='RUR' value='RUR'>
+                        <MenuOption key="RUR" value="RUR">
                           <Text>
                             RUR
-                        </Text>
+                          </Text>
                         </MenuOption>
                       </MenuOptions>
                     </Menu>
@@ -435,7 +443,7 @@ class Transfer extends Component {
                   fontStyle={styles.sendButtonText}
                   onPress={this.onSubmitHandler}
                   title={submitButtonText}
-                  style={{ width: 300, alignSelf: 'center', marginTop: 30, }}
+                  style={{ width: 300, alignSelf: 'center', marginTop: 30 }}
                 />
               </CenterHalf>
 
@@ -460,6 +468,7 @@ Transfer.propTypes = {
   updateCurrencies: PropTypes.func,
   updateEstimatedFee: PropTypes.func,
   exchangeRates: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  updateCryptValue: PropTypes.func,
   currencyCode: PropTypes.string,
   cryptValue: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };

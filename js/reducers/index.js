@@ -22,6 +22,7 @@ import signUp from './signUp';
 import recoverPassword from './recoverPassword';
 import pushNotifications from './pushNotifications';
 import trades from './trades';
+import cryptValue from './cryptValue';
 
 export default combineReducers({
   nav: navigation,
@@ -47,4 +48,5 @@ export default combineReducers({
   paymentMethodBanks,
   pushNotifications,
   trades,
+  cryptValue,
 });

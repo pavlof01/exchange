@@ -118,6 +118,8 @@ class Wallet extends Component {
       getTransactionTokens,
       generateTransactionToken,
       intl,
+      updateCryptValue,
+      cryptValue,
     } = this.props;
     let content; let
       header;
@@ -128,6 +130,8 @@ class Wallet extends Component {
           currencyCode={currencyCode}
           balance={balance}
           exchangeRates={exchangeRates}
+          updateCryptValue={updateCryptValue}
+          cryptValue={cryptValue}
           updateRates={this.props.updateRates}
           updateCurrencies={this.props.updateCurrencies}
           updateEstimatedFee={this.props.updateEstimatedFee}
@@ -194,6 +198,8 @@ Wallet.propTypes = {
   updateRates: PropTypes.any,
   updateEstimatedFee: PropTypes.any,
   updateCurrencies: PropTypes.any,
+  updateCryptValue: PropTypes.any,
+  cryptValue: PropTypes.any,
   /* eslint-enable react/forbid-prop-types */
 };
 
