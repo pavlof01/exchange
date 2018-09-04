@@ -6,6 +6,7 @@ import { fetch as fetchCurrencies } from '../../actions/currencies';
 import { fetch as fetchPaymentMethods } from '../../actions/paymentMethods';
 import { fetch as fetchCountries } from '../../actions/countries';
 import { fetch as fetchExchangeRates } from '../../actions/exchangeRates';
+import { fetch as fetchCryptValue } from '../../actions/cryprtValue';
 import { newTrade } from '../../actions/navigation';
 
 const mapDispatchToProps = dispatch => ({
@@ -14,6 +15,7 @@ const mapDispatchToProps = dispatch => ({
   fetchExchangeRates: params => dispatch(fetchExchangeRates(dispatch, params)),
   fetchPaymentMethods: () => dispatch(fetchPaymentMethods(dispatch)),
   fetchCountries: () => dispatch(fetchCountries(dispatch)),
+  updateCryptValue: params => dispatch(fetchCryptValue(dispatch, params)),
   newTrade: ad => dispatch(newTrade(ad)),
 });
 
@@ -23,6 +25,7 @@ const mapStateToProps = (state) => {
   return {
     filter: state.ordersFilter,
     currencies: state.currencies.list,
+    cryptValue: state.cryptValue,
     exchangeRates: state.exchangeRates,
     cryptoCurrencies: state.cryptoCurrencies.list,
     paymentMethods: state.paymentMethods.list,

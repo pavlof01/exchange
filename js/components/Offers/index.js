@@ -330,12 +330,14 @@ class Offers extends React.PureComponent {
       fetchCountries,
       updateFilter,
       fetchExchangeRates,
+      updateCryptValue,
     } = this.props;
     fetchCurrencies();
     fetchPaymentMethods();
     fetchCountries();
     fetchExchangeRates();
     updateFilter({});
+    updateCryptValue();
     const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
@@ -345,8 +347,9 @@ class Offers extends React.PureComponent {
   }
 
   componentWillMount() {
-    const { fetchExchangeRates } = this.props;
+    const { fetchExchangeRates, updateCryptValue } = this.props;
     fetchExchangeRates();
+    updateCryptValue();
     this.setState({ exchangeRates: this.props.exchangeRates.BTC_USD });
   }
 
@@ -429,9 +432,11 @@ class Offers extends React.PureComponent {
       filter,
       updateFilter,
       fetchExchangeRates,
+      updateCryptValue,
     } = this.props;
     updateFilter(filter);
     fetchExchangeRates();
+    updateCryptValue();
   };
 
   static itemWithIcon(label, icon) {
@@ -685,6 +690,13 @@ class Offers extends React.PureComponent {
     return '';
   };
 
+  getBitcionValue = () => {
+    if (this.props.cryptValue.pending) {
+      return '';
+    }
+    return Number.parseInt(this.props.cryptValue.BTC_USD);
+  };
+
   upToolBar = () => {
     if (!this.downToolBarAnimation) {
       this.downToolBarAnimation = Animated.timing(
@@ -798,7 +810,7 @@ class Offers extends React.PureComponent {
                 BTC COST
               </Text>
               <Text style={styles.btcCost}>
-                483672
+                {this.getBitcionValue()} $
               </Text>
               <Text style={styles.btcChangePercent}>
                 {this.getBitcionChangeRatesdByTime('4', 'h')}
@@ -824,7 +836,7 @@ class Offers extends React.PureComponent {
                   }}
                   refreshing={orders.pending}
                   onScrollEndDrag={this.handleRelease}
-                  onMomentumScrollEnd={Platform.OS === 'ios' ? () => {} : this.handleRelease}
+                  onMomentumScrollEnd={Platform.OS === 'ios' ? () => { } : this.handleRelease}
                   onResponderRelease={this.handleRelease}
                   ref={(ref) => {
                     this.flatListRef = ref;
@@ -861,6 +873,8 @@ Offers.propTypes = {
   currencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   exchangeRates: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   fetchExchangeRates: PropTypes.func,
+  updateCryptValue: PropTypes.func,
+  cryptValue: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default injectIntl(Offers);
