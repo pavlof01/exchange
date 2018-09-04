@@ -5,21 +5,13 @@ import {
   View,
   StyleSheet,
   Image,
-  Platform,
   Dimensions,
 } from 'react-native';
-
-import { cryptoIcons } from '../../../style/resourceHelpers';
-import CurrencyItemWithIcon from './CurrencyItemWithIcon';
 import Touchable from '../../../style/Touchable';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    height,
-  },
   cryptHeader: {
     flexDirection: 'row',
     width,
@@ -81,35 +73,33 @@ export default class CurrencySelector extends Component {
     const { balance } = this.props;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.cryptHeader}>
-          <Touchable onPress={() => this.onCryptoCurrencyCodeChange('BTC')}>
-            <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'BTC' ? styles.active : null]}>
-              <Image style={styles.cryptImage} source={require('../../../img/ic_btc.png')} />
-              <View>
-                <Text style={styles.cryptNameText}>
-                  BTC
-                </Text>
-                <Text style={styles.cryptBalanceText}>
-                  {balance.BTC.value}
-                </Text>
-              </View>
+      <View style={styles.cryptHeader}>
+        <Touchable onPress={() => this.onCryptoCurrencyCodeChange('BTC')}>
+          <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'BTC' ? styles.active : null]}>
+            <Image style={styles.cryptImage} source={require('../../../img/ic_btc.png')} />
+            <View>
+              <Text style={styles.cryptNameText}>
+                BTC
+              </Text>
+              <Text style={styles.cryptBalanceText}>
+                {balance.BTC.value}
+              </Text>
             </View>
-          </Touchable>
-          <Touchable onPress={() => this.onCryptoCurrencyCodeChange('ETH')}>
-            <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'ETH' ? styles.active : null]}>
-              <Image style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
-              <View>
-                <Text style={styles.cryptNameText}>
-                  ETH
-                </Text>
-                <Text style={styles.cryptBalanceText}>
-                  {balance.ETH.value}
-                </Text>
-              </View>
+          </View>
+        </Touchable>
+        <Touchable onPress={() => this.onCryptoCurrencyCodeChange('ETH')}>
+          <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'ETH' ? styles.active : null]}>
+            <Image style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
+            <View>
+              <Text style={styles.cryptNameText}>
+                ETH
+              </Text>
+              <Text style={styles.cryptBalanceText}>
+                {balance.ETH.value}
+              </Text>
             </View>
-          </Touchable>
-        </View>
+          </View>
+        </Touchable>
       </View>
     );
   }

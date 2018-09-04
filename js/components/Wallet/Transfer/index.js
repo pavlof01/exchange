@@ -21,7 +21,6 @@ import FormTextInput from '../../FormTextInput';
 import PrimaryButton from '../../../style/ActionButton';
 import { common, Hint } from '../../../style/common';
 import CenterHalf from '../../../style/CenterHalf';
-import Touchable from '../../../style/Touchable';
 import CurrencySelector from '../CurrencySelector';
 
 const { width, height } = Dimensions.get('window');
