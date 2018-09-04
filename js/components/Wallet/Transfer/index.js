@@ -192,7 +192,9 @@ class Transfer extends Component {
   onCostChange = (value) => {
     // eslint-disable-next-line no-param-reassign
     value = value.replace(/,/, '.');
-    const rate = this.props.cryptValue.BTC_USD;
+    const { BTC_USD, ETH_USD } = this.props.cryptValue;
+    const rate = this.state.cryptoCurrencyCode === 'BTC'
+      ? BTC_USD : ETH_USD;
     // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
     const amount = value / rate;
@@ -202,7 +204,9 @@ class Transfer extends Component {
   onAmountChange = (value) => {
     // eslint-disable-next-line no-param-reassign
     value = value.replace(/,/, '.');
-    const rate = this.props.cryptValue.BTC_USD;
+    const { BTC_USD, ETH_USD } = this.props.cryptValue;
+    const rate = this.state.cryptoCurrencyCode === 'BTC'
+      ? BTC_USD : ETH_USD;
     // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
     const cost = value * rate;
@@ -255,7 +259,7 @@ class Transfer extends Component {
       ...this.state.form,
       currency: value,
     };
-    this.setState({ form, cryptoCurrencyCode: value });
+    this.setState({ form, cryptoCurrencyCode: value }, () => this.props.updateCryptValue({ crypt: value, currency: 'USD' }));
   };
 
   onAddressChange = (value) => {
@@ -342,7 +346,7 @@ class Transfer extends Component {
                 <Image style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
                 <View>
                   <Text style={styles.cryptNameText}>
-                    BTC
+                    ETH
                   </Text>
                   <Text style={styles.cryptBalanceText}>
                     {balance.ETH.value}
