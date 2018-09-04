@@ -92,7 +92,7 @@
   "app.wallet.form.label.adress.placeholder.enter": "Введите ",
   "app.wallet.form.label.adress.placeholder.address": "адрес",
   "app.wallet.form.label.amount": "Количество",
-  "app.wallet.form.label.amount.placeholder": "BTC",
+  "app.wallet.form.label.amount.placeholder": "Введите количество",
   "app.wallet.form.label.cost": "Стоимость",
   "app.wallet.form.label.cost.placeholder": "USD",
   "app.wallet.form.label.adress.error": "Введите адрес кошелька",
