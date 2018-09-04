@@ -751,12 +751,12 @@ class Offers extends React.PureComponent {
       : intl.formatMessage({ id: 'app.offers.operation.sellTitle', defaultMessage: 'Sell offers' }).toUpperCase();
     const translateTitleY = this.state.animatedToolbarPosition.interpolate({
       inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, MAX_TOOLBAR_VIEW_HEIGHT],
-      outputRange: [40, 0, -100],
+      outputRange: [0, 0, -100],
       extrapolate: 'clamp',
     });
     const opacityTitle = this.state.animatedToolbarPosition.interpolate({
       inputRange: [0, SAFE_REFRESH_VIEW_HEIGHT, MAX_TOOLBAR_VIEW_HEIGHT],
-      outputRange: [0, 1, 0],
+      outputRange: [1, 1, 0],
       extrapolate: 'clamp',
     });
     const translateToolbarY = this.state.animatedToolbarPosition.interpolate({
