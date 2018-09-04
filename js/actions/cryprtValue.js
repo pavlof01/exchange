@@ -1,9 +1,10 @@
 import Api from '../services/Api';
 import { CRYPT_VALUE } from '../actions';
 
-export function fetch(dispatch, params) {
-  Api.get('/exchange_rates?BTC=USD,USD&USD=USD', params) // FETCH RUB exchange_rates?BTC=USD,RUB&USD=RUB
-    .then(response => dispatch(fetchSucceed(response.rates)))
+export function fetch(dispatch, params = { crypt: 'BTC', currency: 'USD' }) {
+  const { crypt, currency } = params;
+  Api.get(`/exchange_rates?${crypt}=USD,${currency}&USD=${currency}`, params)
+    .then(response => dispatch(fetchSucceed(response.data.rates)))
     .catch(() => dispatch(fetchFailure('Ошибка /exchange_rates')));
 
   return { type: CRYPT_VALUE.FETCH_CRYPT_VALUE_START };
