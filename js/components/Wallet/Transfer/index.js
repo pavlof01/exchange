@@ -191,20 +191,20 @@ class Transfer extends Component {
   onCostChange = (value) => {
     // eslint-disable-next-line no-param-reassign
     value = value.replace(/,/, '.');
-    const rate = this.props.exchangeRates[`${this.props.currencyCode}_${this.state.cryptoCurrencyCode}`];
+    const rate = this.props.cryptValue.BTC_USD;
     // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
-    const amount = value * rate;
+    const amount = value / rate;
     this.setState({ form: { ...this.state.form, cost: value, amount: amount.toFixed(8) } });
   };
 
   onAmountChange = (value) => {
     // eslint-disable-next-line no-param-reassign
     value = value.replace(/,/, '.');
-    const rate = this.props.exchangeRates[`${this.props.currencyCode}_${this.state.cryptoCurrencyCode}`];
+    const rate = this.props.cryptValue.BTC_USD;
     // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
-    const cost = value / rate;
+    const cost = value * rate;
     this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) } });
   };
 
@@ -461,6 +461,7 @@ Transfer.propTypes = {
   updateEstimatedFee: PropTypes.func,
   exchangeRates: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   currencyCode: PropTypes.string,
+  cryptValue: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default injectIntl(Transfer);
