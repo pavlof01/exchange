@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
   btcChangePercent: {
     fontFamily: fonts.bold.regular,
     fontSize: 10,
-    color: '#14d459',
   },
   text: {
     color: '#9b9b9b',
@@ -808,6 +807,7 @@ class Offers extends React.PureComponent {
       outputRange: [0, 0, -50],
       extrapolate: 'clamp',
     });
+    const changeRate = this.getBitcionChangeRatesdByTime('1', 'd');
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -856,8 +856,8 @@ class Offers extends React.PureComponent {
                 </Text>
               </View>
               <View style={styles.btcChangeWrapper}>
-                <Text style={styles.btcChangePercent}>
-                  {this.getBitcionChangeRatesdByTime('4', 'h')}
+                <Text style={[styles.btcChangePercent, changeRate < 0 ? { color: 'red' } : { color: '#14d459' }]}>
+                  {changeRate}
                 </Text>
               </View>
             </View>
