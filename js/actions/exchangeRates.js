@@ -1,22 +1,29 @@
-import { EXCHANGE_RATES } from '../actions'
-import Api from '../services/Api'
+import { EXCHANGE_RATES } from '../actions';
 
-export function fetch(dispatch, params) {
-  Api.get('/exchange_rates?BTC=USD,USD&retrospective=true', params)
-    .then(response => dispatch(fetchSucceed(response.data.rates)))
-    .catch(response => dispatch(fetchFailure('Ошибка /exchange_rates')));
-
-  return { type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_STARTED }
+/**
+ * @param {string} cryptoCurrency - код криптовалюты. Например: 'BTC'.
+ * @param {string} fiatCurrency - код фиатной валюты. Например: 'USD'.
+ */
+export function fetch(cryptoCurrency, fiatCurrency) {
+  console.warn(JSON.stringify(cryptoCurrency, null, 2) + ' ' + JSON.stringify(fiatCurrency, null, 2));
+  return {
+    type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_STARTED,
+    payload: {
+      cryptoCurrency,
+      fiatCurrency,
+    },
+  };
 }
 
-function fetchSucceed(rates) {
-  return { type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_SUCCEED, ...rates }
+export function fetchSucceed(rates) {
+  console.warn(JSON.stringify(rates, null, 2));
+  return { type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_SUCCEED, rates };
 }
 
-function fetchFailure(error) {
-  return { type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_FAILURE, error: error }
+export function fetchFailure(error) {
+  return { type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_FAILURE, error };
 }
 
 export function getCached(state) {
-  return (sourceCode, destCode) => (state.exchangeRates[sourceCode + '_' + destCode])
+  return (sourceCode, destCode) => (state.exchangeRates[sourceCode + '_' + destCode]);
 }

@@ -311,7 +311,6 @@ class Offers extends React.PureComponent {
       translateHeaderY: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
       animatedToolbarPosition: new Animated.Value(SAFE_REFRESH_VIEW_HEIGHT),
-      exchangeRates: '',
     };
 
     this.downToolBarAnimation = null;
@@ -335,22 +334,19 @@ class Offers extends React.PureComponent {
     fetchCurrencies();
     fetchPaymentMethods();
     fetchCountries();
-    fetchExchangeRates();
     updateFilter({});
     updateCryptValue();
     const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
+    fetchExchangeRates('BTC', 'USD');
     this.state.animatedValue.addListener(value => this.handleScroll(value));
-    this.setState({ exchangeRates: this.props.exchangeRates.BTC_USD });
   }
 
   componentWillMount() {
-    const { fetchExchangeRates, updateCryptValue } = this.props;
-    fetchExchangeRates();
+    const { updateCryptValue } = this.props;
     updateCryptValue();
-    this.setState({ exchangeRates: this.props.exchangeRates.BTC_USD });
   }
 
   scrollToTop = (animated) => {
@@ -366,9 +362,6 @@ class Offers extends React.PureComponent {
       && this.scrollValue <= SAFE_REFRESH_VIEW_HEIGHT
     ) {
       this.scrollToTop(true);
-    }
-    if (nextProps.exchangeRates.BTC_USD !== this.props.exchangeRates.BTC_USD) {
-      this.setState({ exchangeRates: nextProps.exchangeRates.BTC_USD });
     }
   }
 
@@ -435,7 +428,9 @@ class Offers extends React.PureComponent {
       updateCryptValue,
     } = this.props;
     updateFilter(filter);
-    fetchExchangeRates();
+    const cryptoCurrency = filter.cryptoCurrencyCode;
+    const fiatCurrency = filter.currencyCode || 'USD';
+    fetchExchangeRates(cryptoCurrency, fiatCurrency);
     updateCryptValue();
   };
 
@@ -684,8 +679,11 @@ class Offers extends React.PureComponent {
   };
 
   getBitcionChangeRatesdByTime = (hours, time = 'h') => {
-    if (this.state.exchangeRates) {
-      return `${this.state.exchangeRates[`change_${hours}${time}`].toFixed(2)}%`;
+    const {
+      exchangeRates,
+    } = this.props;
+    if (exchangeRates.rates) {
+      return `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}%`;
     }
     return '';
   };
@@ -694,7 +692,7 @@ class Offers extends React.PureComponent {
     if (this.props.cryptValue.pending) {
       return '';
     }
-    return Number.parseInt(this.props.cryptValue.BTC_USD);
+    return Number.parseInt(this.props.cryptValue.BTC_USD, 10);
   };
 
   upToolBar = () => {
@@ -810,7 +808,7 @@ class Offers extends React.PureComponent {
                 BTC COST
               </Text>
               <Text style={styles.btcCost}>
-                {this.getBitcionValue()} $
+                {`${this.getBitcionValue()} $`}
               </Text>
               <Text style={styles.btcChangePercent}>
                 {this.getBitcionChangeRatesdByTime('4', 'h')}
