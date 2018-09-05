@@ -4,6 +4,7 @@ const initial = {
   pending: false,
   rates: null,
   rate: 0,
+  fiatCurrency: '',
 };
 
 export default (state = initial, action) => {

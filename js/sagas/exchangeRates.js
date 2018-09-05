@@ -48,6 +48,7 @@ function fetchExchangeRateValues(cryptoCurrency, fiatCurrency) {
     return {
       rates,
       rate,
+      fiatCurrency,
     };
   });
 }

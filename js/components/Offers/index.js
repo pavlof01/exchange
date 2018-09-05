@@ -717,7 +717,7 @@ class Offers extends React.PureComponent {
     return '';
   };
 
-  getBitcionValue = () => {
+  getCryptRateValue = () => {
     const {
       exchangeRates,
     } = this.props;
@@ -725,6 +725,16 @@ class Offers extends React.PureComponent {
       return Number.parseInt(exchangeRates.rate, 10);
     }
     return 0;
+  };
+
+  getCryptRateSymbol = () => {
+    const {
+      exchangeRates,
+    } = this.props;
+    if (exchangeRates.fiatCurrency) {
+      return currencyCodeToSymbol(exchangeRates.fiatCurrency);
+    }
+    return '';
   };
 
   upToolBar = () => {
@@ -852,7 +862,7 @@ class Offers extends React.PureComponent {
               </View>
               <View style={styles.btcValueWrapper}>
                 <Text style={styles.btcCost}>
-                  {`${this.getBitcionValue()} $`}
+                  {`${this.getCryptRateValue()} ${this.getCryptRateSymbol()}`}
                 </Text>
               </View>
               <View style={styles.btcChangeWrapper}>

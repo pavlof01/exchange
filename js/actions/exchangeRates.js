@@ -19,6 +19,7 @@ export function fetchSucceed(payload) {
     type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_SUCCEED,
     rates: payload.rates,
     rate: payload.rate,
+    fiatCurrency: payload.fiatCurrency,
   };
 }
 
