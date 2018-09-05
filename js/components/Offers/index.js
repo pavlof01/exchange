@@ -267,6 +267,28 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     textAlign: 'center',
   },
+  btcCostWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingStart: 20,
+    paddingEnd: 20,
+  },
+  btcValueWrapper: {
+    flex: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  btcChangeWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingStart: 20,
+    paddingEnd: 20,
+  },
   btcCostContainer: {
     width,
     flexDirection: 'row',
@@ -277,6 +299,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
     fontSize: 10,
     color: 'rgb(168,190,235)',
+    marginEnd: 8,
   },
   btcCost: {
     fontFamily: fonts.regular.regular,
@@ -765,6 +788,7 @@ class Offers extends React.PureComponent {
       intl,
       orders,
       filter,
+      exchangeRates,
     } = this.props;
     const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
@@ -814,15 +838,28 @@ class Offers extends React.PureComponent {
               </Text>
             </Animated.View>
             <View style={styles.btcCostContainer}>
-              <Text style={styles.btcCostText}>
-                BTC COST
-              </Text>
-              <Text style={styles.btcCost}>
-                {`${this.getBitcionValue()} $`}
-              </Text>
-              <Text style={styles.btcChangePercent}>
-                {this.getBitcionChangeRatesdByTime('4', 'h')}
-              </Text>
+              <View style={styles.btcCostWrapper}>
+                <Text style={styles.btcCostText}>
+                  {`${filter.cryptoCurrencyCode} COST`}
+                </Text>
+                { exchangeRates.pending && (
+                  <ActivityIndicator
+                    size="small"
+                    animating
+                    color="rgb(168,190,235)"
+                  />
+                ) }
+              </View>
+              <View style={styles.btcValueWrapper}>
+                <Text style={styles.btcCost}>
+                  {`${this.getBitcionValue()} $`}
+                </Text>
+              </View>
+              <View style={styles.btcChangeWrapper}>
+                <Text style={styles.btcChangePercent}>
+                  {this.getBitcionChangeRatesdByTime('4', 'h')}
+                </Text>
+              </View>
             </View>
           </Animated.View>
           {
