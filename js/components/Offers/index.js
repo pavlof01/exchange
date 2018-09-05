@@ -407,9 +407,25 @@ class Offers extends React.PureComponent {
 
   onFilterChangeFactory = name => (value) => {
     const {
+      filter,
       updateFilter,
+      fetchExchangeRates,
     } = this.props;
     updateFilter({ [name]: value });
+    switch (name) {
+      case 'cryptoCurrencyCode': {
+        const fiatCurrency = filter.currencyCode || 'USD';
+        fetchExchangeRates(value, fiatCurrency);
+        break;
+      }
+      case 'currencyCode': {
+        const cryptoCurrency = filter.cryptoCurrencyCode || 'BTC';
+        fetchExchangeRates(cryptoCurrency, value);
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
@@ -428,7 +444,7 @@ class Offers extends React.PureComponent {
       updateCryptValue,
     } = this.props;
     updateFilter(filter);
-    const cryptoCurrency = filter.cryptoCurrencyCode;
+    const cryptoCurrency = filter.cryptoCurrencyCode || 'BTC';
     const fiatCurrency = filter.currencyCode || 'USD';
     fetchExchangeRates(cryptoCurrency, fiatCurrency);
     updateCryptValue();
