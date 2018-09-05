@@ -12,7 +12,9 @@ import { newTrade } from '../../actions/navigation';
 const mapDispatchToProps = dispatch => ({
   updateFilter: values => dispatch(updateFilter(values)),
   fetchCurrencies: params => dispatch(fetchCurrencies(dispatch, params)),
-  fetchExchangeRates: params => dispatch(fetchExchangeRates(dispatch, params)),
+  fetchExchangeRates: (cryptoCurrency, fiatCurrency) => dispatch(
+    fetchExchangeRates(cryptoCurrency, fiatCurrency),
+  ),
   fetchPaymentMethods: () => dispatch(fetchPaymentMethods(dispatch)),
   fetchCountries: () => dispatch(fetchCountries(dispatch)),
   updateCryptValue: params => dispatch(fetchCryptValue(dispatch, params)),

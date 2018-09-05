@@ -12,7 +12,7 @@ import {
 } from '../../actions/session';
 
 const mapDispatchToProps = dispatch => ({
-  updateRates: params => dispatch(fetchRates(dispatch, params)),
+  updateRates: (cryptoCurrency, fiatCurrency) => dispatch(fetchRates(cryptoCurrency, fiatCurrency)),
   updateCurrencies: () => dispatch(fetchCurrencies(dispatch)),
   updateCryptValue: params => dispatch(fetchCryptValue(dispatch, params)),
   updateUserWallet: () => dispatch(set(dispatch)),

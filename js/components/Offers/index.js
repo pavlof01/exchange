@@ -267,6 +267,28 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     textAlign: 'center',
   },
+  btcCostWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingStart: 20,
+    paddingEnd: 20,
+  },
+  btcValueWrapper: {
+    flex: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  btcChangeWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingStart: 20,
+    paddingEnd: 20,
+  },
   btcCostContainer: {
     width,
     flexDirection: 'row',
@@ -277,6 +299,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold.regular,
     fontSize: 10,
     color: 'rgb(168,190,235)',
+    marginEnd: 8,
   },
   btcCost: {
     fontFamily: fonts.regular.regular,
@@ -287,7 +310,6 @@ const styles = StyleSheet.create({
   btcChangePercent: {
     fontFamily: fonts.bold.regular,
     fontSize: 10,
-    color: '#14d459',
   },
   text: {
     color: '#9b9b9b',
@@ -311,7 +333,6 @@ class Offers extends React.PureComponent {
       translateHeaderY: new Animated.Value(0),
       animatedValue: new Animated.Value(0),
       animatedToolbarPosition: new Animated.Value(SAFE_REFRESH_VIEW_HEIGHT),
-      exchangeRates: '',
     };
 
     this.downToolBarAnimation = null;
@@ -330,27 +351,17 @@ class Offers extends React.PureComponent {
       fetchCountries,
       updateFilter,
       fetchExchangeRates,
-      updateCryptValue,
     } = this.props;
     fetchCurrencies();
     fetchPaymentMethods();
     fetchCountries();
-    fetchExchangeRates();
     updateFilter({});
-    updateCryptValue();
     const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
+    fetchExchangeRates('BTC', 'USD');
     this.state.animatedValue.addListener(value => this.handleScroll(value));
-    this.setState({ exchangeRates: this.props.exchangeRates.BTC_USD });
-  }
-
-  componentWillMount() {
-    const { fetchExchangeRates, updateCryptValue } = this.props;
-    fetchExchangeRates();
-    updateCryptValue();
-    this.setState({ exchangeRates: this.props.exchangeRates.BTC_USD });
   }
 
   scrollToTop = (animated) => {
@@ -366,9 +377,6 @@ class Offers extends React.PureComponent {
       && this.scrollValue <= SAFE_REFRESH_VIEW_HEIGHT
     ) {
       this.scrollToTop(true);
-    }
-    if (nextProps.exchangeRates.BTC_USD !== this.props.exchangeRates.BTC_USD) {
-      this.setState({ exchangeRates: nextProps.exchangeRates.BTC_USD });
     }
   }
 
@@ -414,9 +422,25 @@ class Offers extends React.PureComponent {
 
   onFilterChangeFactory = name => (value) => {
     const {
+      filter,
       updateFilter,
+      fetchExchangeRates,
     } = this.props;
     updateFilter({ [name]: value });
+    switch (name) {
+      case 'cryptoCurrencyCode': {
+        const fiatCurrency = filter.currencyCode || 'USD';
+        fetchExchangeRates(value, fiatCurrency);
+        break;
+      }
+      case 'currencyCode': {
+        const cryptoCurrency = filter.cryptoCurrencyCode || 'BTC';
+        fetchExchangeRates(cryptoCurrency, value);
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   onPaymentMethodCodeChange = this.onFilterChangeFactory('paymentMethodCode');
@@ -432,11 +456,11 @@ class Offers extends React.PureComponent {
       filter,
       updateFilter,
       fetchExchangeRates,
-      updateCryptValue,
     } = this.props;
     updateFilter(filter);
-    fetchExchangeRates();
-    updateCryptValue();
+    const cryptoCurrency = filter.cryptoCurrencyCode || 'BTC';
+    const fiatCurrency = filter.currencyCode || 'USD';
+    fetchExchangeRates(cryptoCurrency, fiatCurrency);
   };
 
   static itemWithIcon(label, icon) {
@@ -684,17 +708,33 @@ class Offers extends React.PureComponent {
   };
 
   getBitcionChangeRatesdByTime = (hours, time = 'h') => {
-    if (this.state.exchangeRates) {
-      return `${this.state.exchangeRates[`change_${hours}${time}`].toFixed(2)}%`;
+    const {
+      exchangeRates,
+    } = this.props;
+    if (exchangeRates.rates) {
+      return `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}`;
     }
     return '';
   };
 
-  getBitcionValue = () => {
-    if (this.props.cryptValue.pending) {
-      return '';
+  getCryptRateValue = () => {
+    const {
+      exchangeRates,
+    } = this.props;
+    if (exchangeRates.rate) {
+      return Number.parseInt(exchangeRates.rate, 10);
     }
-    return Number.parseInt(this.props.cryptValue.BTC_USD);
+    return 0;
+  };
+
+  getCryptRateSymbol = () => {
+    const {
+      exchangeRates,
+    } = this.props;
+    if (exchangeRates.fiatCurrency) {
+      return currencyCodeToSymbol(exchangeRates.fiatCurrency);
+    }
+    return '';
   };
 
   upToolBar = () => {
@@ -757,6 +797,7 @@ class Offers extends React.PureComponent {
       intl,
       orders,
       filter,
+      exchangeRates,
     } = this.props;
     const header = filter.type === FILTER_SELL
       ? intl.formatMessage({ id: 'app.offers.operation.buyTitle', defaultMessage: 'Buy offers' }).toUpperCase()
@@ -776,6 +817,7 @@ class Offers extends React.PureComponent {
       outputRange: [0, 0, -50],
       extrapolate: 'clamp',
     });
+    const changeRate = this.getBitcionChangeRatesdByTime('1', 'd');
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -806,15 +848,28 @@ class Offers extends React.PureComponent {
               </Text>
             </Animated.View>
             <View style={styles.btcCostContainer}>
-              <Text style={styles.btcCostText}>
-                BTC COST
-              </Text>
-              <Text style={styles.btcCost}>
-                {this.getBitcionValue()} $
-              </Text>
-              <Text style={styles.btcChangePercent}>
-                {this.getBitcionChangeRatesdByTime('4', 'h')}
-              </Text>
+              <View style={styles.btcCostWrapper}>
+                <Text style={styles.btcCostText}>
+                  {`${filter.cryptoCurrencyCode} COST`}
+                </Text>
+                { exchangeRates.pending && (
+                  <ActivityIndicator
+                    size="small"
+                    animating
+                    color="rgb(168,190,235)"
+                  />
+                ) }
+              </View>
+              <View style={styles.btcValueWrapper}>
+                <Text style={styles.btcCost}>
+                  {`${this.getCryptRateValue()} ${this.getCryptRateSymbol()}`}
+                </Text>
+              </View>
+              <View style={styles.btcChangeWrapper}>
+                <Text style={[styles.btcChangePercent, changeRate < 0 ? { color: 'red' } : { color: '#14d459' }]}>
+                  {changeRate}
+                </Text>
+              </View>
             </View>
           </Animated.View>
           {
@@ -873,8 +928,6 @@ Offers.propTypes = {
   currencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   exchangeRates: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   fetchExchangeRates: PropTypes.func,
-  updateCryptValue: PropTypes.func,
-  cryptValue: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default injectIntl(Offers);

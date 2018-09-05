@@ -16,6 +16,9 @@ import {
   tradesData,
   resetTradesAfterSetNew,
 } from './trades';
+import {
+  fetchExchangeRatesData,
+} from './exchangeRates';
 
 const rootSagas = function* root() {
   yield all([
@@ -28,6 +31,7 @@ const rootSagas = function* root() {
     fork(resetTradesData),
     fork(tradesData),
     fork(resetTradesAfterSetNew),
+    fork(fetchExchangeRatesData),
   ]);
 };
 
