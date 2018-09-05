@@ -2,6 +2,8 @@ import { EXCHANGE_RATES } from '../actions';
 
 const initial = {
   pending: false,
+  rates: null,
+  rate: 0,
 };
 
 export default (state = initial, action) => {

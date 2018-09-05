@@ -14,8 +14,12 @@ export function fetch(cryptoCurrency, fiatCurrency) {
   };
 }
 
-export function fetchSucceed(rates) {
-  return { type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_SUCCEED, rates };
+export function fetchSucceed(payload) {
+  return {
+    type: EXCHANGE_RATES.FETCH_EXCHANGE_RATES_SUCCEED,
+    rates: payload.rates,
+    rate: payload.rate,
+  };
 }
 
 export function fetchFailure(error) {
