@@ -329,24 +329,17 @@ class Offers extends React.PureComponent {
       fetchCountries,
       updateFilter,
       fetchExchangeRates,
-      updateCryptValue,
     } = this.props;
     fetchCurrencies();
     fetchPaymentMethods();
     fetchCountries();
     updateFilter({});
-    updateCryptValue();
     const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
     fetchExchangeRates('BTC', 'USD');
     this.state.animatedValue.addListener(value => this.handleScroll(value));
-  }
-
-  componentWillMount() {
-    const { updateCryptValue } = this.props;
-    updateCryptValue();
   }
 
   scrollToTop = (animated) => {
@@ -441,13 +434,11 @@ class Offers extends React.PureComponent {
       filter,
       updateFilter,
       fetchExchangeRates,
-      updateCryptValue,
     } = this.props;
     updateFilter(filter);
     const cryptoCurrency = filter.cryptoCurrencyCode || 'BTC';
     const fiatCurrency = filter.currencyCode || 'USD';
     fetchExchangeRates(cryptoCurrency, fiatCurrency);
-    updateCryptValue();
   };
 
   static itemWithIcon(label, icon) {
@@ -699,16 +690,19 @@ class Offers extends React.PureComponent {
       exchangeRates,
     } = this.props;
     if (exchangeRates.rates) {
-      return `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}%`;
+      return `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}`;
     }
     return '';
   };
 
   getBitcionValue = () => {
-    if (this.props.cryptValue.pending) {
-      return '';
+    const {
+      exchangeRates,
+    } = this.props;
+    if (exchangeRates.rate) {
+      return Number.parseInt(exchangeRates.rate, 10);
     }
-    return Number.parseInt(this.props.cryptValue.BTC_USD, 10);
+    return 0;
   };
 
   upToolBar = () => {
@@ -887,8 +881,6 @@ Offers.propTypes = {
   currencies: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   exchangeRates: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   fetchExchangeRates: PropTypes.func,
-  updateCryptValue: PropTypes.func,
-  cryptValue: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default injectIntl(Offers);

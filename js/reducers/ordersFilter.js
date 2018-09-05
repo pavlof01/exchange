@@ -5,7 +5,7 @@ const initial = {
   type: 'sell',
   sort: '-price',
   currencyCode: 'USD',
-  cryptoCurrencyCode: 'ETH',
+  cryptoCurrencyCode: 'BTC',
   countryCode: 'US',
   withCorrectLimits: true,
   paymentMethodCode: null,
