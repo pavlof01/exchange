@@ -29,7 +29,7 @@ import AbsoluteContainer from '../AbsoluteContainer';
 
 const { height } = Dimensions.get('window');
 
-const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 50;
+const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 56;
 // отступ от верха, регулирование величины наложения
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
-    paddingVertical: 10,
+    height: 76,
   },
   centerMessage: {
     flex: 1,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold.regular,
   },
   flatListContainer: {
-    height: height - 112,
+    height: height - 132,
   },
   activityIndicator: {
     marginTop: height / 2 - ACTIVITY_INDICATOR_HEIGHT,
