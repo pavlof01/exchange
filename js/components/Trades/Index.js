@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
-import CenterProgressBar from '../../style/CenterProgressBar';
 import {
   tradePartner,
   tradeType,
@@ -25,32 +24,25 @@ import Touchable from '../../style/Touchable';
 import HeaderBar from '../../style/HeaderBar';
 import { withCommonStatusBar } from '../../style/navigation';
 import { fonts } from '../../style/resourceHelpers';
+import AbsoluteContainer from '../AbsoluteContainer';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
+
+const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 50;
+// отступ от верха, регулирование величины наложения
+// контейнера на абсолютный хедер
+const ACTIVITY_INDICATOR_HEIGHT = 60;
 
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#243682',
+    backgroundColor: '#fff',
   },
   container: {
-    flex: 1,
-    backgroundColor: '#e9e9e9',
-  },
-  header: {
-    height: 96,
+    backgroundColor: '#243682',
     position: 'absolute',
-    width,
-    zIndex: 1,
-  },
-  centerMessage: {
-    flex: 1,
-    height: 64,
-    fontSize: 18,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
+    width: '100%',
+    height: 112,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -60,6 +52,15 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: '#ffffff',
     marginBottom: 10,
+  },
+  centerMessage: {
+    flex: 1,
+    height: 64,
+    fontSize: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
   tradeNumber: {
     flex: 3,
@@ -82,28 +83,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statusActive: {
-    width: 4,
+    width: 8,
     height: 40,
     backgroundColor: '#DADADA',
-    left: -2,
+    left: -4,
   },
   statusNoneActive: {
-    width: 4,
+    width: 8,
     height: 40,
     backgroundColor: '#2a3b89',
-    left: -2,
+    left: -4,
   },
   username: {
     flex: 5,
     fontFamily: fonts.semibold.regular,
   },
   flatListContainer: {
-    marginTop: 76,
-    zIndex: 3,
-    alignSelf: 'center',
-    position: 'absolute',
-    width: width / 1.1,
-    height,
+    height: height - 112,
+  },
+  activityIndicator: {
+    marginTop: height / 2 - ACTIVITY_INDICATOR_HEIGHT,
+  },
+  body: {
+    marginTop: MARGIN_FROM_TOP_TO_MAIN_CONTAINER,
   },
 });
 
@@ -178,9 +180,15 @@ class Trades extends Component {
           </Text>
           <View style={styles.currencyType}>
             {trade.ad.crypto_currency_code === 'BTC' ? (
-              <Image style={styles.imageCurrencyType} source={require('../../img/ic_btc.png')} />
+              <Image
+                style={styles.imageCurrencyType}
+                source={require('../../img/ic_btc.png')}
+              />
             ) : (
-                <Image style={styles.imageCurrencyType} source={require('../../img/ic_eth.png')} />
+                <Image
+                  style={styles.imageCurrencyType}
+                  source={require('../../img/ic_eth.png')}
+                />
               )}
           </View>
         </View>
@@ -223,36 +231,38 @@ class Trades extends Component {
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
-          <HeaderBar
-            style={styles.header}
-            title={intl.formatMessage({ id: 'app.trades.header', defaultMessage: 'Trades' }).toUpperCase()}
-          />
+          <HeaderBar title="TRADES" />
         </View>
-        {isFetch && trades.length === 0 ? (<CenterProgressBar />)
-          : (
-            <FlatList
-              style={styles.flatListContainer}
-              data={trades}
-              refreshControl={(
-                <RefreshControl
-                  refreshing={isFetch}
-                  onRefresh={this.onRefresh}
+        <View style={styles.body}>
+          <AbsoluteContainer>
+            {isFetch && trades.length === 0
+              ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
+              : (
+                <FlatList
+                  style={styles.flatListContainer}
+                  data={trades}
+                  refreshControl={(
+                    <RefreshControl
+                      refreshing={isFetch}
+                      onRefresh={this.onRefresh}
+                    />
+                  )}
+                  renderItem={this.renderItem}
+                  keyExtractor={i => i.id}
+                  ListEmptyComponent={(
+                    <Text style={styles.centerMessage}>
+                      {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
+                    </Text>
+                  )}
+                  ListFooterComponent={
+                    isFetch && <ActivityIndicator size="large" />
+                  }
+                  onEndReached={this.loadNext}
+                  onEndReachedThreshold={0.3}
                 />
               )}
-              renderItem={this.renderItem}
-              keyExtractor={i => i.id}
-              ListEmptyComponent={(
-                <Text style={styles.centerMessage}>
-                  {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
-                </Text>
-              )}
-              ListFooterComponent={
-                isFetch && <ActivityIndicator size="large" />
-              }
-              onEndReached={this.loadNext}
-              onEndReachedThreshold={0.3}
-            />
-          )}
+          </AbsoluteContainer>
+        </View>
       </SafeAreaView>,
     );
   }
