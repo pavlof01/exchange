@@ -61,9 +61,9 @@ class HeaderBar extends React.Component {
         <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
           {this.props.title}
         </Text>
-        <Touchable style={styles.image}>
+        <View style={styles.image}>
           {this.props.rightIcon}
-        </Touchable>
+        </View>
       </View>
     );
   }
