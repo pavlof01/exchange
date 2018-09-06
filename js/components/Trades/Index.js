@@ -10,6 +10,7 @@ import {
   RefreshControl,
   Image,
   Dimensions,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
@@ -48,10 +49,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 10,
-    paddingTop: 10,
     backgroundColor: '#ffffff',
-    marginBottom: 10,
+    paddingVertical: 10,
   },
   centerMessage: {
     flex: 1,
@@ -114,6 +113,7 @@ const PAGE_SIZE = 15;
 class Trades extends Component {
   state = {
     trades: [],
+    headerHeight: new Animated.Value(0),
   };
 
   componentDidMount() {
@@ -228,11 +228,47 @@ class Trades extends Component {
       intl,
     } = this.props;
 
+    const scroll = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: {
+            y: this.state.headerHeight,
+          },
+        },
+      },
+    ]);
+    const translateToolbarY = this.state.headerHeight.interpolate({
+      inputRange: [0, 20, 50],
+      outputRange: [0, 0, -62],
+      extrapolate: 'clamp',
+    });
+    const stayHeader = this.state.headerHeight.interpolate({
+      inputRange: [0, 20, 50],
+      outputRange: [0, 0, 62],
+      extrapolate: 'clamp',
+    });
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
-          <HeaderBar title="TRADES" />
-        </View>
+        <Animated.View style={[
+          styles.container,
+          {
+            transform: [{
+              translateY: translateToolbarY,
+            }],
+          },
+        ]}
+        >
+          <Animated.View style={[
+            {
+              transform: [{
+                translateY: stayHeader,
+              }],
+            },
+          ]}
+          >
+            <HeaderBar title="TRADES" />
+          </Animated.View>
+        </Animated.View>
         <View style={styles.body}>
           <AbsoluteContainer>
             {isFetch && trades.length === 0
@@ -240,6 +276,7 @@ class Trades extends Component {
               : (
                 <FlatList
                   style={styles.flatListContainer}
+                  onScroll={scroll}
                   data={trades}
                   refreshControl={(
                     <RefreshControl
