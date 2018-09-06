@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
   View,
-  StyleSheet, ScrollView,
+  StyleSheet, ScrollView, Image,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   container: {
-    backgroundColor: 'white',
+    backgroundColor: '#243682',
     position: 'absolute',
     width: '100%',
   },
@@ -158,7 +158,10 @@ class Wallet extends Component {
     return withCommonStatusBar(
       <ScrollView bounces={false} style={styles.safeContainer}>
         <View style={styles.container}>
-          <HeaderBar title={header} />
+          <HeaderBar
+            title={header}
+            rightIcon={<Image source={require('../../img/messages_notification.png')} />}
+          />
           <View style={styles.rowContainer}>
             <TopButton
               title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' })}

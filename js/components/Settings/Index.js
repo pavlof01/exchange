@@ -20,7 +20,7 @@ import { getLocaleDisplayName } from '../../utils/i18n';
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
   },
   mainContainer: {
     flex: 1,
@@ -152,8 +152,8 @@ class Settings extends Component {
     const displaySelectedLanguage = getLocaleDisplayName(selectedLocale);
     return (
       <SafeAreaView style={styles.safeContainer}>
+        <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
         <View style={styles.mainContainer}>
-          <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
           <ScrollView style={styles.scrollContainer}>
             <Title text={intl.formatMessage({ id: 'app.settings.title.profile', defaultMessage: 'Profile' }).toUpperCase()} />
             <View style={styles.emailContainer}>
