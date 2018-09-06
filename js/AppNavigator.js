@@ -21,6 +21,7 @@ import SelectCountries from './containers/Settings/SelectCountries';
 import SelectNativeCurrency from './containers/Settings/SelectNativeCurr';
 import SelectLanguage from './containers/Settings/SelectLanguage';
 import PincodeAutorization from './containers/PincodeAutorization';
+import Transactions from './containers/Transactions';
 
 import {
   bottomBarStyle,
@@ -54,6 +55,7 @@ const AppNavigator = createStackNavigator({
   SelectNativeCurrency: { screen: SelectNativeCurrency },
   SelectLanguage: { screen: SelectLanguage },
   PincodeAutorization: { screen: PincodeAutorization },
+  Transactions: { screen: Transactions, navigationOptions: () => ({ header: () => null }) },
 });
 
 export default AppNavigator;

@@ -161,6 +161,7 @@ class Wallet extends Component {
           <HeaderBar
             title={header}
             rightIcon={<Image source={require('../../img/messages_notification.png')} />}
+            onPress={() => this.props.openTransactions()}
           />
           <View style={styles.rowContainer}>
             <TopButton
@@ -204,6 +205,7 @@ Wallet.propTypes = {
   updateCurrencies: PropTypes.any,
   updateCryptValue: PropTypes.any,
   cryptValue: PropTypes.any,
+  openTransactions: PropTypes.any,
   /* eslint-enable react/forbid-prop-types */
 };
 
