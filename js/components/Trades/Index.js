@@ -11,6 +11,7 @@ import {
   Image,
   Dimensions,
   Animated,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
@@ -28,11 +29,14 @@ import { fonts } from '../../style/resourceHelpers';
 import AbsoluteContainer from '../AbsoluteContainer';
 
 const { height } = Dimensions.get('window');
+const isAndroid = Platform.OS === 'android';
 
 const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 56;
 // отступ от верха, регулирование величины наложения
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
+
+const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 56 : 36;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -239,12 +243,12 @@ class Trades extends Component {
     ]);
     const translateToolbarY = this.state.headerHeight.interpolate({
       inputRange: [0, 20, 50],
-      outputRange: [0, 0, -62],
+      outputRange: [0, 0, -HEIGHT_HEADER_FOR_INTERPOLATE],
       extrapolate: 'clamp',
     });
     const stayHeader = this.state.headerHeight.interpolate({
       inputRange: [0, 20, 50],
-      outputRange: [0, 0, 62],
+      outputRange: [0, 0, HEIGHT_HEADER_FOR_INTERPOLATE],
       extrapolate: 'clamp',
     });
     return withCommonStatusBar(
@@ -266,7 +270,10 @@ class Trades extends Component {
             },
           ]}
           >
-            <HeaderBar title="TRADES" />
+            <HeaderBar
+              rightIcon={<Image source={require('../../img/transactions.png')} />}
+              title="TRADES"
+            />
           </Animated.View>
         </Animated.View>
         <View style={styles.body}>

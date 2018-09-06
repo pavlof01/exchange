@@ -2,11 +2,21 @@ import React from 'react';
 import {
   Platform,
   StyleSheet, Text,
+  View,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { fonts } from '../resourceHelpers';
+import Touchable from '../Touchable';
+
+const isAndroid = Platform.OS === 'android';
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: isAndroid ? 0 : 10,
+  },
   androidContainer: {
     backgroundColor: '#243682',
     color: 'white',
@@ -30,10 +40,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     letterSpacing: 1,
   },
+  image: {
+    backgroundColor: '#243682',
+    position: 'absolute',
+    right: 20,
+  },
 });
-
-
-const isAndroid = Platform.OS === 'android';
 
 class HeaderBar extends React.Component {
   static propTypes = {
@@ -45,9 +57,14 @@ class HeaderBar extends React.Component {
 
   render() {
     return (
-      <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
-        {this.props.title}
-      </Text>
+      <View style={styles.container}>
+        <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
+          {this.props.title}
+        </Text>
+        <Touchable style={styles.image}>
+          {this.props.rightIcon}
+        </Touchable>
+      </View>
     );
   }
 }
