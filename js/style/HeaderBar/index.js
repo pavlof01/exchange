@@ -40,10 +40,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     letterSpacing: 1,
   },
-  image: {
+  touchableContainer: {
     backgroundColor: '#243682',
     position: 'absolute',
     right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageContainer: {
+    backgroundColor: '#243682',
+    position: 'absolute',
+    right: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
@@ -61,9 +70,11 @@ class HeaderBar extends React.Component {
         <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
           {this.props.title}
         </Text>
-        <View style={styles.image}>
-          {this.props.rightIcon}
-        </View>
+        <Touchable onPress={this.props.onPress} style={styles.touchableContainer}>
+          <View style={styles.imageContainer}>
+            {this.props.rightIcon}
+          </View>
+        </Touchable>
       </View>
     );
   }

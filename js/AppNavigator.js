@@ -1,10 +1,10 @@
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import SplashScreen from './containers/SplashScreen';
-import Offers from './containers/Offers/Index';
-import Wallet from './containers/Wallet/Index';
-import Trades from './containers/Trades/Index';
-import Settings from './containers/Settings/Index';
+import OffersScreen from './containers/Offers/Index';
+import WalletScreen from './containers/Wallet/Index';
+import TradesScreen from './containers/Trades/Index';
+import SettingsScreen from './containers/Settings/Index';
 import Login from './containers/Login/Index';
 import SignUp from './containers/SignUp/Index';
 import RecoverPassword from './containers/RecoverPassword/Index';
@@ -21,7 +21,7 @@ import SelectCountries from './containers/Settings/SelectCountries';
 import SelectNativeCurrency from './containers/Settings/SelectNativeCurr';
 import SelectLanguage from './containers/Settings/SelectLanguage';
 import PincodeAutorization from './containers/PincodeAutorization';
-
+import Transactions from './containers/Transactions';
 import {
   bottomBarStyle,
   createBasicNavigationOptions,
@@ -29,10 +29,10 @@ import {
 } from './style/navigation';
 
 const Main = createBottomTabNavigator({
-  Offers: { screen: Offers, navigationOptions: createBottomBarOptions('app.navigation.bottomLabel.Offers', require('./img/ic_offer.png')) },
-  Wallet: { screen: Wallet, navigationOptions: createBottomBarOptions('app.navigation.bottomLabel.Wallet', require('./img/ic_wallet.png')) },
-  Trades: { screen: Trades, navigationOptions: createBottomBarOptions('app.navigation.bottomLabel.Trades', require('./img/ic_trades.png')) },
-  Settings: { screen: Settings, navigationOptions: createBottomBarOptions('app.navigation.bottomLabel.Settings', require('./img/ic_settings.png')) },
+  Offers: { screen: OffersScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_offer.png'))) },
+  Wallet: { screen: WalletScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_wallet.png'))) }, // createBottomBarOptions('app.navigation.bottomLabel.Wallet', require('./img/ic_wallet.png')) },
+  Trades: { screen: TradesScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_trades.png'))) }, // createBottomBarOptions('app.navigation.bottomLabel.Trades', require('./img/ic_trades.png')) },
+  Settings: { screen: SettingsScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_settings.png'))) }, // createBottomBarOptions('app.navigation.bottomLabel.Settings', require('./img/ic_settings.png')) },
 }, bottomBarStyle);
 
 const AppNavigator = createStackNavigator({
@@ -54,6 +54,7 @@ const AppNavigator = createStackNavigator({
   SelectNativeCurrency: { screen: SelectNativeCurrency },
   SelectLanguage: { screen: SelectLanguage },
   PincodeAutorization: { screen: PincodeAutorization },
+  Transactions: { screen: Transactions, navigationOptions: () => ({ header: () => null }) },
 });
 
 export default AppNavigator;

@@ -11,6 +11,7 @@ export const SELECT_COUNTRIES = 'SELECT_COUNTRIES';
 export const SELECT_NATIVE_CURRENCY = 'SELECT_NATIVE_CURRENCY';
 export const SELECT_LANGUAGE = 'SELECT_LANGUAGE';
 export const OPEN_PINCODE_AUTORIZATION = 'OPEN PINCODE AUTORIZATION';
+export const OPEN_TRANSACTIONS = 'OPEN TRANSACTIONS';
 
 export function newTrade(ad) {
   return {
@@ -91,5 +92,11 @@ export function openSelectLanguage() {
 export function openPincodeAutorization() {
   return {
     type: OPEN_PINCODE_AUTORIZATION,
+  };
+}
+
+export function openTransactions() {
+  return {
+    type: OPEN_TRANSACTIONS,
   };
 }

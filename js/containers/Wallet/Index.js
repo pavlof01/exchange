@@ -10,6 +10,7 @@ import {
   getTransactionTokensList,
   generateTransactionToken,
 } from '../../actions/session';
+import { openTransactions } from '../../actions/navigation';
 
 const mapDispatchToProps = dispatch => ({
   updateRates: (cryptoCurrency, fiatCurrency) => dispatch(fetchRates(cryptoCurrency, fiatCurrency)),
@@ -20,6 +21,7 @@ const mapDispatchToProps = dispatch => ({
   sendCryptoCurrency: params => dispatch(sendCryptoCurrency(dispatch, params)),
   getTransactionTokens: params => dispatch(getTransactionTokensList(params, dispatch)),
   generateTransactionToken: params => dispatch(generateTransactionToken(params, dispatch)),
+  openTransactions: () => dispatch(openTransactions()),
 });
 
 const mapStateToProps = state => ({

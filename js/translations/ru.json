@@ -87,6 +87,8 @@
   "app.trades.curr": "Валюта",
   "app.wallet.title.transfer": "Перевести",
   "app.wallet.title.receive": "Получить",
+  "app.wallet.transactions.title.incoming": "Полученные",
+  "app.wallet.transactions.title.outbox": "Архив",
   "app.wallet.title.balance": "Баланс",
   "app.wallet.form.label.adress": "Адрес",
   "app.wallet.form.label.adress.placeholder.enter": "Введите ",
