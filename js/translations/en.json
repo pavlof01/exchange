@@ -87,6 +87,8 @@
   "app.trades.curr": "Curr",
   "app.wallet.title.transfer": "Transfer",
   "app.wallet.title.receive": "Receive",
+  "app.wallet.transactions.title.incoming": "Incoming",
+  "app.wallet.transactions.title.outbox": "Outbox",
   "app.wallet.title.balance": "Balance",
   "app.wallet.form.label.adress": "Address",
   "app.wallet.form.label.adress.placeholder.enter": "Enter ",

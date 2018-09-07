@@ -234,13 +234,13 @@ class Transactions extends Component {
           />
           <View style={styles.topButtonsContainer}>
             <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' })}
+              title={intl.formatMessage({ id: 'app.wallet.transactions.title.incoming', defaultMessage: 'Incoming' })}
               onPress={() => console.warn('sdf')}
               selected
             />
 
             <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' })}
+              title={intl.formatMessage({ id: 'app.wallet.transactions.title.outbox', defaultMessage: 'Outbox' })}
               onPress={() => console.warn('sdf')}
               selected={false}
             />
