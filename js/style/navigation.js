@@ -2,8 +2,8 @@ import React from 'react';
 import {
   StatusBar,
   StyleSheet,
-  Image,
-  Text,
+  Image,  
+  View,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 
@@ -12,6 +12,18 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
   },
+  activeIconTopLine: {
+    width: '50%',
+    height: 3,
+    backgroundColor: '#25367e',
+    position: 'absolute',
+    alignSelf: 'center',
+    top: 0,
+  },
+  bottomBarIconContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
 });
 
 /**
@@ -19,6 +31,7 @@ const styles = StyleSheet.create({
  * @param {string} title Заголовок сцены
  * @return {Object}
  */
+
 export function createBasicNavigationOptions(title) {
   return {
     title,
@@ -36,27 +49,17 @@ export const bottomBarStyle = {
   },
 };
 
-export function createBottomBarOptions(labelMessageId, src) {
-  return ({
-    tabBarLabel: ({ tintColor }) => (
-      <FormattedMessage
-        id={labelMessageId}
-      >
-        {text => (
-          <Text style={{ color: tintColor, fontSize: 10, textAlign: 'center' }}>
-            {text}
-          </Text>
-        )}
-      </FormattedMessage>
-    ),
-    tabBarIcon: ({ tintColor }) => (
-      <Image
-        source={src}
-        style={styles.bottomBarIcon}
-        tintColor={tintColor}
-      />
-    ),
-  });
+export function createBottomBarOptions(navigation, sourceIcon) {
+  return {
+    tabBarIcon: ({ focused, tintColor }) => {
+      return (
+        <View style={styles.bottomBarIconContainer}>
+          <View style={[focused ? styles.activeIconTopLine : null]} />
+          <Image style={styles.bottomBarIcon} source={sourceIcon} />
+        </View>
+      );
+    },
+  };
 }
 
 export const withCommonStatusBar = container => (
