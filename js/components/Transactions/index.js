@@ -18,11 +18,12 @@ import TopButton from '../../style/TopButton';
 import AbsoluteContainer from '../AbsoluteContainer';
 import { fonts } from '../../style/resourceHelpers';
 import { withCommonStatusBar } from '../../style/navigation';
+import Touchable from '../../style/Touchable';
 
 const { height } = Dimensions.get('window');
 const isAndroid = Platform.OS === 'android';
 
-const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 56;
+const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 116;
 // отступ от верха, регулирование величины наложения
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
@@ -38,8 +39,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#243682',
     position: 'absolute',
     width: '100%',
+    height: 176,
   },
-  rowContainer: {
+  topButtonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -47,6 +49,49 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 8,
     backgroundColor: '#243682',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    borderBottomColor: 'rgba(238, 238, 238,0.8)',
+    borderBottomWidth: 1,
+  },
+  rowContaineCryptIcon: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  cryptIcon: {
+    width: 30,
+    height: 30,
+  },
+  rowContaineArrowIcon: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  arrowIcon: {
+    transform: [
+      { rotateZ: '-90deg' },
+    ],
+  },
+  rowContainerBody: {
+    flex: 5,
+  },
+  rowContainerAmount: {
+    flexDirection: 'row',
+  },
+  amountText: {
+    fontSize: 17,
+    color: '#000000',
+    fontWeight: '400',
+  },
+  dateText: {
+    fontSize: 12,
+    color: '#a7a7a7',
+    fontWeight: '300',
   },
   centerMessage: {
     flex: 1,
@@ -57,42 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
   },
-  tradeNumber: {
-    flex: 3,
-    color: '#b0b0b0',
-  },
-  tradeType: {
-    textAlign: 'center',
-    flex: 3,
-    fontFamily: fonts.semibold.regular,
-  },
-  currencyType: {
-    flex: 3,
-    alignItems: 'center',
-  },
-  imageCurrencyType: {
-    width: 22,
-    height: 22,
-  },
-  statusContainer: {
-    flex: 1,
-  },
-  statusActive: {
-    width: 8,
-    height: 40,
-    backgroundColor: '#DADADA',
-    left: -4,
-  },
-  statusNoneActive: {
-    width: 8,
-    height: 40,
-    backgroundColor: '#2a3b89',
-    left: -4,
-  },
-  username: {
-    flex: 5,
-    fontFamily: fonts.semibold.regular,
-  },
+
   flatListContainer: {
     height: height - 132,
   },
@@ -110,6 +120,86 @@ class Transactions extends Component {
     this.state = {
       headerHeight: new Animated.Value(0),
     };
+  }
+
+  componentDidMount() {
+    this.props.getTransactionList(1);
+  }
+
+  renderItem = ({ item }) => {
+    // const alt = index % 2 === 0;
+    console.warn(JSON.stringify(item, null, 2));
+    return (
+      <Touchable onPress={() => console.warn('dsfsd')/* this.props.openTrade(trade.id) */}>
+        <View
+          style={[styles.rowContainer]}
+        >
+          <View style={styles.rowContaineCryptIcon}>
+            <Image
+              style={styles.cryptIcon}
+              source={item.data.currency === 'BTC'
+                ? require('../../img/ic_btc.png') : require('../../img/ic_eth.png')}
+            />
+          </View>
+          <View style={styles.rowContainerBody}>
+            <View style={styles.rowContainerAmount}>
+              <Text style={styles.amountText}>
+                {item.data.currency}
+              </Text>
+              <Text style={styles.amountText}>
+                {item.amount}
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.dateText}>
+                {item.date}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowContaineArrowIcon}>
+            <Image style={styles.arrowIcon} source={require('../../img/ic_picker.png')} />
+          </View>
+
+        </View>
+      </Touchable>
+    );
+  };
+
+  onRefresh = () => {
+    const {
+      getTransactionList,
+    } = this.props;
+    getTransactionList(1);
+  };
+
+  loadNext = () => {
+    const {
+      fetchTrades,
+      lastLoadedPage,
+      isFetch,
+      isReachEnd,
+      getTransactionList,
+    } = this.props;
+    const nextPage = lastLoadedPage + 1;
+    const params = {
+      scope: 'info_panel',
+      limit: PAGE_SIZE,
+      page: nextPage,
+    };
+
+    if (!isFetch && !isReachEnd) {
+      fetchTrades(params);
+    }
+  };
+
+  getFlatListData = () => {
+    const { transactions } = this.props;
+    try {
+      const { data } = transactions.toJS();
+      return data;
+    } catch (e) {
+      return [];
+    }
   }
 
   render() {
@@ -133,6 +223,7 @@ class Transactions extends Component {
       outputRange: [0, 0, HEIGHT_HEADER_FOR_INTERPOLATE],
       extrapolate: 'clamp',
     });
+    const flatListData = this.getFlatListData();
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -141,32 +232,32 @@ class Transactions extends Component {
             title="TRADES"
             onPress={() => this.props.navigation.goBack()}
           />
-          <View style={styles.rowContainer}>
+          <View style={styles.topButtonsContainer}>
             <TopButton
               title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' })}
-              onPress={this.onTransferSelected}
-              selected={this.state.selectedAction === 'transfer'}
+              onPress={() => console.warn('sdf')}
+              selected
             />
 
             <TopButton
               title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' })}
-              onPress={this.onReceiveSelected}
-              selected={this.state.selectedAction === 'receive'}
+              onPress={() => console.warn('sdf')}
+              selected={false}
             />
           </View>
         </View>
         <View style={styles.body}>
           <AbsoluteContainer>
-            {/*isFetch && trades.length === 0
+            {this.props.session.transactions.pending && flatListData.length === 0
               ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
               : (
                 <FlatList
                   style={styles.flatListContainer}
                   onScroll={scroll}
-                  data={trades}
+                  data={flatListData}
                   refreshControl={(
                     <RefreshControl
-                      refreshing={isFetch}
+                      refreshing={this.props.session.transactions.pending}
                       onRefresh={this.onRefresh}
                     />
                   )}
@@ -178,12 +269,12 @@ class Transactions extends Component {
                     </Text>
                   )}
                   ListFooterComponent={
-                    isFetch && <ActivityIndicator size="large" />
+                    this.props.session.transactions.pending && <ActivityIndicator size="large" />
                   }
-                  onEndReached={this.loadNext}
+                  // onEndReached={this.loadNext}
                   onEndReachedThreshold={0.3}
                 />
-              )*/}
+              )}
           </AbsoluteContainer>
         </View>
       </SafeAreaView>,
