@@ -160,7 +160,7 @@ class Wallet extends Component {
         <View style={styles.container}>
           <HeaderBar
             title={header}
-            rightIcon={<Image source={require('../../img/messages_notification.png')} />}
+            rightIcon={<Image source={require('../../img/transactions.png')} />}
             onPress={() => this.props.openTransactions()}
           />
           <View style={styles.rowContainer}>

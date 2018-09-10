@@ -188,11 +188,11 @@ class Trades extends Component {
                 source={require('../../img/ic_btc.png')}
               />
             ) : (
-                <Image
+              <Image
                   style={styles.imageCurrencyType}
                   source={require('../../img/ic_eth.png')}
                 />
-              )}
+            )}
           </View>
         </View>
       </Touchable>
@@ -270,7 +270,7 @@ class Trades extends Component {
           ]}
           >
             <HeaderBar
-              rightIcon={<Image source={require('../../img/transactions.png')} />}
+              rightIcon={<Image source={require('../../img/messages_notification.png')} />}
               title="TRADES"
             />
           </Animated.View>
