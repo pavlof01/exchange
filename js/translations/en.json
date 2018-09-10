@@ -117,6 +117,7 @@
   "app.wallet.dialog.to": "To",
   "app.wallet.dialog.password": "Password",
   "app.wallet.dialog.password.placeholder": "Login password",
+  "app.wallet.transactions.title": "Transactions",
   "app.login.enter_username": "Enter email",
   "app.login.enter_password": "Enter password",
   "app.login.forgot_password": "Forgot password?",
