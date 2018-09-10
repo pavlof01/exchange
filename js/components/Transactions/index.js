@@ -28,7 +28,7 @@ const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 116;
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
-const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 116 : 96;
+const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 116 : 106;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
     marginTop: height / 2 - ACTIVITY_INDICATOR_HEIGHT,
   },
   body: {
-    marginTop: MARGIN_FROM_TOP_TO_MAIN_CONTAINER,
+    marginTop: HEIGHT_HEADER_FOR_INTERPOLATE,
+    flex: 1,
   },
 });
 
@@ -215,13 +216,13 @@ class Transactions extends Component {
       extrapolate: 'clamp',
     });
     const buttonsOpacity = this.state.headerHeight.interpolate({
-      inputRange: [0, 50],
+      inputRange: [15, 50],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
     const translateAbsoluteContainer = this.state.headerHeight.interpolate({
       inputRange: [0, 50],
-      outputRange: [0, -56],
+      outputRange: [0, -40],
       extrapolate: 'clamp',
     });
     const flatListData = this.getFlatListData();
