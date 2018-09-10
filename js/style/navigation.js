@@ -2,15 +2,15 @@ import React from 'react';
 import {
   StatusBar,
   StyleSheet,
-  Image,  
+  Image,
   View,
 } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 
 const styles = StyleSheet.create({
   bottomBarIcon: {
-    height: 24,
-    width: 24,
+    height: 26,
+    width: 26,
   },
   activeIconTopLine: {
     width: '50%',
@@ -45,20 +45,21 @@ export const bottomBarStyle = {
   initialRouteName: 'Offers',
   tabBarOptions: {
     activeTintColor: '#25367E',
-    inactiveTintColor: '#696969',
+    showLabel: false,
+    style: {
+      height: 60,
+    },
   },
 };
 
 export function createBottomBarOptions(navigation, sourceIcon) {
   return {
-    tabBarIcon: ({ focused, tintColor }) => {
-      return (
-        <View style={styles.bottomBarIconContainer}>
-          <View style={[focused ? styles.activeIconTopLine : null]} />
-          <Image style={styles.bottomBarIcon} source={sourceIcon} />
-        </View>
-      );
-    },
+    tabBarIcon: ({ focused, tintColor }) => (
+      <View style={styles.bottomBarIconContainer}>
+        <View style={[focused ? styles.activeIconTopLine : null]} />
+        <Image style={[styles.bottomBarIcon, focused ? null : { opacity: 0.5 }]} tintColor={tintColor} source={sourceIcon} />
+      </View>
+    ),
   };
 }
 
