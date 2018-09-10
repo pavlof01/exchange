@@ -28,7 +28,7 @@ const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 116;
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
-const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 56 : 36;
+const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 116 : 106;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
     marginTop: height / 2 - ACTIVITY_INDICATOR_HEIGHT,
   },
   body: {
-    marginTop: MARGIN_FROM_TOP_TO_MAIN_CONTAINER,
+    marginTop: HEIGHT_HEADER_FOR_INTERPOLATE,
+    flex: 1,
   },
 });
 
@@ -209,26 +210,37 @@ class Transactions extends Component {
         },
       },
     ]);
-    const translateToolbarY = this.state.headerHeight.interpolate({
-      inputRange: [0, 20, 50],
-      outputRange: [0, 0, -HEIGHT_HEADER_FOR_INTERPOLATE],
+    const heightHeader = this.state.headerHeight.interpolate({
+      inputRange: [0, 50],
+      outputRange: [176, 76],
       extrapolate: 'clamp',
     });
-    const stayHeader = this.state.headerHeight.interpolate({
-      inputRange: [0, 20, 50],
-      outputRange: [0, 0, HEIGHT_HEADER_FOR_INTERPOLATE],
+    const buttonsOpacity = this.state.headerHeight.interpolate({
+      inputRange: [15, 50],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+    const translateAbsoluteContainer = this.state.headerHeight.interpolate({
+      inputRange: [0, 50],
+      outputRange: [0, -40],
       extrapolate: 'clamp',
     });
     const flatListData = this.getFlatListData();
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
+        <Animated.View style={[
+          styles.container,
+          {
+            height: heightHeader,
+          },
+        ]}
+        >
           <HeaderBar
             rightIcon={<Image source={require('../../img/close.png')} />}
             title={intl.formatMessage({ id: 'app.wallet.transactions.title', defaultMessage: 'Transactions' }).toUpperCase()}
             onPress={() => this.props.navigation.goBack()}
           />
-          <View style={styles.topButtonsContainer}>
+          <Animated.View style={[styles.topButtonsContainer, { opacity: buttonsOpacity }]}>
             <TopButton
               title={intl.formatMessage({ id: 'app.wallet.transactions.title.incoming', defaultMessage: 'Incoming' })}
               onPress={() => console.warn('sdf')}
@@ -240,9 +252,14 @@ class Transactions extends Component {
               onPress={() => console.warn('sdf')}
               selected={false}
             />
-          </View>
-        </View>
-        <View style={styles.body}>
+          </Animated.View>
+        </Animated.View>
+        <Animated.View style={[styles.body, {
+          transform: [{
+            translateY: translateAbsoluteContainer,
+          }],
+        }]}
+        >
           <AbsoluteContainer>
             {this.props.session.transactions.pending && flatListData.length === 0
               ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
@@ -272,7 +289,7 @@ class Transactions extends Component {
                 />
               )}
           </AbsoluteContainer>
-        </View>
+        </Animated.View>
       </SafeAreaView>,
     );
   }
