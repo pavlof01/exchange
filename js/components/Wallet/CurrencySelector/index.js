@@ -76,7 +76,7 @@ export default class CurrencySelector extends Component {
       <View style={styles.cryptHeader}>
         <Touchable onPress={() => this.onCryptoCurrencyCodeChange('BTC')}>
           <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'BTC' ? styles.active : null]}>
-            <Image style={styles.cryptImage} source={require('../../../img/ic_btc.png')} />
+            <Image resizeMode="contain" style={styles.cryptImage} source={require('../../../img/ic_btc.png')} />
             <View>
               <Text style={styles.cryptNameText}>
                 BTC
@@ -89,7 +89,7 @@ export default class CurrencySelector extends Component {
         </Touchable>
         <Touchable onPress={() => this.onCryptoCurrencyCodeChange('ETH')}>
           <View style={[styles.cryptContainer, this.state.cryptoCurrencyCode === 'ETH' ? styles.active : null]}>
-            <Image style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
+            <Image resizeMode="contain" style={styles.cryptImage} source={require('../../../img/ic_eth.png')} />
             <View>
               <Text style={styles.cryptNameText}>
                 ETH
