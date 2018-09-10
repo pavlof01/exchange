@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
     padding: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#e1e1e1',
@@ -114,12 +115,15 @@ const styles = StyleSheet.create({
   pickerIcon: {
     height: 17,
     width: 23,
+    left: 15,
   },
   cardText: {
     fontSize: 24,
     color: '#4a4a4a',
     margin: 8,
     fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center'
   },
   currencyCircle: {
     width: 18,
@@ -128,6 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#9b9b9b',
     alignItems: 'center',
     justifyContent: 'center',
+    left: 15,
   },
   currencySubcircle: {
     width: 16,
@@ -852,13 +857,13 @@ class Offers extends React.PureComponent {
                 <Text style={styles.btcCostText}>
                   {`${filter.cryptoCurrencyCode} COST`}
                 </Text>
-                { exchangeRates.pending && (
+                {exchangeRates.pending && (
                   <ActivityIndicator
                     size="small"
                     animating
                     color="rgb(168,190,235)"
                   />
-                ) }
+                )}
               </View>
               <View style={styles.btcValueWrapper}>
                 <Text style={styles.btcCost}>
