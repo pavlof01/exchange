@@ -30,9 +30,9 @@ import {
 
 const Main = createBottomTabNavigator({
   Offers: { screen: OffersScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_offer.png'))) },
-  Wallet: { screen: WalletScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_wallet.png'))) }, // createBottomBarOptions('app.navigation.bottomLabel.Wallet', require('./img/ic_wallet.png')) },
-  Trades: { screen: TradesScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_trades.png'))) }, // createBottomBarOptions('app.navigation.bottomLabel.Trades', require('./img/ic_trades.png')) },
-  Settings: { screen: SettingsScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_settings.png'))) }, // createBottomBarOptions('app.navigation.bottomLabel.Settings', require('./img/ic_settings.png')) },
+  Wallet: { screen: WalletScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_wallet.png'))) },
+  Trades: { screen: TradesScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_trades.png'))) },
+  Settings: { screen: SettingsScreen, navigationOptions: ({ navigation }) => (createBottomBarOptions(navigation, require('./img/ic_settings.png'))) },
 }, bottomBarStyle);
 
 const AppNavigator = createStackNavigator({
