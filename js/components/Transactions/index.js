@@ -121,10 +121,11 @@ class Transactions extends Component {
     this.state = {
       headerHeight: new Animated.Value(0),
     };
+    this.page = 1;
   }
 
   componentDidMount() {
-    this.props.getTransactionList(1);
+    this.props.getTransactionList({ page: this.page });
   }
 
   renderItem = ({ item }) => (
@@ -171,21 +172,12 @@ class Transactions extends Component {
 
   loadNext = () => {
     const {
-      fetchTrades,
-      lastLoadedPage,
-      isFetch,
-      isReachEnd,
       getTransactionList,
     } = this.props;
-    const nextPage = lastLoadedPage + 1;
-    const params = {
-      scope: 'info_panel',
-      limit: PAGE_SIZE,
-      page: nextPage,
-    };
-
-    if (!isFetch && !isReachEnd) {
-      fetchTrades(params);
+    const { total_pages, page } = this.props.transactions.toJS();
+    if (page < total_pages) {
+      this.page = page + 1;
+      getTransactionList({ page: this.page });
     }
   };
 
@@ -275,7 +267,7 @@ class Transactions extends Component {
                     />
                   )}
                   renderItem={this.renderItem}
-                  keyExtractor={i => i.id}
+                  keyExtractor={(i, index) => index}
                   ListEmptyComponent={(
                     <Text style={styles.centerMessage}>
                       {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
@@ -284,7 +276,7 @@ class Transactions extends Component {
                   ListFooterComponent={
                     this.props.session.transactions.pending && <ActivityIndicator size="large" />
                   }
-                  // onEndReached={this.loadNext}
+                  onEndReached={this.loadNext}
                   onEndReachedThreshold={0.3}
                 />
               )}
