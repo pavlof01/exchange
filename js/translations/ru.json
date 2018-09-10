@@ -117,6 +117,7 @@
   "app.wallet.dialog.to": "Кому",
   "app.wallet.dialog.password": "Пароль",
   "app.wallet.dialog.password.placeholder": "Введите пароль",
+  "app.wallet.transactions.title": "Транзакции",
   "app.login.enter_username": "Введите email",
   "app.login.enter_password": "Введите пароль",
   "app.login.forgot_password": "Забыли пароль?",
