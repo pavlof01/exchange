@@ -168,12 +168,41 @@ export function updateUserMeta(params, dispatch) {
 
 export function getTransactionList(params, dispatch) {
   Api.get(`/transactions?page=${params.page}`).then(({ data }) => {
-    dispatch({ type: SESSION.FETCH_TRANSACTIONS_SUCCEED, data: { ...data, page: params.page } });
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_SUCCEED,
+      payload: {
+        items: data && data.transactions ? data.transactions : [],
+        page: params.page,
+      },
+    });
   }).catch((error) => {
-    dispatch({ type: SESSION.FETCH_TRANSACTIONS_FAILURE, error });
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_FAILURE,
+      payload: error,
+    });
   });
 
   return { type: SESSION.FETCH_TRANSACTIONS_STARTED };
+}
+
+export function refreshTransactionList(dispatch) {
+  const FIRST_PAGE = 1;
+  Api.get(`/transactions?page=${FIRST_PAGE}`).then(({ data }) => {
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_SUCCEED,
+      payload: {
+        items: data && data.transactions ? data.transactions : [],
+        page: FIRST_PAGE,
+      },
+    });
+  }).catch((error) => {
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_FAILURE,
+      payload: error,
+    });
+  });
+
+  return { type: SESSION.REFRESH_TRANSACTIONS };
 }
 
 export function toggleTransactionDetails(id) {

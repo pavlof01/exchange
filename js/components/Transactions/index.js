@@ -1,4 +1,6 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   ActivityIndicator,
   FlatList,
@@ -17,7 +19,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
 import TopButton from '../../style/TopButton';
 import AbsoluteContainer from '../AbsoluteContainer';
-import { fonts } from '../../style/resourceHelpers';
 import { withCommonStatusBar } from '../../style/navigation';
 import Touchable from '../../style/Touchable';
 
@@ -122,10 +123,20 @@ class Transactions extends Component {
       headerHeight: new Animated.Value(0),
     };
     this.page = 1;
+
+    this.scroll = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: {
+            y: this.state.headerHeight,
+          },
+        },
+      },
+    ]);
   }
 
   componentDidMount() {
-    this.props.getTransactionList({ page: this.page });
+    this.onRefresh();
   }
 
   renderItem = ({ item }) => (
@@ -165,43 +176,35 @@ class Transactions extends Component {
 
   onRefresh = () => {
     const {
-      getTransactionList,
+      refreshTransactionList,
     } = this.props;
-    getTransactionList(1);
+    refreshTransactionList();
   };
 
   loadNext = () => {
     const {
       getTransactionList,
+      lastLoadedPage,
+      isReachEnd,
     } = this.props;
-    const { total_pages, page } = this.props.transactions.toJS();
-    if (page < total_pages) {
-      this.page = page + 1;
-      getTransactionList({ page: this.page });
+    if (!isReachEnd) {
+      this.page = lastLoadedPage + 1;
+      getTransactionList({page: this.page});
     }
   };
 
   getFlatListData = () => {
-    const { transactions } = this.props;
-    try {
-      const { data } = transactions.toJS();
-      return data;
-    } catch (e) {
-      return [];
-    }
-  }
+    const { items } = this.props;
+    return items;
+  };
+
+  isPending = () => {
+    const { isFetching } = this.props;
+    return isFetching;
+  };
 
   render() {
     const { intl } = this.props;
-    const scroll = Animated.event([
-      {
-        nativeEvent: {
-          contentOffset: {
-            y: this.state.headerHeight,
-          },
-        },
-      },
-    ]);
     const heightHeader = this.state.headerHeight.interpolate({
       inputRange: [0, 50],
       outputRange: [206, 96],
@@ -248,16 +251,16 @@ class Transactions extends Component {
         </Animated.View>
         <Animated.View style={[styles.body, { marginTop: translateAbsoluteContainer }]}>
           <AbsoluteContainer>
-            {this.props.session.transactions.pending && flatListData.length === 0
+            {this.isPending() && flatListData.length === 0
               ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
               : (
                 <FlatList
                   style={styles.flatListContainer}
-                  onScroll={scroll}
-                  data={flatListData}
+                  onScroll={this.scroll}
+                  data={this.getFlatListData()}
                   refreshControl={(
                     <RefreshControl
-                      refreshing={this.props.session.transactions.pending}
+                      refreshing={this.props.isRefreshing}
                       onRefresh={this.onRefresh}
                     />
                   )}
@@ -269,7 +272,7 @@ class Transactions extends Component {
                     </Text>
                   )}
                   ListFooterComponent={
-                    this.props.session.transactions.pending && <ActivityIndicator size="large" />
+                    this.isPending() && <ActivityIndicator size="large" />
                   }
                   onEndReached={this.loadNext}
                   onEndReachedThreshold={0.3}
@@ -281,5 +284,20 @@ class Transactions extends Component {
     );
   }
 }
+
+Transactions.propTypes = {
+  intl: intlShape.isRequired,
+  navigation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  getTransactionList: PropTypes.func,
+  refreshTransactionList: PropTypes.func,
+  session: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  transactions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  isRefreshing: PropTypes.bool,
+  isFetching: PropTypes.bool,
+  items: PropTypes.any,
+  error: PropTypes.any, // eslint-disable-line react/no-unused-prop-types
+  lastLoadedPage: PropTypes.number,
+  isReachEnd: PropTypes.bool,
+};
 
 export default injectIntl(Transactions);
