@@ -15,7 +15,7 @@ import ConfirmDialog from './ConfirmDialog';
 
 const isAndroid = Platform.OS === 'android';
 
-const MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER = isAndroid ? 140 : 150;
+const MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER = isAndroid ? 140 : 149;
 const MARGIN_BETWEEN_HEADER_BAR_AND_BUTTONS = 20;
 
 const styles = StyleSheet.create({
@@ -40,6 +40,10 @@ const styles = StyleSheet.create({
   },
   body: {
     marginTop: MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER,
+  },
+  rightIconOfHeaderBar: {
+    width: 30,
+    height: 30,
   },
 });
 
@@ -169,7 +173,7 @@ class Wallet extends Component {
         <View style={styles.container}>
           <HeaderBar
             title={header}
-            rightIcon={<Image style={styles.rightIconOfHeaderBar} source={require('../../img/transactions.png')} />}
+            rightIcon={<Image resizeMode="contain" style={styles.rightIconOfHeaderBar} source={require('../../img/transactions.png')} />}
             onPress={() => this.props.openTransactions()}
           />
           <View style={styles.rowContainer}>

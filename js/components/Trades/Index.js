@@ -30,12 +30,12 @@ import AbsoluteContainer from '../AbsoluteContainer';
 const { height } = Dimensions.get('window');
 const isAndroid = Platform.OS === 'android';
 
-const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 56;
+const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 76;
 // отступ от верха, регулирование величины наложения
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
-const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 56 : 36;
+const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 76 : 56;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -46,14 +46,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#243682',
     position: 'absolute',
     width: '100%',
-    height: 112,
+    height: '25%',
   },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
-    height: 76,
+    paddingBottom: '5%',
+    paddingTop: '5%',
   },
   centerMessage: {
     flex: 1,
@@ -108,6 +109,7 @@ const styles = StyleSheet.create({
   },
   body: {
     marginTop: MARGIN_FROM_TOP_TO_MAIN_CONTAINER,
+    flex: 1,
   },
 });
 
@@ -188,11 +190,11 @@ class Trades extends Component {
                 source={require('../../img/ic_btc.png')}
               />
             ) : (
-              <Image
+                <Image
                   style={styles.imageCurrencyType}
                   source={require('../../img/ic_eth.png')}
                 />
-            )}
+              )}
           </View>
         </View>
       </Touchable>

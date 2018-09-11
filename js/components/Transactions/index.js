@@ -26,6 +26,7 @@ const isAndroid = Platform.OS === 'android';
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
 const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 146 : 136;
+const TRANSLATE_WHEN_TOP = isAndroid ? 96 : 76;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -202,7 +203,7 @@ class Transactions extends Component {
     ]);
     const heightHeader = this.state.headerHeight.interpolate({
       inputRange: [0, 50],
-      outputRange: [206, 76],
+      outputRange: [206, 96],
       extrapolate: 'clamp',
     });
     const buttonsOpacity = this.state.headerHeight.interpolate({
@@ -212,7 +213,7 @@ class Transactions extends Component {
     });
     const translateAbsoluteContainer = this.state.headerHeight.interpolate({
       inputRange: [0, 50],
-      outputRange: [0, -40],
+      outputRange: [HEIGHT_HEADER_FOR_INTERPOLATE, TRANSLATE_WHEN_TOP],
       extrapolate: 'clamp',
     });
     const flatListData = this.getFlatListData();
@@ -244,12 +245,7 @@ class Transactions extends Component {
             />
           </Animated.View>
         </Animated.View>
-        <Animated.View style={[styles.body, {
-          transform: [{
-            translateY: translateAbsoluteContainer,
-          }],
-        }]}
-        >
+        <Animated.View style={[styles.body, { marginTop: translateAbsoluteContainer }]}>
           <AbsoluteContainer>
             {this.props.session.transactions.pending && flatListData.length === 0
               ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
