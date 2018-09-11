@@ -168,7 +168,6 @@ export function updateUserMeta(params, dispatch) {
 
 export function getTransactionList(params, dispatch) {
   Api.get(`/transactions?page=${params.page}`).then(({ data }) => {
-    console.warn(JSON.stringify(data, null, 2));
     dispatch({
       type: SESSION.FETCH_TRANSACTIONS_SUCCEED,
       payload: {
@@ -177,7 +176,6 @@ export function getTransactionList(params, dispatch) {
       },
     });
   }).catch((error) => {
-    console.warn(JSON.stringify(error, null, 2));
     dispatch({
       type: SESSION.FETCH_TRANSACTIONS_FAILURE,
       payload: error,
@@ -190,7 +188,6 @@ export function getTransactionList(params, dispatch) {
 export function refreshTransactionList(dispatch) {
   const FIRST_PAGE = 1;
   Api.get(`/transactions?page=${FIRST_PAGE}`).then(({ data }) => {
-    console.warn(JSON.stringify(data, null, 2));
     dispatch({
       type: SESSION.FETCH_TRANSACTIONS_SUCCEED,
       payload: {
@@ -199,7 +196,6 @@ export function refreshTransactionList(dispatch) {
       },
     });
   }).catch((error) => {
-    console.warn(JSON.stringify(error, null, 2));
     dispatch({
       type: SESSION.FETCH_TRANSACTIONS_FAILURE,
       payload: error,
