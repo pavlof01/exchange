@@ -15,7 +15,7 @@ import ConfirmDialog from './ConfirmDialog';
 
 const isAndroid = Platform.OS === 'android';
 
-const MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER = isAndroid ? 140 : 150;
+const MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER = isAndroid ? 140 : 149;
 const MARGIN_BETWEEN_HEADER_BAR_AND_BUTTONS = 20;
 
 const styles = StyleSheet.create({
