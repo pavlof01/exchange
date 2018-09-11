@@ -91,6 +91,11 @@ const styles = StyleSheet.create({
     fontSize: width / 23,
     fontWeight: '400',
   },
+  sendButton: {
+    width: 320,
+    alignSelf: 'center',
+    marginTop: 30,
+  },
 });
 
 const DEFAULT_FORM_VALUES = {
@@ -384,7 +389,7 @@ class Transfer extends Component {
                   fontStyle={styles.sendButtonText}
                   onPress={this.onSubmitHandler}
                   title={submitButtonText}
-                  style={{ width: 300, alignSelf: 'center', marginTop: 30 }}
+                  style={styles.sendButton}
                 />
               </CenterHalf>
 
