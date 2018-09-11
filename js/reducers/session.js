@@ -223,6 +223,12 @@ function parseMutation(state, action) {
       },
     };
 
+    case SESSION.REFRESH_TRANSACTIONS: {
+      return {
+        transactions: { error: null, pending: true, data: [] },
+      };
+    }
+
     case SESSION.FETCH_TRANSACTIONS_STARTED: {
       const oldData = state.transactions.data || [];
       return {
@@ -230,13 +236,14 @@ function parseMutation(state, action) {
       };
     }
 
-
     case SESSION.FETCH_TRANSACTIONS_SUCCEED: {
       let oldData = [];
       try {
         const tr = state.transactions.toJS();
         oldData = tr.data || [];
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(`SESSION.FETCH_TRANSACTIONS_SUCCEED parse error - ${JSON.stringify(error, null, 2)}`);
       }
       const newData = oldData.concat(action.data.transactions);
       return {

@@ -1,4 +1,6 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   ActivityIndicator,
   FlatList,
@@ -16,7 +18,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
 import TopButton from '../../style/TopButton';
 import AbsoluteContainer from '../AbsoluteContainer';
-import { fonts } from '../../style/resourceHelpers';
 import { withCommonStatusBar } from '../../style/navigation';
 import Touchable from '../../style/Touchable';
 
@@ -121,6 +122,16 @@ class Transactions extends Component {
       headerHeight: new Animated.Value(0),
     };
     this.page = 1;
+
+    this.scroll = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: {
+            y: this.state.headerHeight,
+          },
+        },
+      },
+    ]);
   }
 
   componentDidMount() {
@@ -188,19 +199,10 @@ class Transactions extends Component {
     } catch (e) {
       return [];
     }
-  }
+  };
 
   render() {
     const { intl } = this.props;
-    const scroll = Animated.event([
-      {
-        nativeEvent: {
-          contentOffset: {
-            y: this.state.headerHeight,
-          },
-        },
-      },
-    ]);
     const heightHeader = this.state.headerHeight.interpolate({
       inputRange: [0, 50],
       outputRange: [206, 96],
@@ -252,7 +254,7 @@ class Transactions extends Component {
               : (
                 <FlatList
                   style={styles.flatListContainer}
-                  onScroll={scroll}
+                  onScroll={this.scroll}
                   data={flatListData}
                   refreshControl={(
                     <RefreshControl
@@ -280,5 +282,13 @@ class Transactions extends Component {
     );
   }
 }
+
+Transactions.propTypes = {
+  intl: intlShape.isRequired,
+  navigation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  getTransactionList: PropTypes.func,
+  session: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  transactions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+};
 
 export default injectIntl(Transactions);
