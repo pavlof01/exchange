@@ -11,6 +11,7 @@ import {
   Animated,
   Platform,
 } from 'react-native';
+import moment from 'moment';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
@@ -150,7 +151,7 @@ class Transactions extends Component {
           </View>
           <View>
             <Text style={styles.dateText}>
-              {item.date}
+              {moment(item.date).format("d.MM.YYYY h:mm:ss a")}
             </Text>
           </View>
         </View>
