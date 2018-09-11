@@ -74,19 +74,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-  positiveButton: {
-    width: width / 2 - 50,
+  btn: {
+    width: width / 2 - 70,
     marginRight: 8,
     marginLeft: 8,
   },
-  negativeButton: {
-    width: width / 2 - 50,
-    marginRight: 8,
-    marginLeft: 8,
+  btnText: {
+    fontWeight: '400',
+    fontSize: width / 25,
   },
   dialogErrorLabel: {
-    // flex: 1,
     color: '#d61b38',
+  },
+  amountSentContainer: {
+    borderBottomColor: 'rgba(151,151,151,0.1)',
+    borderBottomWidth: 1,
+    marginBottom: 10,
   },
 });
 
@@ -127,12 +130,14 @@ class ConfirmDialog extends Component {
                 </Text>
               </View>
               <View style={styles.mainInfo}>
-                <Hint>
-                  {priceLabel}
-                </Hint>
-                <Text style={styles.dialogPrice}>
-                  {priceText}
-                </Text>
+                <View style={styles.amountSentContainer}>
+                  <Hint>
+                    {priceLabel}
+                  </Hint>
+                  <Text style={styles.dialogPrice}>
+                    {priceText}
+                  </Text>
+                </View>
                 <Hint>
                   {intl.formatMessage({ id: 'app.wallet.dialog.to', defaultMessage: 'To' }).toUpperCase()}
                 </Hint>
@@ -148,12 +153,14 @@ class ConfirmDialog extends Component {
                   onPress={onCancelPress}
                   title={intl.formatMessage({ id: 'app.wallet.btn.cancel', defaultMessage: 'Cancel' })}
                   secondary
-                  style={styles.negativeButton}
+                  style={styles.btn}
+                  fontStyle={styles.btnText}
                 />
                 <PrimaryButton
                   onPress={onConfirmPress}
                   title={intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' })}
-                  style={styles.positiveButton}
+                  style={styles.btn}
+                  fontStyle={styles.btnText}
                 />
               </View>
             </View>
