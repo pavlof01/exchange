@@ -175,9 +175,9 @@ class Transactions extends Component {
 
   onRefresh = () => {
     const {
-      getTransactionList,
+      refreshTransactionList,
     } = this.props;
-    getTransactionList(1);
+    refreshTransactionList();
   };
 
   loadNext = () => {
@@ -201,6 +201,14 @@ class Transactions extends Component {
     }
   };
 
+  isPending = () => {
+    try {
+      return this.props.session.transactions.get('pending');
+    } catch (e) {
+      return false;
+    }
+  };
+
   render() {
     const { intl } = this.props;
     const heightHeader = this.state.headerHeight.interpolate({
@@ -219,6 +227,7 @@ class Transactions extends Component {
       extrapolate: 'clamp',
     });
     const flatListData = this.getFlatListData();
+    const isRefreshing = this.isPending();
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
         <Animated.View style={[
@@ -249,7 +258,7 @@ class Transactions extends Component {
         </Animated.View>
         <Animated.View style={[styles.body, { marginTop: translateAbsoluteContainer }]}>
           <AbsoluteContainer>
-            {this.props.session.transactions.pending && flatListData.length === 0
+            {isRefreshing && flatListData.length === 0
               ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
               : (
                 <FlatList
@@ -258,7 +267,7 @@ class Transactions extends Component {
                   data={flatListData}
                   refreshControl={(
                     <RefreshControl
-                      refreshing={this.props.session.transactions.pending}
+                      refreshing={isRefreshing}
                       onRefresh={this.onRefresh}
                     />
                   )}
@@ -270,7 +279,7 @@ class Transactions extends Component {
                     </Text>
                   )}
                   ListFooterComponent={
-                    this.props.session.transactions.pending && <ActivityIndicator size="large" />
+                    isRefreshing && <ActivityIndicator size="large" />
                   }
                   onEndReached={this.loadNext}
                   onEndReachedThreshold={0.3}
@@ -287,6 +296,7 @@ Transactions.propTypes = {
   intl: intlShape.isRequired,
   navigation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   getTransactionList: PropTypes.func,
+  refreshTransactionList: PropTypes.func,
   session: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   transactions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };

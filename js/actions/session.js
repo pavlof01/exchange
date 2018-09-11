@@ -176,6 +176,15 @@ export function getTransactionList(params, dispatch) {
   return { type: SESSION.FETCH_TRANSACTIONS_STARTED };
 }
 
+export function refreshTransactionList(dispatch) {
+  Api.get(`/transactions?page=${1}`).then(({ data }) => {
+    dispatch({ type: SESSION.FETCH_TRANSACTIONS_SUCCEED, data: { ...data, page: 1 } });
+  }).catch((error) => {
+    dispatch({ type: SESSION.FETCH_TRANSACTIONS_FAILURE, error });
+  });
+  return { type: SESSION.REFRESH_TRANSACTIONS };
+}
+
 export function toggleTransactionDetails(id) {
   return { type: SESSION.TOGGLE_TRANSACTION_DETAILS, data: id };
 }

@@ -1,9 +1,13 @@
 import { connect } from 'react-redux';
 import Transactions from '../../components/Transactions';
-import { getTransactionList } from '../../actions/session';
+import {
+  getTransactionList,
+  refreshTransactionList,
+} from '../../actions/session';
 
 const mapDispatchToProps = dispath => ({
   getTransactionList: props => dispath(getTransactionList(props, dispath)),
+  refreshTransactionList: () => dispath(refreshTransactionList(dispath)),
 });
 
 const mapStateToProps = state => ({
