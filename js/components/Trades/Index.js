@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
+    paddingBottom: '5%',
+    paddingTop: '5%',
   },
   centerMessage: {
     flex: 1,
@@ -188,11 +190,11 @@ class Trades extends Component {
                 source={require('../../img/ic_btc.png')}
               />
             ) : (
-              <Image
+                <Image
                   style={styles.imageCurrencyType}
                   source={require('../../img/ic_eth.png')}
                 />
-            )}
+              )}
           </View>
         </View>
       </Touchable>
