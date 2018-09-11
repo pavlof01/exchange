@@ -115,6 +115,7 @@ const simpleCurrencyName = {
 class Transfer extends Component {
   state = {
     cryptoCurrencyCode: 'BTC',
+    currency: 'USD',
     form: DEFAULT_FORM_VALUES,
     price: '',
     isConfirming: false,
@@ -127,7 +128,7 @@ class Transfer extends Component {
 
     this.props.updateRates({ [currencyCode]: this.state.cryptoCurrencyCode });
     this.props.updateCurrencies();
-    this.props.updateCryptValue();
+    this.props.updateCryptValue({crypt: 'BTC', currency: 'RUB' });
     this.props.updateEstimatedFee({ currency: this.props.currencyCode });
   }
 
@@ -168,16 +169,17 @@ class Transfer extends Component {
     this.setState({ form: { ...this.state.form, cost: value, amount: amount.toFixed(8) } });
   };
 
-  onAmountChange = (value) => {
-    // eslint-disable-next-line no-param-reassign
-    value = value.replace(/,/, '.');
-    const { BTC_USD, ETH_USD } = this.props.cryptValue;
-    const rate = this.state.cryptoCurrencyCode === 'BTC'
-      ? BTC_USD : ETH_USD;
+  onAmountChange = (value, currency = this.state.currency || 'USD') => {
+    // eslint-disable-next-line no-param-reassign    
+    value = value === null ? this.state.form.amount : value.replace(/,/, '.');
+    const { BTC_USD, ETH_USD, BTC_RUB, ETH_RUB } = this.props.cryptValue;
+    const rate = this.state.cryptoCurrencyCode === 'BTC' && currency === 'USD'
+      ? BTC_USD : this.state.cryptoCurrencyCode === 'BTC' && currency === 'RUB' 
+      ? BTC_RUB:ETH_USD;
     // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
     const cost = value * rate;
-    this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) } });
+    this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }, currency, });
   };
 
   clearedErrorList = (name) => {
@@ -279,6 +281,7 @@ class Transfer extends Component {
       withdrawal: { pending },
       intl,
       balance,
+      cryptValue,
     } = this.props;
     /* eslint-disable no-nested-ternary */
     const submitButtonText = pending
@@ -286,7 +289,7 @@ class Transfer extends Component {
       : this.state.isConfirming
         ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()
         : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
-    /* eslint-enable no-nested-ternary */
+    /* eslint-enable no-nested-ternary */    
     return (
       <KeyboardAwareScrollView
         behavior="padding"
@@ -358,20 +361,20 @@ class Transfer extends Component {
                             color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5,
                           }}
                           >
-                            {currencyCode}
+                            {this.state.currency}
                           </Text>
                           <Image source={require('../../../img/ic_picker.png')} />
                         </View>
                       </MenuTrigger>
                       <MenuOptions>
-                        <MenuOption key="USD" value="USD">
+                        <MenuOption onSelect={() => this.onAmountChange(null, 'USD')} key="USD" value="USD">
                           <Text>
                             USD
                           </Text>
                         </MenuOption>
-                        <MenuOption key="RUR" value="RUR">
+                        <MenuOption onSelect={() => this.onAmountChange(null, 'RUB')} key="RUR" value="RUR">
                           <Text>
-                            RUR
+                            RUB
                           </Text>
                         </MenuOption>
                       </MenuOptions>
