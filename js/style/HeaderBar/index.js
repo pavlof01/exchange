@@ -20,8 +20,7 @@ const styles = StyleSheet.create({
   androidContainer: {
     backgroundColor: '#243682',
     color: 'white',
-    height: 56,
-    padding: 14,
+    marginTop: 34,
     fontSize: 22,
     fontFamily: fonts.semibold.regular,
     alignItems: 'center',
@@ -31,8 +30,7 @@ const styles = StyleSheet.create({
   iosContainer: {
     backgroundColor: '#243682',
     color: 'white',
-    height: 56,
-    padding: 24,
+    marginTop: 44,
     fontSize: 16,
     fontFamily: fonts.semibold.regular,
     alignItems: 'center',
@@ -43,7 +41,8 @@ const styles = StyleSheet.create({
   touchableContainer: {
     backgroundColor: '#243682',
     position: 'absolute',
-    right: 20,
+    right: 10,
+    top: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -51,6 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#243682',
     position: 'absolute',
     right: 10,
+    top: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -67,9 +67,11 @@ class HeaderBar extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
-          {this.props.title}
-        </Text>
+        <View>
+          <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
+            {this.props.title}
+          </Text>
+        </View>
         <Touchable onPress={this.props.onPress} style={styles.touchableContainer}>
           <View style={styles.imageContainer}>
             {this.props.rightIcon}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
   View,
-  StyleSheet, ScrollView, Image,
+  StyleSheet, ScrollView, Image, Platform,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
 import HeaderBar from '../../style/HeaderBar';
@@ -12,6 +12,11 @@ import Transfer from './Transfer';
 import Receive from './Receive';
 import { withCommonStatusBar } from '../../style/navigation';
 import ConfirmDialog from './ConfirmDialog';
+
+const isAndroid = Platform.OS === 'android';
+
+const MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER = isAndroid ? 140 : 150;
+const MARGIN_BETWEEN_HEADER_BAR_AND_BUTTONS = 20;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -31,6 +36,10 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 8,
     backgroundColor: '#243682',
+    marginTop: MARGIN_BETWEEN_HEADER_BAR_AND_BUTTONS,
+  },
+  body: {
+    marginTop: MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER,
   },
 });
 
@@ -160,7 +169,7 @@ class Wallet extends Component {
         <View style={styles.container}>
           <HeaderBar
             title={header}
-            rightIcon={<Image source={require('../../img/transactions.png')} />}
+            rightIcon={<Image style={styles.rightIconOfHeaderBar} source={require('../../img/transactions.png')} />}
             onPress={() => this.props.openTransactions()}
           />
           <View style={styles.rowContainer}>
@@ -181,7 +190,7 @@ class Wallet extends Component {
           {this.state.isConfirming ? this.renderConfirmDialog() : null}
 
         </View>
-        <View style={{ marginTop: 110 }}>
+        <View style={styles.body}>
           {content}
         </View>
       </ScrollView>,

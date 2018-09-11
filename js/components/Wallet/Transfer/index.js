@@ -89,6 +89,12 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: width / 23,
+    fontWeight: '400',
+  },
+  sendButton: {
+    width: 320,
+    alignSelf: 'center',
+    marginTop: 30,
   },
 });
 
@@ -373,7 +379,6 @@ class Transfer extends Component {
                   </View>
                 </View>
               </View>
-
               {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
               {this.state.errorTextInput ? (
                 <Text style={styles.error}>
@@ -384,7 +389,7 @@ class Transfer extends Component {
                   fontStyle={styles.sendButtonText}
                   onPress={this.onSubmitHandler}
                   title={submitButtonText}
-                  style={{ width: 300, alignSelf: 'center', marginTop: 30 }}
+                  style={styles.sendButton}
                 />
               </CenterHalf>
 
