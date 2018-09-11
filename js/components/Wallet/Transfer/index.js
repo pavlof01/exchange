@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: width / 23,
+    fontWeight: '400',
   },
 });
 
@@ -373,7 +374,6 @@ class Transfer extends Component {
                   </View>
                 </View>
               </View>
-
               {this.state.isConfirming ? this.renderConfirmPasswordField() : null}
               {this.state.errorTextInput ? (
                 <Text style={styles.error}>
