@@ -223,42 +223,42 @@ function parseMutation(state, action) {
       },
     };
 
-    case SESSION.REFRESH_TRANSACTIONS: {
-      return {
-        transactions: { error: null, pending: true, data: [] },
-      };
-    }
-
-    case SESSION.FETCH_TRANSACTIONS_STARTED: {
-      const oldData = state.transactions.data || [];
-      return {
-        transactions: { error: null, pending: true, data: oldData },
-      };
-    }
-
-    case SESSION.FETCH_TRANSACTIONS_SUCCEED: {
-      let oldData = [];
-      try {
-        const tr = state.transactions.toJS();
-        oldData = tr.data || [];
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(`SESSION.FETCH_TRANSACTIONS_SUCCEED parse error - ${JSON.stringify(error, null, 2)}`);
-      }
-      const newData = oldData.concat(action.data.transactions);
-      return {
-        transactions: {
-          total_pages: action.data.total_pages,
-          data: newData,
-          page: action.data.page,
-          pending: false,
-        },
-      };
-    }
-
-    case SESSION.FETCH_TRANSACTIONS_FAILURE: return {
-      transactions: { error: action.error, pending: false },
-    };
+    // case SESSION.REFRESH_TRANSACTIONS: {
+    //   return {
+    //     transactions: { error: null, pending: true, data: [] },
+    //   };
+    // }
+    //
+    // case SESSION.FETCH_TRANSACTIONS_STARTED: {
+    //   const oldData = state.transactions.data || [];
+    //   return {
+    //     transactions: { error: null, pending: true, data: oldData },
+    //   };
+    // }
+    //
+    // case SESSION.FETCH_TRANSACTIONS_SUCCEED: {
+    //   let oldData = [];
+    //   try {
+    //     const tr = state.transactions.toJS();
+    //     oldData = tr.data || [];
+    //   } catch (error) {
+    //     // eslint-disable-next-line no-console
+    //     console.warn(`SESSION.FETCH_TRANSACTIONS_SUCCEED parse error - ${JSON.stringify(error, null, 2)}`);
+    //   }
+    //   const newData = oldData.concat(action.data.transactions);
+    //   return {
+    //     transactions: {
+    //       total_pages: action.data.total_pages,
+    //       data: newData,
+    //       page: action.data.page,
+    //       pending: false,
+    //     },
+    //   };
+    // }
+    //
+    // case SESSION.FETCH_TRANSACTIONS_FAILURE: return {
+    //   transactions: { error: action.error, pending: false },
+    // };
 
     case SESSION.TOGGLE_TRANSACTION_DETAILS: return {
       transactions: {

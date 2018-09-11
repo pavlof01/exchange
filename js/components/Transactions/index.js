@@ -135,7 +135,7 @@ class Transactions extends Component {
   }
 
   componentDidMount() {
-    this.props.getTransactionList({ page: this.page });
+    this.onRefresh();
   }
 
   renderItem = ({ item }) => (
@@ -183,30 +183,23 @@ class Transactions extends Component {
   loadNext = () => {
     const {
       getTransactionList,
+      lastLoadedPage,
+      isReachEnd,
     } = this.props;
-    const { total_pages, page } = this.props.transactions.toJS();
-    if (page < total_pages) {
-      this.page = page + 1;
-      getTransactionList({ page: this.page });
+    if (!isReachEnd) {
+      this.page = lastLoadedPage + 1;
+      getTransactionList({page: this.page});
     }
   };
 
   getFlatListData = () => {
-    const { transactions } = this.props;
-    try {
-      const { data } = transactions.toJS();
-      return data;
-    } catch (e) {
-      return [];
-    }
+    const { items } = this.props;
+    return items;
   };
 
   isPending = () => {
-    try {
-      return this.props.session.transactions.get('pending');
-    } catch (e) {
-      return false;
-    }
+    const { isFetching } = this.props;
+    return isFetching;
   };
 
   render() {
@@ -227,7 +220,6 @@ class Transactions extends Component {
       extrapolate: 'clamp',
     });
     const flatListData = this.getFlatListData();
-    const isRefreshing = this.isPending();
     return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
         <Animated.View style={[
@@ -258,16 +250,16 @@ class Transactions extends Component {
         </Animated.View>
         <Animated.View style={[styles.body, { marginTop: translateAbsoluteContainer }]}>
           <AbsoluteContainer>
-            {isRefreshing && flatListData.length === 0
+            {this.isPending() && flatListData.length === 0
               ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
               : (
                 <FlatList
                   style={styles.flatListContainer}
                   onScroll={this.scroll}
-                  data={flatListData}
+                  data={this.getFlatListData()}
                   refreshControl={(
                     <RefreshControl
-                      refreshing={isRefreshing}
+                      refreshing={this.props.isRefreshing}
                       onRefresh={this.onRefresh}
                     />
                   )}
@@ -279,7 +271,7 @@ class Transactions extends Component {
                     </Text>
                   )}
                   ListFooterComponent={
-                    isRefreshing && <ActivityIndicator size="large" />
+                    this.isPending() && <ActivityIndicator size="large" />
                   }
                   onEndReached={this.loadNext}
                   onEndReachedThreshold={0.3}
@@ -299,6 +291,12 @@ Transactions.propTypes = {
   refreshTransactionList: PropTypes.func,
   session: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   transactions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  isRefreshing: PropTypes.bool,
+  isFetching: PropTypes.bool,
+  items: PropTypes.any,
+  error: PropTypes.any, // eslint-disable-line react/no-unused-prop-types
+  lastLoadedPage: PropTypes.number,
+  isReachEnd: PropTypes.bool,
 };
 
 export default injectIntl(Transactions);

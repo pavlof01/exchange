@@ -168,20 +168,44 @@ export function updateUserMeta(params, dispatch) {
 
 export function getTransactionList(params, dispatch) {
   Api.get(`/transactions?page=${params.page}`).then(({ data }) => {
-    dispatch({ type: SESSION.FETCH_TRANSACTIONS_SUCCEED, data: { ...data, page: params.page } });
+    console.warn(JSON.stringify(data, null, 2));
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_SUCCEED,
+      payload: {
+        items: data && data.transactions ? data.transactions : [],
+        page: params.page,
+      },
+    });
   }).catch((error) => {
-    dispatch({ type: SESSION.FETCH_TRANSACTIONS_FAILURE, error });
+    console.warn(JSON.stringify(error, null, 2));
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_FAILURE,
+      payload: error,
+    });
   });
 
   return { type: SESSION.FETCH_TRANSACTIONS_STARTED };
 }
 
 export function refreshTransactionList(dispatch) {
-  Api.get(`/transactions?page=${1}`).then(({ data }) => {
-    dispatch({ type: SESSION.FETCH_TRANSACTIONS_SUCCEED, data: { ...data, page: 1 } });
+  const FIRST_PAGE = 1;
+  Api.get(`/transactions?page=${FIRST_PAGE}`).then(({ data }) => {
+    console.warn(JSON.stringify(data, null, 2));
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_SUCCEED,
+      payload: {
+        items: data && data.transactions ? data.transactions : [],
+        page: FIRST_PAGE,
+      },
+    });
   }).catch((error) => {
-    dispatch({ type: SESSION.FETCH_TRANSACTIONS_FAILURE, error });
+    console.warn(JSON.stringify(error, null, 2));
+    dispatch({
+      type: SESSION.FETCH_TRANSACTIONS_FAILURE,
+      payload: error,
+    });
   });
+
   return { type: SESSION.REFRESH_TRANSACTIONS };
 }
 
