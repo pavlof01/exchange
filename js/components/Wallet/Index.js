@@ -57,149 +57,149 @@ const DEFAULT_FORM_VALUES = {
 };
 
 class Wallet extends Component {
-    state = {
-      selectedAction: 'transfer',
-      isConfirming: false,
-      form: DEFAULT_FORM_VALUES,
+  state = {
+    selectedAction: 'transfer',
+    isConfirming: false,
+    form: DEFAULT_FORM_VALUES,
+  };
+
+  onTransferSelected = () => this.setState({ selectedAction: 'transfer' });
+
+  onReceiveSelected = () => this.setState({ selectedAction: 'receive' });
+
+  onWalletOperationStart = (form) => {
+    this.setState({ isConfirming: true, form });
+  };
+
+  closeConfirmDialog = () => {
+    this.setState({ isConfirming: false });
+  };
+
+  renderConfirmDialog = () => {
+    const {
+      intl,
+    } = this.props;
+    const {
+      form,
+    } = this.state;
+    const {
+      amount,
+      currency,
+      address,
+      password,
+    } = form;
+    return (
+      <ConfirmDialog
+        priceLabel={intl.formatMessage({ id: 'app.wallet.dialog.you_send', defaultMessage: 'You send' }).toUpperCase()}
+        priceText={`${amount} ${currency}`}
+        addressText={address}
+        passwordValue={password}
+        onChangePassword={this.onChangePassword}
+        errorText=""
+        onCancelPress={this.closeConfirmDialog}
+        onConfirmPress={this.onConfirmPress}
+      />
+    );
+  };
+
+  onConfirmPress = () => {
+    const params = { ...this.state.form };
+    this.props.sendCryptoCurrency(params);
+    this.closeConfirmDialog();
+  };
+
+  onChangePassword = (value) => {
+    const form = {
+      // eslint-disable-next-line react/no-access-state-in-setstate
+      ...this.state.form,
+      password: value,
     };
 
-    onTransferSelected = () => this.setState({ selectedAction: 'transfer' });
+    this.setState({ form });
+  };
 
-    onReceiveSelected = () => this.setState({ selectedAction: 'receive' });
-
-    onWalletOperationStart = (form) => {
-      this.setState({ isConfirming: true, form });
-    };
-
-    closeConfirmDialog = () => {
-      this.setState({ isConfirming: false });
-    };
-
-    renderConfirmDialog = () => {
-      const {
-        intl,
-      } = this.props;
-      const {
-        form,
-      } = this.state;
-      const {
-        amount,
-        currency,
-        address,
-        password,
-      } = form;
-      return (
-          <ConfirmDialog
-              priceLabel={intl.formatMessage({ id: 'app.wallet.dialog.you_send', defaultMessage: 'You send' }).toUpperCase()}
-              priceText={`${amount} ${currency}`}
-              addressText={address}
-              passwordValue={password}
-              onChangePassword={this.onChangePassword}
-              errorText=""
-              onCancelPress={this.closeConfirmDialog}
-              onConfirmPress={this.onConfirmPress}
-            />
+  render() {
+    const {
+      user: {
+        balance,
+        currencyCode,
+      },
+      exchangeRates,
+      withdrawal,
+      sendCryptoCurrency,
+      transactionTokens,
+      getTransactionTokens,
+      generateTransactionToken,
+      intl,
+      updateCryptValue,
+      cryptValue,
+    } = this.props;
+    let content; let
+      header;
+    if (this.state.selectedAction === 'transfer') {
+      content = (
+        <Transfer
+          cryptoCurrencies={this.props.cryptoCurrencies}
+          currencyCode={currencyCode}
+          balance={balance}
+          exchangeRates={exchangeRates}
+          updateCryptValue={updateCryptValue}
+          cryptValue={cryptValue}
+          updateRates={this.props.updateRates}
+          updateCurrencies={this.props.updateCurrencies}
+          updateEstimatedFee={this.props.updateEstimatedFee}
+          withdrawal={withdrawal}
+          onWalletOperationStart={this.onWalletOperationStart}
+          sendCryptoCurrency={sendCryptoCurrency}
+        />
       );
-    };
-
-    onConfirmPress = () => {
-      const params = { ...this.state.form };
-      this.props.sendCryptoCurrency(params);
-      this.closeConfirmDialog();
-    };
-
-    onChangePassword = (value) => {
-      const form = {
-        // eslint-disable-next-line react/no-access-state-in-setstate
-        ...this.state.form,
-        password: value,
-      };
-
-      this.setState({ form });
-    };
-
-    render() {
-      const {
-        user: {
-          balance,
-          currencyCode,
-        },
-        exchangeRates,
-        withdrawal,
-        sendCryptoCurrency,
-        transactionTokens,
-        getTransactionTokens,
-        generateTransactionToken,
-        intl,
-        updateCryptValue,
-        cryptValue,
-      } = this.props;
-      let content; let
-        header;
-      if (this.state.selectedAction === 'transfer') {
-        content = (
-              <Transfer
-                  cryptoCurrencies={this.props.cryptoCurrencies}
-                  currencyCode={currencyCode}
-                  balance={balance}
-                  exchangeRates={exchangeRates}
-                  updateCryptValue={updateCryptValue}
-                  cryptValue={cryptValue}
-                  updateRates={this.props.updateRates}
-                  updateCurrencies={this.props.updateCurrencies}
-                  updateEstimatedFee={this.props.updateEstimatedFee}
-                  withdrawal={withdrawal}
-                  onWalletOperationStart={this.onWalletOperationStart}
-                  sendCryptoCurrency={sendCryptoCurrency}
-                />
-        );
-        header = intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' }).toUpperCase();
-      } else {
-        content = (
-              <Receive
-                  currency="BTC"
-                  balance={balance}
-                  cryptoCurrencies={this.props.cryptoCurrencies}
-                  transactionTokens={transactionTokens}
-                  getTransactionTokens={getTransactionTokens}
-                  generateTransactionToken={generateTransactionToken}
-                />
-        );
-        header = intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' }).toUpperCase();
-      }
-
-      return withCommonStatusBar(
-          <ScrollView bounces={false} style={styles.safeContainer}>
-              <View style={styles.container}>
-                  <HeaderBar
-                      title={header}
-                      rightIcon={<Image style={styles.rightIconOfHeaderBar} source={require('../../img/transactions.png')} />}
-                      onPress={() => this.props.openTransactions()}
-                    />
-                  <View style={styles.rowContainer}>
-                      <TopButton
-                          title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' })}
-                          onPress={this.onTransferSelected}
-                          selected={this.state.selectedAction === 'transfer'}
-                        />
-
-                      <TopButton
-                          title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' })}
-                          onPress={this.onReceiveSelected}
-                          selected={this.state.selectedAction === 'receive'}
-                        />
-                    </View>
-
-
-                  {this.state.isConfirming ? this.renderConfirmDialog() : null}
-
-                </View>
-              <View style={styles.body}>
-                  {content}
-                </View>
-            </ScrollView>,
+      header = intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' }).toUpperCase();
+    } else {
+      content = (
+        <Receive
+          currency="BTC"
+          balance={balance}
+          cryptoCurrencies={this.props.cryptoCurrencies}
+          transactionTokens={transactionTokens}
+          getTransactionTokens={getTransactionTokens}
+          generateTransactionToken={generateTransactionToken}
+        />
       );
+      header = intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' }).toUpperCase();
     }
+
+    return withCommonStatusBar(
+      <ScrollView bounces={false} style={styles.safeContainer}>
+        <View style={styles.container}>
+          <HeaderBar
+            title={header}
+            rightIcon={<Image resizeMode="contain" style={styles.rightIconOfHeaderBar} source={require('../../img/transactions.png')} />}
+            onPress={() => this.props.openTransactions()}
+          />
+          <View style={styles.rowContainer}>
+            <TopButton
+              title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' })}
+              onPress={this.onTransferSelected}
+              selected={this.state.selectedAction === 'transfer'}
+            />
+
+            <TopButton
+              title={intl.formatMessage({ id: 'app.wallet.title.receive', defaultMessage: 'Receive' })}
+              onPress={this.onReceiveSelected}
+              selected={this.state.selectedAction === 'receive'}
+            />
+          </View>
+
+
+          {this.state.isConfirming ? this.renderConfirmDialog() : null}
+
+        </View>
+        <View style={styles.body}>
+          {content}
+        </View>
+      </ScrollView>,
+    );
+  }
 }
 
 Wallet.propTypes = {
