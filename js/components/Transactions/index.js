@@ -23,12 +23,9 @@ import Touchable from '../../style/Touchable';
 const { height } = Dimensions.get('window');
 const isAndroid = Platform.OS === 'android';
 
-const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 116;
-// отступ от верха, регулирование величины наложения
-// контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
-const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 116 : 106;
+const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 146 : 136;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -39,7 +36,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#243682',
     position: 'absolute',
     width: '100%',
-    height: 176,
+    height: 206,
   },
   topButtonsContainer: {
     flexDirection: 'row',
@@ -49,6 +46,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 8,
     backgroundColor: '#243682',
+    marginTop: 20,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -204,7 +202,7 @@ class Transactions extends Component {
     ]);
     const heightHeader = this.state.headerHeight.interpolate({
       inputRange: [0, 50],
-      outputRange: [176, 76],
+      outputRange: [206, 76],
       extrapolate: 'clamp',
     });
     const buttonsOpacity = this.state.headerHeight.interpolate({
