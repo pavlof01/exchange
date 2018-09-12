@@ -128,7 +128,8 @@ class Transfer extends Component {
 
     this.props.updateRates({ [currencyCode]: this.state.cryptoCurrencyCode });
     this.props.updateCurrencies();
-    this.props.updateCryptValue({crypt: 'BTC', currency: 'RUB' });
+    this.props.updateCryptValue({ crypt: 'BTC' });
+    this.props.updateCryptValue({ crypt: 'ETH' });
     this.props.updateEstimatedFee({ currency: this.props.currencyCode });
   }
 
@@ -170,13 +171,15 @@ class Transfer extends Component {
   };
 
   onAmountChange = (value, currency = this.state.currency || 'USD') => {
-    // eslint-disable-next-line no-param-reassign    
+    /* eslint-disable no-nested-ternary  */
     value = value === null ? this.state.form.amount : value.replace(/,/, '.');
     const { BTC_USD, ETH_USD, BTC_RUB, ETH_RUB } = this.props.cryptValue;
     const rate = this.state.cryptoCurrencyCode === 'BTC' && currency === 'USD'
-      ? BTC_USD : this.state.cryptoCurrencyCode === 'BTC' && currency === 'RUB' 
-      ? BTC_RUB:ETH_USD;
-    // eslint-disable-next-line no-param-reassign
+      ? BTC_USD : this.state.cryptoCurrencyCode === 'BTC' && currency === 'RUB'
+        ? BTC_RUB : this.state.cryptoCurrencyCode === 'ETH' && currency === 'USD'
+          ? ETH_USD : ETH_RUB;
+    /* eslint-enable no-nested-ternary  */
+
     value = value || 0.0;
     const cost = value * rate;
     this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }, currency, });
@@ -228,7 +231,7 @@ class Transfer extends Component {
       ...this.state.form,
       currency: value,
     };
-    this.setState({ form, cryptoCurrencyCode: value }, () => this.props.updateCryptValue({ crypt: value, currency: 'USD' }));
+    this.setState({ form, cryptoCurrencyCode: value }, () => this.onAmountChange(null, this.state.currency));
   };
 
   onAddressChange = (value) => {
@@ -289,7 +292,7 @@ class Transfer extends Component {
       : this.state.isConfirming
         ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()
         : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
-    /* eslint-enable no-nested-ternary */    
+    /* eslint-enable no-nested-ternary */
     return (
       <KeyboardAwareScrollView
         behavior="padding"
