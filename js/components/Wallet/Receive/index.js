@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: fonts.regular.regular,
     marginBottom: 8,
+    marginLeft: 4,
   },
   buttonText: {
     fontSize: width / 23,
