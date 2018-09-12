@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
   formStyle: {
     flex: 1,
     width: width - 20,
-    position: 'absolute',
-    marginTop: 180,
     backgroundColor: '#fff',
     alignSelf: 'center',
     padding: 15,
+    marginTop: -70,
+    paddingTop: 30,
   },
   formRow: {
     marginTop: 15,

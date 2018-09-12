@@ -27,11 +27,10 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     width: width - 20,
-    position: 'absolute',
-    marginTop: 180,
     backgroundColor: '#fff',
     alignSelf: 'center',
     padding: 15,
+    marginTop: -70,
   },
   address: {
     color: '#4a4a4a',
@@ -43,10 +42,12 @@ const styles = StyleSheet.create({
   },
   buttonsCOntainer: {
     flexDirection: 'row',
-    paddingTop: 50,
+    paddingTop: 15,
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   btn: {
-    flex: 1,
+    width: '80%',
     margin: 16,
   },
   buttonText: {

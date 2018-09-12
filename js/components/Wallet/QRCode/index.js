@@ -11,11 +11,9 @@ import {
 
 const styles = StyleSheet.create({
   centerContent: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 188,
     padding: 8,
   },
 });
