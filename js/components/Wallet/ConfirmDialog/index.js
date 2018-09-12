@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Modal,
   Dimensions,
-  Platform
+  Platform,
 } from 'react-native';
 
 import { injectIntl, intlShape } from 'react-intl';
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: fonts.regular.regular,
     marginBottom: 4,
+    marginLeft: 4,
   },
   dialogAddress: {
     // flex: 1,
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: fonts.regular.regular,
     marginBottom: 4,
+    marginLeft: 4,
   },
   buttonGroup: {
     flex: 1,
@@ -87,9 +89,14 @@ const styles = StyleSheet.create({
     color: '#d61b38',
   },
   amountSentContainer: {
-    borderBottomColor: 'rgba(151,151,151,0.1)',
+    borderBottomColor: 'rgba(151,151,151,0.2)',
     borderBottomWidth: 1,
     marginBottom: 10,
+  },
+  addressContainer: {
+    borderBottomColor: 'rgba(151,151,151,0.2)',
+    borderBottomWidth: 1,
+    paddingBottom: 20,
   },
 });
 
@@ -104,17 +111,24 @@ class ConfirmDialog extends Component {
     intl: intlShape.isRequired,
   };
 
+  parseAmount = (amount) => {
+    if (amount.indexOf('.') <= 0) {
+      return Number.parseInt(amount).toFixed(2);
+    }
+    return amount;
+  }
+
   render() {
     const {
       priceLabel,
-      priceText,
       addressText,
       errorText,
       onCancelPress,
       onConfirmPress,
       intl,
+      amount,
+      currency,
     } = this.props;
-
     return (
       <Modal
         animationType="fade"
@@ -135,15 +149,17 @@ class ConfirmDialog extends Component {
                     {priceLabel}
                   </Hint>
                   <Text style={styles.dialogPrice}>
-                    {priceText}
+                    {`${this.parseAmount(amount)} ${currency}`}
                   </Text>
                 </View>
                 <Hint>
                   {intl.formatMessage({ id: 'app.wallet.dialog.to', defaultMessage: 'To' }).toUpperCase()}
                 </Hint>
-                <Text style={styles.dialogAddress}>
-                  {addressText}
-                </Text>
+                <View style={styles.addressContainer}>
+                  <Text style={styles.dialogAddress}>
+                    {addressText}
+                  </Text>
+                </View>
                 <Text style={styles.dialogErrorLabel}>
                   {errorText}
                 </Text>
