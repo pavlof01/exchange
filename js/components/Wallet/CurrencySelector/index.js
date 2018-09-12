@@ -15,10 +15,11 @@ const styles = StyleSheet.create({
   cryptHeader: {
     flexDirection: 'row',
     width,
-    height: 236,
+    height: 260,
     backgroundColor: '#243682',
     justifyContent: 'space-around',
     paddingTop: 24,
+    paddingBottom: 24,
   },
   cryptContainer: {
     width: 169,

@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
   formStyle: {
     flex: 1,
     width: width - 20,
-    position: 'absolute',
-    marginTop: 180,
     backgroundColor: '#fff',
     alignSelf: 'center',
     padding: 15,
+    marginTop: -70,
+    paddingTop: 30,
   },
   formRow: {
     marginTop: 15,
@@ -128,7 +128,7 @@ class Transfer extends Component {
 
     this.props.updateRates({ [currencyCode]: this.state.cryptoCurrencyCode });
     this.props.updateCurrencies();
-    this.props.updateCryptValue({crypt: 'BTC', currency: 'RUB' });
+    this.props.updateCryptValue({ crypt: 'BTC', currency: 'RUB' });
     this.props.updateEstimatedFee({ currency: this.props.currencyCode });
   }
 
@@ -174,8 +174,8 @@ class Transfer extends Component {
     value = value === null ? this.state.form.amount : value.replace(/,/, '.');
     const { BTC_USD, ETH_USD, BTC_RUB, ETH_RUB } = this.props.cryptValue;
     const rate = this.state.cryptoCurrencyCode === 'BTC' && currency === 'USD'
-      ? BTC_USD : this.state.cryptoCurrencyCode === 'BTC' && currency === 'RUB' 
-      ? BTC_RUB:ETH_USD;
+      ? BTC_USD : this.state.cryptoCurrencyCode === 'BTC' && currency === 'RUB'
+        ? BTC_RUB : ETH_USD;
     // eslint-disable-next-line no-param-reassign
     value = value || 0.0;
     const cost = value * rate;
@@ -289,7 +289,7 @@ class Transfer extends Component {
       : this.state.isConfirming
         ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()
         : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
-    /* eslint-enable no-nested-ternary */    
+    /* eslint-enable no-nested-ternary */
     return (
       <KeyboardAwareScrollView
         behavior="padding"

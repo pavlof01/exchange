@@ -15,9 +15,6 @@ import ConfirmDialog from './ConfirmDialog';
 
 const isAndroid = Platform.OS === 'android';
 
-const MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER = isAndroid ? 137 : 149;
-const MARGIN_BETWEEN_HEADER_BAR_AND_BUTTONS = 20;
-
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
@@ -25,8 +22,6 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#243682',
-    position: 'absolute',
-    width: '100%',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -36,10 +31,9 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 8,
     backgroundColor: '#243682',
-    marginTop: MARGIN_BETWEEN_HEADER_BAR_AND_BUTTONS,
   },
   body: {
-    marginTop: MARGIN_BETWEEN_HEADER_AND_ABSOLUTE_CONTAINER,
+
   },
   rightIconOfHeaderBar: {
     width: 30,
