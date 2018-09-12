@@ -35,7 +35,7 @@ const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 76;
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
-const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 76 : 56;
+const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 29 : 33;
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#243682',
     position: 'absolute',
     width: '100%',
-    height: '25%',
+    height: isAndroid ? 105 : 129,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#ffffff',
     paddingBottom: '5%',
-    paddingTop: '5%',
   },
   centerMessage: {
     flex: 1,

@@ -85,7 +85,8 @@ class Wallet extends Component {
     return (
       <ConfirmDialog
         priceLabel={intl.formatMessage({ id: 'app.wallet.dialog.you_send', defaultMessage: 'You send' }).toUpperCase()}
-        priceText={`${amount} ${currency}`}
+        amount={amount}
+        currency={currency}
         addressText={address}
         passwordValue={password}
         onChangePassword={this.onChangePassword}
