@@ -11,45 +11,102 @@ import {
   Image,
   Dimensions,
   Animated,
-  Platform,
 } from 'react-native';
 import moment from 'moment';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
-import HeaderBar from '../../style/HeaderBar';
 import TopButton from '../../style/TopButton';
-import AbsoluteContainer from '../AbsoluteContainer';
 import { withCommonStatusBar } from '../../style/navigation';
 import Touchable from '../../style/Touchable';
 
 const { height } = Dimensions.get('window');
-const isAndroid = Platform.OS === 'android';
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
-const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 146 : 136;
-const TRANSLATE_WHEN_TOP = isAndroid ? 96 : 76;
+const HEADER_BACKGROUNG_MIN_HEIGHT = 0;
+const HEADER_BACKGROUNG_MAX_HEIGHT = 100;
+
+const SHADOW_OFFSET_MIN_MARGIN = 0;
+const SHADOW_OFFSET_MAX_MARGIN = -45;
+
+const FLAT_LIST_MIN_PADDING = 0;
+const FLAT_LIST_MAX_PADDING = 55;
+
+const ANIMATION_SCROLL_START = 0;
+const ANIMATION_SCROLL_END = 100;
 
 const styles = StyleSheet.create({
+  containerWrapper: {
+    flex: 1,
+  },
+  safeContainerHeader: {
+    backgroundColor: '#243682',
+  },
   safeContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  container: {
-    backgroundColor: '#243682',
-    position: 'absolute',
-    width: '100%',
-    height: 206,
-  },
-  topButtonsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  headerContainer: {
+    height: 48,
     justifyContent: 'center',
-    height: 56,
-    paddingLeft: 8,
-    paddingRight: 8,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  headerTitleStyle: {
+    fontFamily: 'System',
+    fontSize: 18,
+    letterSpacing: 0.5,
+    textAlign: 'center',
+    flex: 1,
+    color: '#fff',
+    marginStart: 39,
+  },
+  closeButton: {
+    width: 39,
+    height: 39,
+    paddingTop: 9,
+    paddingBottom: 9,
+    paddingEnd: 18,
+  },
+  tabAnimatedBackground: {
     backgroundColor: '#243682',
-    marginTop: 20,
+    height: HEADER_BACKGROUNG_MAX_HEIGHT,
+  },
+  contentShadowAnimated: {
+    position: 'relative',
+    top: 0,
+    bottom: 0,
+    flexGrow: 1,
+    marginTop: SHADOW_OFFSET_MAX_MARGIN,
+    overflow: 'hidden',
+  },
+  contentShadow: {
+    elevation: 3,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 3,
+    shadowOpacity: 0.1,
+    marginStart: 13,
+    marginEnd: 13,
+    backgroundColor: '#fff',
+    flexGrow: 1,
+  },
+  flatListPositionWrapper: {
+    marginTop: -FLAT_LIST_MAX_PADDING,
+    marginStart: 0,
+    marginEnd: 0,
+    flexGrow: 1,
+  },
+  contentContainerStyle: {
+    paddingTop: 0,
+  },
+  tabsContainer: {
+    flexDirection: 'row',
+    height: FLAT_LIST_MAX_PADDING,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -110,10 +167,6 @@ const styles = StyleSheet.create({
   activityIndicator: {
     marginTop: height / 2 - ACTIVITY_INDICATOR_HEIGHT,
   },
-  body: {
-    marginTop: HEIGHT_HEADER_FOR_INTERPOLATE,
-    flex: 1,
-  },
 });
 
 class Transactions extends Component {
@@ -162,7 +215,7 @@ class Transactions extends Component {
           </View>
           <View>
             <Text style={styles.dateText}>
-              {moment(item.date).format("d.MM.YYYY h:mm:ss a")}
+              {moment(item.date).format('d.MM.YYYY H:mm:ss')}
             </Text>
           </View>
         </View>
@@ -189,7 +242,7 @@ class Transactions extends Component {
     } = this.props;
     if (!isReachEnd) {
       this.page = lastLoadedPage + 1;
-      getTransactionList({page: this.page});
+      getTransactionList({ page: this.page });
     }
   };
 
@@ -206,8 +259,18 @@ class Transactions extends Component {
   render() {
     const { intl } = this.props;
     const heightHeader = this.state.headerHeight.interpolate({
-      inputRange: [0, 50],
-      outputRange: [206, 96],
+      inputRange: [ANIMATION_SCROLL_START, ANIMATION_SCROLL_END],
+      outputRange: [HEADER_BACKGROUNG_MAX_HEIGHT, HEADER_BACKGROUNG_MIN_HEIGHT],
+      extrapolate: 'clamp',
+    });
+    const shadowOffset = this.state.headerHeight.interpolate({
+      inputRange: [ANIMATION_SCROLL_START, ANIMATION_SCROLL_END],
+      outputRange: [SHADOW_OFFSET_MAX_MARGIN, SHADOW_OFFSET_MIN_MARGIN],
+      extrapolate: 'clamp',
+    });
+    const flatListPadding = this.state.headerHeight.interpolate({
+      inputRange: [ANIMATION_SCROLL_START, ANIMATION_SCROLL_END],
+      outputRange: [FLAT_LIST_MAX_PADDING, FLAT_LIST_MIN_PADDING],
       extrapolate: 'clamp',
     });
     const buttonsOpacity = this.state.headerHeight.interpolate({
@@ -215,72 +278,76 @@ class Transactions extends Component {
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
-    const translateAbsoluteContainer = this.state.headerHeight.interpolate({
-      inputRange: [0, 50],
-      outputRange: [HEIGHT_HEADER_FOR_INTERPOLATE, TRANSLATE_WHEN_TOP],
-      extrapolate: 'clamp',
-    });
     const flatListData = this.getFlatListData();
     return withCommonStatusBar(
-      <SafeAreaView style={styles.safeContainer}>
-        <Animated.View style={[
-          styles.container,
-          {
-            height: heightHeader,
-          },
-        ]}
-        >
-          <HeaderBar
-            rightIcon={<Image source={require('../../img/close.png')} />}
-            title={intl.formatMessage({ id: 'app.wallet.transactions.title', defaultMessage: 'Transactions' }).toUpperCase()}
-            onPress={() => this.props.navigation.goBack()}
-          />
-          <Animated.View style={[styles.topButtonsContainer, { opacity: buttonsOpacity }]}>
-            <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.transactions.title.incoming', defaultMessage: 'Incoming' })}
-              onPress={() => console.warn('sdf')}
-              selected
-            />
-
-            <TopButton
-              title={intl.formatMessage({ id: 'app.wallet.transactions.title.outbox', defaultMessage: 'Outbox' })}
-              onPress={() => console.warn('sdf')}
-              selected={false}
-            />
+      <View style={styles.containerWrapper}>
+        <SafeAreaView style={styles.safeContainerHeader}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerTitleStyle}>
+              {intl.formatMessage({ id: 'app.wallet.transactions.title', defaultMessage: 'Transactions' }).toUpperCase()}
+            </Text>
+            <Touchable
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <View style={styles.closeButton}>
+                <Image source={require('../../img/close.png')} />
+              </View>
+            </Touchable>
+          </View>
+        </SafeAreaView>
+        <SafeAreaView style={styles.safeContainer}>
+          <Animated.View style={[styles.tabAnimatedBackground, { height: heightHeader }]}>
+            <Animated.View style={[styles.tabsContainer, { opacity: buttonsOpacity }]}>
+              <TopButton
+                title={intl.formatMessage({ id: 'app.wallet.transactions.title.incoming', defaultMessage: 'Incoming' })}
+                onPress={() => console.warn('sdf')}
+                selected
+              />
+              <TopButton
+                title={intl.formatMessage({ id: 'app.wallet.transactions.title.outbox', defaultMessage: 'Outbox' })}
+                onPress={() => console.warn('sdf')}
+                selected={false}
+              />
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-        <Animated.View style={[styles.body, { marginTop: translateAbsoluteContainer }]}>
-          <AbsoluteContainer>
-            {this.isPending() && flatListData.length === 0
-              ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
-              : (
-                <FlatList
-                  style={styles.flatListContainer}
-                  onScroll={this.scroll}
-                  data={this.getFlatListData()}
-                  refreshControl={(
-                    <RefreshControl
-                      refreshing={this.props.isRefreshing}
-                      onRefresh={this.onRefresh}
+          <Animated.View style={[styles.contentShadowAnimated, { marginTop: shadowOffset }]}>
+            <View style={styles.contentShadow}>
+              <Animated.View
+                style={[styles.flatListPositionWrapper, { marginTop: -1 * flatListPadding }]}
+              >
+                {this.isPending() && flatListData.length === 0
+                  ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
+                  : (
+                    <AnimatedFlatList
+                      style={styles.flatListContainer}
+                      contentContainerStyle={styles.contentContainerStyle}
+                      onScroll={this.scroll}
+                      data={this.getFlatListData()}
+                      refreshControl={(
+                        <RefreshControl
+                          refreshing={this.props.isRefreshing}
+                          onRefresh={this.onRefresh}
+                        />
+                      )}
+                      renderItem={this.renderItem}
+                      keyExtractor={(i, index) => index}
+                      ListEmptyComponent={(
+                        <Text style={styles.centerMessage}>
+                          {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
+                        </Text>
+                      )}
+                      ListFooterComponent={
+                        this.isPending() && <ActivityIndicator size="large" />
+                      }
+                      onEndReached={this.loadNext}
+                      onEndReachedThreshold={0.3}
                     />
                   )}
-                  renderItem={this.renderItem}
-                  keyExtractor={(i, index) => index}
-                  ListEmptyComponent={(
-                    <Text style={styles.centerMessage}>
-                      {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
-                    </Text>
-                  )}
-                  ListFooterComponent={
-                    this.isPending() && <ActivityIndicator size="large" />
-                  }
-                  onEndReached={this.loadNext}
-                  onEndReachedThreshold={0.3}
-                />
-              )}
-          </AbsoluteContainer>
-        </Animated.View>
-      </SafeAreaView>,
+              </Animated.View>
+            </View>
+          </Animated.View>
+        </SafeAreaView>
+      </View>,
     );
   }
 }
