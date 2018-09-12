@@ -128,9 +128,8 @@ class Transfer extends Component {
 
     this.props.updateRates({ [currencyCode]: this.state.cryptoCurrencyCode });
     this.props.updateCurrencies();
-    this.props.updateCryptValue({ crypt: 'BTC', currency: 'RUB' });
-    this.props.updateCryptValue({ crypt: 'ETH', currency: 'USD' });
-    this.props.updateCryptValue({ crypt: 'ETH', currency: 'RUB' });
+    this.props.updateCryptValue({ crypt: 'BTC' });
+    this.props.updateCryptValue({ crypt: 'ETH' });
     this.props.updateEstimatedFee({ currency: this.props.currencyCode });
   }
 
