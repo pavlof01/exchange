@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   buttonsCOntainer: {
     flexDirection: 'row',
-    paddingTop: 50,
+    paddingTop: 15,
   },
   btn: {
     flex: 1,
