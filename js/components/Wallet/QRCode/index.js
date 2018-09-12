@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 276,
+    minHeight: 188,
     padding: 8,
   },
 });
@@ -36,7 +36,7 @@ export default class QRCode extends Component {
       content = (
         <Image
           source={{ uri: `data:image/png;base64, ${base64code}` }}
-          style={{ width: 260, height: 260 }}
+          style={{ width: 184, height: 188 }}
         />
       );
     } else {

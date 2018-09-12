@@ -35,10 +35,19 @@ const styles = StyleSheet.create({
   },
   address: {
     color: '#4a4a4a',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '400',
     fontFamily: fonts.regular.regular,
     marginBottom: 8,
+    marginLeft: 4,
+  },
+  buttonsCOntainer: {
+    flexDirection: 'row',
+    paddingTop: 50,
+  },
+  btn: {
+    flex: 1,
+    margin: 16,
   },
   buttonText: {
     fontSize: width / 23,
@@ -125,42 +134,36 @@ class Receive extends Component {
           balance={balance}
         />
         <View style={styles.body}>
-          <View style={{ flex: 1 }}>
-            <View>
-              <View>
-                <QRCode transactionTokens={transactionTokens} />
-              </View>
-              <Hint>
-                {intl.formatMessage({ id: 'app.wallet.receive.address_to_receive', defaultMessage: 'Address to receive bitcoins' }, { value: this.state.cryptoCurrencyCode === 'BTC' ? 'Bitcoins' : 'Etherium' }).toUpperCase()}
-              </Hint>
-              <Text
-                style={styles.address}
-                selectable
-              >
-                {this.getAddressFromTokens(transactionTokens)}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <PrimaryButton
-                onPress={this.generateNewToken}
-                title={transactionTokens.data && transactionTokens.data.length > 0
-                  ? intl.formatMessage({ id: 'app.wallet.receive.btn.share', defaultMessage: 'UPDATE' })
-                  : intl.formatMessage({ id: 'app.wallet.receive.btn.copy', defaultMessage: 'COPY' })}
-                style={{ flex: 1, margin: 16 }}
-                fontStyle={styles.buttonText}
-                secondary
-                disabled={transactionTokens.generation_pending}
-              >
-                {transactionTokens.generation_pending ? <ActivityIndicator size="large" /> : null}
-              </PrimaryButton>
-              <PrimaryButton
-                onPress={this.copyAddress}
-                title={intl.formatMessage({ id: 'app.wallet.receive.btn.copy', defaultMessage: 'COPY' })}
-                style={{ flex: 1, margin: 16 }}
-                fontStyle={styles.buttonText}
-                disabled={transactionTokens.generation_pending}
-              />
-            </View>
+          <QRCode transactionTokens={transactionTokens} />
+          <Hint>
+            {intl.formatMessage({ id: 'app.wallet.receive.address_to_receive', defaultMessage: 'Address to receive bitcoins' }, { value: this.state.cryptoCurrencyCode === 'BTC' ? 'Bitcoins' : 'Etherium' }).toUpperCase()}
+          </Hint>
+          <Text
+            style={styles.address}
+            selectable
+          >
+            {this.getAddressFromTokens(transactionTokens)}
+          </Text>
+          <View style={styles.buttonsCOntainer}>
+            <PrimaryButton
+              onPress={this.generateNewToken}
+              title={transactionTokens.data && transactionTokens.data.length > 0
+                ? intl.formatMessage({ id: 'app.wallet.receive.btn.share', defaultMessage: 'UPDATE' })
+                : intl.formatMessage({ id: 'app.wallet.receive.btn.copy', defaultMessage: 'COPY' })}
+              style={styles.btn}
+              fontStyle={styles.buttonText}
+              secondary
+              disabled={transactionTokens.generation_pending}
+            >
+              {transactionTokens.generation_pending ? <ActivityIndicator size="large" /> : null}
+            </PrimaryButton>
+            <PrimaryButton
+              onPress={this.copyAddress}
+              title={intl.formatMessage({ id: 'app.wallet.receive.btn.copy', defaultMessage: 'COPY' })}
+              style={styles.btn}
+              fontStyle={styles.buttonText}
+              disabled={transactionTokens.generation_pending}
+            />
           </View>
         </View>
       </View>
