@@ -34,25 +34,29 @@ const styles = StyleSheet.create({
   },
   address: {
     color: '#4a4a4a',
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '400',
-    fontFamily: fonts.regular.regular,
+    fontFamily: 'System',
     marginBottom: 8,
-    marginLeft: 4,
+    marginLeft: 10,
   },
   buttonsCOntainer: {
     flexDirection: 'row',
-    paddingTop: 15,
+    marginTop: 50,
     alignItems: 'center',
     justifyContent: 'space-around',
   },
   btn: {
-    width: '80%',
+    width: width / 2.5,
     margin: 16,
   },
   buttonText: {
     fontSize: width / 23,
     fontWeight: '400',
+  },
+  hint: {
+    color: '#4a4a4a',
+    marginLeft: 10,
   },
 });
 
@@ -136,7 +140,7 @@ class Receive extends Component {
         />
         <View style={styles.body}>
           <QRCode transactionTokens={transactionTokens} />
-          <Hint>
+          <Hint style={styles.hint}>
             {intl.formatMessage({ id: 'app.wallet.receive.address_to_receive', defaultMessage: 'Address to receive bitcoins' }, { value: this.state.cryptoCurrencyCode === 'BTC' ? 'Bitcoins' : 'Etherium' }).toUpperCase()}
           </Hint>
           <Text

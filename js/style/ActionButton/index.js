@@ -22,8 +22,8 @@ const sharedTextStyle = {
   alignSelf: 'center',
   fontSize: 16,
   lineHeight: 16,
-  fontWeight: '700',
-  fontFamily: fonts.regular.regular,
+  fontWeight: '400',
+  fontFamily: 'System',
 };
 
 const styles = StyleSheet.create({
