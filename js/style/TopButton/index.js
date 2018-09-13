@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: 40,
     height: 2,
-    top: -8,
   },
 });
 
