@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 15,
     marginTop: -70,
-    paddingTop: 15,
+    paddingTop: 5,
   },
   formRow: {
     marginTop: 15,
@@ -76,10 +76,10 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     right: 0,
-    color: '#cac8c8',
+    color: 'rgba(193,193,193, 0.45)',
     fontWeight: '400',
     fontSize: 18,
-    fontFamily: fonts.regular.regular,
+    fontFamily: 'System',
   },
   error: {
     color: 'red',
@@ -95,10 +95,11 @@ const styles = StyleSheet.create({
   sendButton: {
     width: 320,
     alignSelf: 'center',
-    marginTop: 30,
+    marginTop: 16,
   },
   hint: {
     paddingLeft: 18,
+    marginBottom: 25,
   },
   textFormInput: {
     paddingLeft: 18,
@@ -329,6 +330,7 @@ class Transfer extends Component {
                   value={this.state.form.address}
                   textStyle={styles.textFormInput}
                   onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  placeholderTextColor='rgba(193,193,193, 0.45)'
                 />
               </View>
               <View style={styles.formRow}>
@@ -347,6 +349,7 @@ class Transfer extends Component {
                     style={styles.formTextInput}
                     textStyle={styles.textFormInput}
                     onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                    placeholderTextColor='rgba(193,193,193, 0.45)'
                   />
                   <Text style={styles.header}>
                     {code}
@@ -366,18 +369,19 @@ class Transfer extends Component {
                     style={{ marginRight: 80 }}
                     textStyle={styles.textFormInput}
                     onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                    placeholderTextColor='rgba(193,193,193, 0.45)'
                   />
                   <View style={styles.currencyPickerContainer}>
                     <Menu>
                       <MenuTrigger>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                           <Text style={{
-                            color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5,
+                            color: 'rgba(193,193,193, 0.45)', fontWeight: '400', fontSize: 18, marginRight: 5,
                           }}
                           >
                             {this.state.currency}
                           </Text>
-                          <Image source={require('../../../img/ic_picker.png')} />
+                          <Image style={{ opacity: 0.5 }} source={require('../../../img/ic_picker.png')} />
                         </View>
                       </MenuTrigger>
                       <MenuOptions>

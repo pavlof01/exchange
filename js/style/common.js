@@ -1,6 +1,5 @@
 import { StyleSheet, Text } from 'react-native';
 import React from 'react';
-import { fonts } from './resourceHelpers';
 
 export const common = StyleSheet.create({
   hintText: {
@@ -9,9 +8,9 @@ export const common = StyleSheet.create({
     marginBottom: 20,
     fontSize: 10,
     textAlign: 'left',
-    fontFamily: fonts.medium.regular,
+    fontFamily: 'System',
     color: '#686868',
-    letterSpacing: 1.5,
+    letterSpacing: 1,
   },
 });
 

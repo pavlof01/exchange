@@ -54,7 +54,7 @@ class FormTextInput extends Component {
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
-    borderColor: 'rgba(48, 48, 48, 0.35)',
+    borderColor: 'rgba(151,151,151, 0.20)',
     borderStyle: 'solid',
   },
   text: {
