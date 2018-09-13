@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 import {
   tradePartner,
   tradeType,
@@ -30,30 +31,34 @@ import AbsoluteContainer from '../AbsoluteContainer';
 const { height } = Dimensions.get('window');
 const isAndroid = Platform.OS === 'android';
 
-const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = 76;
+const MARGIN_FROM_TOP_TO_MAIN_CONTAINER = -32;
 // отступ от верха, регулирование величины наложения
 // контейнера на абсолютный хедер
 const ACTIVITY_INDICATOR_HEIGHT = 60;
 
-const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 29 : 33;
+const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 32 : 33;
 
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f9f9f9',
+    ...ifIphoneX(
+      {
+        top: -1,
+      },
+    ),
   },
   container: {
     backgroundColor: '#243682',
-    position: 'absolute',
-    width: '100%',
     height: isAndroid ? 105 : 129,
   },
   rowContainer: {
+    height: 64,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
-    paddingBottom: '5%',
+    marginBottom: 10,
   },
   centerMessage: {
     flex: 1,
@@ -66,12 +71,19 @@ const styles = StyleSheet.create({
   },
   tradeNumber: {
     flex: 3,
-    color: '#b0b0b0',
+    fontFamily: 'System',
+    fontWeight: '300',
+    color: '#000000',
+    fontSize: 14,
+    opacity: 0.47,
   },
   tradeType: {
     textAlign: 'center',
     flex: 3,
-    fontFamily: fonts.semibold.regular,
+    fontFamily: 'System',
+    fontWeight: '400',
+    color: '#000000',
+    fontSize: 12,
   },
   currencyType: {
     flex: 3,
@@ -98,7 +110,10 @@ const styles = StyleSheet.create({
   },
   username: {
     flex: 5,
-    fontFamily: fonts.semibold.regular,
+    fontFamily: 'System',
+    fontWeight: '400',
+    color: '#000000',
+    fontSize: 17,
   },
   flatListContainer: {
     height: height - 132,
@@ -109,6 +124,9 @@ const styles = StyleSheet.create({
   body: {
     marginTop: MARGIN_FROM_TOP_TO_MAIN_CONTAINER,
     flex: 1,
+  },
+  absoluteContainer: {
+    backgroundColor: '#f9f9f9',
   },
 });
 
@@ -263,6 +281,7 @@ class Trades extends Component {
         ]}
         >
           <Animated.View style={[
+            { top: 0 },
             {
               transform: [{
                 translateY: stayHeader,
@@ -277,7 +296,7 @@ class Trades extends Component {
           </Animated.View>
         </Animated.View>
         <View style={styles.body}>
-          <AbsoluteContainer>
+          <AbsoluteContainer style={styles.absoluteContainer}>
             {isFetch && trades.length === 0
               ? (<ActivityIndicator style={styles.activityIndicator} size="large" />)
               : (

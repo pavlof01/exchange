@@ -28,9 +28,9 @@ class AbsoluteContainer extends Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, style } = this.props;
     return (
-      <View style={styles.body}>
+      <View style={[styles.body, style]}>
         {children}
       </View>
     );
@@ -38,7 +38,7 @@ class AbsoluteContainer extends Component {
 }
 
 AbsoluteContainer.propTypes = {
-  children: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  children: PropTypes.any, // eslint-disable-line react/forbid-prop-types  
 };
 
 export default AbsoluteContainer;
