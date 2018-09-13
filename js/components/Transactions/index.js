@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   headerContainer: {
-    height: 48,
+    height: 62,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
