@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     textAlign: 'left',
-    fontFamily: fonts.regular.regular,
-    fontSize: 16,
+    fontFamily: 'System',
+    fontSize: 18,
     height: 32,
     padding: 4,
   },

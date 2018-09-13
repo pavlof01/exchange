@@ -15,4 +15,4 @@ export const common = StyleSheet.create({
   },
 });
 
-export const Hint = props => <Text {...props} style={common.hintText} />;
+export const Hint = props => <Text {...props} style={[common.hintText, props.style]} />;
