@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 15,
     marginTop: -70,
-    paddingTop: 30,
+    paddingTop: 15,
   },
   formRow: {
     marginTop: 15,
@@ -96,6 +96,12 @@ const styles = StyleSheet.create({
     width: 320,
     alignSelf: 'center',
     marginTop: 30,
+  },
+  hint: {
+    paddingLeft: 18,
+  },
+  textFormInput: {
+    paddingLeft: 18,
   },
 });
 
@@ -311,22 +317,22 @@ class Transfer extends Component {
           <View style={styles.formStyle}>
             <View style={{ flex: 1 }}>
               <View style={styles.formRow}>
-                <Hint>
+                <Hint style={styles.hint}>
                   {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
                 </Hint>
                 <FormTextInput
                   placeholder={
                     `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
-                      simpleCurrencyName[code]} ${
-                      intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
+                    simpleCurrencyName[code]} ${
+                    intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
                   onChangeText={this.onAddressChange}
                   value={this.state.form.address}
-                  // style={styles.formTextInput}
+                  textStyle={styles.textFormInput}
                   onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
                 />
               </View>
               <View style={styles.formRow}>
-                <Hint>
+                <Hint style={styles.hint}>
                   {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
                   {' '}
                   {' '}
@@ -339,6 +345,7 @@ class Transfer extends Component {
                     keyboardType="numeric"
                     value={this.state.form.amount}
                     style={styles.formTextInput}
+                    textStyle={styles.textFormInput}
                     onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
                   />
                   <Text style={styles.header}>
@@ -347,7 +354,7 @@ class Transfer extends Component {
                 </View>
               </View>
               <View style={styles.formRow}>
-                <Hint>
+                <Hint style={styles.hint}>
                   {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Cost' }).toUpperCase()}
                 </Hint>
                 <View>
@@ -357,6 +364,7 @@ class Transfer extends Component {
                     keyboardType="numeric"
                     value={this.state.form.cost}
                     style={{ marginRight: 80 }}
+                    textStyle={styles.textFormInput}
                     onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
                   />
                   <View style={styles.currencyPickerContainer}>
