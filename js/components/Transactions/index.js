@@ -18,6 +18,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import TopButton from '../../style/TopButton';
 import { withCommonStatusBar } from '../../style/navigation';
 import Touchable from '../../style/Touchable';
+import TransactionItem from './transactionItem';
 
 const { height } = Dimensions.get('window');
 
@@ -192,40 +193,7 @@ class Transactions extends Component {
     this.onRefresh();
   }
 
-  renderItem = ({ item }) => (
-    <Touchable onPress={() => console.warn('dsfsd')/* this.props.openTrade(trade.id) */}>
-      <View
-        style={[styles.rowContainer]}
-      >
-        <View style={styles.rowContaineCryptIcon}>
-          <Image
-            style={styles.cryptIcon}
-            source={item.data.currency === 'BTC'
-              ? require('../../img/ic_btc.png') : require('../../img/ic_eth.png')}
-          />
-        </View>
-        <View style={styles.rowContainerBody}>
-          <View style={styles.rowContainerAmount}>
-            <Text style={styles.amountText}>
-              {item.data.currency}
-            </Text>
-            <Text style={styles.amountText}>
-              {item.amount}
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.dateText}>
-              {moment(item.date).format('d.MM.YYYY H:mm:ss')}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.rowContaineArrowIcon}>
-          <Image style={styles.arrowIcon} source={require('../../img/ic_picker.png')} />
-        </View>
-      </View>
-    </Touchable>
-  )
-    ;
+  renderItem = ({ item }) => <TransactionItem item={item} />;
 
   onRefresh = () => {
     const {

@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
   pickerIcon: {
     height: 17,
     width: 23,
-    left: 15,
   },
   cardText: {
     fontSize: 24,
