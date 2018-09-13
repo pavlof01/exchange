@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   sendButtonText: {
     fontSize: width / 23,
     fontWeight: '400',
+    fontFamily: 'System',
   },
   sendButton: {
     width: 320,
@@ -173,7 +174,9 @@ class Transfer extends Component {
   onAmountChange = (value, currency = this.state.currency || 'USD') => {
     /* eslint-disable no-nested-ternary  */
     value = value === null ? this.state.form.amount : value.replace(/,/, '.');
-    const { BTC_USD, ETH_USD, BTC_RUB, ETH_RUB } = this.props.cryptValue;
+    const {
+      BTC_USD, ETH_USD, BTC_RUB, ETH_RUB,
+    } = this.props.cryptValue;
     const rate = this.state.cryptoCurrencyCode === 'BTC' && currency === 'USD'
       ? BTC_USD : this.state.cryptoCurrencyCode === 'BTC' && currency === 'RUB'
         ? BTC_RUB : this.state.cryptoCurrencyCode === 'ETH' && currency === 'USD'
@@ -182,7 +185,7 @@ class Transfer extends Component {
 
     value = value || 0.0;
     const cost = value * rate;
-    this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }, currency, });
+    this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }, currency });
   };
 
   clearedErrorList = (name) => {
@@ -288,10 +291,10 @@ class Transfer extends Component {
     } = this.props;
     /* eslint-disable no-nested-ternary */
     const submitButtonText = pending
-      ? intl.formatMessage({ id: 'app.wallet.btn.wait', defaultMessage: 'Wait' }).toUpperCase()
+      ? intl.formatMessage({ id: 'app.wallet.btn.wait', defaultMessage: 'Wait' })
       : this.state.isConfirming
-        ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()
-        : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
+        ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' })
+        : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' });
     /* eslint-enable no-nested-ternary */
     return (
       <KeyboardAwareScrollView
@@ -314,8 +317,8 @@ class Transfer extends Component {
                 <FormTextInput
                   placeholder={
                     `${intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.enter', defaultMessage: 'Enter' })} ${
-                    simpleCurrencyName[code]} ${
-                    intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
+                      simpleCurrencyName[code]} ${
+                      intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
                   onChangeText={this.onAddressChange}
                   value={this.state.form.address}
                   // style={styles.formTextInput}
