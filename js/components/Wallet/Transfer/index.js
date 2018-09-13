@@ -62,6 +62,11 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: -70,
     paddingTop: 5,
+    elevation: 20,
+    shadowOffset: { width: 0, height: 100 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    shadowColor: 'rgba(0, 0, 0, 0.15)',
   },
   formRow: {
     marginTop: 15,
