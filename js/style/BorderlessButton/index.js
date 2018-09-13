@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     color: defaultBlue,
-    paddingBottom: 4,
+    padding: 4,
     fontSize: 16,
     fontFamily: fonts.bold.regular,
   },
