@@ -25,8 +25,6 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     height: 56,
     paddingLeft: 8,
     paddingRight: 8,
@@ -36,8 +34,8 @@ const styles = StyleSheet.create({
 
   },
   rightIconOfHeaderBar: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
 });
 

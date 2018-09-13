@@ -61,7 +61,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 15,
     marginTop: -70,
-    paddingTop: 30,
+    paddingTop: 5,
+    elevation: 20,
+    shadowOffset: { width: 0, height: 100 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    shadowColor: 'rgba(0, 0, 0, 0.15)',
   },
   formRow: {
     marginTop: 15,
@@ -76,10 +81,10 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     right: 0,
-    color: '#cac8c8',
+    color: 'rgba(193,193,193, 0.45)',
     fontWeight: '400',
     fontSize: 18,
-    fontFamily: fonts.regular.regular,
+    fontFamily: 'System',
   },
   error: {
     color: 'red',
@@ -90,11 +95,19 @@ const styles = StyleSheet.create({
   sendButtonText: {
     fontSize: width / 23,
     fontWeight: '400',
+    fontFamily: 'System',
   },
   sendButton: {
     width: 320,
     alignSelf: 'center',
-    marginTop: 30,
+    marginTop: 16,
+  },
+  hint: {
+    paddingLeft: 18,
+    marginBottom: 25,
+  },
+  textFormInput: {
+    paddingLeft: 18,
   },
 });
 
@@ -173,7 +186,9 @@ class Transfer extends Component {
   onAmountChange = (value, currency = this.state.currency || 'USD') => {
     /* eslint-disable no-nested-ternary  */
     value = value === null ? this.state.form.amount : value.replace(/,/, '.');
-    const { BTC_USD, ETH_USD, BTC_RUB, ETH_RUB } = this.props.cryptValue;
+    const {
+      BTC_USD, ETH_USD, BTC_RUB, ETH_RUB,
+    } = this.props.cryptValue;
     const rate = this.state.cryptoCurrencyCode === 'BTC' && currency === 'USD'
       ? BTC_USD : this.state.cryptoCurrencyCode === 'BTC' && currency === 'RUB'
         ? BTC_RUB : this.state.cryptoCurrencyCode === 'ETH' && currency === 'USD'
@@ -182,7 +197,7 @@ class Transfer extends Component {
 
     value = value || 0.0;
     const cost = value * rate;
-    this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }, currency, });
+    this.setState({ form: { ...this.state.form, amount: value, cost: cost.toFixed(2) }, currency });
   };
 
   clearedErrorList = (name) => {
@@ -288,10 +303,10 @@ class Transfer extends Component {
     } = this.props;
     /* eslint-disable no-nested-ternary */
     const submitButtonText = pending
-      ? intl.formatMessage({ id: 'app.wallet.btn.wait', defaultMessage: 'Wait' }).toUpperCase()
+      ? intl.formatMessage({ id: 'app.wallet.btn.wait', defaultMessage: 'Wait' })
       : this.state.isConfirming
-        ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' }).toUpperCase()
-        : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' }).toUpperCase();
+        ? intl.formatMessage({ id: 'app.wallet.btn.confirm', defaultMessage: 'Confirm' })
+        : intl.formatMessage({ id: 'app.wallet.btn.send', defaultMessage: 'Send' });
     /* eslint-enable no-nested-ternary */
     return (
       <KeyboardAwareScrollView
@@ -308,7 +323,7 @@ class Transfer extends Component {
           <View style={styles.formStyle}>
             <View style={{ flex: 1 }}>
               <View style={styles.formRow}>
-                <Hint>
+                <Hint style={styles.hint}>
                   {intl.formatMessage({ id: 'app.wallet.form.label.adress', defaultMessage: 'Adress' }).toUpperCase()}
                 </Hint>
                 <FormTextInput
@@ -318,12 +333,13 @@ class Transfer extends Component {
                     intl.formatMessage({ id: 'app.wallet.form.label.adress.placeholder.address', defaultMessage: 'Adress' })}`}
                   onChangeText={this.onAddressChange}
                   value={this.state.form.address}
-                  // style={styles.formTextInput}
+                  textStyle={styles.textFormInput}
                   onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                  placeholderTextColor='rgba(193,193,193, 0.45)'
                 />
               </View>
               <View style={styles.formRow}>
-                <Hint>
+                <Hint style={styles.hint}>
                   {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Amount' }).toUpperCase()}
                   {' '}
                   {' '}
@@ -336,7 +352,9 @@ class Transfer extends Component {
                     keyboardType="numeric"
                     value={this.state.form.amount}
                     style={styles.formTextInput}
+                    textStyle={styles.textFormInput}
                     onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                    placeholderTextColor='rgba(193,193,193, 0.45)'
                   />
                   <Text style={styles.header}>
                     {code}
@@ -344,7 +362,7 @@ class Transfer extends Component {
                 </View>
               </View>
               <View style={styles.formRow}>
-                <Hint>
+                <Hint style={styles.hint}>
                   {intl.formatMessage({ id: 'app.wallet.form.label.amount', defaultMessage: 'Cost' }).toUpperCase()}
                 </Hint>
                 <View>
@@ -354,19 +372,21 @@ class Transfer extends Component {
                     keyboardType="numeric"
                     value={this.state.form.cost}
                     style={{ marginRight: 80 }}
+                    textStyle={styles.textFormInput}
                     onFocus={event => this._scrollToInput(ReactNative.findNodeHandle(event.target))}
+                    placeholderTextColor='rgba(193,193,193, 0.45)'
                   />
                   <View style={styles.currencyPickerContainer}>
                     <Menu>
                       <MenuTrigger>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                           <Text style={{
-                            color: '#cac8c8', fontWeight: '400', fontSize: 18, marginRight: 5,
+                            color: 'rgba(193,193,193, 0.45)', fontWeight: '400', fontSize: 18, marginRight: 5,
                           }}
                           >
                             {this.state.currency}
                           </Text>
-                          <Image source={require('../../../img/ic_picker.png')} />
+                          <Image style={{ opacity: 0.5 }} source={require('../../../img/ic_picker.png')} />
                         </View>
                       </MenuTrigger>
                       <MenuOptions>

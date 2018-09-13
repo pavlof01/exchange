@@ -11,15 +11,6 @@ import Touchable from '../Touchable/index';
 import { fonts } from '../resourceHelpers';
 
 const sharedButtonStyle = {
-  /*shadowOffset: {
-    width: 0,
-    height: 2,
-  },
-  shadowRadius: 4,
-  shadowOpacity: 1.0,
-  elevation: 4,
-  borderWidth: 2,
-  borderRadius: 4,*/
   height: 48,
   flexDirection: 'row',
   alignItems: 'center',
@@ -29,11 +20,10 @@ const sharedButtonStyle = {
 const sharedTextStyle = {
   textAlign: 'center',
   alignSelf: 'center',
-  paddingTop: 6,
   fontSize: 16,
   lineHeight: 16,
-  fontWeight: '700',
-  fontFamily: fonts.regular.regular,
+  fontWeight: '400',
+  fontFamily: 'System',
 };
 
 const styles = StyleSheet.create({

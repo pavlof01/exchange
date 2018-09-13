@@ -14,8 +14,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
+    fontWeight: '600',
+    fontFamily: 'System',
   },
   border: {
     backgroundColor: '#fff',

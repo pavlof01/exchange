@@ -15,12 +15,11 @@ const defaultBlue = '#4f88b5';
 const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
-    height: 44,
   },
   text: {
     textAlign: 'center',
     color: defaultBlue,
-    padding: 8,
+    padding: 4,
     fontSize: 16,
     fontFamily: fonts.bold.regular,
   },
