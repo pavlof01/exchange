@@ -34,7 +34,7 @@ export default class QRCode extends Component {
       content = (
         <Image
           source={{ uri: `data:image/png;base64, ${base64code}` }}
-          style={{ width: 184, height: 188 }}
+          style={{ width: 174, height: 178 }}
         />
       );
     } else {
