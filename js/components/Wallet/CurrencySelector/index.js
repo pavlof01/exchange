@@ -27,9 +27,9 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#243682',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
     justifyContent: 'space-between',
     opacity: 0.1,
     elevation: 4,
@@ -120,7 +120,7 @@ export default class CurrencySelector extends Component {
             </View>
           </View>
         </Touchable>
-      </View >
+      </View>
     );
   }
 }
