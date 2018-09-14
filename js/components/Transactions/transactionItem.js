@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     height: 30,
   },
   rowContaineArrowIcon: {
-    flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
@@ -43,18 +42,23 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   dateAndStatusContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   dateText: {
+    flex: 1,
     fontSize: 12,
     color: '#a7a7a7',
     fontWeight: '300',
   },
   status: {
+    flex: 1,
+    textAlign: 'right',
     color: '#25367e',
     fontSize: 12,
     fontWeight: '300',
+    paddingRight: 10,
   },
   cryptAdressContainer: {
     height: 40,
