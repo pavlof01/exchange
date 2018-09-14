@@ -28,7 +28,7 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    height,
+    flex: 1,
   },
   pickerRow: {
     flexDirection: 'row',
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
   },
   sendButton: {
-    width: 320,
+    width: width / 1.2,
     alignSelf: 'center',
     marginTop: 16,
   },

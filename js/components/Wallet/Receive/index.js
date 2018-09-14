@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   content: {
     flexDirection: 'column',
-    height,
+    flex: 1,
   },
   body: {
     flex: 1,
