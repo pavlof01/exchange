@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   safeContainerHeader: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
   },
   safeContainer: {
     flex: 1,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     paddingEnd: 18,
   },
   tabAnimatedBackground: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
     height: HEADER_BACKGROUNG_MAX_HEIGHT,
   },
   contentShadowAnimated: {
@@ -108,49 +108,6 @@ const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: 'row',
     height: FLAT_LIST_MAX_PADDING,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 15,
-    borderBottomColor: 'rgba(238, 238, 238,0.8)',
-    borderBottomWidth: 1,
-  },
-  rowContaineCryptIcon: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  cryptIcon: {
-    width: 30,
-    height: 30,
-  },
-  rowContaineArrowIcon: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
-  arrowIcon: {
-    transform: [
-      { rotateZ: '-90deg' },
-    ],
-  },
-  rowContainerBody: {
-    flex: 5,
-  },
-  rowContainerAmount: {
-    flexDirection: 'row',
-  },
-  amountText: {
-    fontSize: 17,
-    color: '#000000',
-    fontWeight: '400',
-  },
-  dateText: {
-    fontSize: 12,
-    color: '#a7a7a7',
-    fontWeight: '300',
   },
   centerMessage: {
     flex: 1,
