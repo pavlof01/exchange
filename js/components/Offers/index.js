@@ -109,8 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     padding: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e1e1e1',
+    marginLeft: 15,
   },
   pickerIcon: {
     height: 17,
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     margin: 8,
     fontWeight: 'bold',
     flex: 1,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   currencyCircle: {
     width: 18,
@@ -131,7 +130,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#9b9b9b',
     alignItems: 'center',
     justifyContent: 'center',
-    left: 15,
   },
   currencySubcircle: {
     width: 16,
