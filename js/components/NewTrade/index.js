@@ -151,7 +151,7 @@ class NewTrade extends Component {
       ad,
       form,
     } = this.state;
-    const newValue = value || 0.0;
+    const newValue = value.replace(/,/, '.') || 0.0;
     const amount = newValue / ad.price;
     this.setState({
       form: { ...form, cost: newValue, amount: amount.toFixed(8) },
@@ -163,7 +163,7 @@ class NewTrade extends Component {
       ad,
       form,
     } = this.state;
-    const newValue = value || 0.0;
+    const newValue = value.replace(/,/, '.') || 0.0;
     const cost = newValue * ad.price;
     this.setState({
       form: { ...form, amount: newValue, cost: cost.toFixed(2) },
