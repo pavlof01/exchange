@@ -35,7 +35,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
   },
   container: {
     flex: 1,
@@ -109,8 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     padding: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e1e1e1',
+    marginLeft: 15,
   },
   pickerIcon: {
     height: 17,
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     margin: 8,
     fontWeight: 'bold',
     flex: 1,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   currencyCircle: {
     width: 18,
@@ -131,7 +130,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#9b9b9b',
     alignItems: 'center',
     justifyContent: 'center',
-    left: 15,
   },
   currencySubcircle: {
     width: 16,
@@ -193,6 +191,7 @@ const styles = StyleSheet.create({
   bankNameContainer: {
     flex: 0.8,
     height: 46,
+    justifyContent: 'center',
     overflow: 'hidden',
     paddingRight: 4,
     paddingLeft: 4,
@@ -238,7 +237,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   androidContainer: {
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
     color: 'white',
     height: 112,
     fontWeight: 'bold',
@@ -249,7 +248,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iosContainer: {
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
     color: 'white',
     fontWeight: 'bold',
     fontFamily: fonts.bold.regular,
