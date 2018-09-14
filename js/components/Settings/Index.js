@@ -20,7 +20,7 @@ import { getLocaleDisplayName } from '../../utils/i18n';
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
   },
   mainContainer: {
     flex: 1,
