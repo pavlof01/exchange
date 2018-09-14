@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     ),
   },
   container: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
     height: isAndroid ? 105 : 129,
   },
   rowContainer: {

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     marginTop: isAndroid ? 0 : 10,
   },
   androidContainer: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
     color: 'white',
     marginTop: 34,
     fontSize: 22,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iosContainer: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
     color: 'white',
     marginTop: 44,
     fontSize: 17,
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   touchableContainer: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
     position: 'absolute',
     right: 0,
     padding: 20,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imageContainer: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
     position: 'absolute',
     right: 0,
     paddingRight: 20,

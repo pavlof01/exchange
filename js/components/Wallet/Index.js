@@ -21,14 +21,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   container: {
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
   },
   rowContainer: {
     flexDirection: 'row',
     height: 56,
     paddingLeft: 8,
     paddingRight: 8,
-    backgroundColor: '#243682',
+    backgroundColor: '#2B2B82',
   },
   body: {
 

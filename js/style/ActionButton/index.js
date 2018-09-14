@@ -29,13 +29,13 @@ const sharedTextStyle = {
 const styles = StyleSheet.create({
   button: {
     ...sharedButtonStyle,
-    backgroundColor: '#25367e',
+    backgroundColor: '#2B2B82',
     justifyContent: 'center',
   },
   buttonSecondary: {
     ...sharedButtonStyle,
     backgroundColor: 'white',
-    borderColor: '#25367e',
+    borderColor: '#2B2B82',
     borderWidth: 1,
   },
   buttonDisabled: {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   textSecondary: {
     ...sharedTextStyle,
-    color: '#25367e',
+    color: '#2B2B82',
   },
   textDisabled: {
     ...sharedTextStyle,
