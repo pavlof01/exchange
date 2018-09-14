@@ -193,6 +193,7 @@ const styles = StyleSheet.create({
   bankNameContainer: {
     flex: 0.8,
     height: 46,
+    justifyContent: 'center',
     overflow: 'hidden',
     paddingRight: 4,
     paddingLeft: 4,
