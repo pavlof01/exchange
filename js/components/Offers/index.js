@@ -35,7 +35,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
   },
   container: {
     flex: 1,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   androidContainer: {
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
     color: 'white',
     height: 112,
     fontWeight: 'bold',
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iosContainer: {
-    backgroundColor: '#2B2B82',
+    backgroundColor: '#243682',
     color: 'white',
     fontWeight: 'bold',
     fontFamily: fonts.bold.regular,
