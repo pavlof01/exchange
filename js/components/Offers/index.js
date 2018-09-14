@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
   },
   btcCost: {
     fontFamily: fonts.regular.regular,
-    fontSize: 34,
+    fontSize: Math.floor(width / 11),
     color: 'rgb(168,190,235)',
     textAlign: 'center',
   },
