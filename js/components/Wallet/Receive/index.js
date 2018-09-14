@@ -47,11 +47,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   btn: {
-    width: width / 2.5,
+    flex: 1,
     margin: 16,
   },
   buttonText: {
     fontSize: width / 23,
+    lineHeight: width / 23,
     fontWeight: '400',
   },
   hint: {
