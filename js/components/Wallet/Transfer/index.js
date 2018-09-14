@@ -93,7 +93,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   sendButtonText: {
+    flex: 1,
     fontSize: width / 23,
+    lineHeight: width / 15,
     fontWeight: '400',
     fontFamily: 'System',
   },
