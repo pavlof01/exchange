@@ -111,6 +111,28 @@ const styles = StyleSheet.create({
   textFormInput: {
     paddingLeft: 18,
   },
+  menuTriggerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  menuTriggerText: {
+    color: 'rgba(193,193,193, 0.45)',
+    fontWeight: '400',
+    fontSize: 18,
+    lineHeight: 20,
+    width: 60,
+    textAlign: 'center',
+  },
+  menuTriggerIcon: {
+    opacity: 0.5,
+  },
+  menuOptionText: {
+    fontFamily: 'System',
+    fontSize: 18,
+    textAlign: 'center',
+  },
 });
 
 const DEFAULT_FORM_VALUES = {
@@ -381,24 +403,29 @@ class Transfer extends Component {
                   <View style={styles.currencyPickerContainer}>
                     <Menu>
                       <MenuTrigger>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                          <Text style={{
-                            color: 'rgba(193,193,193, 0.45)', fontWeight: '400', fontSize: 18, marginRight: 5,
-                          }}
-                          >
+                        <View style={styles.menuTriggerContainer}>
+                          <Text style={styles.menuTriggerText}>
                             {this.state.currency}
                           </Text>
-                          <Image style={{ opacity: 0.5 }} source={require('../../../img/ic_picker.png')} />
+                          <Image style={styles.menuTriggerIcon} source={require('../../../img/ic_picker.png')} />
                         </View>
                       </MenuTrigger>
                       <MenuOptions>
-                        <MenuOption onSelect={() => this.onAmountChange(null, 'USD')} key="USD" value="USD">
-                          <Text>
+                        <MenuOption
+                          onSelect={() => this.onAmountChange(null, 'USD')}
+                          key="USD"
+                          value="USD"
+                        >
+                          <Text style={styles.menuOptionText}>
                             USD
                           </Text>
                         </MenuOption>
-                        <MenuOption onSelect={() => this.onAmountChange(null, 'RUB')} key="RUR" value="RUR">
-                          <Text>
+                        <MenuOption
+                          onSelect={() => this.onAmountChange(null, 'RUB')}
+                          key="RUR"
+                          value="RUB"
+                        >
+                          <Text style={styles.menuOptionText}>
                             RUB
                           </Text>
                         </MenuOption>
