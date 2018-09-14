@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
   },
+  headerContainer: {
+    marginTop: 18,
+    marginBottom: 18,
+  },
   emailContainer: {
     paddingBottom: 20,
     paddingTop: 20,
@@ -152,7 +156,7 @@ class Settings extends Component {
     const displaySelectedLanguage = getLocaleDisplayName(selectedLocale);
     return (
       <SafeAreaView style={styles.safeContainer}>
-        <HeaderBar title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
+        <HeaderBar style={styles.headerContainer} title={intl.formatMessage({ id: 'app.settings.title', defaultMessage: 'Settings' }).toUpperCase()} />
         <View style={styles.mainContainer}>
           <ScrollView style={styles.scrollContainer}>
             <Title text={intl.formatMessage({ id: 'app.settings.title.profile', defaultMessage: 'Profile' }).toUpperCase()} />

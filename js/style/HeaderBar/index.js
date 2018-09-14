@@ -15,28 +15,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: isAndroid ? 0 : 10,
+    // marginTop: isAndroid ? 0 : 10,
+    backgroundColor: '#2B2B82',
   },
   androidContainer: {
     backgroundColor: '#2B2B82',
-    color: 'white',
-    marginTop: 34,
-    fontSize: 22,
-    fontFamily: 'System',
+    marginTop: 24,
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
   },
   iosContainer: {
     backgroundColor: '#2B2B82',
-    color: 'white',
     marginTop: 44,
-    fontSize: 17,
-    fontFamily: 'System',
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
-    letterSpacing: 1,
   },
   touchableContainer: {
     backgroundColor: '#2B2B82',
@@ -58,6 +52,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    color: 'white',
+    fontSize: 17,
+    fontFamily: 'System',
+    letterSpacing: 1,
+  },
 });
 
 class HeaderBar extends React.Component {
@@ -71,16 +71,19 @@ class HeaderBar extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <Text style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
+        <View style={[isAndroid ? styles.androidContainer : styles.iosContainer, this.props.style]}>
+          <Text style={styles.title}>
             {this.props.title}
           </Text>
         </View>
-        <Touchable onPress={this.props.onPress} style={styles.touchableContainer}>
-          <View style={styles.imageContainer}>
-            {this.props.rightIcon}
-          </View>
-        </Touchable>
+        {this.props.rightIcon ? (
+          <Touchable onPress={this.props.onPress} style={styles.touchableContainer}>
+            <View style={styles.imageContainer}>
+              {this.props.rightIcon}
+            </View>
+          </Touchable>
+        ) : null}
+
       </View>
     );
   }
