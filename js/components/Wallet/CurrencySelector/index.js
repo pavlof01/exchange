@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   cryptContainer: {
-    width: 169,
+    width: width / 2.2,
     height: 136,
     padding: 12,
     backgroundColor: '#243682',

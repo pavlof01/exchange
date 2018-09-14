@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
   },
   sendButton: {
-    width: 320,
+    width: width / 1.2,
     alignSelf: 'center',
     marginTop: 16,
   },
