@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   androidContainer: {
     backgroundColor: '#2B2B82',
-    marginTop: 24,
+    marginTop: 28,
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
