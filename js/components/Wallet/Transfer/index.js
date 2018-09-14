@@ -335,8 +335,8 @@ class Transfer extends Component {
     return (
       <KeyboardAwareScrollView
         behavior="padding"
-        style={{ flex: 1 }}
         innerRef={(ref) => { this.scrollKeyboard = ref; }}
+        bounces={false}
       >
         <View style={styles.container}>
           <CurrencySelector
