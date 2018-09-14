@@ -28,7 +28,7 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    height,
+    flex: 1,
   },
   pickerRow: {
     flexDirection: 'row',
