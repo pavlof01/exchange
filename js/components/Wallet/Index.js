@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     backgroundColor: '#2B2B82',
   },
-  body: {
-
+  headerBar: {
+    marginBottom: 15,
   },
   rightIconOfHeaderBar: {
     width: 25,
@@ -168,6 +168,7 @@ class Wallet extends Component {
             title={intl.formatMessage({ id: 'app.wallet.title.transfer', defaultMessage: 'Transfer' }).toUpperCase()}
             rightIcon={<Image resizeMode="contain" style={styles.rightIconOfHeaderBar} source={require('../../img/transactions.png')} />}
             onPress={() => this.props.openTransactions()}
+            style={styles.headerBar}
           />
           <View style={styles.rowContainer}>
             <TopButton
