@@ -717,8 +717,8 @@ class Offers extends React.PureComponent {
     } = this.props;
     if (exchangeRates.rates) {
       const currencyRate = exchangeRates.rate;
-      const changeInCurrency = `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}`;
-      const changeInPercent = (changeInCurrency / currencyRate) * 100;
+      const changeInCurrencyByTime = `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}`;
+      const changeInPercent = (changeInCurrencyByTime / currencyRate) * 100;
       return `${changeInPercent.toFixed(2)} %`;
     }
     return '';
