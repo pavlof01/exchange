@@ -256,11 +256,16 @@ class Transactions extends Component {
                       )}
                       renderItem={this.renderItem}
                       keyExtractor={(i, index) => index}
-                      ListEmptyComponent={(
-                        <Text style={styles.centerMessage}>
-                          {intl.formatMessage({ id: 'app.trades.loading', defaultMessage: 'Loading...' })}
-                        </Text>
-                      )}
+                      ListEmptyComponent={this.isPending() === false && flatListData.length === 0
+                        ? (
+                          <Text style={styles.centerMessage}>
+                            {intl.formatMessage({ id: 'app.trades.loading', defaultMessage: 'loading' })}
+                          </Text>
+                        ) : (
+                          <Text style={styles.centerMessage}>
+                            {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' })}
+                          </Text>
+                        )}
                       ListFooterComponent={
                         this.isPending() && <ActivityIndicator size="large" />
                       }
