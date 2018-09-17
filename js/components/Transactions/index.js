@@ -258,7 +258,7 @@ class Transactions extends Component {
                       keyExtractor={(i, index) => index}
                       ListEmptyComponent={(
                         <Text style={styles.centerMessage}>
-                          {intl.formatMessage({ id: 'app.trades.noTrades', defaultMessage: 'no trades' }).toUpperCase()}
+                          {intl.formatMessage({ id: 'app.trades.loading', defaultMessage: 'Loading...' })}
                         </Text>
                       )}
                       ListFooterComponent={

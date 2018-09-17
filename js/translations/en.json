@@ -80,6 +80,7 @@
   "app.trade.status.cancelled": "Transaction cancelled",
   "app.trades.header": "Trades",
   "app.trades.noTrades": "no trades",
+  "app.trades.loading": "Loading...",
   "app.trades.user": "User",
   "app.trades.type": "Type",
   "app.trades.type.sell": "Sell",
