@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     fontWeight: '400',
     color: '#000000',
-    fontSize: 17,
+    fontSize: 14,
   },
   flatListContainer: {
     height: height - 132,

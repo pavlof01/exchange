@@ -6,6 +6,7 @@ import {
   Text,
   View,
   AsyncStorage,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
@@ -16,6 +17,8 @@ import SettingsItem from './SettingsItem';
 import Switcher from './Switcher';
 import { fonts } from '../../style/resourceHelpers';
 import { getLocaleDisplayName } from '../../utils/i18n';
+
+const isAndroid = Platform.OS === 'android';
 
 const styles = StyleSheet.create({
   safeContainer: {
@@ -29,8 +32,8 @@ const styles = StyleSheet.create({
   scrollContainer: {
   },
   headerContainer: {
-    marginTop: 18,
-    marginBottom: 18,
+    marginTop: isAndroid ? 28 : 0,
+    marginBottom: isAndroid ? 24 : 30,
   },
   emailContainer: {
     paddingBottom: 20,

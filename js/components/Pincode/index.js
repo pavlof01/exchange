@@ -14,6 +14,7 @@ import ModalDialog from '../../style/ModalDialog';
 import PinCodeNumberButton from './PinCodeNumberButton';
 
 const PINCODE_LENTH = 4;
+const DIVIDER_FOR_RESPONSIVE_DESIGN = 5;
 const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -64,30 +65,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   circleNumber: {
-    width: height / 9,
-    height: height / 9,
+    width: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    height: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
     backgroundColor: 'rgba(148, 183, 255, 0.15)',
-    borderRadius: height / 18,
+    borderRadius: width / DIVIDER_FOR_RESPONSIVE_DESIGN * 2,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   delete: {
-    width: height / 9,
-    height: height / 9,
-    borderRadius: height / 18,
+    width: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    height: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    borderRadius: width / DIVIDER_FOR_RESPONSIVE_DESIGN * 2,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   goBackContainer: {
-    width: height / 9,
-    height: height / 9,
+    width: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    height: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(148, 183, 255, 0.15)',
-    borderRadius: height / 18,
+    borderRadius: width / DIVIDER_FOR_RESPONSIVE_DESIGN * 2,
   },
   goBackText: {
     fontSize: 14,

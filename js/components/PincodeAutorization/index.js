@@ -6,6 +6,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
+const DIVIDER_FOR_RESPONSIVE_DESIGN = 5;
+
 export default class PincodeAurorization extends Component {
   static navigationOptions = { header: props => null };
 
@@ -202,12 +204,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
   },
-  circleRight: {
-    width: 20,
-    height: 20,
-    backgroundColor: 'green',
-    borderRadius: 10,
-  },
   circleWrong: {
     width: 20,
     height: 20,
@@ -222,23 +218,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   circleNumber: {
-    width: height / 9,
-    height: height / 9,
+    width: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    height: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
     backgroundColor: 'rgba(148, 183, 255, 0.15)',
-    borderRadius: height / 18,
+    borderRadius: width / DIVIDER_FOR_RESPONSIVE_DESIGN * 2,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   empty: {
-    width: height / 9,
-    height: height / 9,
+    width: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    height: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
     margin: 10,
   },
   delete: {
-    width: height / 9,
-    height: height / 9,
-    borderRadius: height / 18,
+    width: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    height: width / DIVIDER_FOR_RESPONSIVE_DESIGN,
+    borderRadius: width / DIVIDER_FOR_RESPONSIVE_DESIGN * 2,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',

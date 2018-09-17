@@ -23,7 +23,9 @@ import { currencyCodeToSymbol } from '../../helpers';
 import Price from '../../values/Price';
 import PickerModal from '../../style/PickerModal';
 import CardPicker from '../../style/CardPicker';
+import HeaderBar from '../../style/HeaderBar';
 
+const isAndroid = Platform.OS === 'android';
 const SIDE_PADDING = 20;
 const REFRESH_OFFSET_HEIGHT = 25;
 const SAFE_REFRESH_VIEW_HEIGHT = 55;
@@ -44,6 +46,10 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     flexDirection: 'column',
+  },
+  headerBar: {
+    marginTop: isAndroid ? 28 : 0,
+    marginBottom: isAndroid ? 24 : 25,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -249,12 +255,7 @@ const styles = StyleSheet.create({
   },
   iosContainer: {
     backgroundColor: '#2B2B82',
-    color: 'white',
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
     alignItems: 'center',
-    textAlign: 'center',
-    justifyContent: 'center',
   },
   titleContainer: {
     alignItems: 'center',
@@ -263,12 +264,12 @@ const styles = StyleSheet.create({
   titleText: {
     color: 'white',
     height: 56,
-    fontSize: 16,
     lineHeight: 18,
-    fontWeight: 'bold',
-    fontFamily: fonts.bold.regular,
     paddingTop: 24,
     textAlign: 'center',
+    fontSize: 17,
+    fontFamily: 'System',
+    letterSpacing: 1,
   },
   btcCostWrapper: {
     flex: 1,
@@ -316,11 +317,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#9b9b9b',
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: isAndroid ? 28 : 12,
+    marginBottom: isAndroid ? 28 : 12,
     fontSize: 16,
     lineHeight: 16,
-    fontFamily: fonts.bold.regular,
+    fontFamily: 'System',
     marginLeft: 20,
   },
 });
@@ -715,7 +716,10 @@ class Offers extends React.PureComponent {
       exchangeRates,
     } = this.props;
     if (exchangeRates.rates) {
-      return `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}`;
+      const currencyRate = exchangeRates.rate;
+      const changeInCurrencyByTime = `${exchangeRates.rates[`change_${hours}${time}`].toFixed(2)}`;
+      const changeInPercent = currencyRate ? (changeInCurrencyByTime / currencyRate) * 100 : (-1) * 100;
+      return `${changeInPercent.toFixed(2)} %`;
     }
     return '';
   };
@@ -846,9 +850,10 @@ class Offers extends React.PureComponent {
                 ]
               }
             >
-              <Text style={styles.titleText}>
-                {header}
-              </Text>
+              <HeaderBar
+                title={header}
+                style={styles.headerBar}
+              />
             </Animated.View>
             <View style={styles.btcCostContainer}>
               <View style={styles.btcCostWrapper}>

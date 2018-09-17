@@ -80,6 +80,7 @@
   "app.trade.status.cancelled": "Транзакция отменена",
   "app.trades.header": "Сделки",
   "app.trades.noTrades": "Нет сделок",
+  "app.trades.loading": "Загрузка...",
   "app.trades.user": "Имя",
   "app.trades.type": "Тип",
   "app.trades.type.sell": "Продажа",
