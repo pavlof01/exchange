@@ -9,13 +9,11 @@ import {
   initializeListeners,
   createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
-
 import AppNavigator from './AppNavigator';
 import { ONE_SIGNAL_APP_ID } from './config.json';
 import Api from './services/Api';
 import { setPushToken } from './actions/pushNotifications';
-import { fetchFromTrade } from './actions/currentTrade';
-import { openTrade } from './actions/navigation';
+import { setTradeIdForRedirect } from './actions/app';
 import { translationMessages } from './utils/i18n';
 import LanguageProvider from './containers/LanguageProvider';
 
@@ -76,16 +74,15 @@ class App extends Component {
   };
 
   onOpened = (openResult) => {
+    const { dispatch } = this.props;
     if (openResult.notification.isAppInFocus) {
       console.warn('Notification onOpened: ', JSON.stringify(openResult, null, 2));
     } else {
-      const { dispatch } = this.props;
       const { type } = openResult.notification.payload.additionalData;
       console.warn('Notification onOpened: ', JSON.stringify(openResult, null, 2));
       if (type === 'Notification::NotReadTradeMessage') {
-        const tradeId = openResult.notification.payload.additionalData.trade_id;
-        dispatch(fetchFromTrade(dispatch, { id: tradeId }));
-        dispatch(openTrade(tradeId));
+        const tradeId = 5436; // openResult.notification.payload.additionalData.trade_id;
+        dispatch(setTradeIdForRedirect(tradeId));
       }
     }
     console.log('Message: ', openResult.notification.payload.body);

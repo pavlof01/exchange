@@ -1,4 +1,6 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {
+  call, put, takeLatest, select,
+} from 'redux-saga/effects';
 import { AsyncStorage } from 'react-native';
 import LoginUser from '../models/User/Login';
 import Api from '../services/Api';
@@ -6,7 +8,11 @@ import {
   setUser, setFailure, logoutSuccess, loginRequest, loginSuccess, isFetchingUser,
 } from '../actions/session';
 import { APP, SESSION } from '../actions';
-import { openPincodeAutorization } from '../actions/navigation';
+import { openPincodeAutorization, openTrade } from '../actions/navigation';
+import { fetchFromTrade } from '../actions/currentTrade';
+import { removeTradeId } from '../actions/app';
+import store from '../store';
+
 
 function userFetch() {
   return Api.get('/me')
@@ -72,6 +78,10 @@ export const dynamicInitialRoute = function* dynamicInitialRoute() {
       saveToken(user.api_token);
       yield put(setUser(user));
       yield put(loginSuccess());
+      const tradeId = yield select(state => state.app.tradeId);
+      yield put(removeTradeId());
+      yield put(fetchFromTrade(store.dispatch, { id: tradeId }));
+      yield put(openTrade(tradeId));
     }
   } catch (err) {
     if (err.request && err.request.status === 401) {

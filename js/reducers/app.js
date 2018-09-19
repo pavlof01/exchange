@@ -2,6 +2,7 @@ import { APP, SESSION } from '../actions';
 
 const initial = {
   ready: false,
+  tradeId: null,
 };
 
 export default (state = initial, action) => {
@@ -20,6 +21,14 @@ export default (state = initial, action) => {
 
     case SESSION.SESSION_SET_USER: return {
       ...state, ready: true,
+    };
+
+    case APP.SET_TRADE_ID_FOR_REDIRECT: return {
+      ...state, tradeId: action.payload.tradeId,
+    };
+
+    case APP.REMOVE_TRADE_ID: return {
+      ...state, tradeId: null,
     };
 
     default: return state;
