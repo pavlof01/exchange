@@ -6,7 +6,7 @@ import {
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import Api from '../../services/Api';
-
+import OneSignal from 'react-native-onesignal';
 import {
   tradePartner,
   tradeType,
@@ -46,6 +46,7 @@ class Trade extends Component {
 
   onConnect = () => {
     const intervalId = setInterval(() => {
+      OneSignal.inFocusDisplaying(0);
       const {
         trade,
       } = this.props;
@@ -86,6 +87,7 @@ class Trade extends Component {
 
   /* eslint-disable  */
   onDisconnect = (event) => {
+    OneSignal.inFocusDisplaying(2);
     console.warn('chat disconnect');
     event.wasClean
       ? console.log('Disconnect was clean (Api::V1::ChatChannel)')
