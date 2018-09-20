@@ -9,9 +9,11 @@ import ReactNative, {
   ActivityIndicator,
   TextInput,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ifIphoneX } from 'react-native-iphone-x-helper';
 import FormTextInput from '../FormTextInput';
 import Price from '../../values/Price';
 import {
@@ -25,6 +27,7 @@ import TraderInfo from '../TraderInfo';
 import { fonts } from '../../style/resourceHelpers';
 
 const { width } = Dimensions.get('window');
+const isAndroid = Platform.OS === 'android';
 
 const styles = StyleSheet.create({
   container: {
@@ -118,9 +121,38 @@ const styles = StyleSheet.create({
   sendButtonText: {
     fontSize: width / 25,
   },
+  androidContainer: {
+    backgroundColor: '#2B2B82',
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  iosContainer: {
+    backgroundColor: '#2B2B82',
+    paddingTop: 20,
+    paddingBottom: 20,
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+    ...ifIphoneX(
+      {
+        paddingTop: 40,
+        paddingBottom: 20,
+      },
+    ),
+  },
+  titleHeader: {
+    color: 'white',
+    fontSize: 17,
+    fontFamily: 'System',
+    letterSpacing: 1,
+  },
 });
 
 class NewTrade extends Component {
+
   constructor(props) {
     super(props);
 
@@ -210,17 +242,16 @@ class NewTrade extends Component {
     this.setState({ pending: true, errors: undefined });
   };
 
-  static renderCurrencyInput(
+  renderCurrencyInput = (
     limitMin,
     limitMax,
     curCode,
     isCrypt,
     value,
     onChange,
-  ) {
+  ) => {
     const min = Price.build(limitMin);
     const max = Price.build(limitMax);
-
     return (
       <View style={styles.formStyle}>
         <View style={styles.formRow}>
@@ -240,7 +271,7 @@ class NewTrade extends Component {
             marginTop: 10, flex: 1, color: '#4a4a4a', fontSize: 12,
           }}
         >
-          Limit:
+          {this.props.intl.formatMessage({ id: 'app.newTrade.label.limits', defaultMessage: 'Limits' })}{': '}
           {isCrypt ? min.viewCrypto : min.viewMain}
           {' - '}
           {isCrypt ? max.viewCrypto : max.viewMain}
@@ -253,7 +284,7 @@ class NewTrade extends Component {
 
   renderFiatCurrencyInput() {
     const { ad, form } = this.state;
-    return NewTrade.renderCurrencyInput(
+    return this.renderCurrencyInput(
       ad.limit_min,
       ad.limit_max,
       ad.currency_code,
@@ -265,7 +296,7 @@ class NewTrade extends Component {
 
   renderCryptoCurrencyInput() {
     const { ad, form } = this.state;
-    return NewTrade.renderCurrencyInput(
+    return this.renderCurrencyInput(
       ad.limit_min / ad.price,
       ad.limit_max / ad.price,
       ad.crypto_currency_code,
@@ -299,6 +330,11 @@ class NewTrade extends Component {
           style={{ backgroundColor: '#fff' }}
         >
           <View>
+            <View style={[isAndroid ? styles.androidContainer : styles.iosContainer]}>
+              <Text style={styles.titleHeader}>
+                {intl.formatMessage({ id: 'app.newTrade.titleHeader', defaultMessage: 'New request' }).toUpperCase()}
+              </Text>
+            </View>
             <Text style={styles.title}>
               {`${intl.formatMessage({ id: 'app.newTrade.title', defaultMessage: 'Transfer via' }).toUpperCase()} ${ad.payment_method_code}`}
             </Text>

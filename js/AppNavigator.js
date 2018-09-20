@@ -37,7 +37,7 @@ const Main = createBottomTabNavigator({
 
 const AppNavigator = createStackNavigator({
   Main: { screen: Main, navigationOptions: () => ({ header: () => null }) },
-  NewTrade: { screen: NewTrade, navigationOptions: createBasicNavigationOptions('REQUEST') },
+  NewTrade: { screen: NewTrade, navigationOptions: () => ({ header: () => null }) },
   Trade: { screen: Trade },
   Feedback: { screen: Feedback },
   Profile: { screen: Profile },
