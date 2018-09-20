@@ -41,16 +41,17 @@ const HEIGHT_HEADER_FOR_INTERPOLATE = isAndroid ? 32 : 33;
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
+    top: -1,
     backgroundColor: '#f9f9f9',
-    ...ifIphoneX(
-      {
-        top: -1,
-      },
-    ),
   },
   container: {
     backgroundColor: '#2B2B82',
-    height: isAndroid ? 105 : 129,
+    height: isAndroid ? 119 : 129,
+    ...ifIphoneX(
+      {
+        height: 139,
+      },
+    ),
   },
   rowContainer: {
     height: 64,
@@ -127,6 +128,11 @@ const styles = StyleSheet.create({
   },
   absoluteContainer: {
     backgroundColor: '#f9f9f9',
+  },
+  rightIconOfHeaderBar: {
+    width: 25,
+    height: 25,
+    top: '30%',
   },
 });
 
@@ -281,7 +287,6 @@ class Trades extends Component {
         ]}
         >
           <Animated.View style={[
-            { top: 0 },
             {
               transform: [{
                 translateY: stayHeader,
@@ -290,7 +295,7 @@ class Trades extends Component {
           ]}
           >
             <HeaderBar
-              rightIcon={<Image source={require('../../img/messages_notification.png')} />}
+              rightIcon={<Image resizeMode="contain" style={styles.rightIconOfHeaderBar} source={require('../../img/messages_notification.png')} />}
               title="TRADES"
             />
           </Animated.View>
