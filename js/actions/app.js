@@ -11,3 +11,14 @@ export function dynamicInitialRoute() {
 export function checkPincode() {
   return { type: APP.CHECK_PINCODE };
 }
+
+export function setTradeIdForRedirect(tradeId) {
+  return {
+    type: APP.SET_TRADE_ID_FOR_REDIRECT,
+    payload: { tradeId },
+  };
+}
+
+export function removeTradeId() {
+  return { type: APP.REMOVE_TRADE_ID };
+}
