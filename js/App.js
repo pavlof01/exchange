@@ -33,7 +33,7 @@ class App extends Component {
 
   componentWillMount() {
     OneSignal.init(ONE_SIGNAL_APP_ID);
-
+    OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);
