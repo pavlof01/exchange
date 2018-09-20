@@ -79,9 +79,11 @@ export const dynamicInitialRoute = function* dynamicInitialRoute() {
       yield put(setUser(user));
       yield put(loginSuccess());
       const tradeId = yield select(state => state.app.tradeId);
-      yield put(removeTradeId());
-      yield put(fetchFromTrade(store.dispatch, { id: tradeId }));
-      yield put(openTrade(tradeId));
+      if (tradeId) {
+        yield put(removeTradeId());
+        yield put(fetchFromTrade(store.dispatch, { id: tradeId }));
+        yield put(openTrade(tradeId));
+      }
     }
   } catch (err) {
     if (err.request && err.request.status === 401) {

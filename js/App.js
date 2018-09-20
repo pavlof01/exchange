@@ -81,7 +81,7 @@ class App extends Component {
       const { type } = openResult.notification.payload.additionalData;
       console.warn('Notification onOpened: ', JSON.stringify(openResult, null, 2));
       if (type === 'Notification::NotReadTradeMessage') {
-        const tradeId = 5436; // openResult.notification.payload.additionalData.trade_id;
+        const tradeId = openResult.notification.payload.additionalData.trade_id;
         dispatch(setTradeIdForRedirect(tradeId));
       }
     }
