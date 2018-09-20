@@ -731,7 +731,7 @@ class Offers extends React.PureComponent {
     if (exchangeRates.rate) {
       return Number.parseInt(exchangeRates.rate, 10);
     }
-    return 0;
+    return '';
   };
 
   getCryptRateSymbol = () => {
