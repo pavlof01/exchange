@@ -9,9 +9,11 @@ import ReactNative, {
   ActivityIndicator,
   TextInput,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { injectIntl, intlShape } from 'react-intl';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ifIphoneX } from 'react-native-iphone-x-helper';
 import FormTextInput from '../FormTextInput';
 import Price from '../../values/Price';
 import {
@@ -25,6 +27,7 @@ import TraderInfo from '../TraderInfo';
 import { fonts } from '../../style/resourceHelpers';
 
 const { width } = Dimensions.get('window');
+const isAndroid = Platform.OS === 'android';
 
 const styles = StyleSheet.create({
   container: {
@@ -118,9 +121,38 @@ const styles = StyleSheet.create({
   sendButtonText: {
     fontSize: width / 25,
   },
+  androidContainer: {
+    backgroundColor: '#2B2B82',
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  iosContainer: {
+    backgroundColor: '#2B2B82',
+    paddingTop: 20,
+    paddingBottom: 20,
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+    ...ifIphoneX(
+      {
+        paddingTop: 40,
+        paddingBottom: 20,
+      },
+    ),
+  },
+  titleHeader: {
+    color: 'white',
+    fontSize: 17,
+    fontFamily: 'System',
+    letterSpacing: 1,
+  },
 });
 
 class NewTrade extends Component {
+
   constructor(props) {
     super(props);
 
@@ -299,6 +331,11 @@ class NewTrade extends Component {
           style={{ backgroundColor: '#fff' }}
         >
           <View>
+            <View style={[isAndroid ? styles.androidContainer : styles.iosContainer]}>
+              <Text style={styles.titleHeader}>
+                dfgdf
+              </Text>
+            </View>
             <Text style={styles.title}>
               {`${intl.formatMessage({ id: 'app.newTrade.title', defaultMessage: 'Transfer via' }).toUpperCase()} ${ad.payment_method_code}`}
             </Text>

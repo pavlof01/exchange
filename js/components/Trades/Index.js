@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { injectIntl, intlShape } from 'react-intl';
-import { ifIphoneX } from 'react-native-iphone-x-helper'
+import { ifIphoneX } from 'react-native-iphone-x-helper';
 import {
   tradePartner,
   tradeType,
