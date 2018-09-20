@@ -107,6 +107,7 @@ class Pincode extends Component {
       textModal: '',
       deletePincode: false,
     };
+    this.isCompared = false;
   }
 
   componentWillMount() {
@@ -154,6 +155,7 @@ class Pincode extends Component {
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
     if (pincode === confirmPincode) {
+      this.isCompared = true;
       this.setState({
         openModal: true,
         textModal: intl.formatMessage({ id: 'app.settings.pincode_set', defaultMessage: 'pincode set' }).toUpperCase(),
@@ -172,6 +174,7 @@ class Pincode extends Component {
     const pincode = await AsyncStorage.getItem('pincode');
     const confirmPincode = this.state.pincode;
     if (pincode === confirmPincode) {
+      this.isCompared = true;
       AsyncStorage.removeItem('pincode');
       this.setState({
         openModal: true,
@@ -184,6 +187,14 @@ class Pincode extends Component {
       });
     }
   };
+
+  tryAgain = () => {
+    if (this.isCompared) {
+      this.props.navigation.goBack();
+    } else {
+      this.setState({ pincode: '', confirm: false });
+    }
+  }
 
   render() {
     const {
@@ -205,7 +216,7 @@ class Pincode extends Component {
           onPositivePress={
             () => this.setState(
               { openModal: false },
-              () => navigation.goBack(),
+              () => this.tryAgain(),
             )
           }
         />
