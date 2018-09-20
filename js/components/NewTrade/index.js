@@ -333,7 +333,7 @@ class NewTrade extends Component {
           <View>
             <View style={[isAndroid ? styles.androidContainer : styles.iosContainer]}>
               <Text style={styles.titleHeader}>
-                dfgdf
+                {intl.formatMessage({ id: 'app.newTrade.titleHeader', defaultMessage: 'New request' }).toUpperCase()}
               </Text>
             </View>
             <Text style={styles.title}>

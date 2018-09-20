@@ -15,6 +15,7 @@
   "app.offers.label.limits": "Limits",
   "app.offers.label.value": "Value",
   "app.offers.selector.paymentMethodAny": "Any",
+  "app.newTrade.titleHeader": "New request",
   "app.newTrade.title": "Transfer via",
   "app.newTrade.label.cost": "Cost",
   "app.newTrade.label.amount": "Amount",

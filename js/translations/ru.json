@@ -15,6 +15,7 @@
   "app.offers.label.limits": "Лимиты",
   "app.offers.label.value": "Цена",
   "app.offers.selector.paymentMethodAny": "Любой",
+  "app.newTrade.titleHeader": "Новая сделка",
   "app.newTrade.title": "Перевод через",
   "app.newTrade.label.cost": "Стоимость",
   "app.newTrade.label.amount": "Количество",
