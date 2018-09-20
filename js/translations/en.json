@@ -19,6 +19,7 @@
   "app.newTrade.title": "Transfer via",
   "app.newTrade.label.cost": "Cost",
   "app.newTrade.label.amount": "Amount",
+  "app.newTrade.label.limits": "Limits",
   "app.newTrade.label.message": "Message",
   "app.newTrade.text.timeLeft": "Time limit for payment of seller's invoice:",
   "app.newTrade.text.timeLeftValue": "{time} min",

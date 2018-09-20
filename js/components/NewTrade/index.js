@@ -242,17 +242,16 @@ class NewTrade extends Component {
     this.setState({ pending: true, errors: undefined });
   };
 
-  static renderCurrencyInput(
+  renderCurrencyInput = (
     limitMin,
     limitMax,
     curCode,
     isCrypt,
     value,
     onChange,
-  ) {
+  ) => {
     const min = Price.build(limitMin);
     const max = Price.build(limitMax);
-
     return (
       <View style={styles.formStyle}>
         <View style={styles.formRow}>
@@ -272,7 +271,7 @@ class NewTrade extends Component {
             marginTop: 10, flex: 1, color: '#4a4a4a', fontSize: 12,
           }}
         >
-          Limit:
+          {this.props.intl.formatMessage({ id: 'app.newTrade.label.limits', defaultMessage: 'Limits' })}{': '}
           {isCrypt ? min.viewCrypto : min.viewMain}
           {' - '}
           {isCrypt ? max.viewCrypto : max.viewMain}
@@ -285,7 +284,7 @@ class NewTrade extends Component {
 
   renderFiatCurrencyInput() {
     const { ad, form } = this.state;
-    return NewTrade.renderCurrencyInput(
+    return this.renderCurrencyInput(
       ad.limit_min,
       ad.limit_max,
       ad.currency_code,
@@ -297,7 +296,7 @@ class NewTrade extends Component {
 
   renderCryptoCurrencyInput() {
     const { ad, form } = this.state;
-    return NewTrade.renderCurrencyInput(
+    return this.renderCurrencyInput(
       ad.limit_min / ad.price,
       ad.limit_max / ad.price,
       ad.crypto_currency_code,
