@@ -94,7 +94,7 @@ class Login extends Component {
               source={require('../../img/logo_text.png')}
             />
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 2 }}>
             <KeyboardAvoidingView behavior="padding">
               <View style={styles.formContainer}>
                 <FormTextInput
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     marginTop: height / 15,
-    flex: 1,
+    flex: 2,
   },
   logo: {
     marginBottom: height / 40,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   bottom: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'space-between',
     marginBottom: 15,
   },
