@@ -9,6 +9,7 @@ import {
   Keyboard,
   ScrollView,
   Dimensions,
+  Platform,
 } from 'react-native';
 import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,6 +22,7 @@ import BorderlessButton from '../../style/BorderlessButton';
 import { fonts } from '../../style/resourceHelpers';
 
 const { height } = Dimensions.get('window');
+const isAndroid = Platform.OS === 'android';
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -166,12 +168,12 @@ class Login extends Component {
                 </Text>
               </Touchable>
             </View>
-            <Touchable style={{ marginTop: 50 }}>
-              <Text style={styles.loginQR}>
-                {intl.formatMessage({ id: 'app.login.btn.login_with_qr_code', defaultMessage: 'Sign up' }).toUpperCase()}
-              </Text>
-            </Touchable>
           </View>
+          <Touchable>
+            <Text style={styles.loginQR}>
+              {intl.formatMessage({ id: 'app.login.btn.login_with_qr_code', defaultMessage: 'Sign up' }).toUpperCase()}
+            </Text>
+          </Touchable>
         </ScrollView>
       </LinearGradient>
 
@@ -192,8 +194,9 @@ const styles = StyleSheet.create({
     height,
   },
   scrollView: {
-    height,
     justifyContent: 'space-between',
+    flex: 1,
+    paddingBottom: isAndroid ? 40 : 20,
   },
   logoContainer: {
     alignItems: 'center',
@@ -248,9 +251,9 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   bottom: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'space-between',
-    marginBottom: 5,
+    marginBottom: 15,
   },
   signInBtn: {
     marginTop: 10,
