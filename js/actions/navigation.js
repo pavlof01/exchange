@@ -12,6 +12,13 @@ export const SELECT_NATIVE_CURRENCY = 'SELECT_NATIVE_CURRENCY';
 export const SELECT_LANGUAGE = 'SELECT_LANGUAGE';
 export const OPEN_PINCODE_AUTORIZATION = 'OPEN PINCODE AUTORIZATION';
 export const OPEN_TRANSACTIONS = 'OPEN TRANSACTIONS';
+export const RESET_NAVIGATION = 'RESET NAVIGATION';
+
+export function resetNavigation() {
+  return {
+    type: RESET_NAVIGATION,
+  };
+}
 
 export function newTrade(ad) {
   return {

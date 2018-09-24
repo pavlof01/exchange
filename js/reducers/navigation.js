@@ -1,4 +1,4 @@
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import AppNavigator from '../AppNavigator';
 
 import {
@@ -9,6 +9,7 @@ import {
 } from '../actions/recoverPassword';
 import { SESSION } from '../actions';
 import {
+  RESET_NAVIGATION,
   NEW_TRADE_REQUEST,
   OPEN_FEEDBACK_REQUEST,
   OPEN_PROFILE_REQUEST,
@@ -31,9 +32,24 @@ const initialState = AppNavigator.router.getStateForAction(firstAction);
 export default function navigationReducer(state = initialState, action) {
   let nextState;
   switch (action.type) {
+    case RESET_NAVIGATION: {
+      const resetToMain = StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'Main' }),
+        ],
+      });
+      nextState = AppNavigator.router.getStateForAction(resetToMain, state);
+      break;
+    }
     case SESSION.LOGIN_SUCCESS:
       nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'Main' }),
+        StackActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({ routeName: 'Main' }),
+          ],
+        }),
         state,
       );
       break;
