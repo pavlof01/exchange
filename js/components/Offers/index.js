@@ -24,6 +24,7 @@ import Price from '../../values/Price';
 import PickerModal from '../../style/PickerModal';
 import CardPicker from '../../style/CardPicker';
 import HeaderBar from '../../style/HeaderBar';
+import { withCommonStatusBar } from '../../style/navigation';
 
 const isAndroid = Platform.OS === 'android';
 const SIDE_PADDING = 20;
@@ -825,7 +826,7 @@ class Offers extends React.PureComponent {
       extrapolate: 'clamp',
     });
     const changeRate = this.getBitcionChangeRatesdByTime('1', 'd');
-    return (
+    return withCommonStatusBar(
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <Animated.View
@@ -911,7 +912,7 @@ class Offers extends React.PureComponent {
           }
         </View>
 
-      </SafeAreaView>
+      </SafeAreaView>,
     );
   }
 }
