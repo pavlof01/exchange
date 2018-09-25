@@ -82,7 +82,10 @@ export default function navigationReducer(state = initialState, action) {
       const resetAction = StackActions.reset({
         index: 1,
         actions: [
-          NavigationActions.navigate({ routeName: 'Trades' }),
+          NavigationActions.navigate({
+            routeName: 'Main',
+            action: NavigationActions.navigate({ routeName: 'Trades' }),
+          }),
           NavigationActions.navigate({ routeName: 'Trade' }),
         ],
       });
