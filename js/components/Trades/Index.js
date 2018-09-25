@@ -209,11 +209,13 @@ class Trades extends Component {
           <View style={styles.currencyType}>
             {trade.ad.crypto_currency_code === 'BTC' ? (
               <Image
+                resizeMode="contain"
                 style={styles.imageCurrencyType}
                 source={require('../../img/ic_btc.png')}
               />
             ) : (
                 <Image
+                  resizeMode="contain"
                   style={styles.imageCurrencyType}
                   source={require('../../img/ic_eth.png')}
                 />
