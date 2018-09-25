@@ -364,7 +364,7 @@ class Offers extends React.PureComponent {
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
-    fetchExchangeRates('BTC', 'USD');
+    fetchExchangeRates('BTC', selectedCurrency);
     this.state.animatedValue.addListener(value => this.handleScroll(value));
   }
 
