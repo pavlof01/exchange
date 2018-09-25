@@ -99,6 +99,7 @@ class TransactionItem extends Component {
             <View style={styles.rowContaineCryptIcon}>
               <Image
                 style={styles.cryptIcon}
+                resizeMode="contain"
                 source={item.data.currency === 'BTC'
                   ? require('../../img/ic_btc.png') : require('../../img/ic_eth.png')}
               />
