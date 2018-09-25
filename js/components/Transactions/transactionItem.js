@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import {
+  View, Text, StyleSheet, Image,
+} from 'react-native';
 import moment from 'moment';
 import Touchable from '../../style/Touchable';
 
@@ -8,9 +10,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 15,
+    paddingBottom: 15,
+    paddingTop: 15,
     borderBottomColor: 'rgba(238, 238, 238,0.8)',
     borderBottomWidth: 1,
+    marginLeft: 10,
+    marginRight: 10,
   },
   rowContaineCryptIcon: {
     flex: 1,
@@ -102,6 +107,7 @@ class TransactionItem extends Component {
               <View style={styles.rowContainerAmount}>
                 <Text style={styles.amountText}>
                   {item.data.currency}
+                  {' '}
                 </Text>
                 <Text style={styles.amountText}>
                   {item.amount}
@@ -109,7 +115,7 @@ class TransactionItem extends Component {
               </View>
               <View style={styles.dateAndStatusContainer}>
                 <Text style={styles.dateText}>
-                  {moment(item.date).format('d.MM.YYYY H:mm:ss')}
+                  {moment(item.date).format('YYYY.MM.d H:mm:ss')}
                 </Text>
                 <Text style={styles.status}>
                   {this.state.isOpen ? 'Confirm' : null}
@@ -132,7 +138,6 @@ class TransactionItem extends Component {
       </Touchable>
     );
   }
-
 }
 
 export default TransactionItem;
