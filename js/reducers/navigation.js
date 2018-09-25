@@ -78,12 +78,20 @@ export default function navigationReducer(state = initialState, action) {
         state,
       );
       break;
-    case OPEN_TRADE_REQUEST:
-      nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'Trade' }),
-        state,
-      );
+    case OPEN_TRADE_REQUEST: {
+      const resetAction = StackActions.reset({
+        index: 1,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'Main',
+            action: NavigationActions.navigate({ routeName: 'Trades' }),
+          }),
+          NavigationActions.navigate({ routeName: 'Trade' }),
+        ],
+      });
+      nextState = AppNavigator.router.getStateForAction(resetAction, state);
       break;
+    }
     case OPEN_PROFILE_REQUEST:
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'Profile', params: { profile: action.profile } }),
