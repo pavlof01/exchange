@@ -34,6 +34,17 @@ const initial = {
   interval: null,
 };
 
+/**
+ * Отправляет онлайн статус пользователя через сокет, если он открыт.
+ *
+ * @param {MainSocket} socketInstance
+ */
+function sendUserOnline(socketInstance) {
+  if (socketInstance && socketInstance.isOpen()) {
+    socketInstance.sendMessage('online');
+  }
+}
+
 export default (state = initial, action) => {
   if (action.type === SESSION.SESSION_SET_USER) {
     clearInterval(state.interval);
@@ -44,7 +55,7 @@ export default (state = initial, action) => {
 
       return {
         instance,
-        interval: setInterval(() => instance.sendMessage('online'), 5 * 1000),
+        interval: setInterval(() => sendUserOnline(instance), 5 * 1000),
       };
     } if (state.instance) {
       state.instance.close();

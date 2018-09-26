@@ -8,7 +8,7 @@ export default class MainSocket {
     let postfix = '/cable';
 
     this.url = protocol + '//' + SOCKET_IP + postfix;
-    this.socket = null
+    this.socket = null;
   }
 
   open = (userId) => {
@@ -20,6 +20,19 @@ export default class MainSocket {
     this.socket.onmessage = this.onMessage;
     this.socket.onclose = this.onDisconnect;
     this.socket.onerror = this.onError;
+  };
+
+  /**
+   * @return {boolean} - true, если сокет подключен.
+   */
+  isOpen = () => {
+    try {
+      return this.socket
+        && this.socket instanceof WebSocket // eslint-disable-line no-undef
+        && (this.socket.readyState === this.socket.OPEN);
+    } catch (e) {
+      return false;
+    }
   };
 
   close() {

@@ -24,7 +24,7 @@ import Price from '../../values/Price';
 import PickerModal from '../../style/PickerModal';
 import CardPicker from '../../style/CardPicker';
 import HeaderBar from '../../style/HeaderBar';
-import { withColoredStatusBar, withCommonStatusBar } from '../../style/navigation';
+import { withCommonStatusBar } from '../../style/navigation';
 
 const isAndroid = Platform.OS === 'android';
 const SIDE_PADDING = 20;
