@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     color: '#4a4a4a',
     fontFamily: fonts.medium.regular,
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 14,
     paddingTop: 6,
     paddingBottom: 6,
     paddingStart: 17,
