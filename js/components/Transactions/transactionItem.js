@@ -116,7 +116,7 @@ class TransactionItem extends Component {
               </View>
               <View style={styles.dateAndStatusContainer}>
                 <Text style={styles.dateText}>
-                  {moment(item.date).format('YYYY.MM.DD H:mm:ss')}
+                  {moment(item.date).format('YYYY-MM-DD H.mm.ss')}
                 </Text>
                 <Text style={styles.status}>
                   {this.state.isOpen ? 'Confirm' : null}
