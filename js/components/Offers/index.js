@@ -350,6 +350,12 @@ class Offers extends React.PureComponent {
   }
 
   async componentDidMount() {
+    this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        this.onRefresh();
+      },
+    );
     const {
       fetchCurrencies,
       fetchPaymentMethods,
