@@ -354,19 +354,16 @@ class Offers extends React.PureComponent {
       fetchCurrencies,
       fetchPaymentMethods,
       fetchCountries,
-      updateFilter,
-      fetchExchangeRates,
     } = this.props;
     fetchCurrencies();
     fetchPaymentMethods();
     fetchCountries();
-    updateFilter({});
     const selectedCurrency = await AsyncStorage.getItem('selectedCurrency');
     const selectedCountry = await AsyncStorage.getItem('selectedCountryCode');
     this.onCurrencyCodeChange(selectedCurrency);
     this.onCountryCodeChange(selectedCountry);
-    fetchExchangeRates('BTC', selectedCurrency);
     this.state.animatedValue.addListener(value => this.handleScroll(value));
+    this.onRefresh();
   }
 
   scrollToTop = (animated) => {
